@@ -1,0 +1,190 @@
+"use client";
+
+import Logo from "@/components/shared/logo/Logo";
+import {
+  GlobeSvg,
+  NotificationSvg,
+  CheckSvg,
+  SettingsSvg,
+  MarkAllAsReadSvg,
+  NotificationDropdownSvg,
+  TimeSvg,
+} from "@/components/svgs/NavbarSvgs";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import Dropdown, { DropdownItem } from "@/components/ui/dropdown/Dropdown";
+import { useState } from "react";
+import { languages, navItems } from "@/lib/constants/navbarConstants";
+import gsap from "gsap";
+import { useLayoutEffect } from "react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+// ======================================================
+// Register Gsap Plugins
+// ======================================================
+gsap.registerPlugin(ScrollTrigger);
+
+const Navbar = () => {
+  // ======================================================
+  // Hooks
+  // ======================================================
+  const pathname = usePathname();
+
+  // ======================================================
+  // State
+  // ======================================================
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
+
+  // ======================================================
+  // handle language change
+  // ======================================================
+  const handleLanguageChange = (language: string) => {
+    setSelectedLanguage(language);
+  };
+
+  // ======================================================
+  // Make the Navbar sticky with smooth animation when scrolling
+  // ======================================================
+  useLayoutEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+    const showAnim = gsap
+      .from(".navbar", {
+        yPercent: -100,
+        paused: true,
+        duration: 0.2,
+      })
+      .progress(1);
+
+    ScrollTrigger.create({
+      start: "top top",
+      end: "bottom top",
+      onUpdate: (self) => {
+        self.direction === -1 ? showAnim.play() : showAnim.reverse();
+      },
+      onEnter: () => {
+        gsap.to(".navbar", { boxShadow: "0 2px 4px rgba(0,0,0,0.1)", duration: 0.2 });
+      },
+      onLeaveBack: () => {
+        gsap.to(".navbar", { boxShadow: "none", duration: 0.2 });
+      },
+    });
+  }, []);
+
+  return (
+    <div className="flex-between gap-2 pt-[15px] pb-2.5 x-padding navbar sticky top-0 z-50 bg-bg">
+      <Logo />
+
+      {/* ------------- nav items ------------- */}
+      <nav className="flex-center gap-2.5 text-[14px]">
+        {navItems.map((item) => (
+          <Link href={item.href} prefetch={false} key={item.title}>
+            <div
+              className={`flex-center gap-1 px-5 py-2.5 rounded-4xl ${
+                pathname === item.href ? "text-white bg-pri" : "text-gray-200"
+              }`}
+            >
+              <span>{item.icon}</span>
+              <h2>{item.title}</h2>
+            </div>
+          </Link>
+        ))}
+      </nav>
+
+      <div className="flex-center gap-4">
+        {/* ------------- localization ------------- */}
+        <Dropdown
+          trigger={
+            <button className="flex-center gap-1 gray-hover">
+              <GlobeSvg />
+              <span className="uppercase text-[14px]">
+                {languages.find((language) => language.code === selectedLanguage)?.code}
+              </span>
+            </button>
+          }
+          dropDownClass="w-[176px]"
+          position="bottom-left"
+        >
+          {languages.map((language) => (
+            <DropdownItem key={language.name} onClick={() => handleLanguageChange(language.code)}>
+              <button
+                className={`p-2.5 flex-between w-full rounded-lg transition-all duration-200 ease-in-out
+                    ${
+                      language.code === selectedLanguage
+                        ? "text-sec bg-gray-100"
+                        : "text-text hover:bg-gray-100"
+                    }`}
+              >
+                <h2 className={`text-[14px]`}>{language.name}</h2>
+                {language.code === selectedLanguage && <CheckSvg />}
+              </button>
+            </DropdownItem>
+          ))}
+        </Dropdown>
+
+        {/* ------------- settings ------------- */}
+        <Link
+          href="/settings"
+          prefetch={false}
+          className="bg-white p-2.5 rounded-full border border-gray-b gray-hover"
+        >
+          <SettingsSvg />
+        </Link>
+
+        {/* ------------- notifications ------------- */}
+        <Dropdown
+          trigger={
+            <button className="bg-white p-2.5 rounded-full border border-gray-b relative gray-hover">
+              <div className="absolute top-0 right-0 w-2 h-2 bg-danger rounded-full"></div>
+              <NotificationSvg />
+            </button>
+          }
+          dropDownClass="w-[458px] p-5 pt-7"
+          gap={10}
+          position="bottom-left"
+        >
+          <DropdownItem>
+            <div className="w-full flex flex-col gap-[10px]">
+              <h2 className="text-[20px] font-[500] leading-none pb-2.5 border-b border-gray-b">
+                Notifications
+              </h2>
+              <div className="flex-between gap-2.5 text-[14px] font-[500]">
+                <button className="flex-center gap-1 gray-hover">
+                  Mark all as read
+                  <MarkAllAsReadSvg />
+                </button>
+                <button className="text-danger gap-1 hover:text-gray-200 transition-all duration-200 ease-in-out underline-auto-from-front">
+                  Clear all
+                </button>
+              </div>
+            </div>
+          </DropdownItem>
+          <div className="bg-gray rounded-2xl py-4 px-3 flex flex-col gap-2.5">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <DropdownItem
+                key={index}
+                className="flex flex-col items-end-safe gap-2 bg-white border-l-[3px] border-l-pri rounded-2xl p-4 pb-2 gray-hover cursor-pointer"
+              >
+                <div className="flex-between-start gap-2.5">
+                  <div className="bg-pri rounded-full size-[30px] flex-center">
+                    <NotificationDropdownSvg />
+                  </div>
+                  <div className="flex flex-col gap-0.5 leading-[18px]">
+                    <h2 className="text-[16px] font-[500]">AI Insight Available</h2>
+                    <h3 className="text-[14px] text-gray-400">
+                      New proposal recommendation ready for Acme Corp deal
+                    </h3>
+                  </div>
+                </div>
+                <h4 className="text-[12px] text-gray-n flex-center gap-1">
+                  <TimeSvg />2 hours ago
+                </h4>
+              </DropdownItem>
+            ))}
+          </div>
+        </Dropdown>
+      </div>
+    </div>
+  );
+};
+
+export default Navbar;

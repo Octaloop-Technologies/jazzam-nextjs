@@ -1,0 +1,72 @@
+/* Chart dark theme */
+.chart-container {
+  color-scheme: dark;
+}
+
+.chart-container text {
+  fill: #fff !important;
+  stroke: none;
+}
+
+.chart-container .axis path,
+.chart-container .axis line {
+  stroke: rgba(255, 255, 255, 0.2) !important;
+}
+
+.chart-container .axis text {
+  fill: rgba(255, 255, 255, 0.8) !important;
+}
+
+.chart-container line {
+  stroke: rgba(255, 255, 255, 0.2) !important;
+}
+
+.chart-container rect {
+  opacity: 0.9;
+}
+
+.chart-container path {
+  opacity: 0.9;
+}
+
+.chart-container circle {
+  opacity: 0.9;
+}
+
+/* Chart responsive styles */
+@media (max-width: 640px) {
+  .chart-container svg {
+    overflow: visible !important;
+  }
+
+  .chart-container text {
+    font-size: 8px !important;
+  }
+
+  .chart-container .axis text {
+    font-size: 8px !important;
+  }
+
+  .chart-container circle {
+    r: 3px !important;
+  }
+}
+
+/* ----------------| Chart Responsiveness |----------------------- */
+@media (max-width: 640px) {
+  .chart-container svg {
+    overflow: visible;
+  }
+
+  .chart-container text {
+    font-size: 8px !important;
+  }
+
+  .chart-container .axis text {
+    font-size: 8px !important;
+  }
+
+  .chart-container circle {
+    r: 3px !important;
+  }
+}
