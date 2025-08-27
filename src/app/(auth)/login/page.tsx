@@ -14,7 +14,7 @@ const LoginPage = () => {
       <div className="mt-8 p-5 bg-white rounded-3xl max-w-[400px] w-full">
         <div className="capitalize leading-none tracking-wide">
           <h1 className="text-[26px] text-pri font-[600]">Welcome!</h1>
-          <p className="mt-1 text-[14px] text-gray-300">Let's connect your account</p>
+          <p className="mt-1 text-[14px] text-gray-300">Let&apos;s connect your account</p>
         </div>
         <LoginButtons />
       </div>
