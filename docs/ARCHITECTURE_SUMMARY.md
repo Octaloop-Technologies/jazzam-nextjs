@@ -500,7 +500,6 @@ interface Props {
 }
 
 
-
 #### State Management
 
 - Keep state minimal and normalized
