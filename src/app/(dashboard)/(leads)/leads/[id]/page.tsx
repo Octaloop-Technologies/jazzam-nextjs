@@ -34,6 +34,8 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     company: "TechCorp Inc",
     email: "wadewarren@gmail.com",
     followUp: "follow-up-1",
+    status: "hot",
+    date: "2021-01-01",
   };
 
   const leadScore: LeadScore = {

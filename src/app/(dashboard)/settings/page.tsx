@@ -143,12 +143,7 @@ const SettingsPage = () => {
         </div>
       </div>
 
-      <LanguageModal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        onConfirm={() => {}}
-        leadId="123"
-      />
+      <LanguageModal isOpen={isOpen} onClose={() => setIsOpen(false)} onConfirm={() => {}} />
     </div>
   );
 };

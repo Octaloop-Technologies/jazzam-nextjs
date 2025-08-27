@@ -1,6 +1,7 @@
 import Breadcrumb from "@/components/ui/breadcrumb/Breadcrumb";
-import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
-import React from "react";
+import FollowUpButtons from "@/components/view/dashboard/follow-up/FollowUpButtons";
+import ChannelToggle from "@/components/view/dashboard/leads/ChannelToggle";
+import LanguageToggle from "@/components/view/dashboard/leads/LanguageToggle";
 
 const FollowPage = async ({ params }: { params: Promise<{ id: string; followUp: string }> }) => {
   const { id, followUp } = await params;
@@ -23,37 +24,33 @@ const FollowPage = async ({ params }: { params: Promise<{ id: string; followUp: 
           <div className="w-full max-w-[35%] p-[30px] bg-white border border-gray-b rounded-3xl">
             <h1 className="text-[20px] font-[500]">Follow up settings</h1>
             <div className="mt-5">
-              <div>
-                <h3>Channel*</h3>
-                <div></div>
-              </div>
+              <div className="flex flex-col gap-3">
+                <div>
+                  <h3 className="text-sm font-[500] mb-2">Channel*</h3>
+                  <ChannelToggle />
+                </div>
 
-              <div>
-                <h3>Channel*</h3>
-                <div></div>
-              </div>
+                <div className="flex flex-col-2">
+                  <h3 className="text-sm font-[500]">Tone*</h3>
+                  <div></div>
+                </div>
 
-              <div>
-                <h3>language*</h3>
-                <div></div>
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-sm font-[500]">language*</h3>
+                  <LanguageToggle />
+                </div>
               </div>
             </div>
           </div>
 
           <div className="w-full max-w-[65%] p-[30px] bg-white border border-gray-b rounded-3xl">
-            <h1>Message</h1>
-            <h2>Subject*</h2>
+            <h1 className="text-[16px] font-[500] pb-1 border-b border-gray-n/30">Message</h1>
+            <h2 className="mt-[14px] text-[14px] font-[500]">Subject*</h2>
           </div>
         </div>
 
-        <div className="flex gap-2.5">
-          <PrimaryButton title="Cancel" className="w-fit" bordered iconRight={<CloseSvg />} />
-          <PrimaryButton
-            title="Schedule"
-            className="!bg-[#EF8305] w-fit"
-            iconRight={<CloseSvg />}
-          />
-          <PrimaryButton title="Send now" className="w-fit" iconRight={<CloseSvg />} />
+        <div className="mt-[35px] flex justify-center gap-2.5">
+          <FollowUpButtons />
         </div>
       </div>
     </section>
@@ -61,19 +58,3 @@ const FollowPage = async ({ params }: { params: Promise<{ id: string; followUp: 
 };
 
 export default FollowPage;
-
-// ======================================================
-// Svgs
-// ======================================================
-const CloseSvg = () => {
-  return (
-    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">
-      <path
-        d="M0.998535 11L11.0014 1M0.998535 1L11.0014 11"
-        stroke="#15803C"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-};

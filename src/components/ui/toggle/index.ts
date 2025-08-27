@@ -1,2 +1,4 @@
 export { default as ToggleSwitch } from "./ToggleSwitch";
-export { default as ToggleSwitchDemo } from "./ToggleSwitchDemo";
+export { default as ToggleSelector } from "./ToggleSelector";
+export type { ToggleOption } from "./ToggleSelector";
+export * from "./ToggleIcons";

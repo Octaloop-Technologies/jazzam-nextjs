@@ -6,6 +6,7 @@ import Dropdown, { DropdownItem } from "@/components/ui/dropdown/Dropdown";
 import DeleteLeadModal from "@/components/ui/models/DeleteLeadModal";
 import { useState } from "react";
 import LeadDetailModal from "./LeadDetailModal";
+import ScadualeModal from "./ScadualeModal";
 
 const FollowUpMenu = ({
   lead,
@@ -22,6 +23,7 @@ const FollowUpMenu = ({
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedLeadId, setSelectedLeadId] = useState<string>(lead.id);
   const [isLeadDetailModalOpen, setIsLeadDetailModalOpen] = useState(false);
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
 
   // ======================================================
   // Delete lead
@@ -49,6 +51,20 @@ const FollowUpMenu = ({
   const handleCloseLeadDetailModal = () => {
     setIsLeadDetailModalOpen(false);
     setSelectedLeadId(lead.id);
+  };
+
+  // ======================================================
+  // Schedule follow-up modal
+  // ======================================================
+  const handleCloseScheduleModal = () => {
+    setIsScheduleModalOpen(false);
+  };
+
+  const handleConfirmSchedule = (date: Date) => {
+    // Here you would implement the actual scheduling logic
+    console.log(`Scheduling follow-up for lead ${lead.id} on ${date.toLocaleDateString()}`);
+    // After scheduling, you might want to update the lead status or refresh the data
+    handleCloseScheduleModal();
   };
 
   return (
@@ -83,6 +99,25 @@ const FollowUpMenu = ({
             <div className="flex gap-1">
               <ViewDetailsSvg />
               View details
+            </div>
+            <RightArrowSvg />
+          </button>
+        </DropdownItem>
+        <DropdownItem>
+          <button
+            className="flex-between w-full hover:text-gray-200"
+            onClick={() => setIsScheduleModalOpen(true)}
+          >
+            <div className="flex gap-1">
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              Schedule Follow-up
             </div>
             <RightArrowSvg />
           </button>
@@ -124,6 +159,14 @@ const FollowUpMenu = ({
         onClose={handleCloseLeadDetailModal}
         onConfirm={handleConfirmDelete}
         leadId={selectedLeadId}
+      />
+
+      {/* ---------------------------- schedule follow-up modal ---------------------------- */}
+      <ScadualeModal
+        isOpen={isScheduleModalOpen}
+        onClose={handleCloseScheduleModal}
+        onConfirm={handleConfirmSchedule}
+        title={`Schedule Follow-up for ${lead.name}`}
       />
     </>
   );
