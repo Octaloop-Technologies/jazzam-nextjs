@@ -261,6 +261,39 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                 Urgent
               </div>
             </div>
+            <div className="mt-4 flex justify-between gap-2.5">
+              <div className="flex flex-col gap-1">
+                <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Timeline</h3>
+                <h2 className="text-[14px] leading-none font-[500]">Expected decision timeframe</h2>
+              </div>
+              <div className="flex-center px-5 h-[25px] text-[12px] text-pipeline bg-pipeline-light rounded-lg">
+                Q1 2025
+              </div>
+            </div>
+          </div>
+          {/* ----------------------- Not Needed : Design Only ----------------------- */}
+          <div className="p-[30px] w-full max-w-[40%]" aria-hidden="true" />
+          <div className="w-full max-w-[5%]" aria-hidden="true" />
+        </div>
+
+        <div className="flex-between gap-2.5 w-full items-stretch pb-5">
+          <div className="p-[30px] w-full border border-gray-b rounded-3xl bg-white max-w-[55%]">
+            <h2 className="text-[16px] leading-none font-[500] capitalize pb-2 border-b border-gray-n/30">
+              Interests
+            </h2>
+            <div className="mt-4 flex justify-between gap-2.5">
+              <div className="flex flex-col gap-2.5">
+                <h3 className="text-[14px] text-gray-250 leading-none font-[500]">
+                  Primary Interests
+                </h3>
+
+                <div className="flex gap-2.5 text-pri">
+                  <div className="bg-pri-light rounded-4xl py-2.5 px-5">AI</div>
+                  <div className="bg-pri-light rounded-4xl py-2.5 px-5">Cloud Infrastructure</div>
+                  <div className="bg-pri-light rounded-4xl py-2.5 px-5">DevOps</div>
+                </div>
+              </div>
+            </div>
           </div>
           {/* ----------------------- Not Needed : Design Only ----------------------- */}
           <div className="p-[30px] w-full max-w-[40%]" aria-hidden="true" />
