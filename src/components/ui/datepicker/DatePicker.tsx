@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import PrimaryButton from "../buttons/PrimaryButton";
+import CloseSvg from "@/components/svgs/CloseSvg";
 
 interface DatePickerProps {
   selectedDate: Date | null;
@@ -20,7 +22,6 @@ const DatePicker: React.FC<DatePickerProps> = ({
   className = "",
 }) => {
   const [currentMonth, setCurrentMonth] = useState(new Date());
-  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
 
   const daysInWeek = ["S", "M", "T", "W", "T", "F", "S"];
 
@@ -70,7 +71,6 @@ const DatePicker: React.FC<DatePickerProps> = ({
 
   const handleDateClick = (date: Date) => {
     onDateSelect(date);
-    setIsCalendarOpen(false);
   };
 
   const formatDate = (date: Date | null) => {
@@ -95,36 +95,24 @@ const DatePicker: React.FC<DatePickerProps> = ({
 
   return (
     <div className={`bg-white rounded-3xl p-6 shadow-lg ${className}`}>
-      <h2 className="text-xl font-semibold text-gray-900 mb-6 text-center">{title}</h2>
-
-      {/* Date Display Area */}
-      <div className="mb-6 space-y-2">
-        <div className="bg-blue-50 p-3 rounded-lg">
-          <span className="text-blue-600 font-medium">
-            {isToday(selectedDate || new Date()) ? "T " : ""}
-            {selectedDate
-              ? selectedDate.toLocaleDateString("en-US", { month: "long", year: "numeric" })
-              : "February 2020"}
-          </span>
-        </div>
-        <div
-          className="bg-blue-50 p-3 rounded-lg cursor-pointer hover:bg-blue-100 transition-colors"
-          onClick={() => setIsCalendarOpen(!isCalendarOpen)}
-        >
-          <span className="text-blue-600 font-medium">{formatDate(selectedDate)}</span>
-        </div>
-      </div>
+      <h2 className="text-[16px] font-[500] pb-1 border-b border-gray-n/30">{title}</h2>
 
       {/* Calendar */}
-      {isCalendarOpen && (
-        <div className="mb-6">
-          {/* Calendar Navigation */}
-          <div className="flex items-center justify-between mb-4">
+      <div className="mb-6">
+        {/* Calendar Navigation */}
+
+        <div className="mt-4 flex-between">
+          <span className="text-sm font-medium">
+            {isToday(selectedDate || new Date()) ? "T " : ""}{" "}
+            {formatDate(selectedDate) || "Pick Any Date"}
+          </span>
+
+          <div className="flex items-center gap-2 justify-between">
             <button
               onClick={() => navigateMonth("prev")}
-              className="p-2 text-gray-400 hover:text-gray-600 transition-colors"
+              className="size-[30px] hover:bg-pri rounded-full flex-center transition-colors hover:text-white text-gray-250"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="size-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -133,14 +121,14 @@ const DatePicker: React.FC<DatePickerProps> = ({
                 />
               </svg>
             </button>
-            <span className="text-lg font-medium text-gray-900">
+            <span className="text-sm font-medium">
               {currentMonth.toLocaleDateString("en-US", { month: "long", year: "numeric" })}
             </span>
             <button
               onClick={() => navigateMonth("next")}
-              className="p-2 text-green-600 hover:text-green-700 transition-colors"
+              className="size-[30px] hover:bg-pri rounded-full flex-center transition-colors hover:text-white text-gray-250"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="size-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -150,56 +138,56 @@ const DatePicker: React.FC<DatePickerProps> = ({
               </svg>
             </button>
           </div>
+        </div>
 
-          {/* Days of Week */}
-          <div className="grid grid-cols-7 gap-1 mb-2">
-            {daysInWeek.map((day, index) => (
-              <div key={index} className="text-center text-sm font-medium text-green-600 py-2">
-                {day}
-              </div>
-            ))}
-          </div>
+        {/* Days of Week */}
+        <div className="grid grid-cols-7 gap-1 mb-2 mt-2">
+          {daysInWeek.map((day, index) => (
+            <div key={index} className="text-center text-sm text-pri">
+              {day}
+            </div>
+          ))}
+        </div>
 
-          {/* Calendar Grid */}
-          <div className="grid grid-cols-7 gap-1">
-            {days.map(({ date, isCurrentMonth }, index) => (
-              <button
-                key={index}
-                onClick={() => handleDateClick(date)}
-                className={`
-                  p-2 text-sm rounded-lg transition-colors
+        {/* Calendar Grid */}
+        <div className="grid grid-cols-7 gap-1">
+          {days.map(({ date, isCurrentMonth }, index) => (
+            <button
+              key={index}
+              onClick={() => handleDateClick(date)}
+              className={`
+                  flex-center rounded-full transition-colors text-sm py-2
                   ${
                     isCurrentMonth
                       ? isSelected(date)
-                        ? "bg-green-600 text-white"
+                        ? "bg-pri text-white"
                         : isToday(date)
-                        ? "bg-blue-100 text-blue-600"
-                        : "text-gray-700 hover:bg-gray-100"
-                      : "text-gray-400"
+                        ? "bg-pri text-white"
+                        : "hover:bg-pri hover:text-white text-gray-250"
+                      : "text-gray-250"
                   }
                 `}
-              >
-                {date.getDate()}
-              </button>
-            ))}
-          </div>
+            >
+              {date.getDate()}
+            </button>
+          ))}
         </div>
-      )}
+      </div>
 
       {/* Action Buttons */}
       <div className="flex gap-3">
-        <button
+        <PrimaryButton
+          title="Cancel"
           onClick={onCancel}
-          className="flex-1 px-4 py-3 border-2 border-green-600 text-green-600 rounded-xl font-medium hover:bg-green-50 transition-colors"
-        >
-          Cancel X
-        </button>
-        <button
+          bordered
+          iconRight={<CloseSvg className="size-[11px]" />}
+          className="flex-1 px-4 py-3 border-2 border-pri text-pri rounded-xl font-medium hover:bg-green-50 transition-colors"
+        />
+        <PrimaryButton
+          title="Confirm"
           onClick={onConfirm}
-          className="flex-1 px-4 py-3 bg-green-600 text-white rounded-xl font-medium hover:bg-green-700 transition-colors"
-        >
-          Confirm
-        </button>
+          className="flex-1 px-4 py-3 bg-pri text-white rounded-xl font-medium hover:bg-green-700 transition-colors"
+        />
       </div>
     </div>
   );

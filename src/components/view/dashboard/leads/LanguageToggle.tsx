@@ -8,16 +8,16 @@ const LanguageToggle = () => {
 
   const languageOptions: ToggleOption[] = [
     {
-      id: "english",
-      label: "English",
-      value: "english",
-      img: "/assets/images/flags/uk-flag.svg",
-    },
-    {
       id: "arabic",
       label: "Arabic",
       value: "arabic",
       img: "/assets/images/flags/arabic.svg",
+    },
+    {
+      id: "english",
+      label: "English",
+      value: "english",
+      img: "/assets/images/flags/uk-flag.svg",
     },
   ];
 

@@ -7,6 +7,9 @@
 /* ----------------| Import Charts CSS |----------------------- */
 @import "./charts.css";
 
+/* ----------------| Import Rich Text Editor CSS |----------------------- */
+@import "./rich-text-editor.css";
+
 /* ----------------| Import Custom Animations CSS |----------------------- */
 @import "./customAnimations.css";
 

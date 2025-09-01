@@ -23,7 +23,7 @@ const ToggleSelector: React.FC<ToggleSelectorProps> = ({
   className = "",
 }) => {
   return (
-    <div className={`flex gap-2 ${className}`}>
+    <div className={`flex gap-3.5 ${className}`}>
       {options.map((option) => {
         const isSelected = option.value === selectedValue;
 
@@ -32,33 +32,29 @@ const ToggleSelector: React.FC<ToggleSelectorProps> = ({
             key={option.id}
             onClick={() => onSelectionChange(option.value)}
             className={`
-              flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-all duration-200
-              ${
-                isSelected
-                  ? "border-green-500 bg-white"
-                  : "border-gray-200 bg-white hover:border-gray-300"
-              }
+              flex-between gap-2 w-[140px] py-2.5 px-2 rounded-4xl border transition-all duration-200
+              ${isSelected ? "border-pri bg-white" : "border-gray-b bg-white hover:border-pri"}
             `}
           >
-            {option.img && (
-              <div className="w-4 h-4 relative overflow-hidden rounded-full">
-                <OptimizedImage
-                  src={option.img}
-                  alt={option.label}
-                  fill
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            )}
-            {option.icon && (
-              <div className={`${isSelected ? "text-blue-500" : "text-green-500"}`}>
-                {option.icon}
-              </div>
-            )}
+            <div className="flex-center gap-2">
+              {option.img && (
+                <div className="w-4 h-4 relative overflow-hidden rounded-full">
+                  <OptimizedImage
+                    src={option.img}
+                    alt={option.label}
+                    fill
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              {option.icon && (
+                <div className={`${isSelected ? "text-pri" : "text-gray-250"}`}>{option.icon}</div>
+              )}
 
-            <span className="text-sm">{option.label}</span>
+              <span className="text-sm">{option.label}</span>
+            </div>
 
-            {isSelected && <div className="w-2 h-2 bg-green-500 rounded-full ml-1" />}
+            {isSelected && <div className="w-2 h-2 bg-pri rounded-full" />}
           </button>
         );
       })}

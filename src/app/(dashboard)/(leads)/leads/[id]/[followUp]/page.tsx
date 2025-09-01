@@ -2,6 +2,8 @@ import Breadcrumb from "@/components/ui/breadcrumb/Breadcrumb";
 import FollowUpButtons from "@/components/view/dashboard/follow-up/FollowUpButtons";
 import ChannelToggle from "@/components/view/dashboard/leads/ChannelToggle";
 import LanguageToggle from "@/components/view/dashboard/leads/LanguageToggle";
+import Input from "@/components/ui/input/Input";
+import RichTextEditor from "@/components/ui/textarea/RichTextEditor";
 
 const FollowPage = async ({ params }: { params: Promise<{ id: string; followUp: string }> }) => {
   const { id, followUp } = await params;
@@ -30,10 +32,10 @@ const FollowPage = async ({ params }: { params: Promise<{ id: string; followUp: 
                   <ChannelToggle />
                 </div>
 
-                <div className="flex flex-col-2">
+                {/* <div className="flex flex-col-2">
                   <h3 className="text-sm font-[500]">Tone*</h3>
                   <div></div>
-                </div>
+                </div> */}
 
                 <div className="flex flex-col gap-2">
                   <h3 className="text-sm font-[500]">language*</h3>
@@ -45,7 +47,23 @@ const FollowPage = async ({ params }: { params: Promise<{ id: string; followUp: 
 
           <div className="w-full max-w-[65%] p-[30px] bg-white border border-gray-b rounded-3xl">
             <h1 className="text-[16px] font-[500] pb-1 border-b border-gray-n/30">Message</h1>
-            <h2 className="mt-[14px] text-[14px] font-[500]">Subject*</h2>
+            <div className="mt-[20px] space-y-4">
+              <Input
+                label="Subject"
+                placeholder="Subject"
+                required
+                variant="background"
+                inputSize="md"
+                labelClass="text-[14px] font-[500]"
+              />
+
+              <RichTextEditor
+                placeholder="Write a message to Sarah...."
+                required
+                labelClass="text-[14px] font-[500]"
+                minHeight="350px"
+              />
+            </div>
           </div>
         </div>
 
