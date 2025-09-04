@@ -74,7 +74,7 @@ const LeadsMenu = ({
         {showViewDetails && (
           <DropdownItem>
             <Link
-              href={`/leads/${lead.id}`}
+              href={`/super-user/leads/${lead.id}`}
               className="flex-between w-full hover:text-gray-200"
               prefetch={false}
             >
@@ -88,7 +88,7 @@ const LeadsMenu = ({
         )}
         <DropdownItem>
           <Link
-            href={`/leads/${lead.id}/${lead.followUp}`}
+            href={`/super-user/leads/${lead.id}/${lead.followUp}`}
             className="flex-between w-full hover:text-gray-200"
             prefetch={false}
           >

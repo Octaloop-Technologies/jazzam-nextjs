@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   description: "Login to your account",
 };
 
-const LoginPage = () => {
+const LoginPage = async () => {
   return (
     <div className="flex-col-center text-center w-full">
       <Logo />

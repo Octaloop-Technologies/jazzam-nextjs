@@ -1,8 +1,8 @@
 {
-  "id": "jozzam",
-  "name": "jozzam",
-  "short_name": "jozzam",
-  "description": "jozzam is a platform that generate leads for your business",
+  "id": "jazzam",
+  "name": "jazzam",
+  "short_name": "jazzam",
+  "description": "jazzam is a platform that generate leads for your business",
   "icons": [
     { "src": "/assets/icons/favicon-32x32.png", "sizes": "32x32", "type": "image/png" },
     { "src": "/assets/icons/favicon-16x16.png", "sizes": "16x16", "type": "image/png" },

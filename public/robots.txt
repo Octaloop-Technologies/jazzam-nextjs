@@ -3,4 +3,4 @@ Disallow: /api/
 Disallow: /private/
 Allow: /
 
-Sitemap: https://civil-dijest-next.vercel.app/sitemap.xml
+Sitemap: https://jazzam.ai/sitemap.xml

@@ -72,6 +72,10 @@ export const validators = {
       if (value === undefined || value === null || value === "") {
         return message;
       }
+      // Handle arrays - empty arrays should be considered as not filled
+      if (Array.isArray(value) && value.length === 0) {
+        return message;
+      }
       return null;
     },
 

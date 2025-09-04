@@ -123,7 +123,7 @@ const Navbar = () => {
 
         {/* ------------- settings ------------- */}
         <Link
-          href="/settings"
+          href="/super-user/settings"
           prefetch={false}
           className="bg-white p-2.5 rounded-full border border-gray-b gray-hover"
         >

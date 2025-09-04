@@ -5,18 +5,18 @@ import { FollowUpsIcon, LeadsIcon, SummaryIcon } from "@/components/svgs/NavbarS
 // ====================================================================
 const navItems = [
   {
-    href: "/",
+    href: "/super-user",
     icon: <LeadsIcon />,
     title: "Leads",
   },
   {
-    href: "/summary",
+    href: "/super-user/summary",
     icon: <SummaryIcon />,
     title: "Summary",
   },
 
   {
-    href: "/follow-ups",
+    href: "/super-user/follow-ups",
     icon: <FollowUpsIcon />,
     title: "Follow Ups",
   },

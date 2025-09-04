@@ -17,9 +17,18 @@ export default LoginButtons;
 // ==============================================================================
 // ============================| Login Button |==================================
 // ==============================================================================
-const LoginButton = ({ title, icon }: { title: string; icon: React.ReactNode }) => {
+const LoginButton = ({
+  title,
+  icon,
+  onClick,
+}: {
+  title: string;
+  icon: React.ReactNode;
+  onClick?: () => void;
+}) => {
   return (
     <button
+      onClick={onClick}
       className="flex-center gap-1 py-[13px] px-1.5 w-full bg-gray border border-gray-b rounded-xl 
                 hover:bg-gray-b transition-all duration-200 ease-in-out"
     >
