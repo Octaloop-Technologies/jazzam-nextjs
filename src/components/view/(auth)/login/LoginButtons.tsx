@@ -4,10 +4,18 @@ import { GoogleIcon, ZohoIcon } from "@/components/svgs/loginButtonSvgs";
 import React from "react";
 
 const LoginButtons = () => {
+  const handleGoogleLogin = () => {
+    window.location.href = "http://localhost:4000/api/v1/users/auth/google";
+  };
+
+  const handleZohoLogin = () => {
+    window.location.href = "http://localhost:4000/api/v1/users/auth/zohocrm";
+  };
+
   return (
     <div className="mt-5 flex flex-col gap-2.5 text-[14px] font-[500]">
-      <LoginButton title="Continue with Google" icon={<GoogleIcon />} />
-      <LoginButton title="Continue with Zoho" icon={<ZohoIcon />} />
+      <LoginButton title="Continue with Google" icon={<GoogleIcon />} onClick={handleGoogleLogin} />
+      <LoginButton title="Continue with Zoho" icon={<ZohoIcon />} onClick={handleZohoLogin} />
     </div>
   );
 };
