@@ -48,8 +48,7 @@ const SettingsPage = () => {
       window.location.href = "/login";
     } else {
       // Handle logout failure
-      error((logoutResponse.payload as string) || "Logout failed. Please try again.");
-      console.error("Logout failed:", logoutResponse.payload as string);
+      error("Logout failed. Please try again.");
     }
   };
 
