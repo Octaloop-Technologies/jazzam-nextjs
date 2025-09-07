@@ -20,6 +20,8 @@ import React from "react";
 import LeadsMenu from "@/components/view/dashboard/leads/LeadsMenu";
 import AuthStatusHandler from "@/components/view/dashboard/leads/AuthStatusHandler";
 import { Metadata } from "next";
+import { getAllLeads, getLeadStats } from "./action";
+import { cookies } from "next/headers";
 
 // ======================================================
 // Meta Data
@@ -29,100 +31,71 @@ export const metadata: Metadata = {
   description: "Leads page",
 };
 
-// ======================================================
-// Cards
-// ======================================================
-const cards = [
-  {
-    title: "Hot Leads",
-    value: 120,
-    icon: <HotLeadsSvg />,
-    color: "text-hot",
-    bgColor: "bg-hot-light",
-  },
-  {
-    title: "Warm leads",
-    value: 120,
-    icon: <WarmLeadsSvg />,
-    color: "text-warm",
-    bgColor: "bg-warm-light",
-  },
-  {
-    title: "Cold leads   ",
-    value: 120,
-    icon: <ColdLeadsSvg />,
-    color: "text-cold",
-    bgColor: "bg-cold-light",
-  },
-  {
-    title: "Pipeline value",
-    value: "$1,020",
-    icon: <PipelineValueSvg />,
-    color: "text-pipeline",
-    bgColor: "bg-pipeline-light",
-  },
-];
-
-// ======================================================
-// Leads data
-// ======================================================
-const leadsData = [
-  {
-    id: "1",
-    name: "Wade Warren",
-    company: "TechCorp Inc",
-    email: "wade.12@gmail.com",
-    status: "Hot",
-    score: 95,
-    linkedIn: "https://www.linkedin.com/in/wadewarren",
-    value: "$89,500",
-    followUp: "follow-up-1",
-  },
-  {
-    id: "2",
-    name: "Wade Warren",
-    company: "TechCorp Inc",
-    email: "wade.12@gmail.com",
-    status: "Warm",
-    score: 95,
-    linkedIn: "https://www.linkedin.com/in/wadewarren",
-    value: "$89,500",
-    followUp: "follow-up-2",
-  },
-  {
-    id: "3",
-    name: "Wade Warren",
-    company: "TechCorp Inc",
-    email: "wade.12@gmail.com",
-    status: "Cold",
-    score: 95,
-    linkedIn: "https://www.linkedin.com/in/wadewarren",
-    value: "$89,500",
-    followUp: "follow-up-3",
-  },
-  {
-    id: "4",
-    name: "Wade Warren",
-    company: "TechCorp Inc",
-    email: "wade.12@gmail.com",
-    status: "Warm",
-    score: 95,
-    linkedIn: "https://www.linkedin.com/in/wadewarren",
-    value: "$89,500",
-    followUp: "follow-up-4",
-  },
-];
-
 interface DashboardPageProps {
   searchParams: Promise<{
     error?: string;
     logout?: string;
     login?: string;
+    page?: string;
+    status?: string;
+    search?: string;
   }>;
 }
 
 const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value || "";
+
   const params = await searchParams;
+  const currentPage = parseInt(params.page || "1");
+  const statusFilter = params.status;
+
+  // Fetch leads and stats
+  const [leadsResponse, statsResponse] = await Promise.all([
+    getAllLeads({
+      token,
+      page: currentPage,
+      limit: 10,
+      status: statusFilter,
+    }),
+    getLeadStats({ token }),
+  ]);
+
+  const leadsData = leadsResponse.success ? leadsResponse.data?.data : null;
+  const statsData = statsResponse.success ? statsResponse.data?.data : null;
+
+  // Generate cards from stats data
+  const cards = [
+    {
+      title: "Hot Leads",
+      value: statsData?.overview?.hotLeads || 0,
+      icon: <HotLeadsSvg />,
+      color: "text-hot",
+      bgColor: "bg-hot-light",
+    },
+    {
+      title: "Warm leads",
+      value: statsData?.overview?.warmLeads || 0,
+      icon: <WarmLeadsSvg />,
+      color: "text-warm",
+      bgColor: "bg-warm-light",
+    },
+    {
+      title: "Cold leads",
+      value: statsData?.overview?.coldLeads || 0,
+      icon: <ColdLeadsSvg />,
+      color: "text-cold",
+      bgColor: "bg-cold-light",
+    },
+    {
+      title: "Qualified Leads",
+      value: statsData?.overview?.qualifiedLeads || 0,
+      icon: <PipelineValueSvg />,
+      color: "text-pipeline",
+      bgColor: "bg-pipeline-light",
+    },
+  ];
+
   // ======================================================
   // Status of the lead
   // ======================================================
@@ -131,21 +104,26 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
     let bgColorClass;
     let textColorClass;
 
-    switch (status) {
-      case "Hot":
+    switch (status.toLowerCase()) {
+      case "hot":
         icon = <HotLeadsSvg className="size-4" />;
         bgColorClass = "bg-hot-light";
         textColorClass = "text-hot";
         break;
-      case "Warm":
+      case "warm":
         icon = <WarmLeadsSvg className="size-4" />;
         bgColorClass = "bg-warm-light";
         textColorClass = "text-warm";
         break;
-      case "Cold":
+      case "cold":
         icon = <ColdLeadsSvg className="size-4" />;
         bgColorClass = "bg-cold-light";
         textColorClass = "text-cold";
+        break;
+      case "qualified":
+        icon = <PipelineValueSvg />;
+        bgColorClass = "bg-pipeline-light";
+        textColorClass = "text-pipeline";
         break;
       default:
         icon = null;
@@ -158,7 +136,7 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
         className={`flex-center gap-1.5 w-[107px] px-3 h-[30px] rounded-lg ${bgColorClass} ${textColorClass} text-sm`}
       >
         {icon}
-        {status}
+        {status.charAt(0).toUpperCase() + status.slice(1)}
       </div>
     );
   };
@@ -177,10 +155,38 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
 
           {/* tabs */}
           <div className="flex gap-[15px] h-[61px] text-[14px] border border-gray-b p-2.5 rounded-4xl">
-            <button className="h-full px-5 bg-[#0fb98121] text-pri rounded-4xl">All</button>
-            <button className="h-full px-5 bg-white rounded-4xl">Hot</button>
-            <button className="h-full px-5 bg-white rounded-4xl">Warm</button>
-            <button className="h-full px-5 bg-white rounded-4xl">Cold</button>
+            <Link
+              href="?"
+              className={`h-full px-5 rounded-4xl flex-center ${
+                !statusFilter ? "bg-[#0fb98121] text-pri" : "bg-white hover:bg-gray-50"
+              }`}
+            >
+              All
+            </Link>
+            <Link
+              href="?status=hot"
+              className={`h-full px-5 rounded-4xl flex-center ${
+                statusFilter === "hot" ? "bg-[#0fb98121] text-pri" : "bg-white hover:bg-gray-50"
+              }`}
+            >
+              Hot
+            </Link>
+            <Link
+              href="?status=warm"
+              className={`h-full px-5 rounded-4xl flex-center ${
+                statusFilter === "warm" ? "bg-[#0fb98121] text-pri" : "bg-white hover:bg-gray-50"
+              }`}
+            >
+              Warm
+            </Link>
+            <Link
+              href="?status=cold"
+              className={`h-full px-5 rounded-4xl flex-center ${
+                statusFilter === "cold" ? "bg-[#0fb98121] text-pri" : "bg-white hover:bg-gray-50"
+              }`}
+            >
+              Cold
+            </Link>
           </div>
 
           {/* split line */}
@@ -223,13 +229,29 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
             </p>
           </div>
           <div className="flex items-center gap-2 text-gray-600 text-sm">
-            <button className="size-[30px] rounded-full border border-gray-b flex-center">
+            <Link
+              href={`?page=${Math.max(1, currentPage - 1)}${
+                statusFilter ? `&status=${statusFilter}` : ""
+              }`}
+              className={`size-[30px] rounded-full border border-gray-b flex-center ${
+                currentPage === 1 ? "pointer-events-none opacity-50" : "hover:bg-gray-50"
+              }`}
+            >
               <LeftArrowSvg />
-            </button>
-            <span className="text-gray-300">Page 1/200</span>
-            <button className="size-[30px] rounded-full border border-gray-b flex-center bg-pri text-white">
+            </Link>
+            <span className="text-gray-300">
+              Page {leadsData?.page || 1}/{leadsData?.totalPages || 1}
+            </span>
+            <Link
+              href={`?page=${currentPage + 1}${statusFilter ? `&status=${statusFilter}` : ""}`}
+              className={`size-[30px] rounded-full border border-gray-b flex-center ${
+                !leadsData?.hasNextPage
+                  ? "pointer-events-none opacity-50"
+                  : "bg-pri text-white hover:bg-pri/90"
+              }`}
+            >
               <RightArrowSvg />
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -243,49 +265,61 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
               <TableCell>Value</TableCell>
             </TableHeader>
             <div className="px-[30px]">
-              {leadsData.map((lead) => (
-                <TableRow key={lead.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <div className="size-[40px] rounded-full overflow-hidden">
-                        <OptimizedImage
-                          src="/assets/images/leads/dummy-profile.png"
-                          alt="avatar"
-                          fill
-                          className="w-full h-full object-cover"
-                        />
+              {leadsData?.leads?.length > 0 ? (
+                leadsData.leads.map((lead: any) => (
+                  <TableRow key={lead._id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <div className="size-[40px] rounded-full overflow-hidden">
+                          <OptimizedImage
+                            src={
+                              lead.assignedUser?.avatar || "/assets/images/leads/dummy-profile.png"
+                            }
+                            alt="avatar"
+                            fill
+                            className="w-full h-full object-cover"
+                          />
+                        </div>
+                        <div className="flex flex-col leading-none">
+                          <p className="text-[16px] font-[500]">{lead.name}</p>
+                          <p className="text-[12px] text-gray-200">{lead.company}</p>
+                          <p className="text-[12px] text-gray-200">{lead.email}</p>
+                        </div>
                       </div>
-                      <div className="flex flex-col leading-none">
-                        <p className="text-[16px] font-[500]">{lead.name}</p>
-                        <p className="text-[12px] text-gray-200">{lead.company}</p>
-                        <p className="text-[12px] text-gray-200">{lead.email}</p>
+                    </TableCell>
+                    <TableCell>{getStatusComponent(lead.status)}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <PercentageCircleSvg />
+                        <span className="text-sec font-medium">{lead.leadScore || 0}%</span>
                       </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>{getStatusComponent(lead.status)}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <PercentageCircleSvg />
-                      <span className="text-sec font-medium">{lead.score}%</span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Link
-                      href={lead.linkedIn}
-                      target="_blank"
-                      prefetch={false}
-                      rel="noopener noreferrer"
-                      className="flex items-center gap-2.5 text-cold text-sm underline-auto-from-front gray-hover"
-                    >
-                      Wade Warren <ExternalLinkSvg />
-                    </Link>
-                  </TableCell>
-                  <TableCell className="flex-between">
-                    <h3 className="font-medium">{lead.value}</h3>
-                    <LeadsMenu lead={lead} />
-                  </TableCell>
-                </TableRow>
-              ))}
+                    </TableCell>
+                    <TableCell>
+                      {lead.linkedinProfile ? (
+                        <Link
+                          href={lead.linkedinProfile}
+                          target="_blank"
+                          prefetch={false}
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2.5 text-cold text-sm underline-auto-from-front gray-hover"
+                        >
+                          {lead.name} <ExternalLinkSvg />
+                        </Link>
+                      ) : (
+                        <span className="text-gray-400 text-sm">No LinkedIn</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="flex-between">
+                      <h3 className="font-medium">{lead.website || "N/A"}</h3>
+                      <LeadsMenu lead={lead} />
+                    </TableCell>
+                  </TableRow>
+                ))
+              ) : (
+                <div className="px-[30px] py-8 text-center text-gray-500">
+                  {leadsResponse.success ? "No leads found" : "Error loading leads"}
+                </div>
+              )}
             </div>
           </Table>
         </div>

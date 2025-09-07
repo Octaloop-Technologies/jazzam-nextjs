@@ -27,10 +27,18 @@ const AuthInitializer: React.FC<AuthInitializerProps> = ({ children }) => {
 
       // Silently attempt to fetch user - if tokens are valid, user will be fetched
       // If not, the request will fail silently without exposing token information
-      dispatch(fetchCurrentUser()).catch(() => {
+      dispatch(fetchCurrentUser()).catch((error) => {
         // Silent failure - don't log auth failures in production for security
         if (process.env.NODE_ENV !== "production") {
           console.log("AuthInitializer: User not authenticated or session expired");
+        }
+
+        // If it's an auth error, we might want to clear any invalid tokens
+        // This prevents infinite retry loops with bad tokens
+        if (error?.message?.includes("401") || error?.message?.includes("Unauthorized")) {
+          // Clear any potentially invalid tokens from cookies
+          document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+          document.cookie = "refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
         }
       });
     }
