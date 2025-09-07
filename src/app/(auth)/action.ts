@@ -1,14 +1,13 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { API_URLS } from "@/lib/constants/apiEndpoints";
 
 // ==============================================================
 // Login With Google
 // ==============================================================
 export const loginWithGoogle = async () => {
   // Redirect to backend Google OAuth endpoint
-  const googleAuthUrl = `${API_URLS.BASE_URL}/users/auth/google`;
+  const googleAuthUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/google`;
   redirect(googleAuthUrl);
 };
 
@@ -17,7 +16,7 @@ export const loginWithGoogle = async () => {
 // ==============================================================
 export const loginWithZoho = async () => {
   // Redirect to backend Zoho CRM OAuth endpoint
-  const zohoAuthUrl = `${API_URLS.BASE_URL}/users/auth/zohocrm`;
+  const zohoAuthUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/zohocrm`;
   redirect(zohoAuthUrl);
 };
 
@@ -26,7 +25,7 @@ export const loginWithZoho = async () => {
 // ==============================================================
 export const logoutUser = async (): Promise<{ success: boolean; message?: string }> => {
   try {
-    const response = await fetch(`${API_URLS.BASE_URL}/users/auth/logout`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/logout`, {
       method: "POST",
       credentials: "include", // Include cookies
       headers: {
@@ -54,7 +53,7 @@ export const getCurrentUser = async () => {
   const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
   try {
-    const response = await fetch(`${API_URLS.BASE_URL}/users/auth/current-user`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/current-user`, {
       method: "GET",
       credentials: "include", // Include cookies
       headers: {

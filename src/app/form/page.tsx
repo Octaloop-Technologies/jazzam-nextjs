@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Input from "@/components/ui/input/Input";
 import Textarea from "@/components/ui/textarea/Textarea";
 import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
@@ -12,45 +12,58 @@ import {
   LinkedInSvg,
 } from "@/components/svgs/leadsDetailSvgs";
 import {
-  industryOptions,
+  industryOptionsWithLabels,
   companySizeOptions,
-  sourceOptions,
+  sourceOptionsWithLabels,
   interestsOptions,
   statusOptions,
 } from "@/lib/constants/leadConstants";
 import { useForm } from "@/lib/hooks/useForm";
 import { validators } from "@/lib/hooks/useValidation";
+import { createLead } from "./action";
+import { useToast } from "@/lib/hooks/useToast";
 
 const FormPage = () => {
+  const { success, error, warning } = useToast();
+
   // ==========================================================
   // Custom Input State Management
   // ==========================================================
-  const [customInterest, setCustomInterest] = React.useState("");
+  const [customInterest, setCustomInterest] = useState("");
 
   // ==========================================================
   // Form Submit Handler
   // ==========================================================
-  const handleSubmit = (values: LeadFormData, isValid: boolean) => {
+  const handleSubmit = async (values: LeadFormData, isValid: boolean) => {
     if (isValid) {
-      // Prepare final values with custom entries
-      const finalValues = {
-        ...values,
-        // Filter out "Other" from interests if there are custom values
-        interests: values.interests.filter(
-          (interest) => interest !== "Other" || values.interests.length === 1
-        ),
-      };
+      try {
+        // Prepare final values with custom entries
+        const finalValues = {
+          ...values,
+          // Filter out "Other" from interests if there are custom values
+          interests: values.interests.filter(
+            (interest) => interest !== "Other" || values.interests.length === 1
+          ),
+        };
 
-      console.log("Form submitted:", finalValues);
-      console.log(
-        "Custom interests:",
-        finalValues.interests.filter((interest) => !interestsOptions.includes(interest))
-      );
+        // Submit to API
+        const response = await createLead(finalValues);
 
-      // Here you would typically send the data to your API
-      alert("Lead created successfully!");
+        console.log("Response:", response);
+
+        if (response.success) {
+          success("Form submitted successfully!");
+          resetForm();
+          setCustomInterest("");
+        } else {
+          error(response.data.message);
+        }
+      } catch (err) {
+        error("Error submitting form");
+        throw new Error(err instanceof Error ? err.message : "Unknown error");
+      }
     } else {
-      console.log("Form has validation errors");
+      warning("Form has validation errors. Please check the form and try again.");
     }
   };
 
@@ -307,9 +320,9 @@ const FormPage = () => {
                       }`}
                   >
                     <option value="">Select industry</option>
-                    {industryOptions.map((industry) => (
-                      <option key={industry} value={industry}>
-                        {industry}
+                    {industryOptionsWithLabels.map((industry) => (
+                      <option key={industry.value} value={industry.value}>
+                        {industry.label}
                       </option>
                     ))}
                   </select>
@@ -361,9 +374,9 @@ const FormPage = () => {
                       }`}
                   >
                     <option value="">Select source</option>
-                    {sourceOptions.map((source) => (
-                      <option key={source} value={source}>
-                        {source}
+                    {sourceOptionsWithLabels.map((source) => (
+                      <option key={source.value} value={source.value}>
+                        {source.label}
                       </option>
                     ))}
                   </select>
