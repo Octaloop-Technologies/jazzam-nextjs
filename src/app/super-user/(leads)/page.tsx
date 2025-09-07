@@ -18,6 +18,7 @@ import TableRow from "@/components/ui/table/TableRow";
 import Link from "next/link";
 import React from "react";
 import LeadsMenu from "@/components/view/dashboard/leads/LeadsMenu";
+import AuthStatusHandler from "@/components/view/dashboard/leads/AuthStatusHandler";
 import { Metadata } from "next";
 
 // ======================================================
@@ -112,7 +113,16 @@ const leadsData = [
   },
 ];
 
-const DashboardPage = () => {
+interface DashboardPageProps {
+  searchParams: Promise<{
+    error?: string;
+    logout?: string;
+    login?: string;
+  }>;
+}
+
+const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
+  const params = await searchParams;
   // ======================================================
   // Status of the lead
   // ======================================================
@@ -155,6 +165,9 @@ const DashboardPage = () => {
 
   return (
     <section>
+      {/* Handle auth status messages (like login success) */}
+      <AuthStatusHandler searchParams={params} />
+
       {/* ---------------------------- header ---------------------------- */}
       <div className="flex-between gap-1.5">
         <h1 className="text-[32px] font-[500] capitalize">Your lead analysis</h1>

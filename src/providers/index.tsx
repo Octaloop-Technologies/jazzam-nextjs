@@ -2,8 +2,8 @@
 
 import React from "react";
 import { ReduxProvider } from "./ReduxProvider";
-import { ToastProvider } from "../contexts/ToastContext";
-import ToastContainer from "@/components/ui/toast/ToastContainer";
+import ReduxToastContainer from "@/components/ui/toast/ReduxToastContainer";
+import AuthInitializer from "./AuthInitializer";
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -12,10 +12,10 @@ interface ProvidersProps {
 export function Providers({ children }: ProvidersProps) {
   return (
     <ReduxProvider>
-      <ToastProvider>
+      <AuthInitializer>
         {children}
-        <ToastContainer />
-      </ToastProvider>
+        <ReduxToastContainer />
+      </AuthInitializer>
     </ReduxProvider>
   );
 }
