@@ -21,30 +21,6 @@ export const loginWithZoho = async () => {
 };
 
 // ==============================================================
-// Logout - Server Action (Returns result for Redux handling)
-// ==============================================================
-export const logoutUser = async (): Promise<{ success: boolean; message?: string }> => {
-  try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/logout`, {
-      method: "POST",
-      credentials: "include", // Include cookies
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    if (response.ok) {
-      return { success: true, message: "Successfully logged out" };
-    } else {
-      return { success: false, message: "Logout failed. Please try again." };
-    }
-  } catch (error) {
-    console.error("Logout error:", error);
-    return { success: false, message: "Logout failed. Please try again." };
-  }
-};
-
-// ==============================================================
 // Get Current User - Server Function
 // ==============================================================
 export const getCurrentUser = async () => {

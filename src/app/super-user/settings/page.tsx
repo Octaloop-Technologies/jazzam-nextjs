@@ -12,7 +12,7 @@ import {
   GoogleIcon,
 } from "@/components/view/dashboard/settings/settingPageIcons";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { logoutUserAsync, selectIsLoading, selectUser } from "@/redux/slices/authSlice";
+import { logoutUser, selectIsLoading, selectUser } from "@/redux/slices/authSlice";
 import { useToast } from "@/lib/hooks/useToast";
 
 const SettingsPage = () => {
@@ -38,10 +38,10 @@ const SettingsPage = () => {
   const { success, error } = useToast();
 
   // ==============================================================
-  // Logout User
+  // Logout User - Using Redux client-side logout
   // ==============================================================
-  const logoutUser = async () => {
-    const logoutResponse = await dispatch(logoutUserAsync());
+  const handleLogout = async () => {
+    const logoutResponse = await dispatch(logoutUser());
     if (logoutResponse.meta.requestStatus === "fulfilled") {
       success("You have been successfully logged out.");
       // Redirect to login page after successful logout
@@ -120,7 +120,7 @@ const SettingsPage = () => {
                     </div>
                   </div>
                   <button
-                    onClick={logoutUser}
+                    onClick={handleLogout}
                     disabled={isLoading}
                     className={`w-fit flex gap-1 text-sm transition-colors duration-200 ${
                       isLoading ? "text-gray-400 cursor-not-allowed" : "text-danger gray-hover"

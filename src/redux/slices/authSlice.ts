@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "@/redux/store";
-import { getCurrentUser, logoutUser } from "@/app/(auth)/action";
+import { getCurrentUser } from "@/app/(auth)/action";
 
 // User interface matching the backend
 export interface User {
@@ -53,18 +53,32 @@ export const fetchCurrentUser = createAsyncThunk(
   }
 );
 
-export const logoutUserAsync = createAsyncThunk(
-  "auth/logoutUser",
+// ==============================================================
+// Client-side logout - Direct API call from browser with cookies
+// ==============================================================
+export const logoutUser = createAsyncThunk(
+  "auth/logoutUserClient",
   async (_, { rejectWithValue }) => {
     try {
-      const result = await logoutUser();
-      if (result.success) {
-        return result.message;
+      // Get base URL with fallback
+      const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+      const response = await fetch(`${baseUrl}/users/auth/logout`, {
+        method: "POST",
+        credentials: "include", // Include cookies
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (response.ok) {
+        return "Successfully logged out";
       } else {
-        return rejectWithValue("Failed to logout");
+        return rejectWithValue("Logout failed. Please try again.");
       }
     } catch (error) {
-      return rejectWithValue(error instanceof Error ? error.message : "Unknown error");
+      console.error("Logout error:", error);
+      return rejectWithValue(error instanceof Error ? error.message : "Network error occurred");
     }
   }
 );
@@ -115,17 +129,18 @@ const authSlice = createSlice({
         state.isAuthenticated = false;
         state.error = action.payload as string;
       })
-      .addCase(logoutUserAsync.pending, (state) => {
+      // Client-side logout reducers
+      .addCase(logoutUser.pending, (state) => {
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(logoutUserAsync.fulfilled, (state, action) => {
+      .addCase(logoutUser.fulfilled, (state, action) => {
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
         state.error = null;
       })
-      .addCase(logoutUserAsync.rejected, (state, action) => {
+      .addCase(logoutUser.rejected, (state, action) => {
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
