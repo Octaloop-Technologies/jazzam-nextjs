@@ -16,6 +16,7 @@ interface PrimaryButtonProps {
   gradientClass?: string;
   wrapperClass?: string;
   bordered?: boolean;
+  disabledIcon?: boolean;
 }
 
 const PrimaryButton: React.FC<PrimaryButtonProps> = ({
@@ -31,6 +32,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   iconRightClass,
   bordered = false,
   titleClass = "text-[14px] leading-normal",
+  disabledIcon = true,
 }) => {
   return (
     <button
@@ -45,7 +47,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
           relative z-10`}
     >
       {iconLeft && <span>{iconLeft}</span>}
-      {disabled && (
+      {disabled && disabledIcon && (
         <div className="inset-0 flex-center">
           <div className="w-4 h-4 border-t-2 border-b-2 border-sec rounded-full animate-spin"></div>
         </div>

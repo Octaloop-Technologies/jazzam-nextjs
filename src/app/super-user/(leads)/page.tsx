@@ -7,8 +7,6 @@ import {
   PipelineValueSvg,
   WarmLeadsSvg,
 } from "@/components/svgs/LeadsAnalysisSvgs";
-import { RefreshSvg } from "@/components/svgs/refreshSvg";
-import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
 import OptimizedImage from "@/components/ui/image/OptimizedImage";
 import SearchBarWithFilters from "@/components/view/dashboard/leads/SearchBarWithFilters";
 import Table from "@/components/ui/table/Table";
@@ -22,7 +20,9 @@ import AuthStatusHandler from "@/components/view/dashboard/leads/AuthStatusHandl
 import { Metadata } from "next";
 import { getAllLeads, getLeadStats, searchLeads } from "./action";
 import { cookies } from "next/headers";
-import TableLoader from "@/components/view/dashboard/leads/TableLoader";
+import TabNavigation from "@/components/view/dashboard/leads/TabNavigation";
+import TabContentLoader from "@/components/view/dashboard/leads/TabContentLoader";
+import RefreshButton from "@/components/view/dashboard/leads/RefreshButton";
 
 // ======================================================
 // Meta Data
@@ -188,78 +188,20 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
           <SearchBarWithFilters />
 
           {/* tabs */}
-          <div className="flex gap-[15px] h-[61px] text-[14px] border border-gray-b p-2.5 rounded-4xl">
-            {(() => {
-              const createTabUrl = (status?: string) => {
-                const currentParams = new URLSearchParams();
-                if (searchQuery) currentParams.set("search", searchQuery);
-                if (industryFilter) currentParams.set("industry", industryFilter);
-                if (sourceFilter) currentParams.set("source", sourceFilter);
-                if (sortBy !== "createdAt") currentParams.set("sortBy", sortBy);
-                if (sortOrder !== "desc") currentParams.set("sortOrder", sortOrder);
-                if (status) currentParams.set("status", status);
-
-                return currentParams.toString() ? `?${currentParams.toString()}` : "?";
-              };
-
-              return (
-                <>
-                  <Link
-                    href={createTabUrl()}
-                    prefetch={false}
-                    className={`h-full px-5 rounded-4xl flex-center ${
-                      !statusFilter ? "bg-[#0fb98121] text-pri" : "bg-white hover:bg-gray-50"
-                    }`}
-                  >
-                    All
-                  </Link>
-                  <Link
-                    href={createTabUrl("hot")}
-                    prefetch={false}
-                    className={`h-full px-5 rounded-4xl flex-center ${
-                      statusFilter === "hot"
-                        ? "bg-[#0fb98121] text-pri"
-                        : "bg-white hover:bg-gray-50"
-                    }`}
-                  >
-                    Hot
-                  </Link>
-                  <Link
-                    href={createTabUrl("warm")}
-                    prefetch={false}
-                    className={`h-full px-5 rounded-4xl flex-center ${
-                      statusFilter === "warm"
-                        ? "bg-[#0fb98121] text-pri"
-                        : "bg-white hover:bg-gray-50"
-                    }`}
-                  >
-                    Warm
-                  </Link>
-                  <Link
-                    href={createTabUrl("cold")}
-                    prefetch={false}
-                    className={`h-full px-5 rounded-4xl flex-center ${
-                      statusFilter === "cold"
-                        ? "bg-[#0fb98121] text-pri"
-                        : "bg-white hover:bg-gray-50"
-                    }`}
-                  >
-                    Cold
-                  </Link>
-                </>
-              );
-            })()}
-          </div>
+          <TabNavigation
+            searchQuery={searchQuery}
+            industryFilter={industryFilter}
+            sourceFilter={sourceFilter}
+            sortBy={sortBy}
+            sortOrder={sortOrder}
+            statusFilter={statusFilter}
+          />
 
           {/* split line */}
           <div className="h-[51.5px] w-[1px] bg-gray-b" />
 
           {/* refresh button */}
-          <PrimaryButton
-            title="Refresh"
-            iconRight={<RefreshSvg />}
-            className="w-[116px] h-[60px]"
-          />
+          <RefreshButton />
         </div>
       </div>
 
@@ -282,80 +224,79 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
       </div>
 
       {/* ---------------------------- lead Table ---------------------------- */}
-      <div className="mt-2.5 bg-white py-8 rounded-3xl border border-gray-b overflow-y-auto">
-        <div className="flex items-center justify-between mb-4 px-[30px]">
-          <div className="leading-none">
-            <h1 className="text-[18px] font-[600] capitalize">
-              {searchQuery ? `Search Results for "${searchQuery}"` : "All Leads"}
-            </h1>
-            <p className="text-gray-200 text-sm">
-              {searchQuery
-                ? `Found ${leadsData?.totalResults || 0} leads matching your search criteria`
-                : "Complete list of your sales prospects and their current status"}
-            </p>
-          </div>
+      <Suspense fallback={<TabContentLoader />}>
+        <div className="mt-2.5 bg-white py-8 rounded-3xl border border-gray-b overflow-y-auto">
+          <div className="flex items-center justify-between mb-4 px-[30px]">
+            <div className="leading-none">
+              <h1 className="text-[18px] font-[600] capitalize">
+                {searchQuery ? `Search Results for "${searchQuery}"` : "All Leads"}
+              </h1>
+              <p className="text-gray-200 text-sm">
+                {searchQuery
+                  ? `Found ${leadsData?.totalResults || 0} leads matching your search criteria`
+                  : "Complete list of your sales prospects and their current status"}
+              </p>
+            </div>
 
-          {/* pagination */}
-          <div className="flex items-center gap-2 text-gray-600 text-sm">
-            {(() => {
-              const createPaginationUrl = (page: number) => {
-                const paginationParams = new URLSearchParams();
-                paginationParams.set("page", page.toString());
-                if (searchQuery) paginationParams.set("search", searchQuery);
-                if (statusFilter) paginationParams.set("status", statusFilter);
-                if (industryFilter) paginationParams.set("industry", industryFilter);
-                if (sourceFilter) paginationParams.set("source", sourceFilter);
-                if (sortBy !== "createdAt") paginationParams.set("sortBy", sortBy);
-                if (sortOrder !== "desc") paginationParams.set("sortOrder", sortOrder);
+            {/* pagination */}
+            <div className="flex items-center gap-2 text-gray-600 text-sm">
+              {(() => {
+                const createPaginationUrl = (page: number) => {
+                  const paginationParams = new URLSearchParams();
+                  paginationParams.set("page", page.toString());
+                  if (searchQuery) paginationParams.set("search", searchQuery);
+                  if (statusFilter) paginationParams.set("status", statusFilter);
+                  if (industryFilter) paginationParams.set("industry", industryFilter);
+                  if (sourceFilter) paginationParams.set("source", sourceFilter);
+                  if (sortBy !== "createdAt") paginationParams.set("sortBy", sortBy);
+                  if (sortOrder !== "desc") paginationParams.set("sortOrder", sortOrder);
 
-                return `?${paginationParams.toString()}`;
-              };
+                  return `?${paginationParams.toString()}`;
+                };
 
-              return (
-                <>
-                  <Link
-                    href={createPaginationUrl(Math.max(1, currentPage - 1))}
-                    prefetch={false}
-                    className={`size-[30px] rounded-full border border-gray-b flex-center 
-                      ${
+                return (
+                  <>
+                    <Link
+                      href={createPaginationUrl(Math.max(1, currentPage - 1))}
+                      prefetch={false}
+                      className={`size-[30px] rounded-full border border-gray-b flex-center transition-all duration-200 ${
                         currentPage === 1
-                          ? "pointer-events-none opacity-50"
+                          ? "cursor-not-allowed opacity-50"
                           : "bg-pri text-white hover:bg-pri/90"
                       }`}
-                  >
-                    <LeftArrowSvg />
-                  </Link>
-                  <span className="text-gray-300">
-                    Page {leadsData?.page || 1}/{leadsData?.totalPages || 1}
-                  </span>
-                  <Link
-                    href={createPaginationUrl(currentPage + 1)}
-                    className={`size-[30px] rounded-full border border-gray-b flex-center 
-                      ${
+                    >
+                      <LeftArrowSvg />
+                    </Link>
+                    <span className="text-gray-300">
+                      Page {leadsData?.page || 1}/{leadsData?.totalPages || 1}
+                    </span>
+                    <Link
+                      href={createPaginationUrl(currentPage + 1)}
+                      prefetch={false}
+                      className={`size-[30px] rounded-full border border-gray-b flex-center transition-all duration-200 ${
                         !leadsData?.hasNextPage
-                          ? "pointer-events-none opacity-50"
+                          ? "cursor-not-allowed opacity-50"
                           : "bg-pri text-white hover:bg-pri/90"
                       }`}
-                  >
-                    <RightArrowSvg />
-                  </Link>
-                </>
-              );
-            })()}
+                    >
+                      <RightArrowSvg />
+                    </Link>
+                  </>
+                );
+              })()}
+            </div>
           </div>
-        </div>
 
-        {/* table */}
-        <div className="min-w-full relative">
-          <Table>
-            <TableHeader>
-              <TableCell>Lead</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Score</TableCell>
-              <TableCell>LinkedIn Profile</TableCell>
-              <TableCell>Company Size</TableCell>
-            </TableHeader>
-            <Suspense fallback={<TableLoader />}>
+          {/* table */}
+          <div className="min-w-full relative">
+            <Table>
+              <TableHeader>
+                <TableCell>Lead</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Score</TableCell>
+                <TableCell>LinkedIn Profile</TableCell>
+                <TableCell>Company Size</TableCell>
+              </TableHeader>
               <div className="px-[30px]">
                 {leadsData?.leads?.length > 0 ? (
                   leadsData.leads.map((lead: any) => (
@@ -409,7 +350,7 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                     </TableRow>
                   ))
                 ) : (
-                  <div className="px-[30px] py-8 text-center text-gray-500">
+                  <div className="py-8 text-center text-gray-500">
                     {leadsResponse.success
                       ? searchQuery
                         ? `No leads found matching "${searchQuery}". Try adjusting your search or filters.`
@@ -418,10 +359,10 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                   </div>
                 )}
               </div>
-            </Suspense>
-          </Table>
+            </Table>
+          </div>
         </div>
-      </div>
+      </Suspense>
     </section>
   );
 };
