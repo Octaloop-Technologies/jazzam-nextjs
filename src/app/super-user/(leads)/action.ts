@@ -33,7 +33,7 @@ export const getAllLeads = async ({
   try {
     const params = new URLSearchParams();
 
-    params.append("page", (page - 1).toString()); // Convert to 0-based for backend
+    params.append("page", page.toString());
     params.append("limit", limit.toString());
     params.append("sortBy", sortBy);
     params.append("sortOrder", sortOrder);
@@ -135,7 +135,7 @@ export const searchLeads = async ({
     const params = new URLSearchParams();
 
     params.append("query", query.trim());
-    params.append("page", (page - 1).toString()); // Convert to 0-based for backend
+    params.append("page", page.toString());
     params.append("limit", limit.toString());
     params.append("sortBy", sortBy);
     params.append("sortOrder", sortOrder);

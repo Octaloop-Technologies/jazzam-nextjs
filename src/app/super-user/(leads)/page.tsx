@@ -206,6 +206,7 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                 <>
                   <Link
                     href={createTabUrl()}
+                    prefetch={false}
                     className={`h-full px-5 rounded-4xl flex-center ${
                       !statusFilter ? "bg-[#0fb98121] text-pri" : "bg-white hover:bg-gray-50"
                     }`}
@@ -214,6 +215,7 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                   </Link>
                   <Link
                     href={createTabUrl("hot")}
+                    prefetch={false}
                     className={`h-full px-5 rounded-4xl flex-center ${
                       statusFilter === "hot"
                         ? "bg-[#0fb98121] text-pri"
@@ -224,6 +226,7 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                   </Link>
                   <Link
                     href={createTabUrl("warm")}
+                    prefetch={false}
                     className={`h-full px-5 rounded-4xl flex-center ${
                       statusFilter === "warm"
                         ? "bg-[#0fb98121] text-pri"
@@ -234,6 +237,7 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                   </Link>
                   <Link
                     href={createTabUrl("cold")}
+                    prefetch={false}
                     className={`h-full px-5 rounded-4xl flex-center ${
                       statusFilter === "cold"
                         ? "bg-[#0fb98121] text-pri"
@@ -290,6 +294,8 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                 : "Complete list of your sales prospects and their current status"}
             </p>
           </div>
+
+          {/* pagination */}
           <div className="flex items-center gap-2 text-gray-600 text-sm">
             {(() => {
               const createPaginationUrl = (page: number) => {
@@ -309,9 +315,13 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                 <>
                   <Link
                     href={createPaginationUrl(Math.max(1, currentPage - 1))}
-                    className={`size-[30px] rounded-full border border-gray-b flex-center ${
-                      currentPage === 1 ? "pointer-events-none opacity-50" : "hover:bg-gray-50"
-                    }`}
+                    prefetch={false}
+                    className={`size-[30px] rounded-full border border-gray-b flex-center 
+                      ${
+                        currentPage === 1
+                          ? "pointer-events-none opacity-50"
+                          : "bg-pri text-white hover:bg-pri/90"
+                      }`}
                   >
                     <LeftArrowSvg />
                   </Link>
@@ -320,11 +330,12 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                   </span>
                   <Link
                     href={createPaginationUrl(currentPage + 1)}
-                    className={`size-[30px] rounded-full border border-gray-b flex-center ${
-                      !leadsData?.hasNextPage
-                        ? "pointer-events-none opacity-50"
-                        : "bg-pri text-white hover:bg-pri/90"
-                    }`}
+                    className={`size-[30px] rounded-full border border-gray-b flex-center 
+                      ${
+                        !leadsData?.hasNextPage
+                          ? "pointer-events-none opacity-50"
+                          : "bg-pri text-white hover:bg-pri/90"
+                      }`}
                   >
                     <RightArrowSvg />
                   </Link>
@@ -334,6 +345,7 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
           </div>
         </div>
 
+        {/* table */}
         <div className="min-w-full relative">
           <Table>
             <TableHeader>
