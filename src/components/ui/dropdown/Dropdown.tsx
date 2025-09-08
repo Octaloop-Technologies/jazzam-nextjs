@@ -36,60 +36,64 @@ const Dropdown: React.FC<DropdownProps> = ({
   // Calculate optimal position to prevent cutoff
   // ==========================================================
   const calculatePosition = () => {
-    if (!triggerRef.current || !dropdownRef.current) return;
+    if (!triggerRef.current || !dropdownRef.current || typeof window === "undefined") return;
 
-    const triggerRect = triggerRef.current.getBoundingClientRect();
-    const dropdownRect = dropdownRef.current.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
-    const viewportWidth = window.innerWidth;
+    try {
+      const triggerRect = triggerRef.current.getBoundingClientRect();
+      const dropdownRect = dropdownRef.current.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const viewportWidth = window.innerWidth;
 
-    let top: number;
-    let left: number;
+      let top: number;
+      let left: number;
 
-    // Calculate vertical position
-    if (position.includes("bottom")) {
-      // Try bottom first
-      if (triggerRect.bottom + dropdownRect.height + 20 <= viewportHeight) {
-        top = triggerRect.bottom + 8;
+      // Calculate vertical position
+      if (position.includes("bottom")) {
+        // Try bottom first
+        if (triggerRect.bottom + dropdownRect.height + 20 <= viewportHeight) {
+          top = triggerRect.bottom + 8;
+        } else {
+          // Fallback to top if bottom doesn't fit
+          top = triggerRect.top - dropdownRect.height - 8;
+        }
       } else {
-        // Fallback to top if bottom doesn't fit
-        top = triggerRect.top - dropdownRect.height - 8;
+        // Try top first
+        if (triggerRect.top - dropdownRect.height - 20 >= 0) {
+          top = triggerRect.top - dropdownRect.height - 8;
+        } else {
+          // Fallback to bottom if top doesn't fit
+          top = triggerRect.bottom + 8;
+        }
       }
-    } else {
-      // Try top first
-      if (triggerRect.top - dropdownRect.height - 20 >= 0) {
-        top = triggerRect.top - dropdownRect.height - 8;
+
+      // Calculate horizontal position - align dropdown to the right side of the trigger
+      if (position.includes("left")) {
+        // For left positioning, align right edge of dropdown with right edge of trigger
+        left = triggerRect.right - dropdownRect.width;
       } else {
-        // Fallback to bottom if top doesn't fit
-        top = triggerRect.bottom + 8;
+        // For right positioning (default), align left edge of dropdown with right edge of trigger
+        left = triggerRect.right;
       }
+
+      // Ensure dropdown stays within viewport bounds
+      if (left < 8) {
+        left = 8; // Minimum left margin
+      } else if (left + dropdownRect.width > viewportWidth - 8) {
+        left = viewportWidth - dropdownRect.width - 8; // Maximum right margin
+      }
+
+      // Ensure vertical position stays within viewport bounds
+      top = Math.max(8, Math.min(top, viewportHeight - dropdownRect.height - 8));
+
+      setDropdownStyle({
+        position: "fixed",
+        top: `${top}px`,
+        left: `${left}px`,
+        zIndex: 9999,
+      });
+    } catch (error) {
+      console.warn("Error calculating dropdown position:", error);
     }
-
-    // Calculate horizontal position - align dropdown to the right side of the trigger
-    if (position.includes("left")) {
-      // For left positioning, align right edge of dropdown with right edge of trigger
-      left = triggerRect.right - dropdownRect.width;
-    } else {
-      // For right positioning (default), align left edge of dropdown with right edge of trigger
-      left = triggerRect.right;
-    }
-
-    // Ensure dropdown stays within viewport bounds
-    if (left < 8) {
-      left = 8; // Minimum left margin
-    } else if (left + dropdownRect.width > viewportWidth - 8) {
-      left = viewportWidth - dropdownRect.width - 8; // Maximum right margin
-    }
-
-    // Ensure vertical position stays within viewport bounds
-    top = Math.max(8, Math.min(top, viewportHeight - dropdownRect.height - 8));
-
-    setDropdownStyle({
-      position: "fixed",
-      top: `${top}px`,
-      left: `${left}px`,
-      zIndex: 9999,
-    });
   };
 
   // ==========================================================
@@ -114,23 +118,26 @@ const Dropdown: React.FC<DropdownProps> = ({
   // ==========================================================
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
+      // Safety check for event target
+      if (!event.target || !(event.target instanceof Node)) return;
+
       // Check if the click is outside both the dropdown and the trigger
-      const isOutsideDropdown =
-        dropdownRef.current && !dropdownRef.current.contains(event.target as Node);
-      const isOutsideTrigger =
-        triggerRef.current && !triggerRef.current.contains(event.target as Node);
+      const isOutsideDropdown = dropdownRef.current && !dropdownRef.current.contains(event.target);
+      const isOutsideTrigger = triggerRef.current && !triggerRef.current.contains(event.target);
 
       if (isOutsideDropdown && isOutsideTrigger) {
         setIsOpen(false);
       }
     };
 
-    if (isOpen) {
+    if (isOpen && typeof document !== "undefined") {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      if (typeof document !== "undefined") {
+        document.removeEventListener("mousedown", handleClickOutside);
+      }
     };
   }, [isOpen]);
 
@@ -144,8 +151,15 @@ const Dropdown: React.FC<DropdownProps> = ({
       }
     };
 
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    if (typeof window !== "undefined") {
+      window.addEventListener("resize", handleResize);
+    }
+
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("resize", handleResize);
+      }
+    };
   }, [isOpen]);
 
   // ==========================================================
@@ -168,9 +182,17 @@ const Dropdown: React.FC<DropdownProps> = ({
       </div>
     );
 
-    // Use portal to render outside of any overflow containers
-    if (typeof window !== "undefined") {
-      return createPortal(dropdownContent, document.body);
+    // Use portal to render outside of any overflow containers with safety checks
+    if (typeof window !== "undefined" && document.body && document.body.parentNode) {
+      try {
+        return createPortal(dropdownContent, document.body);
+      } catch (error) {
+        console.warn(
+          "Failed to create portal for dropdown, falling back to inline rendering:",
+          error
+        );
+        return dropdownContent;
+      }
     }
 
     return dropdownContent;

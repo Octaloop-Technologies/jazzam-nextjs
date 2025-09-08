@@ -1,5 +1,8 @@
 "use server";
 
+// ======================================================
+// Get all leads
+// ======================================================
 interface GetLeadsParams {
   token: string;
   page?: number;
@@ -47,12 +50,15 @@ export const getAllLeads = async ({
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
+        cache: "no-store", // Ensure fresh data
       }
     );
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorData = await response.json().catch(() => null);
+      throw new Error(errorData?.message || `HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
@@ -67,6 +73,9 @@ export const getAllLeads = async ({
   }
 };
 
+// ======================================================
+// Get lead stats
+// ======================================================
 export const getLeadStats = async ({ token }: { token: string }) => {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/lead/stats`, {
@@ -91,6 +100,22 @@ export const getLeadStats = async ({ token }: { token: string }) => {
   }
 };
 
+// ======================================================
+// Search leads
+// ======================================================
+
+interface SearchLeadsParams {
+  token: string;
+  query: string;
+  page?: number;
+  limit?: number;
+  status?: string;
+  industry?: string;
+  source?: string;
+  sortBy?: string;
+  sortOrder?: string;
+}
+
 export const searchLeads = async ({
   token,
   query,
@@ -101,26 +126,21 @@ export const searchLeads = async ({
   source,
   sortBy = "createdAt",
   sortOrder = "desc",
-}: {
-  token: string;
-  query: string;
-  page?: number;
-  limit?: number;
-  status?: string;
-  industry?: string;
-  source?: string;
-  sortBy?: string;
-  sortOrder?: string;
-}) => {
+}: SearchLeadsParams) => {
   try {
+    if (!query || query.trim().length === 0) {
+      throw new Error("Search query is required");
+    }
+
     const params = new URLSearchParams();
 
-    params.append("query", query);
+    params.append("query", query.trim());
     params.append("page", (page - 1).toString()); // Convert to 0-based for backend
     params.append("limit", limit.toString());
     params.append("sortBy", sortBy);
     params.append("sortOrder", sortOrder);
 
+    // Add filters if provided
     if (status) params.append("status", status);
     if (industry) params.append("industry", industry);
     if (source) params.append("source", source);
@@ -130,12 +150,15 @@ export const searchLeads = async ({
       {
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
+        cache: "no-store", // Ensure fresh data for searches
       }
     );
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      const errorData = await response.json().catch(() => null);
+      throw new Error(errorData?.message || `HTTP error! status: ${response.status}`);
     }
 
     const data = await response.json();
