@@ -14,6 +14,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { logoutUser, selectIsLoading, selectUser } from "@/redux/slices/authSlice";
 import { useToast } from "@/lib/hooks/useToast";
+import { ZohoIcon } from "@/components/svgs/loginButtonSvgs";
 
 const SettingsPage = () => {
   // ==============================================================
@@ -104,7 +105,11 @@ const SettingsPage = () => {
                 <h2 className="text-[16px] leading-none text-sec font-[500]">Log In</h2>
                 <div className="mt-[14px] flex-between">
                   <div className="flex items-center gap-2.5">
-                    <GoogleIcon />
+                    {user?.provider === "google" ? (
+                      <GoogleIcon />
+                    ) : user?.provider === "zohocrm" ? (
+                      <ZohoIcon size={32} />
+                    ) : null}
                     <div className="flex flex-col gap-0.5">
                       <h3 className="text-[14px] font-[500]">
                         {user?.provider === "google"

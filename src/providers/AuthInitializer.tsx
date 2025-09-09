@@ -21,7 +21,7 @@ const AuthInitializer: React.FC<AuthInitializerProps> = ({ children }) => {
   const hasInitialized = useRef(false);
 
   useEffect(() => {
-    // Simply attempt to fetch current user
+    // Initialize auth state only once per app session
     if (!hasInitialized.current && !user && !isLoading && !isAuthenticated) {
       hasInitialized.current = true;
 
@@ -33,8 +33,7 @@ const AuthInitializer: React.FC<AuthInitializerProps> = ({ children }) => {
           console.log("AuthInitializer: User not authenticated or session expired");
         }
 
-        // If it's an auth error, we might want to clear any invalid tokens
-        // This prevents infinite retry loops with bad tokens
+        // If it's an auth error, clear any invalid tokens to prevent retry loops
         if (error?.message?.includes("401") || error?.message?.includes("Unauthorized")) {
           // Clear any potentially invalid tokens from cookies
           document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
@@ -42,7 +41,7 @@ const AuthInitializer: React.FC<AuthInitializerProps> = ({ children }) => {
         }
       });
     }
-  }, [dispatch, user, isLoading, isAuthenticated]);
+  }, [dispatch]);
 
   return <>{children}</>;
 };

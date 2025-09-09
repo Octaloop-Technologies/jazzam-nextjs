@@ -1,5 +1,6 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 // ==============================================================
@@ -29,11 +30,13 @@ export const getCurrentUser = async () => {
   const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
 
   try {
+    const accessToken = (await cookies()).get("accessToken")?.value;
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/current-user`, {
       method: "GET",
       credentials: "include", // Include cookies
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
       cache: "no-store", // Ensure fresh data
       signal: controller.signal,

@@ -1,5 +1,3 @@
-"use client";
-
 const TabContentLoader = () => {
   return (
     <div className="mt-2.5 bg-white py-8 rounded-3xl border border-gray-b">
