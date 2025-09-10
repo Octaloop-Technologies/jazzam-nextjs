@@ -2,9 +2,7 @@
 
 import Logo from "@/components/shared/logo/Logo";
 import {
-  GlobeSvg,
   NotificationSvg,
-  CheckSvg,
   SettingsSvg,
   MarkAllAsReadSvg,
   NotificationDropdownSvg,
@@ -13,11 +11,11 @@ import {
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Dropdown, { DropdownItem } from "@/components/ui/dropdown/Dropdown";
-import { useState } from "react";
-import { languages, navItems } from "@/lib/constants/navbarConstants";
+import { navItems } from "@/lib/constants/navbarConstants";
 import gsap from "gsap";
 import { useLayoutEffect } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import Language from "@/components/shared/language/Language";
 
 // ======================================================
 // Register Gsap Plugins
@@ -29,18 +27,6 @@ const Navbar = () => {
   // Hooks
   // ======================================================
   const pathname = usePathname();
-
-  // ======================================================
-  // State
-  // ======================================================
-  const [selectedLanguage, setSelectedLanguage] = useState<string>("en");
-
-  // ======================================================
-  // handle language change
-  // ======================================================
-  const handleLanguageChange = (language: string) => {
-    setSelectedLanguage(language);
-  };
 
   // ======================================================
   // Make the Navbar sticky with smooth animation when scrolling
@@ -92,34 +78,7 @@ const Navbar = () => {
 
       <div className="flex-center gap-4">
         {/* ------------- localization ------------- */}
-        <Dropdown
-          trigger={
-            <button className="flex-center gap-1 gray-hover">
-              <GlobeSvg />
-              <span className="uppercase text-[14px]">
-                {languages.find((language) => language.code === selectedLanguage)?.code}
-              </span>
-            </button>
-          }
-          dropDownClass="w-[176px]"
-          position="bottom-left"
-        >
-          {languages.map((language) => (
-            <DropdownItem key={language.name} onClick={() => handleLanguageChange(language.code)}>
-              <button
-                className={`p-2.5 flex-between w-full rounded-lg transition-all duration-200 ease-in-out
-                    ${
-                      language.code === selectedLanguage
-                        ? "text-sec bg-gray-100"
-                        : "text-text hover:bg-gray-100"
-                    }`}
-              >
-                <h2 className={`text-[14px]`}>{language.name}</h2>
-                {language.code === selectedLanguage && <CheckSvg />}
-              </button>
-            </DropdownItem>
-          ))}
-        </Dropdown>
+        <Language />
 
         {/* ------------- settings ------------- */}
         <Link

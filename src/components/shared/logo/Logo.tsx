@@ -1,9 +1,9 @@
-const Logo = () => {
+const Logo = ({ className, titleClassName }: { className?: string; titleClassName?: string }) => {
   return (
     <div className="flex-center gap-1.5">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className="size-[40px]"
+        className={`size-[40px] ${className}`}
         viewBox="0 0 40 40"
         fill="none"
       >
@@ -76,7 +76,7 @@ const Logo = () => {
           </clipPath>
         </defs>
       </svg>
-      <h1 className="text-[24px] font-[600]">Jazzaam</h1>
+      <h1 className={`text-[24px] font-[600] ${titleClassName}`}>Jazzam</h1>
     </div>
   );
 };

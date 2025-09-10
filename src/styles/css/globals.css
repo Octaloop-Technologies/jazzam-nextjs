@@ -22,6 +22,8 @@
   --scrollbar-gray: #7e7e7e;
 
   --pri: #15803c;
+  --pri-gradient: linear-gradient(178deg, #15803c 2%, #0fb981 98%);
+  --pri-gradient-2: linear-gradient(180deg, #51c77c 0%, #15803c 100%);
   --pri-light: #0fb9812e;
   --pri-light-2: #044a2926;
   --sec: #0fb981;
@@ -165,7 +167,9 @@
   --radius-xl-2: 14px;
   --radius-2xl: 16px;
   --radius-3xl: 20px;
+  --radius-4xl-0: 40px;
   --radius-4xl: 44px;
+  --radius-5xl: 55px;
 
   /* Breakpoints */
   --breakpoint-mobile: 600px;
@@ -185,7 +189,11 @@
 }
 
 * {
-  @apply box-border select-none caret-pri selection:bg-pri selection:text-white;
+  @apply box-border caret-pri selection:bg-pri selection:text-white;
+}
+
+img {
+  @apply select-none;
 }
 
 body {
@@ -264,8 +272,20 @@ button {
     @apply max-w-[75%] w-full mx-auto;
   }
 
+  .home-wrapper {
+    @apply max-w-[1440px] w-full mx-auto;
+  }
+
   .x-padding {
     @apply px-[60px] max-lg:px-[40px] max-xs:px-[20px];
+  }
+
+  .gradient-bg {
+    background: var(--pri-gradient-2);
+  }
+
+  .gradient-bg-2 {
+    background: var(--pri-gradient);
   }
 
   /* ----------------| Flex Utilities |----------------------- */
