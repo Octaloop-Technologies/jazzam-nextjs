@@ -41,7 +41,7 @@
 
   --bg: #fafafa;
   --text: #000000;
-  --placeholder: #7e7e7e;
+  --placeholder: #9e9e9e;
   --disabled: #7e7e7e;
 
   --gray: #fafafa;
@@ -167,6 +167,7 @@
   --radius-xl-2: 14px;
   --radius-2xl: 16px;
   --radius-3xl: 20px;
+  --radius-3xl-2: 30px;
   --radius-4xl-0: 40px;
   --radius-4xl: 44px;
   --radius-5xl: 55px;

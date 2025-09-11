@@ -28,9 +28,16 @@ const Marquee: React.FC<MarqueeProps> = ({
     const marqueeElement = marqueeRef.current;
     const contentElement = contentRef.current;
 
-    // Clone the content to create seamless loop
-    const clone = contentElement.cloneNode(true) as HTMLElement;
-    marqueeElement.appendChild(clone);
+    // Clear any existing clones
+    while (marqueeElement.children.length > 1) {
+      marqueeElement.removeChild(marqueeElement.lastChild!);
+    }
+
+    // Create multiple clones to ensure seamless loop
+    const clone1 = contentElement.cloneNode(true) as HTMLElement;
+    const clone2 = contentElement.cloneNode(true) as HTMLElement;
+    marqueeElement.appendChild(clone1);
+    marqueeElement.appendChild(clone2);
 
     // Get dimensions
     const contentWidth = contentElement.offsetWidth;
@@ -39,23 +46,23 @@ const Marquee: React.FC<MarqueeProps> = ({
     // Calculate duration based on speed and content width
     const duration = contentWidth / speed;
 
-    // Set initial position
-    gsap.set([contentElement, clone], {
-      x: direction === "left" ? 0 : -contentWidth,
+    // Set initial positions for seamless loop
+    gsap.set([contentElement, clone1, clone2], {
+      x: direction === "left" ? (i) => i * contentWidth : (i) => -i * contentWidth,
     });
 
     // Create the animation
     const tl = gsap.timeline({ repeat: -1 });
 
     if (direction === "left") {
-      tl.to([contentElement, clone], {
-        x: -contentWidth,
+      tl.to([contentElement, clone1, clone2], {
+        x: (i) => (i - 1) * contentWidth,
         duration,
         ease: "none",
       });
     } else {
-      tl.to([contentElement, clone], {
-        x: contentWidth,
+      tl.to([contentElement, clone1, clone2], {
+        x: (i) => (i + 1) * contentWidth,
         duration,
         ease: "none",
       });

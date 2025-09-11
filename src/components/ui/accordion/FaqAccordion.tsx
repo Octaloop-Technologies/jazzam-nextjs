@@ -33,31 +33,38 @@ const FaqAccordion: React.FC<FaqAccordionProps> = ({ items, className = "" }) =>
         return (
           <div
             key={item.id}
-            className="bg-white rounded-2xl border border-gray-150 overflow-hidden transition-all duration-300 hover:shadow-sm"
+            className="bg-white rounded-3xl-2 border border-gray-b transition-all duration-300 hover:shadow-sm relative"
           >
             <button
               onClick={() => toggleItem(item.id)}
-              className="w-full px-6 py-5 text-left flex items-center justify-between focus:outline-none focus:ring-2 focus:ring-pri/20 focus:ring-inset"
+              className="w-full p-[40px] text-left flex items-center justify-between"
               aria-expanded={isOpen}
               aria-controls={`faq-answer-${item.id}`}
             >
               <div className="flex items-center gap-4">
-                <div className="flex items-center justify-center w-8 h-8 rounded-full bg-pri text-white text-sm font-semibold flex-shrink-0">
+                <div className="absolute left-0 top-1/2 translate-x-[-50%] -translate-y-1/2 flex items-center justify-center size-[40px] rounded-full bg-pri text-white text-sm font-semibold flex-shrink-0">
                   {index + 1}
                 </div>
-                <h3 className="text-[16px] font-[600] text-left">{item.question}</h3>
+                <h3 className="text-[16px] font-[500] text-left">{item.question}</h3>
               </div>
               <div className="flex-shrink-0 ml-4">
                 <svg
-                  className={`w-5 h-5 transition-transform duration-300 ${
-                    isOpen ? "rotate-180" : "rotate-0"
-                  }`}
-                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
                   viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  strokeWidth={2}
+                  fill="none"
+                  className={`transition-transform duration-200 ${
+                    isOpen ? "rotate-45" : "rotate-0"
+                  }`}
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  <path
+                    d="M12 8V16M8 12H16M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
+                    stroke="#98A2B3"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </div>
             </button>
