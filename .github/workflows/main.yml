@@ -1,0 +1,35 @@
+name: Deploy Frontend to Hostinger
+
+on:
+  push:
+    branches:
+      - main  # Trigger deployment when changes are pushed to the 'main' branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the repository
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    # Step 2: Set up FTP deployment using the FTP deploy action
+    - name: Deploy to Hostinger via FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.0.0
+      with:
+        ftp-server: ftp://${{ secrets.FTP_SERVER }}   # Hostinger FTP server address
+        ftp-username: ${{ secrets.FTP_USERNAME }}    # FTP username
+        ftp-password: ${{ secrets.FTP_PASSWORD }}    # FTP password
+        ftp-port: ${{ secrets.FTP_PORT }}            # FTP port (usually 21)
+        local-dir: ./                                # Directory to deploy from (root of your repo)
+        remote-dir: /public_html/                   # Directory to deploy to on Hostinger
+        dry-run: false                              # Set to 'true' to test without deploying
+
+    # Step 3: (Optional) Additional steps for building the project (if applicable)
+    # For example, if you're using npm or yarn to build a React app, you can add a build step:
+    # - name: Install dependencies
+    #   run: npm install
+    
+    # - name: Build project (if needed)
+    #   run: npm run build
