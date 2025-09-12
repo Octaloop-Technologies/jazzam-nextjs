@@ -1,5 +1,6 @@
 name: Deploy Frontend to Hostinger
 
+
 on:
   push:
     branches:
