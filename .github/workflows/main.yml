@@ -20,7 +20,7 @@ jobs:
 
      - name: Build Docker Image
        run: |
-         cd /home/strapi/actions-runner-strapi/strapi/cht-strapi/cht-strapi
+         cd /home/actions-runner-frontend/jazzam-frontend/jazzaam-nextjs/jazzaam-nextjs
          sudo -u jazzam docker build -t jazzam-frontend-image:latest .
 
 
