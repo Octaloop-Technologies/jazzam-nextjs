@@ -1,0 +1,32 @@
+name: Deploy to Hostinger via SSH
+
+on:
+  push:
+    branches:
+      - main  # Trigger deployment when changes are pushed to the 'main' branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Step 2: Set up SSH key for authentication
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.HOSTINGER_SSH_KEY }}  # Use GitHub secret for SSH private key
+
+    # Step 3: Copy files to the server via SSH (using Git)
+    - name: Deploy code to Hostinger
+      run: |
+        # Set up SSH and clone the repo to the server
+        ssh -o StrictHostKeyChecking=no ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_SERVER_IP }} << 'EOF'
+          # Navigate to the directory where you want to deploy your website
+          cd /home/u265385197/public_html || exit 0
+          # Pull the latest code from GitHub
+          git pull origin main
+        EOF
