@@ -7,6 +7,8 @@ import FaqAccordion, { FaqItem } from "@/components/ui/accordion/FaqAccordion";
 import { FollowSvg, MeetingSvg, PredictionSvg } from "@/components/view/(main-page)/mainPageSvgs";
 import TestimonialsMarquee from "@/components/view/(main-page)/TestimonialsMarquee";
 import React from "react";
+import { CustomInput } from "@/components/ui/input";
+import { CustomTextarea } from "@/components/ui/textarea";
 
 const LandingPage = () => {
   // FAQ data
@@ -306,63 +308,11 @@ const LandingPage = () => {
             {/* Right Side - Contact Form */}
             <div className="">
               <form className="space-y-[28px] text-[14px]">
-                <div>
-                  <label className="block font-[500] mb-2">Full name *</label>
-                  <input
-                    type="text"
-                    placeholder="Enter your Full name"
-                    className="w-full h-[48px] px-4 outline-none placeholder:text-placeholder border-b border-gray-b"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-[500] mb-2">email Address*</label>
-                  <input
-                    type="email"
-                    placeholder="your.email@example.com"
-                    className="w-full h-[48px] px-4 outline-none placeholder:text-placeholder border-b border-gray-b"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-[500] mb-2">Company Name</label>
-                  <input
-                    type="text"
-                    placeholder="Your company or website?"
-                    className="w-full h-[48px] px-4 outline-none placeholder:text-placeholder border-b border-gray-b"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-[500] mb-2">Message</label>
-                  <textarea
-                    rows={4}
-                    placeholder="Write your message here...."
-                    className="w-full px-4 py-3 border-b border-gray-b rounded-[12px] outline-none placeholder:text-placeholder resize-none"
-                  ></textarea>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full ml-auto max-w-[184px] relative h-[54px] bg-pri text-white text-[16px] font-[600] rounded-4xl hover:bg-pri/80 transition-colors duration-200 flex-center gap-2"
-                >
-                  SUBMIT
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="28"
-                    height="27"
-                    viewBox="0 0 28 27"
-                    fill="none"
-                    className="absolute right-2 top-[40%] -translate-y-1/2"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M10.4254 17.6855C10.2719 17.8392 10.0636 17.9256 9.84642 17.9257C9.62921 17.9259 9.42084 17.8398 9.26714 17.6863C9.11344 17.5328 9.02701 17.3245 9.02686 17.1073C9.0267 16.8901 9.11284 16.6818 9.26632 16.5281L15.9734 9.82262H11.442C11.2249 9.82262 11.0167 9.73638 10.8632 9.58287C10.7097 9.42937 10.6235 9.22117 10.6235 9.00408C10.6235 8.78699 10.7097 8.5788 10.8632 8.42529C11.0167 8.27179 11.2249 8.18555 11.442 8.18555H17.9493C18.1664 8.18555 18.3746 8.27179 18.5281 8.42529C18.6816 8.5788 18.7679 8.78699 18.7679 9.00408V15.5114C18.7679 15.7285 18.6816 15.9367 18.5281 16.0902C18.3746 16.2437 18.1664 16.33 17.9493 16.33C17.7323 16.33 17.5241 16.2437 17.3706 16.0902C17.217 15.9367 17.1308 15.7285 17.1308 15.5114V10.98L10.4254 17.6855Z"
-                      fill="white"
-                    />
-                  </svg>
-                </button>
+                <CustomInput label="Full name" placeholder="Enter your Full name" />
+                <CustomInput label="Email Address" placeholder="your.email@example.com" />
+                <CustomInput label="Company Name" placeholder="Your company or website?" />
+                <CustomTextarea label="Message" placeholder="Write your message here...." />
+                <SubmitButton />
               </form>
             </div>
           </div>
@@ -393,7 +343,7 @@ const LandingPage = () => {
 
 export default LandingPage;
 
-// Star Icon
+// ------------- Star Icon -------------
 const StarIcon = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="19" viewBox="0 0 18 19" fill="none">
@@ -402,5 +352,32 @@ const StarIcon = () => {
         fill="#FF9B36"
       />
     </svg>
+  );
+};
+
+// ------------- Submit Button -------------
+const SubmitButton = () => {
+  return (
+    <button
+      type="submit"
+      className="w-full ml-auto max-w-[184px] relative h-[54px] bg-pri text-white text-[16px] font-[600] rounded-4xl hover:bg-pri/80 transition-colors duration-200 flex-center gap-2"
+    >
+      SUBMIT
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="28"
+        height="27"
+        viewBox="0 0 28 27"
+        fill="none"
+        className="absolute right-2 top-[40%] -translate-y-1/2"
+      >
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M10.4254 17.6855C10.2719 17.8392 10.0636 17.9256 9.84642 17.9257C9.62921 17.9259 9.42084 17.8398 9.26714 17.6863C9.11344 17.5328 9.02701 17.3245 9.02686 17.1073C9.0267 16.8901 9.11284 16.6818 9.26632 16.5281L15.9734 9.82262H11.442C11.2249 9.82262 11.0167 9.73638 10.8632 9.58287C10.7097 9.42937 10.6235 9.22117 10.6235 9.00408C10.6235 8.78699 10.7097 8.5788 10.8632 8.42529C11.0167 8.27179 11.2249 8.18555 11.442 8.18555H17.9493C18.1664 8.18555 18.3746 8.27179 18.5281 8.42529C18.6816 8.5788 18.7679 8.78699 18.7679 9.00408V15.5114C18.7679 15.7285 18.6816 15.9367 18.5281 16.0902C18.3746 16.2437 18.1664 16.33 17.9493 16.33C17.7323 16.33 17.5241 16.2437 17.3706 16.0902C17.217 15.9367 17.1308 15.7285 17.1308 15.5114V10.98L10.4254 17.6855Z"
+          fill="white"
+        />
+      </svg>
+    </button>
   );
 };
