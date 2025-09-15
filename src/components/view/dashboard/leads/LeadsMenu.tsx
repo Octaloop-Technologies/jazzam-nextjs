@@ -7,11 +7,6 @@ import DeleteLeadModal from "@/components/ui/models/DeleteLeadModal";
 import Link from "next/link";
 import { useState } from "react";
 
-interface Lead {
-  id: string;
-  followUp: string;
-}
-
 const LeadsMenu = ({
   lead,
   showViewDetails = true,

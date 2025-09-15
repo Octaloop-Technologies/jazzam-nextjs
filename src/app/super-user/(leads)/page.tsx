@@ -47,6 +47,23 @@ interface DashboardPageProps {
   }>;
 }
 
+interface Lead {
+  id: string;
+  _id: string;
+  assignedUser: {
+    avatar: string;
+  };
+  leadScore: number;
+  linkedinProfile: string;
+  companySize: string;
+  name: string;
+  company: string;
+  email: string;
+  status: string;
+  followUp: string;
+  date: string;
+}
+
 const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value || "";
@@ -299,8 +316,8 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
               </TableHeader>
               <div className="px-[30px]">
                 {leadsData?.leads?.length > 0 ? (
-                  leadsData.leads.map((lead: any) => (
-                    <TableRow key={lead._id}>
+                  leadsData.leads.map((lead: Lead) => (
+                    <TableRow key={lead.id}>
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <div className="size-[40px] rounded-full overflow-hidden">

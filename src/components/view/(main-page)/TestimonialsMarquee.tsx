@@ -2,49 +2,7 @@
 
 import { Marquee, TextMarquee } from "@/components/ui/marquee";
 import OptimizedImage from "@/components/ui/image/OptimizedImage";
-
-interface Testimonial {
-  id: number;
-  name: string;
-  content: string;
-  avatar: string;
-  rating: number;
-}
-
-const testimonialsData: Testimonial[] = [
-  {
-    id: 1,
-    name: "Liam Patel",
-    content:
-      "Working with Octaloop was a breeze. They understood my vision and executed it flawlessly. Highly professional team!",
-    avatar: "/assets/images/leads/dummy-profile.png",
-    rating: 5,
-  },
-  {
-    id: 2,
-    name: "Liam Patel",
-    content:
-      "Working with Octaloop was a breeze. They understood my vision and executed it flawlessly. Highly professional team!",
-    avatar: "/assets/images/leads/dummy-profile.png",
-    rating: 5,
-  },
-  {
-    id: 3,
-    name: "Liam Patel",
-    content:
-      "Working with Octaloop was a breeze. They understood my vision and executed it flawlessly. Highly professional team!",
-    avatar: "/assets/images/leads/dummy-profile.png",
-    rating: 5,
-  },
-  {
-    id: 4,
-    name: "Liam Patel",
-    content:
-      "Working with Octaloop was a breeze. They understood my vision and executed it flawlessly. Highly professional team!",
-    avatar: "/assets/images/leads/dummy-profile.png",
-    rating: 5,
-  },
-];
+import { Dictionary } from "@/lib/i18n/getDictionary";
 
 const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({ testimonial }) => {
   return (
@@ -107,20 +65,54 @@ const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({ testimonial }
   );
 };
 
-const TestimonialsMarquee: React.FC = () => {
+const TestimonialsMarquee: React.FC<{ dict: Dictionary }> = ({ dict }) => {
+  // Testimonials data
+  const testimonialsData: Testimonial[] = [
+    {
+      id: 1,
+      name: dict?.home?.testimonials?.testimonial?.name,
+      content: dict?.home?.testimonials?.testimonial?.content,
+      avatar: "/assets/images/leads/dummy-profile.png",
+      rating: 5,
+    },
+    {
+      id: 2,
+      name: dict?.home?.testimonials?.testimonial?.name,
+      content: dict?.home?.testimonials?.testimonial?.content,
+      avatar: "/assets/images/leads/dummy-profile.png",
+      rating: 5,
+    },
+    {
+      id: 3,
+      name: dict?.home?.testimonials?.testimonial?.name,
+      content: dict?.home?.testimonials?.testimonial?.content,
+      avatar: "/assets/images/leads/dummy-profile.png",
+      rating: 5,
+    },
+    {
+      id: 4,
+      name: dict?.home?.testimonials?.testimonial?.name,
+      content: dict?.home?.testimonials?.testimonial?.content,
+      avatar: "/assets/images/leads/dummy-profile.png",
+      rating: 5,
+    },
+  ];
+
+  // Marquee data
+  const marqueeData = [
+    dict?.home?.marquee?.title,
+    dict?.home?.marquee?.description,
+    dict?.home?.marquee?.immersion,
+    dict?.home?.marquee?.scalability,
+    dict?.home?.marquee?.visualization,
+    dict?.home?.marquee?.customerSatisfaction,
+  ];
+
   return (
     <>
       <div className="py-[100px] bg-bg">
         <TextMarquee
-          text={[
-            "Innovation",
-            "Development",
-            "Immersion",
-            "Scalability",
-            "Visualization",
-            "Intelligence",
-            "Transformation",
-          ]}
+          text={marqueeData}
           speed={50}
           direction="left"
           textClassName="text-[17px] font-[500] tracking-[1.5px]"
@@ -145,8 +137,12 @@ const TestimonialsMarquee: React.FC = () => {
 
         <div className="pt-[70px] flex-between home-wrapper">
           <div>
-            <h1 className="text-[52px] font-[700] uppercase leading-none">Testimonials</h1>
-            <h4 className="text-[20px] font-[500] text-[#666666]">What they said about us</h4>
+            <h1 className="text-[52px] font-[700] uppercase leading-none">
+              {dict?.home?.testimonials?.title}
+            </h1>
+            <h4 className="text-[20px] font-[500] text-[#666666]">
+              {dict?.home?.testimonials?.description}
+            </h4>
           </div>
           <div className="flex items-end gap-12">
             <div>
@@ -155,11 +151,13 @@ const TestimonialsMarquee: React.FC = () => {
                   <StarIcon key={index} />
                 ))}
               </div>
-              <h3 className="text-[16px]">5.0 (from 10k+ reviews)</h3>
+              <h3 className="text-[16px]">{dict?.home?.testimonials?.reviews}</h3>
             </div>
             <div>
               <h1 className="text-[50px] font-[700] uppercase leading-none">92%</h1>
-              <h4 className="text-[14px] leading-tight">Customer satisfaction</h4>
+              <h4 className="text-[14px] leading-tight">
+                {dict?.home?.testimonials?.customerSatisfaction}
+              </h4>
             </div>
           </div>
         </div>

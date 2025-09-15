@@ -5,6 +5,7 @@ import { ICONS, VIEWPORT } from "@/lib/constants/website";
 import { BASE_METADATA } from "@/lib/constants/website";
 import { Suspense } from "react";
 import NavigationIndicator from "@/components/ui/navigation/NavigationIndicator";
+import { cookies } from "next/headers";
 
 // ----------------| METADATA |--------------------------
 export const metadata: Metadata = {
@@ -34,13 +35,16 @@ export const viewport: Viewport = {
   userScalable: false,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const lang = cookieStore.get("lang")?.value || "en";
+
   return (
-    <html lang="en">
+    <html lang={lang} dir={lang === "ar" ? "rtl" : "ltr"}>
       <head>
         {/* -- ICONS -- */}
         <link rel="icon" href={ICONS.FAVICON} sizes="any" />

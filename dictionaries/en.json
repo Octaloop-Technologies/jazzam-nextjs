@@ -1,0 +1,114 @@
+{
+  "ui": {
+    "language": {
+      "en": "English",
+      "ar": "Arabic"
+    }
+  },
+
+  "home": {
+    "hero": {
+      "title": "Transform Your Sales Team into a Deal-Closing Machine with A",
+      "para": "Jazzam – Smart AI Sales Agent (SaaS) helps your team connect with the right customers and close deals 40% faster.",
+      "getStarted": "Get started"
+    },
+
+    "whyChooseJazzam": {
+      "title": "Why Choose Jazzam?",
+      "smartCustomerFollowUp": {
+        "title": "Smart Customer Follow-up",
+        "description": "Never miss a sales opportunity with the advanced automated follow-up system."
+      },
+      "automaticMeetingScheduling": {
+        "title": "Automatic Meeting Scheduling",
+        "description": "Coordinates appointments with your team & clients without manual intervention."
+      },
+      "accurateSalesPredictions": {
+        "title": "Accurate Sales Predictions",
+        "description": "Smart reports enable swift decision-making, allowing you to act quickly and effectively."
+      },
+      "registerYourCompany": {
+        "title": "Register your company"
+      }
+    },
+
+    "marquee": {
+      "title": "Innovation",
+      "description": "Development",
+      "immersion": "Immersion",
+      "scalability": "Scalability",
+      "visualization": "Visualization",
+      "customerSatisfaction": "Customer satisfaction"
+    },
+
+    "testimonials": {
+      "title": "Testimonials",
+      "description": "What they said about us",
+      "reviews": "5.0 from 10k+ reviews",
+      "customerSatisfaction": "Customer satisfaction",
+      "testimonial": {
+        "name": "Liam Patel",
+        "content": "Working with Octaloop was a breeze. They understood my vision and executed it flawlessly. Highly professional team!",
+        "rating": 5
+      }
+    },
+
+    "seeHowJazzamWorks": {
+      "title": "See How Jazzam Works",
+      "description": "A Short video explaining the customer journey from registration to deal closure"
+    },
+
+    "frequentlyAskedQuestions": {
+      "title": "Frequently Asked Questions",
+      "description": "Got questions? We've got answers. Find everything you need to know about our programs.",
+      "questions": {
+        "question1": "How does the AI generate leads?",
+        "answer1": "Our AI uses advanced algorithms to analyze market data, customer behavior patterns, and industry trends to identify high-quality prospects that match your ideal customer profile. It continuously learns from successful conversions to improve lead quality over time.",
+        "question2": "Is the system easy to integrate with my CRM?",
+        "answer2": "Yes, Jazzam integrates seamlessly with popular CRM systems like Salesforce, HubSpot, Pipedrive, and more. Our setup team will help you configure the integration, usually completed within 24-48 hours with minimal disruption to your current workflow.",
+        "question3": "Can I customize the lead capture form to match my business needs?",
+        "answer3": "Absolutely! Our platform offers extensive customization options for lead capture forms. You can add custom fields, adjust the design to match your brand, set up conditional logic, and create different forms for different campaigns or landing pages.",
+        "question4": "What are the benefits of using AI in content creation?",
+        "answer4": "AI-powered content creation helps you generate personalized messages, email sequences, and follow-up content at scale. It ensures consistent messaging, saves time on content creation, and adapts content based on lead behavior and preferences to improve engagement rates.",
+        "question5": "How long will it take to set up the system?",
+        "answer5": "Most implementations are completed within 3-5 business days. This includes initial setup, CRM integration, team training, and testing. Our dedicated onboarding team will guide you through each step to ensure a smooth transition and quick time-to-value."
+      }
+    },
+
+    "contactUs": {
+      "title": "CONTACT US",
+      "description": "have questions or feedback? we're here to help. Send us a message, and we'll respond within 24 hours.",
+      "registeredUsers": {
+        "title": "16K +",
+        "description": "Registered users"
+      },
+      "phone": {
+        "title": "Phone",
+        "description": "+543-78980900"
+      },
+      "email": {
+        "title": "Email",
+        "description": "jazzam@company.com"
+      },
+      "reviews": {
+        "description": "5.0 from 10k+ reviews"
+      },
+      "form": {
+        "fullName": "Full Name",
+        "fullNamePlaceholder": "Enter your Full name",
+        "email": "Email Address",
+        "emailPlaceholder": "your.email@example.com",
+        "company": "Company Name",
+        "companyPlaceholder": "Your company or website?",
+        "message": "Message",
+        "messagePlaceholder": "Write your message here....",
+        "submitButton": "SUBMIT"
+      }
+    },
+
+    "footer": {
+      "title": "Transform Your Sales Team into a Deal-Closing Machine with AI. Jazzam – Smart AI Sales Agent (SaaS) helps your team connect with the right customers and close deals 40% faster.",
+      "copyright": "All rights reserved."
+    }
+  }
+}

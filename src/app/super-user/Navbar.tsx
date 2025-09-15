@@ -15,7 +15,7 @@ import { navItems } from "@/lib/constants/navbarConstants";
 import gsap from "gsap";
 import { useLayoutEffect } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Language from "@/components/shared/language/Language";
+import LanguageSwitcher from "@/components/shared/language/LanguageSwitcher";
 
 // ======================================================
 // Register Gsap Plugins
@@ -78,7 +78,7 @@ const Navbar = () => {
 
       <div className="flex-center gap-4">
         {/* ------------- localization ------------- */}
-        <Language />
+        <LanguageSwitcher />
 
         {/* ------------- settings ------------- */}
         <Link

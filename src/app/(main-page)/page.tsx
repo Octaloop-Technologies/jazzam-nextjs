@@ -1,4 +1,3 @@
-import Language from "@/components/shared/language/Language";
 import Logo from "@/components/shared/logo/Logo";
 import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
 import OptimizedImage from "@/components/ui/image/OptimizedImage";
@@ -9,39 +8,40 @@ import TestimonialsMarquee from "@/components/view/(main-page)/TestimonialsMarqu
 import React from "react";
 import { CustomInput } from "@/components/ui/input";
 import { CustomTextarea } from "@/components/ui/textarea";
+import LanguageSwitcher from "@/components/shared/language/LanguageSwitcher";
+import { getDictionary } from "@/lib/i18n/getDictionary";
+import { getCurrentLang } from "../action";
 
-const LandingPage = () => {
+const LandingPage = async () => {
+  const lang = await getCurrentLang();
+  const dict = await getDictionary(lang);
+
   // FAQ data
   const faqItems: FaqItem[] = [
     {
       id: "1",
-      question: "How does the AI generate leads?",
-      answer:
-        "Our AI uses advanced algorithms to analyze market data, customer behavior patterns, and industry trends to identify high-quality prospects that match your ideal customer profile. It continuously learns from successful conversions to improve lead quality over time.",
+      question: dict?.home?.frequentlyAskedQuestions?.questions?.question1,
+      answer: dict?.home?.frequentlyAskedQuestions?.questions?.answer1,
     },
     {
       id: "2",
-      question: "Is the system easy to integrate with my CRM?",
-      answer:
-        "Yes, Jazzam integrates seamlessly with popular CRM systems like Salesforce, HubSpot, Pipedrive, and more. Our setup team will help you configure the integration, usually completed within 24-48 hours with minimal disruption to your current workflow.",
+      question: dict?.home?.frequentlyAskedQuestions?.questions?.question2,
+      answer: dict?.home?.frequentlyAskedQuestions?.questions?.answer2,
     },
     {
       id: "3",
-      question: "Can I customize the lead capture form to match my business needs?",
-      answer:
-        "Absolutely! Our platform offers extensive customization options for lead capture forms. You can add custom fields, adjust the design to match your brand, set up conditional logic, and create different forms for different campaigns or landing pages.",
+      question: dict?.home?.frequentlyAskedQuestions?.questions?.question3,
+      answer: dict?.home?.frequentlyAskedQuestions?.questions?.answer3,
     },
     {
       id: "4",
-      question: "What are the benefits of using AI in content creation?",
-      answer:
-        "AI-powered content creation helps you generate personalized messages, email sequences, and follow-up content at scale. It ensures consistent messaging, saves time on content creation, and adapts content based on lead behavior and preferences to improve engagement rates.",
+      question: dict?.home?.frequentlyAskedQuestions?.questions?.question4,
+      answer: dict?.home?.frequentlyAskedQuestions?.questions?.answer4,
     },
     {
       id: "5",
-      question: "How long will it take to set up the system?",
-      answer:
-        "Most implementations are completed within 3-5 business days. This includes initial setup, CRM integration, team training, and testing. Our dedicated onboarding team will guide you through each step to ensure a smooth transition and quick time-to-value.",
+      question: dict?.home?.frequentlyAskedQuestions?.questions?.question5,
+      answer: dict?.home?.frequentlyAskedQuestions?.questions?.answer5,
     },
   ];
 
@@ -53,9 +53,12 @@ const LandingPage = () => {
           <Logo />
           <div className="flex-center gap-5">
             <div className="rounded-xl-2 border border-gray-b h-[52px] w-[138px] flex-center">
-              <Language />
+              <LanguageSwitcher />
             </div>
-            <PrimaryButton title="Get started" className="h-[52px] w-[138px] rounded-xl-2" />
+            <PrimaryButton
+              title={dict?.home?.hero?.getStarted}
+              className="h-[52px] w-[138px] rounded-xl-2"
+            />
           </div>
         </nav>
       </div>
@@ -64,13 +67,8 @@ const LandingPage = () => {
       <section className="gradient-bg pb-14 pt-20">
         <div className="home-wrapper">
           <div className="text-white leading-tight pb-16">
-            <h1 className="text-[60px] uppercase font-[700]">
-              Transform Your Sales Team into a Deal-Closing Machine with AI
-            </h1>
-            <p className="mt-2 text-[20px] capitalize font-[500]">
-              Jazzam – Smart AI Sales Agent (SaaS) helps your team connect with the right customers
-              and close deals 40% faster.
-            </p>
+            <h1 className="text-[60px] uppercase font-[700]">{dict?.home?.hero?.title}</h1>
+            <p className="mt-2 text-[20px] capitalize font-[500]">{dict?.home?.hero?.para}</p>
           </div>
           <div className="w-full h-[560px] scale-120 relative">
             <OptimizedImage
@@ -86,26 +84,23 @@ const LandingPage = () => {
       {/* ------------- Choose Jazzam ------------- */}
       <section className="py-[100px] bg-bg">
         <div className="home-wrapper text-center">
-          <h1 className="text-[52px] font-[700] uppercase">Why Choose Jazzam?</h1>
+          <h1 className="text-[52px] font-[700] uppercase">{dict?.home?.whyChooseJazzam?.title}</h1>
           <div className="mt-11 grid grid-cols-3 gap-2.5">
             {[
               {
-                title: "Smart Customer Follow-up",
+                title: dict?.home?.whyChooseJazzam?.smartCustomerFollowUp?.title,
                 icon: <FollowSvg />,
-                description:
-                  "Never miss a sales opportunity with the advanced automated follow-up system.",
+                description: dict?.home?.whyChooseJazzam?.smartCustomerFollowUp?.description,
               },
               {
-                title: "Automatic Meeting Scheduling",
+                title: dict?.home?.whyChooseJazzam?.automaticMeetingScheduling?.title,
                 icon: <MeetingSvg />,
-                description:
-                  "Coordinates appointments with your team & clients without manual intervention.",
+                description: dict?.home?.whyChooseJazzam?.automaticMeetingScheduling?.description,
               },
               {
-                title: "Accurate Sales Predictions",
+                title: dict?.home?.whyChooseJazzam?.accurateSalesPredictions?.title,
                 icon: <PredictionSvg />,
-                description:
-                  "Smart reports enable swift decision-making, allowing you to act quickly and effectively.",
+                description: dict?.home?.whyChooseJazzam?.accurateSalesPredictions?.description,
               },
             ].map((item) => (
               <div
@@ -119,7 +114,7 @@ const LandingPage = () => {
             ))}
           </div>
           <button className="mt-10 w-full relative max-w-[290px] h-[60px] bg-[#EEB600] text-white text-[16px] font-[600] rounded-4xl">
-            Register your company
+            {dict?.home?.whyChooseJazzam?.registerYourCompany?.title}
             <svg
               className="absolute right-2 top-[40%] -translate-y-1/2"
               xmlns="http://www.w3.org/2000/svg"
@@ -143,9 +138,11 @@ const LandingPage = () => {
       <section className="py-[80px]">
         <div className="home-wrapper">
           <div className="flex items-center gap-12">
-            <h1 className="text-[52px] font-[700] uppercase min-w-max">See How Jazzam Works</h1>
+            <h1 className="text-[52px] font-[700] uppercase min-w-max">
+              {dict?.home?.seeHowJazzamWorks?.title}
+            </h1>
             <p className="text-[20px] font-[500] text-[#666]">
-              A Short video explaining the customer journey from registration to deal closure
+              {dict?.home?.seeHowJazzamWorks?.description}
             </p>
           </div>
           <div className="mt-14 w-full h-[560px] p-[40px] relative">
@@ -165,15 +162,17 @@ const LandingPage = () => {
       </section>
 
       {/* ------------- Testimonials ------------- */}
-      <TestimonialsMarquee />
+      <TestimonialsMarquee dict={dict} />
 
       {/* ------------- FAQs ------------- */}
       <section className="py-[100px] bg-bg">
         <div className="home-wrapper">
           <div className="text-center mb-16">
-            <h1 className="text-[52px] font-[700] uppercase">Frequently Asked Questions</h1>
+            <h1 className="text-[52px] font-[700] uppercase">
+              {dict?.home?.frequentlyAskedQuestions?.title}
+            </h1>
             <p className="text-[20px] font-[500] text-[#666666]">
-              Got questions? We've got answers. Find everything you need to know about our programs.
+              {dict?.home?.frequentlyAskedQuestions?.description}
             </p>
           </div>
           <div className="max-w-[1120px] w-full mx-auto">
@@ -189,10 +188,11 @@ const LandingPage = () => {
             {/* Left Side - Contact Info */}
             <div className="space-y-[41px] w-full max-w-[567px]">
               <div>
-                <h1 className="text-[52px] font-[700] uppercase leading-none">CONTACT US</h1>
+                <h1 className="text-[52px] font-[700] uppercase leading-none">
+                  {dict?.home?.contactUs?.title}
+                </h1>
                 <p className="mt-2 text-[20px] text-[#666666] leading-relaxed">
-                  have questions or feedback? we're here to help. Send us a message, and we'll
-                  respond within 24 hours.
+                  {dict?.home?.contactUs?.description}
                 </p>
               </div>
 
@@ -227,8 +227,12 @@ const LandingPage = () => {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-[16px] font-[600] text-[#333333]">Phone</p>
-                    <p className="text-[14px] font-[400] text-[#666666]">+543-78980900</p>
+                    <p className="text-[16px] font-[600] text-[#333333]">
+                      {dict?.home?.contactUs?.phone?.title}
+                    </p>
+                    <p className="text-[14px] font-[400] text-[#666666]">
+                      {dict?.home?.contactUs?.phone?.description}
+                    </p>
                   </div>
                 </div>
 
@@ -261,8 +265,12 @@ const LandingPage = () => {
                     </svg>
                   </div>
                   <div>
-                    <p className="text-[16px] font-[600] text-[#333333]">Email</p>
-                    <p className="text-[14px] font-[400] text-[#666666]">jazzam@company.com</p>
+                    <p className="text-[16px] font-[600] text-[#333333]">
+                      {dict?.home?.contactUs?.email?.title}
+                    </p>
+                    <p className="text-[14px] font-[400] text-[#666666]">
+                      {dict?.home?.contactUs?.email?.description}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -289,8 +297,12 @@ const LandingPage = () => {
                     </div>
                   </div>
                   <div>
-                    <h3 className="text-[30px] font-[600] leading-none">16K +</h3>
-                    <h5 className="text-[16px] font-[400]">Registered users</h5>
+                    <h3 className="text-[30px] font-[600] leading-none">
+                      {dict?.home?.contactUs?.registeredUsers?.title}
+                    </h3>
+                    <h5 className="text-[16px] font-[400]">
+                      {dict?.home?.contactUs?.registeredUsers?.description}
+                    </h5>
                   </div>
                 </div>
 
@@ -300,7 +312,7 @@ const LandingPage = () => {
                       <StarIcon key={index} />
                     ))}
                   </div>
-                  <p className="mt-1 text-[16px]">5.0 from 10k+ reviews</p>
+                  <p className="mt-1 text-[16px]">{dict?.home?.contactUs?.reviews?.description}</p>
                 </div>
               </div>
             </div>
@@ -308,11 +320,23 @@ const LandingPage = () => {
             {/* Right Side - Contact Form */}
             <div className="">
               <form className="space-y-[28px] text-[14px]">
-                <CustomInput label="Full name" placeholder="Enter your Full name" />
-                <CustomInput label="Email Address" placeholder="your.email@example.com" />
-                <CustomInput label="Company Name" placeholder="Your company or website?" />
-                <CustomTextarea label="Message" placeholder="Write your message here...." />
-                <SubmitButton />
+                <CustomInput
+                  label={dict?.home?.contactUs?.form?.fullName}
+                  placeholder={dict?.home?.contactUs?.form?.fullNamePlaceholder}
+                />
+                <CustomInput
+                  label={dict?.home?.contactUs?.form?.email}
+                  placeholder={dict?.home?.contactUs?.form?.emailPlaceholder}
+                />
+                <CustomInput
+                  label={dict?.home?.contactUs?.form?.company}
+                  placeholder={dict?.home?.contactUs?.form?.companyPlaceholder}
+                />
+                <CustomTextarea
+                  label={dict?.home?.contactUs?.form?.message}
+                  placeholder={dict?.home?.contactUs?.form?.messagePlaceholder}
+                />
+                <SubmitButton title={dict?.home?.contactUs?.form?.submitButton} />
               </form>
             </div>
           </div>
@@ -326,13 +350,11 @@ const LandingPage = () => {
             <Logo titleClassName="text-white" />
 
             <p className="text-[14px] font-[300] leading-[2] max-w-[60%] text-white/80">
-              Transform Your Sales Team into a Deal-Closing Machine with AI. Jazzam – Smart AI Sales
-              Agent (SaaS) helps your team connect with the right customers and close deals 40%
-              faster.
+              {dict?.home?.footer?.title}
             </p>
 
             <p className="w-full py-[15px] text-[14px] opacity-[0.75] font-[500] text-white border-t border-gray-b/20">
-              © {new Date().getFullYear()} | octaloop.io All rights reserved.
+              © {new Date().getFullYear()} | octaloop.io {dict?.home?.footer?.copyright}
             </p>
           </footer>
         </div>
@@ -356,13 +378,13 @@ const StarIcon = () => {
 };
 
 // ------------- Submit Button -------------
-const SubmitButton = () => {
+const SubmitButton = ({ title }: { title: string }) => {
   return (
     <button
       type="submit"
       className="w-full ml-auto max-w-[184px] relative h-[54px] bg-pri text-white text-[16px] font-[600] rounded-4xl hover:bg-pri/80 transition-colors duration-200 flex-center gap-2"
     >
-      SUBMIT
+      {title}
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="28"

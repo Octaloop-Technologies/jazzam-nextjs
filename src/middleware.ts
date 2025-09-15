@@ -11,6 +11,37 @@ const protectedRoutes = ["/super-user", "/profile", "/dashboard"];
 const authRoutes = ["/login"];
 
 // ==============================================================
+// Locale configuration
+// ==============================================================
+const supportedLocales = ["en", "ar"];
+const defaultLocale = "en";
+
+function getLocaleFromHeader(acceptLanguage: string | null): string {
+  if (!acceptLanguage) return defaultLocale;
+
+  // Parse Accept-Language header
+  const languages = acceptLanguage
+    .split(",")
+    .map((lang) => {
+      const [locale, q = "1"] = lang.trim().split(";q=");
+      return {
+        locale: locale.split("-")[0], // "en-US" -> "en"
+        quality: parseFloat(q),
+      };
+    })
+    .sort((a, b) => b.quality - a.quality);
+
+  // Find first supported locale
+  for (const lang of languages) {
+    if (supportedLocales.includes(lang.locale)) {
+      return lang.locale;
+    }
+  }
+
+  return defaultLocale;
+}
+
+// ==============================================================
 // Middleware function
 // ==============================================================
 export function middleware(request: NextRequest) {
@@ -39,6 +70,26 @@ export function middleware(request: NextRequest) {
   }
 
   const response = NextResponse.next();
+
+  // ==============================================================
+  // Handle locale detection and cookie setting
+  // ==============================================================
+  const langCookie = request.cookies.get("lang")?.value;
+
+  // If we don't have a valid language cookie, detect and set locale
+  if (!langCookie || !supportedLocales.includes(langCookie)) {
+    const acceptLang = request.headers.get("accept-language");
+    const detectedLocale = getLocaleFromHeader(acceptLang);
+
+    // Save locale in cookie
+    response.cookies.set("lang", detectedLocale, {
+      path: "/",
+      maxAge: 60 * 60 * 24 * 365, // 1 year
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+    });
+  }
 
   // ==============================================================
   // Add security headers in production
