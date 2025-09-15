@@ -142,6 +142,36 @@ const Dropdown: React.FC<DropdownProps> = ({
   }, [isOpen]);
 
   // ==========================================================
+  // Handle window scroll
+  // ==========================================================
+  useEffect(() => {
+    const handleScroll = () => {
+      if (isOpen) {
+        calculatePosition();
+      }
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("scroll", handleScroll);
+    }
+
+    return () => {
+      if (typeof window !== "undefined") {
+        window.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, [isOpen]);
+
+  // ==========================================================
+  // Close dropdown if trigger element is unmounted
+  // ==========================================================
+  useEffect(() => {
+    if (!triggerRef.current && isOpen) {
+      setIsOpen(false);
+    }
+  }, [triggerRef.current, isOpen]);
+
+  // ==========================================================
   // Handle window resize
   // ==========================================================
   useEffect(() => {
@@ -171,7 +201,7 @@ const Dropdown: React.FC<DropdownProps> = ({
     const dropdownContent = (
       <div
         ref={dropdownRef}
-        className={`dropdown-portal p-2.5 bg-white border border-gray-b rounded-3xl ${dropDownClass}`}
+        className={`dropdown-portal relative p-2.5 bg-white border border-gray-b rounded-3xl ${dropDownClass}`}
         style={{
           ...dropdownStyle,
           animationDuration: "0.15s",
