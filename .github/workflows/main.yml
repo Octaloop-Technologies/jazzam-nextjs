@@ -26,7 +26,7 @@ jobs:
 
      - name: Stop & Remove Existing Container
        run: |
-         CONTAINER_ID=$(sudo -u strapi docker ps -aq --filter "name=jazzam-frontend-container")
+         CONTAINER_ID=$(sudo -u jazzam docker ps -aq --filter "name=jazzam-frontend-container")
          if [ ! -z "$CONTAINER_ID" ]; then
            sudo -u jazzam docker stop jazzam-frontend-container
            sudo -u jazzam docker rm jazzam-frontend-container
