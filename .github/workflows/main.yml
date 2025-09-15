@@ -1,32 +1,54 @@
-name: Deploy to Hostinger via SSH
+name: Node.js CI/CD with Docker
+
 
 on:
-  push:
-    branches:
-      - main  # Trigger deployment when changes are pushed to the 'main' branch
+ push:
+   branches:
+     - main
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
+ build:
+   runs-on: self-hosted
 
-    steps:
-    # Step 1: Checkout the repository
-    - name: Checkout code
-      uses: actions/checkout@v2
 
-    # Step 2: Set up SSH key for authentication
-    - name: Set up SSH
-      uses: webfactory/ssh-agent@v0.5.3
-      with:
-        ssh-private-key: ${{ secrets.HOSTINGER_SSH_KEY }}  # Use GitHub secret for SSH private key
 
-    # Step 3: Copy files to the server via SSH (using Git)
-    - name: Deploy code to Hostinger
-      run: |
-        # Set up SSH and clone the repo to the server
-        ssh -o StrictHostKeyChecking=no ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_SERVER_IP }} << 'EOF'
-          # Navigate to the directory where you want to deploy your website
-          cd /home/u265385197/public_html || exit 0
-          # Pull the latest code from GitHub
-          git pull origin main
-        EOF
+   steps:
+     - name: Checkout Code
+       uses: actions/checkout@v4
+
+
+
+     - name: Build Docker Image
+       run: |
+         cd /home/actions-runner-frontend/jazzam-frontend/jazzaam-nextjs/jazzaam-nextjs
+         sudo -u jazzam docker build -t jazzam-frontend-image:latest .
+
+
+     - name: Stop & Remove Existing Container
+       run: |
+         CONTAINER_ID=$(sudo -u jazzam docker ps -aq --filter "name=jazzam-frontend-container")
+         if [ ! -z "$CONTAINER_ID" ]; then
+           sudo -u jazzam docker stop jazzam-frontend-container
+           sudo -u jazzam docker rm jazzam-frontend-container
+         fi
+
+
+     - name: Run New Container
+       run: |
+         sudo -u jazzam docker run -d -p 3000:3000 --name jazzam-frontend-container jazzam-frontend-image:latest
+
+
+     - name: Prune Unused Images & Containers
+       run: |
+         sudo -u jazzam docker system prune -af
+
+
+ nginx:
+   runs-on: self-hosted
+   needs: build
+   steps:
+     - name: Nginx Configuration
+       run: |
+         sudo nginx -t
+         sudo systemctl restart nginx
+
