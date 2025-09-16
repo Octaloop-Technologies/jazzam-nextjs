@@ -2,13 +2,12 @@
 
 import React, { useState, useRef, useEffect, SVGProps } from "react";
 import { gsap } from "gsap";
-import { joinWaitlist } from "./action";
+import { joinWaitlist } from "../../../app/(main-page)/action";
 import { useToast } from "@/lib/hooks/useToast";
 
 const WaitlistButton = () => {
   const { success, error: ErrorToast } = useToast();
 
-  const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -236,7 +235,6 @@ const WaitlistButton = () => {
       setTimeout(() => {
         setIsSubmitted(false);
         setShowInput(false);
-        setIsHovered(false);
         setIsFocused(false);
       }, 3000);
     } catch (err) {
@@ -263,13 +261,11 @@ const WaitlistButton = () => {
 
   // Handle mouse events
   const handleMouseEnter = () => {
-    setIsHovered(true);
     setShowInput(true);
   };
 
   const handleMouseLeave = () => {
     if (!isFocused) {
-      setIsHovered(false);
       setShowInput(false);
     }
   };
