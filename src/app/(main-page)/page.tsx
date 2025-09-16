@@ -12,6 +12,7 @@ import { getDictionary } from "@/lib/i18n/getDictionary";
 import { getCurrentLang } from "../action";
 import HomeNavbar from "./HomeNavbar";
 import HomeFooter from "./HomeFooter";
+import WaitlistButton from "@/components/view/(main-page)/WaitlistButton";
 
 const LandingPage = async () => {
   const lang = await getCurrentLang();
@@ -54,7 +55,7 @@ const LandingPage = async () => {
       {/* ------------- hero ------------- */}
       <section className="gradient-bg pb-14 pt-20">
         <div className="home-wrapper">
-          <div className="text-white leading-tight pb-16">
+          <div className="text-white leading-tight pb-10">
             <h1 className="text-[60px] uppercase font-[700] max-lg:text-[40px] max-xs:text-[32px]">
               {dict?.home?.hero?.title}
             </h1>
@@ -62,7 +63,10 @@ const LandingPage = async () => {
               {dict?.home?.hero?.para}
             </p>
           </div>
-          <div className="w-full h-[560px] scale-110 relative max-2xl:scale-100 max-lg:h-[400px] max-md:h-[300px] max-xs:h-[200px]">
+
+          <WaitlistButton />
+
+          <div className="mt-10 w-full h-[560px] scale-110 relative max-2xl:scale-100 max-lg:h-[400px] max-md:h-[300px] max-xs:h-[200px]">
             <OptimizedImage
               src="/assets/images/home/hero.png"
               alt="hero-image"
