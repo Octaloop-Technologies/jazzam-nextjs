@@ -2,8 +2,12 @@
 
 import React, { useState, useRef, useEffect, SVGProps } from "react";
 import { gsap } from "gsap";
+import { joinWaitlist } from "./action";
+import { useToast } from "@/lib/hooks/useToast";
 
 const WaitlistButton = () => {
+  const { success, error: ErrorToast } = useToast();
+
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [email, setEmail] = useState("");
@@ -20,9 +24,6 @@ const WaitlistButton = () => {
   const successRef = useRef<HTMLDivElement>(null);
   const shimmerRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
-
-  // GSAP timeline for animations
-  const tl = useRef<gsap.core.Timeline | null>(null);
 
   // Initialize animations
   useEffect(() => {
@@ -210,16 +211,24 @@ const WaitlistButton = () => {
     e.stopPropagation();
 
     if (!email.trim() || isLoading || !showInput) return;
-
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email.trim())) {
       return;
     }
-
     setIsLoading(true);
 
     try {
+      const response = await joinWaitlist(email.trim(), "", "website", {
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString(),
+        referrer: document.referrer || "direct",
+      });
+      if (response.success) {
+        success("Successfully joined waitlist!");
+      } else {
+        ErrorToast(response.error || "Error submitting email");
+      }
       setIsSubmitted(true);
       setEmail("");
 
@@ -230,8 +239,9 @@ const WaitlistButton = () => {
         setIsHovered(false);
         setIsFocused(false);
       }, 3000);
-    } catch (error) {
-      console.error("Error submitting email:", error);
+    } catch (err) {
+      ErrorToast(err instanceof Error ? err.message : "Unknown error submitting email");
+      throw new Error(err instanceof Error ? err.message : "Unknown error submitting email");
     } finally {
       setIsLoading(false);
     }
