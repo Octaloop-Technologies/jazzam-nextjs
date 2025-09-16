@@ -116,7 +116,7 @@ const TextMarquee: React.FC<TextMarqueeProps> = ({
         items.push(
           <span
             key={`${rep}-${index}`}
-            className={`flex items-center justify-center bg-pri h-[71px] px-[30px] rounded-5xl text-white ${textClassName}`}
+            className={`flex items-center justify-center bg-pri h-[71px] px-[30px] rounded-5xl text-white max-lg:h-[50px] max-lg:px-[20px] max-sm:h-[40px] max-sm:px-[10px] ${textClassName}`}
           >
             {item}
           </span>

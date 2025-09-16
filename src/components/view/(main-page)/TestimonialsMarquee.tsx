@@ -110,12 +110,12 @@ const TestimonialsMarquee: React.FC<{ dict: Dictionary }> = ({ dict }) => {
 
   return (
     <>
-      <div className="py-[100px] bg-bg">
+      <div className="home-padding bg-bg">
         <TextMarquee
           text={marqueeData}
           speed={50}
           direction="left"
-          textClassName="text-[17px] font-[500] tracking-[1.5px]"
+          textClassName="text-[17px] font-[500] tracking-[1.5px] max-lg:text-[14px] max-sm:text-[12px]"
         />
       </div>
 
@@ -135,16 +135,12 @@ const TestimonialsMarquee: React.FC<{ dict: Dictionary }> = ({ dict }) => {
           />
         </svg>
 
-        <div className="pt-[70px] flex-between home-wrapper">
+        <div className="pt-[70px] flex-between home-wrapper max-md:flex-col max-md:items-start max-md:gap-5 max-2xl:pt-10">
           <div>
-            <h1 className="text-[52px] font-[700] uppercase leading-none">
-              {dict?.home?.testimonials?.title}
-            </h1>
-            <h4 className="text-[20px] font-[500] text-[#666666]">
-              {dict?.home?.testimonials?.description}
-            </h4>
+            <h1 className="home-heading">{dict?.home?.testimonials?.title}</h1>
+            <h4 className="home-desc">{dict?.home?.testimonials?.description}</h4>
           </div>
-          <div className="flex items-end gap-12">
+          <div className="flex items-end gap-12 max-lg:gap-5 max-lg:flex-col max-md:flex-row max-md:justify-between max-md:w-full">
             <div>
               <div className="flex gap-2">
                 {Array.from({ length: 5 }).map((_, index) => (
@@ -153,16 +149,18 @@ const TestimonialsMarquee: React.FC<{ dict: Dictionary }> = ({ dict }) => {
               </div>
               <h3 className="text-[16px]">{dict?.home?.testimonials?.reviews}</h3>
             </div>
-            <div>
-              <h1 className="text-[50px] font-[700] uppercase leading-none">92%</h1>
-              <h4 className="text-[14px] leading-tight">
+            <div className="w-full max-md:w-auto">
+              <h1 className="text-[50px] font-[700] uppercase leading-none max-lg:text-[40px] max-sm:text-[32px]">
+                92%
+              </h1>
+              <h4 className="text-[14px] leading-tight max-sm:text-[12px]">
                 {dict?.home?.testimonials?.customerSatisfaction}
               </h4>
             </div>
           </div>
         </div>
 
-        <div className="py-[100px] bg-white">
+        <div className="home-padding bg-white">
           <Marquee speed={30} direction="left" className="w-full">
             <div className="flex gap-[25px] items-center">
               {[...Array(3)].map((_, groupIndex) =>

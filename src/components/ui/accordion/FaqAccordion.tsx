@@ -37,12 +37,12 @@ const FaqAccordion: React.FC<FaqAccordionProps> = ({ items, className = "" }) =>
           >
             <button
               onClick={() => toggleItem(item.id)}
-              className="w-full p-[40px] text-left flex items-center justify-between"
+              className="w-full p-[40px] text-left flex items-center justify-between max-xs:p-5"
               aria-expanded={isOpen}
               aria-controls={`faq-answer-${item.id}`}
             >
               <div className="flex items-center gap-4">
-                <div className="absolute left-0 top-1/2 translate-x-[-50%] -translate-y-1/2 flex items-center justify-center size-[40px] rounded-full bg-pri text-white text-sm font-semibold flex-shrink-0">
+                <div className="absolute left-0 top-1/2 translate-x-[-50%] -translate-y-1/2 flex items-center justify-center size-[40px] max-xs:size-[30px] rounded-full bg-pri text-white text-sm font-semibold flex-shrink-0">
                   {index + 1}
                 </div>
                 <h3 className="text-[16px] font-[500] text-left">{item.question}</h3>
@@ -50,11 +50,9 @@ const FaqAccordion: React.FC<FaqAccordionProps> = ({ items, className = "" }) =>
               <div className="flex-shrink-0 ml-4">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
                   viewBox="0 0 24 24"
                   fill="none"
-                  className={`transition-transform duration-200 ${
+                  className={`size-[24px] max-xs:size-[20px] transition-transform duration-200 ${
                     isOpen ? "rotate-45" : "rotate-0"
                   }`}
                 >
@@ -74,7 +72,7 @@ const FaqAccordion: React.FC<FaqAccordionProps> = ({ items, className = "" }) =>
                 isOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
               }`}
             >
-              <div className="px-6 pb-5 pl-[72px]">
+              <div className="pb-5 px-[40px] max-xs:px-5">
                 <p className="text-[14px] font-[400] text-[#666666] leading-relaxed">
                   {item.answer}
                 </p>

@@ -190,7 +190,7 @@
 }
 
 * {
-  @apply box-border caret-pri selection:bg-pri selection:text-white;
+  @apply box-border caret-pri selection:bg-pri selection:text-white scroll-smooth;
 }
 
 img {
@@ -274,7 +274,19 @@ button {
   }
 
   .home-wrapper {
-    @apply max-w-[1440px] w-full mx-auto;
+    @apply px-[300px] w-full mx-auto max-4xl:px-[200px] max-3xl:px-[150px] max-2xl:px-[100px] max-xl:px-[50px] max-lg:px-[30px] max-md:px-[20px];
+  }
+
+  .home-heading {
+    @apply text-[52px] font-[700] uppercase max-lg:text-[40px] max-xs:text-[32px];
+  }
+
+  .home-padding {
+    @apply py-[100px] max-2xl:py-10;
+  }
+
+  .home-desc {
+    @apply text-[20px] font-[500] text-[#666666] max-sm:text-[16px];
   }
 
   .x-padding {

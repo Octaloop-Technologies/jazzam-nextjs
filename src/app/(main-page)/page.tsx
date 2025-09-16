@@ -8,9 +8,10 @@ import TestimonialsMarquee from "@/components/view/(main-page)/TestimonialsMarqu
 import React from "react";
 import { CustomInput } from "@/components/ui/input";
 import { CustomTextarea } from "@/components/ui/textarea";
-import LanguageSwitcher from "@/components/shared/language/LanguageSwitcher";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { getCurrentLang } from "../action";
+import HomeNavbar from "./HomeNavbar";
+import HomeFooter from "./HomeFooter";
 
 const LandingPage = async () => {
   const lang = await getCurrentLang();
@@ -48,29 +49,20 @@ const LandingPage = async () => {
   return (
     <div className="w-full bg-white">
       {/* ------------- navbar ------------- */}
-      <div className="home-wrapper py-[14px]">
-        <nav className="flex-between">
-          <Logo />
-          <div className="flex-center gap-5">
-            <div className="rounded-xl-2 border border-gray-b h-[52px] w-[138px] flex-center">
-              <LanguageSwitcher />
-            </div>
-            <PrimaryButton
-              title={dict?.home?.hero?.getStarted}
-              className="h-[52px] w-[138px] rounded-xl-2"
-            />
-          </div>
-        </nav>
-      </div>
+      <HomeNavbar dict={dict} currentLang={lang} />
 
       {/* ------------- hero ------------- */}
       <section className="gradient-bg pb-14 pt-20">
         <div className="home-wrapper">
           <div className="text-white leading-tight pb-16">
-            <h1 className="text-[60px] uppercase font-[700]">{dict?.home?.hero?.title}</h1>
-            <p className="mt-2 text-[20px] capitalize font-[500]">{dict?.home?.hero?.para}</p>
+            <h1 className="text-[60px] uppercase font-[700] max-lg:text-[40px] max-xs:text-[32px]">
+              {dict?.home?.hero?.title}
+            </h1>
+            <p className="mt-2 text-[20px] capitalize font-[500] max-sm:text-[16px]">
+              {dict?.home?.hero?.para}
+            </p>
           </div>
-          <div className="w-full h-[560px] scale-120 relative">
+          <div className="w-full h-[560px] scale-110 relative max-2xl:scale-100 max-lg:h-[400px] max-md:h-[300px] max-xs:h-[200px]">
             <OptimizedImage
               src="/assets/images/home/hero.png"
               alt="hero-image"
@@ -82,10 +74,10 @@ const LandingPage = async () => {
       </section>
 
       {/* ------------- Choose Jazzam ------------- */}
-      <section className="py-[100px] bg-bg">
+      <section className="home-padding bg-bg">
         <div className="home-wrapper text-center">
-          <h1 className="text-[52px] font-[700] uppercase">{dict?.home?.whyChooseJazzam?.title}</h1>
-          <div className="mt-11 grid grid-cols-3 gap-2.5">
+          <h1 className="home-heading">{dict?.home?.whyChooseJazzam?.title}</h1>
+          <div className="mt-11 grid grid-cols-3 gap-2.5 items-start max-xl:grid-cols-2 max-md:grid-cols-1">
             {[
               {
                 title: dict?.home?.whyChooseJazzam?.smartCustomerFollowUp?.title,
@@ -102,18 +94,22 @@ const LandingPage = async () => {
                 icon: <PredictionSvg />,
                 description: dict?.home?.whyChooseJazzam?.accurateSalesPredictions?.description,
               },
-            ].map((item) => (
+            ].map((item, index) => (
               <div
                 key={item.title}
-                className="bg-white rounded-4xl-0 px-[72px] py-[60px] flex-col-center gap-14"
+                className={`bg-white h-full rounded-4xl-0 px-[72px] py-[60px] flex-col-center gap-14 max-3xl:gap-10 max-2xl:gap-5 max-sm:px-5 max-sm:py-5 
+                  ${index === 2 ? "max-xl:col-span-2" : ""} 
+                  ${index === 1 ? "max-md:col-span-2" : ""}`}
               >
                 <h2 className="text-[18px] font-[600]">{item.title}</h2>
-                <div className="size-[120px]">{item.icon}</div>
+                <div className="size-[120px] max-2xl:size-[80px] max-sm:size-[60px]">
+                  {item.icon}
+                </div>
                 <p className="text-[14px] font-[500] text-[#333333]">{item.description}</p>
               </div>
             ))}
           </div>
-          <button className="mt-10 w-full relative max-w-[290px] h-[60px] bg-[#EEB600] text-white text-[16px] font-[600] rounded-4xl">
+          <button className="mt-10 w-full relative max-w-[290px] h-[60px] bg-[#EEB600] text-white text-[16px] font-[600] rounded-4xl max-sm:h-[50px] max-sm:text-[14px]">
             {dict?.home?.whyChooseJazzam?.registerYourCompany?.title}
             <svg
               className="absolute right-2 top-[40%] -translate-y-1/2"
@@ -135,24 +131,23 @@ const LandingPage = async () => {
       </section>
 
       {/* ------------- See How Jazzam Works ------------- */}
-      <section className="py-[80px]">
+      <section className="home-padding">
         <div className="home-wrapper">
-          <div className="flex items-center gap-12">
-            <h1 className="text-[52px] font-[700] uppercase min-w-max">
+          <div className="flex items-center gap-12 max-3xl:flex-col max-3xl:gap-0">
+            <h1 className="home-heading min-w-max max-4xl:min-w-auto max-xl:text-center">
               {dict?.home?.seeHowJazzamWorks?.title}
             </h1>
-            <p className="text-[20px] font-[500] text-[#666]">
+            <p className="home-desc max-xl:text-center">
               {dict?.home?.seeHowJazzamWorks?.description}
             </p>
           </div>
-          <div className="mt-14 w-full h-[560px] p-[40px] relative">
-            <div className="size-[320px] absolute top-0 left-0 gradient-bg-2 rounded-tl-4xl-0" />
-            <div className="size-[320px] absolute bottom-0 right-0 gradient-bg-2 rounded-br-4xl-0" />
+          <div className="mt-14 w-full h-[560px] p-[40px] relative max-3xl:h-auto max-lg:p-6">
+            <div className="size-[320px] absolute top-0 left-0 gradient-bg-2 rounded-tl-4xl-0 max-lg:size-[200px] max-sm:size-[120px]" />
+            <div className="size-[320px] absolute bottom-0 right-0 gradient-bg-2 rounded-br-4xl-0 max-lg:size-[200px] max-sm:size-[120px]" />
 
             <div className="w-full h-full relative rounded-4xl-0 overflow-hidden">
               <OptimizedVideo
                 src="/assets/videos/home/how-it-works.mp4"
-                objectFit="cover"
                 controls={false}
                 poster="/assets/images/home/dummy.png"
               />
@@ -165,15 +160,11 @@ const LandingPage = async () => {
       <TestimonialsMarquee dict={dict} />
 
       {/* ------------- FAQs ------------- */}
-      <section className="py-[100px] bg-bg">
+      <section className="home-padding bg-bg">
         <div className="home-wrapper">
           <div className="text-center mb-16">
-            <h1 className="text-[52px] font-[700] uppercase">
-              {dict?.home?.frequentlyAskedQuestions?.title}
-            </h1>
-            <p className="text-[20px] font-[500] text-[#666666]">
-              {dict?.home?.frequentlyAskedQuestions?.description}
-            </p>
+            <h1 className="home-heading">{dict?.home?.frequentlyAskedQuestions?.title}</h1>
+            <p className="home-desc">{dict?.home?.frequentlyAskedQuestions?.description}</p>
           </div>
           <div className="max-w-[1120px] w-full mx-auto">
             <FaqAccordion items={faqItems} />
@@ -182,25 +173,21 @@ const LandingPage = async () => {
       </section>
 
       {/* ------------- Contact us ------------- */}
-      <section className="py-[100px]">
+      <section className="home-padding">
         <div className="home-wrapper">
-          <div className="grid grid-cols-2 gap-10 items-start">
+          <div className="grid grid-cols-2 gap-28 items-start max-xl:grid-cols-1 max-xl:gap-10 max-lg:items-center">
             {/* Left Side - Contact Info */}
-            <div className="space-y-[41px] w-full max-w-[567px]">
+            <div className="space-y-[41px] w-full max-w-[567px] max-xl:max-w-full max-xs:space-y-8">
               <div>
-                <h1 className="text-[52px] font-[700] uppercase leading-none">
-                  {dict?.home?.contactUs?.title}
-                </h1>
-                <p className="mt-2 text-[20px] text-[#666666] leading-relaxed">
-                  {dict?.home?.contactUs?.description}
-                </p>
+                <h1 className="home-heading">{dict?.home?.contactUs?.title}</h1>
+                <p className="mt-2 home-desc">{dict?.home?.contactUs?.description}</p>
               </div>
 
               {/* Contact Details */}
-              <div className="flex-between gap-4">
+              <div className="flex-between gap-5 max-xl:justify-center max-xs:flex-col max-xs:items-start">
                 {/* Phone */}
                 <div className="flex items-center gap-3.5">
-                  <div className="size-[60px] bg-pri rounded-full flex-center">
+                  <div className="size-[60px] min-w-[60px] bg-pri rounded-full flex-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="33"
@@ -238,7 +225,7 @@ const LandingPage = async () => {
 
                 {/* Email */}
                 <div className="flex items-center gap-3.5">
-                  <div className="size-[60px] bg-pri rounded-full flex-center">
+                  <div className="size-[60px] min-w-[60px] bg-pri rounded-full flex-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="33"
@@ -276,8 +263,8 @@ const LandingPage = async () => {
               </div>
 
               {/* User Testimonial */}
-              <div className="flex-between gap-4">
-                <div className="flex-center gap-3">
+              <div className="flex-between gap-5 max-xl:justify-center max-xs:flex-col max-xs:items-start">
+                <div className="flex-center gap-3 max-xs:hidden">
                   <div className="flex flex-col -space-y-8">
                     <div className="flex items-center -space-x-2">
                       <div className="size-[83.065px] z-30 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 border-2 border-white flex items-center justify-center text-white font-bold">
@@ -344,21 +331,7 @@ const LandingPage = async () => {
       </section>
 
       {/* ------------- footer ------------- */}
-      <div className="bg-[#181818] pt-[42px]">
-        <div className="home-wrapper">
-          <footer className="flex-col-center gap-[30px] text-center">
-            <Logo titleClassName="text-white" />
-
-            <p className="text-[14px] font-[300] leading-[2] max-w-[60%] text-white/80">
-              {dict?.home?.footer?.title}
-            </p>
-
-            <p className="w-full py-[15px] text-[14px] opacity-[0.75] font-[500] text-white border-t border-gray-b/20">
-              © {new Date().getFullYear()} | octaloop.io {dict?.home?.footer?.copyright}
-            </p>
-          </footer>
-        </div>
-      </div>
+      <HomeFooter dict={dict} />
     </div>
   );
 };

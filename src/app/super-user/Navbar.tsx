@@ -15,14 +15,20 @@ import { navItems } from "@/lib/constants/navbarConstants";
 import gsap from "gsap";
 import { useLayoutEffect } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import LanguageSwitcher from "@/components/shared/language/LanguageSwitcher";
+import Language from "@/components/shared/language/Language";
+import { changeLang } from "../action";
+
+interface NavbarProps {
+  currentLang: string;
+  languages: LanguageProp[];
+}
 
 // ======================================================
 // Register Gsap Plugins
 // ======================================================
 gsap.registerPlugin(ScrollTrigger);
 
-const Navbar = () => {
+const Navbar = ({ currentLang, languages }: NavbarProps) => {
   // ======================================================
   // Hooks
   // ======================================================
@@ -78,7 +84,7 @@ const Navbar = () => {
 
       <div className="flex-center gap-4">
         {/* ------------- localization ------------- */}
-        <LanguageSwitcher />
+        <Language languages={languages} changeLang={changeLang} currentLang={currentLang} />
 
         {/* ------------- settings ------------- */}
         <Link

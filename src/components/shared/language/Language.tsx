@@ -2,7 +2,6 @@
 
 import Dropdown, { DropdownItem } from "@/components/ui/dropdown/Dropdown";
 import { CheckSvg, GlobeSvg } from "@/components/svgs/NavbarSvgs";
-import { useState } from "react";
 
 interface LanguageProps {
   languages: { code: string; label: string; flag: string }[];
