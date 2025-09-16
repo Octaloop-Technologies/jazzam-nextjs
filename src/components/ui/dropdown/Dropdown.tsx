@@ -10,6 +10,7 @@ interface DropdownProps {
   className?: string;
   dropDownClass?: string;
   gap?: 0 | 6 | 10 | 20;
+  lang?: string;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({
@@ -19,6 +20,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   gap = 6,
   className = "",
   dropDownClass = "",
+  lang,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [dropdownStyle, setDropdownStyle] = useState<React.CSSProperties>({});
@@ -140,6 +142,12 @@ const Dropdown: React.FC<DropdownProps> = ({
       }
     };
   }, [isOpen]);
+
+  useEffect(() => {
+    if (isOpen) {
+      calculatePosition();
+    }
+  }, [isOpen, lang]);
 
   // ==========================================================
   // Handle window scroll
