@@ -43,7 +43,7 @@
 
 ### Content & Markdown
 
-<!-- - **React Markdown** - Markdown rendering -->
+<!-- - **React Markdown** - Markdown rendering --> 
 <!-- - **Remark GFM** - GitHub Flavored Markdown support -->
 
 ### Development Tools
