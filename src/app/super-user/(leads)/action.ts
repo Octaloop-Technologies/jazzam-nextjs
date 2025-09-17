@@ -183,6 +183,14 @@ export const getLeadById = async ({ id }: { id: string }) => {
         "Content-Type": "application/json",
       },
     });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(errorData?.message || `HTTP error! status: ${response.status}`);
+    }
+
+    const responseData = await response.json();
+    return { success: true, data: responseData.data };
   } catch (error) {
     console.error("Error fetching lead by id:", error);
     return {

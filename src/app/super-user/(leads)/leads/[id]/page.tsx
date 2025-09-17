@@ -1,4 +1,4 @@
-import { HotLeadsSvg } from "@/components/svgs/LeadsAnalysisSvgs";
+import { HotLeadsSvg, ColdLeadsSvg, NewLeadsSvg } from "@/components/svgs/LeadsAnalysisSvgs";
 import {
   CompanySvg,
   CopySvg,
@@ -13,66 +13,111 @@ import OptimizedImage from "@/components/ui/image/OptimizedImage";
 import ProgressBar from "@/components/ui/progress/ProgressBar";
 import LeadsMenu from "@/components/view/dashboard/leads/LeadsMenu";
 import Link from "next/link";
+import { getLeadById } from "../../action";
+import { notFound } from "next/navigation";
 
 const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
+
+  // Fetch lead data from API
+  const leadResponse = await getLeadById({ id });
+
+  if (!leadResponse.success || !leadResponse.data) {
+    notFound();
+  }
+
+  const lead = leadResponse.data;
 
   // ==========================================================
   // Backcrumb Links and names
   // ==========================================================
   const segments = [
-    { label: "Leads", path: "/" },
-    { label: "Wade warren", path: `/leads/${id}` },
+    { label: "Leads", path: "/super-user/leads" },
+    {
+      label: lead.fullName || `${lead.firstName} ${lead.lastName}` || "Lead",
+      path: `/super-user/leads/${id}`,
+    },
   ];
 
   // ==========================================================
-  // Lead Details
+  // Lead Score Calculation (based on LinkedIn data)
   // ==========================================================
-  const lead: Lead = {
-    id: "1",
-    name: "Wade Warren",
-    company: "TechCorp Inc",
-    email: "wadewarren@gmail.com",
-    followUp: "follow-up-1",
-    status: "hot",
-    date: "2021-01-01",
+  const calculateLeadScore = (lead: any) => {
+    let score = 0;
+
+    // Base score for having LinkedIn profile
+    if (lead.linkedinProfileUrl) score += 20;
+
+    // Email availability
+    if (lead.email) score += 15;
+
+    // Phone availability
+    if (lead.phone) score += 10;
+
+    // Company information
+    if (lead.company) score += 10;
+    if (lead.companyIndustry) score += 5;
+    if (lead.companySize) score += 5;
+
+    // Profile completeness
+    if (lead.headline) score += 10;
+    if (lead.about) score += 10;
+    if (lead.experiences && lead.experiences.length > 0) score += 10;
+    if (lead.educations && lead.educations.length > 0) score += 5;
+
+    // Connections and followers
+    if (lead.connections && lead.connections > 500) score += 5;
+    if (lead.followers && lead.followers > 100) score += 5;
+
+    return Math.min(score, 100);
   };
 
+  const leadScoreValue = calculateLeadScore(lead);
   const leadScore: LeadScore = {
-    score: 95,
-    color: "bg-sec",
+    score: leadScoreValue,
+    color: leadScoreValue >= 80 ? "bg-sec" : leadScoreValue >= 60 ? "bg-pipeline" : "bg-cold",
   };
 
+  // ==========================================================
+  // Contact Information
+  // ==========================================================
   const contactInfo = [
     {
       icon: <EmailSvg />,
       title: "Email",
-      value: "wade.12@gmail.com",
-      copy: true,
+      value: lead.email || "Not available",
+      copy: !!lead.email,
     },
     {
       icon: <PhoneSvg />,
       title: "Phone no.",
-      value: "+1 (555) 123-4567",
-      copy: true,
+      value: lead.phone || "Not available",
+      copy: !!lead.phone,
     },
     {
       icon: <CompanySvg />,
       title: "Company",
-      value: "TechCorp Inc",
+      value: lead.company || "Not available",
       copy: false,
     },
     {
       icon: <LocationSvg />,
       title: "Location",
-      value: "San Francisco, CA",
+      value: lead.location || lead.addressWithCountry || lead.addressCountryOnly || "Not available",
       copy: false,
     },
     {
       icon: <LinkedInSvg />,
       title: "LinkedIn profile",
-      value: "Wade Warren",
-      link: "https://www.linkedin.com/in/wade-warren-1234567890",
+      value: lead.fullName || `${lead.firstName} ${lead.lastName}` || "LinkedIn Profile",
+      link: lead.linkedinProfileUrl || "#",
+      copy: false,
+    },
+    {
+      icon: <LinkedInSvg />,
+      title: "Websites",
+      value: lead.creatorWebsite.link || "Not available",
+      link: lead.linkedinProfileUrl || "#",
       copy: false,
     },
   ];
@@ -90,26 +135,43 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                 <div className="flex items-center gap-3">
                   <div className="size-[60px] rounded-full overflow-hidden">
                     <OptimizedImage
-                      src="/assets/images/leads/dummy-profile.png"
+                      src={lead.profilePic || "/assets/images/leads/dummy-profile.png"}
                       alt="avatar"
                       fill
                       className="w-full h-full object-cover"
                     />
                   </div>
                   <div className="flex flex-col gap-0.5 leading-none">
-                    <p className="text-[18px] font-[500]">{lead.name}</p>
-                    <p className="text-[12px] text-gray-200">{lead.company}</p>
-                    <p className="text-[12px] text-gray-200">{lead.email}</p>
+                    <p className="text-[18px] font-[500]">
+                      {lead.fullName || `${lead.firstName} ${lead.lastName}` || "Unknown"}
+                    </p>
+                    <p className="text-[12px] text-gray-200">{lead.company || "No company"}</p>
+                    <p className="text-[12px] text-gray-200">
+                      {lead.headline || lead.email || "No headline"}
+                    </p>
                   </div>
                 </div>
-                <div className="mt-2.5 w-[107px] h-[30px] text-sm text-hot bg-hot-light rounded-lg flex-center gap-1">
-                  <HotLeadsSvg className="size-4" />
-                  Hot lead
+                <div
+                  className={`mt-2.5 w-[107px] h-[30px] text-sm rounded-lg flex-center gap-1 ${
+                    lead.status === "hot"
+                      ? "text-hot bg-hot-light"
+                      : lead.status === "cold"
+                      ? "text-cold bg-cold-light"
+                      : lead.status === "new"
+                      ? "text-pri bg-pri-light"
+                      : "text-pipeline bg-pipeline-light"
+                  }`}
+                >
+                  {lead.status === "hot" && <HotLeadsSvg className="size-4" />}
+                  {lead.status === "cold" && <ColdLeadsSvg className="size-4" />}
+                  {lead.status === "new" && <NewLeadsSvg className="size-4" />}
+                  {lead.status === "warm" && <HotLeadsSvg className="size-4" />}
+                  {lead.status?.charAt(0).toUpperCase() + lead.status?.slice(1) || "Lead"}
                 </div>
               </div>
 
               <div className="flex-col gap-1 leading-none">
-                <h1 className="text-[22px] font-[600]">$89,500</h1>
+                <h1 className="text-[22px] font-[600]">{lead.potentialValue || "Not available"}</h1>
                 <h3 className="text-[12px] text-gray-200">Potential Value</h3>
               </div>
             </div>
@@ -194,23 +256,57 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
             <div className="mt-4 flex flex-col gap-4">
               <div className="flex flex-col gap-1">
                 <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Industry</h3>
-                <h2 className="text-[14px] leading-none font-[500]">Technology</h2>
+                <h2 className="text-[14px] leading-none font-[500]">
+                  {lead.companyIndustry || "Not available"}
+                </h2>
               </div>
               <div className="flex flex-col gap-1">
                 <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Company Size</h3>
-                <h2 className="text-[14px] leading-none font-[500]">50-100 employees</h2>
+                <h2 className="text-[14px] leading-none font-[500]">
+                  {lead.companySize || "Not available"}
+                </h2>
+              </div>
+              <div className="flex flex-col gap-1">
+                <h3 className="text-[14px] text-gray-250 leading-none font-[500]">
+                  Company Founded
+                </h3>
+                <h2 className="text-[14px] leading-none font-[500]">
+                  {lead.companyFoundedIn || "Not available"}
+                </h2>
+              </div>
+              <div className="flex flex-col gap-1">
+                <h3 className="text-[14px] text-gray-250 leading-none font-[500]">
+                  Current Job Duration
+                </h3>
+                <h2 className="text-[14px] leading-none font-[500]">
+                  {lead.currentJobDuration || "Not available"}
+                </h2>
               </div>
               <div className="flex flex-col gap-1">
                 <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Website</h3>
                 <h2 className="text-[14px] leading-none font-[500]">
-                  <Link
-                    href="https://techcorp.com"
-                    target="_blank"
-                    prefetch={false}
-                    className="underline-auto-from-front text-cold gray-hover underline-offset-2"
-                  >
-                    https://techcorp.com
-                  </Link>
+                  {lead.companyWebsite ? (
+                    <Link
+                      href={
+                        lead.companyWebsite.startsWith("http")
+                          ? lead.companyWebsite
+                          : `https://${lead.companyWebsite}`
+                      }
+                      target="_blank"
+                      prefetch={false}
+                      className="underline-auto-from-front text-cold gray-hover underline-offset-2"
+                    >
+                      {lead.companyWebsite}
+                    </Link>
+                  ) : (
+                    "Not available"
+                  )}
+                </h2>
+              </div>
+              <div className="flex flex-col gap-1">
+                <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Job Title</h3>
+                <h2 className="text-[14px] leading-none font-[500]">
+                  {lead.jobTitle || "Not available"}
                 </h2>
               </div>
               <div className="flex flex-col gap-1">
@@ -222,7 +318,7 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
           <div className="w-full max-w-[5%]" aria-hidden="true" />
         </div>
 
-        {/* ------------------------- Lead Qualification (BANT) ------------------------- */}
+        {/* ------------------------- Lead Qualification (BANT) : Not Yet Implemented ------------------------- */}
         <div className="flex-between gap-2.5 w-full items-stretch">
           <div className="p-[30px] w-full border border-gray-b rounded-3xl bg-white max-w-[55%]">
             <h2 className="text-[16px] leading-none font-[500] capitalize pb-2 border-b border-gray-n/30">
@@ -279,18 +375,42 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
         <div className="flex-between gap-2.5 w-full items-stretch pb-5">
           <div className="p-[30px] w-full border border-gray-b rounded-3xl bg-white max-w-[55%]">
             <h2 className="text-[16px] leading-none font-[500] capitalize pb-2 border-b border-gray-n/30">
-              Interests
+              Skills & Interests
             </h2>
-            <div className="mt-4 flex justify-between gap-2.5">
+            <div className="mt-4 flex flex-col gap-4">
+              {/* Skills Section */}
               <div className="flex flex-col gap-2.5">
                 <h3 className="text-[14px] text-gray-250 leading-none font-[500]">
-                  Primary Interests
+                  LinkedIn Skills
                 </h3>
+                <div className="flex flex-wrap gap-2.5 text-pri">
+                  {lead.skills && lead.skills.length > 0 ? (
+                    lead.skills.map((skill: any, index: number) => (
+                      <div key={index} className="bg-pri-light rounded-4xl py-2.5 px-5">
+                        {skill.title || "Skill"}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-gray-200 text-sm">No skills available</div>
+                  )}
+                </div>
+              </div>
 
-                <div className="flex gap-2.5 text-pri">
-                  <div className="bg-pri-light rounded-4xl py-2.5 px-5">AI</div>
-                  <div className="bg-pri-light rounded-4xl py-2.5 px-5">Cloud Infrastructure</div>
-                  <div className="bg-pri-light rounded-4xl py-2.5 px-5">DevOps</div>
+              {/* Interests Section */}
+              <div className="flex flex-col gap-2.5">
+                <h3 className="text-[14px] text-gray-250 leading-none font-[500]">
+                  LinkedIn Interests
+                </h3>
+                <div className="flex flex-wrap gap-2.5 text-pri">
+                  {lead.interests && lead.interests.length > 0 ? (
+                    lead.interests.map((interest: any, index: number) => (
+                      <div key={index} className="bg-pri-light rounded-4xl py-2.5 px-5">
+                        {interest.section_name || interest.titleV2 || interest.title || "Interest"}
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-gray-200 text-sm">No interests available</div>
+                  )}
                 </div>
               </div>
             </div>
