@@ -1,47 +1,43 @@
 "use server";
 
+import { cookies } from "next/headers";
+
 // ======================================================
 // Get all leads
 // ======================================================
 interface GetLeadsParams {
-  token: string;
   page?: number;
   limit?: number;
   status?: string;
-  industry?: string;
-  source?: string;
+  companyIndustry?: string;
   companySize?: string;
   assignedTo?: string;
   sortBy?: string;
   sortOrder?: string;
-  isActive?: boolean;
 }
 
 export const getAllLeads = async ({
-  token,
   page = 1,
   limit = 10,
   status,
-  industry,
-  source,
+  companyIndustry,
   companySize,
   assignedTo,
   sortBy = "createdAt",
   sortOrder = "desc",
-  isActive = true,
 }: GetLeadsParams) => {
   try {
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value || "";
     const params = new URLSearchParams();
 
     params.append("page", page.toString());
     params.append("limit", limit.toString());
     params.append("sortBy", sortBy);
     params.append("sortOrder", sortOrder);
-    params.append("isActive", isActive.toString());
 
     if (status) params.append("status", status);
-    if (industry) params.append("industry", industry);
-    if (source) params.append("source", source);
+    if (companyIndustry) params.append("companyIndustry", companyIndustry);
     if (companySize) params.append("companySize", companySize);
     if (assignedTo) params.append("assignedTo", assignedTo);
 
@@ -76,12 +72,16 @@ export const getAllLeads = async ({
 // ======================================================
 // Get lead stats
 // ======================================================
-export const getLeadStats = async ({ token }: { token: string }) => {
+export const getLeadStats = async () => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value || "";
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/lead/stats`, {
       headers: {
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
+      cache: "no-store", // Ensure fresh data
     });
 
     if (!response.ok) {
@@ -105,28 +105,26 @@ export const getLeadStats = async ({ token }: { token: string }) => {
 // ======================================================
 
 interface SearchLeadsParams {
-  token: string;
   query: string;
   page?: number;
   limit?: number;
   status?: string;
-  industry?: string;
-  source?: string;
+  companyIndustry?: string;
   sortBy?: string;
   sortOrder?: string;
 }
 
 export const searchLeads = async ({
-  token,
   query,
   page = 1,
   limit = 10,
   status,
-  industry,
-  source,
+  companyIndustry,
   sortBy = "createdAt",
   sortOrder = "desc",
 }: SearchLeadsParams) => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value || "";
   try {
     if (!query || query.trim().length === 0) {
       throw new Error("Search query is required");
@@ -142,8 +140,7 @@ export const searchLeads = async ({
 
     // Add filters if provided
     if (status) params.append("status", status);
-    if (industry) params.append("industry", industry);
-    if (source) params.append("source", source);
+    if (companyIndustry) params.append("companyIndustry", companyIndustry);
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/lead/search?${params.toString()}`,
@@ -165,6 +162,29 @@ export const searchLeads = async ({
     return { success: true, data: data };
   } catch (error) {
     console.error("Error searching leads:", error);
+    return {
+      success: false,
+      data: null,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+};
+
+// ======================================================
+// Get lead by id
+// ======================================================
+export const getLeadById = async ({ id }: { id: string }) => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value || "";
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/lead/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching lead by id:", error);
     return {
       success: false,
       data: null,

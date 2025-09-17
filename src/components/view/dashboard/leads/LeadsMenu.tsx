@@ -20,7 +20,7 @@ const LeadsMenu = ({
   // State
   // ======================================================
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedLeadId, setSelectedLeadId] = useState<string>(lead.id);
+  const [selectedLeadId, setSelectedLeadId] = useState<string>(lead._id);
 
   // ======================================================
   // Delete lead
@@ -32,7 +32,7 @@ const LeadsMenu = ({
 
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
-    setSelectedLeadId(lead.id);
+    setSelectedLeadId(lead._id);
   };
 
   const handleConfirmDelete = () => {
@@ -69,7 +69,7 @@ const LeadsMenu = ({
         {showViewDetails && (
           <DropdownItem>
             <Link
-              href={`/super-user/leads/${lead.id}`}
+              href={`/super-user/leads/${lead._id}`}
               className="flex-between w-full hover:text-gray-200"
               prefetch={false}
             >
@@ -83,7 +83,7 @@ const LeadsMenu = ({
         )}
         <DropdownItem>
           <Link
-            href={`/super-user/leads/${lead.id}/${lead.followUp}`}
+            href={`/super-user/leads/${lead._id}/${lead.notes}`}
             className="flex-between w-full hover:text-gray-200"
             prefetch={false}
           >
@@ -97,7 +97,7 @@ const LeadsMenu = ({
         <DropdownItem>
           <button
             className="w-full text-danger flex gap-1 hover:text-gray-200"
-            onClick={() => handleDeleteClick(lead.id)}
+            onClick={() => handleDeleteClick(lead._id)}
           >
             <DeleteSvg />
             Delete lead

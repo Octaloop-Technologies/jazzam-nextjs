@@ -6,8 +6,7 @@ import { useEffect } from "react";
 
 interface TabNavigationProps {
   searchQuery?: string;
-  industryFilter?: string;
-  sourceFilter?: string;
+  companyIndustryFilter?: string;
   sortBy: string;
   sortOrder: string;
   statusFilter?: string;
@@ -15,8 +14,7 @@ interface TabNavigationProps {
 
 const TabNavigation = ({
   searchQuery,
-  industryFilter,
-  sourceFilter,
+  companyIndustryFilter,
   sortBy,
   sortOrder,
   statusFilter,
@@ -31,8 +29,7 @@ const TabNavigation = ({
   const createTabUrl = (status?: string) => {
     const currentParams = new URLSearchParams();
     if (searchQuery) currentParams.set("search", searchQuery);
-    if (industryFilter) currentParams.set("industry", industryFilter);
-    if (sourceFilter) currentParams.set("source", sourceFilter);
+    if (companyIndustryFilter) currentParams.set("companyIndustry", companyIndustryFilter);
     if (sortBy !== "createdAt") currentParams.set("sortBy", sortBy);
     if (sortOrder !== "desc") currentParams.set("sortOrder", sortOrder);
     if (status) currentParams.set("status", status);
@@ -80,9 +77,12 @@ const TabNavigation = ({
       <button
         onClick={() => handleTabClick(status)}
         disabled={isLoading}
-        className={`h-full px-5 rounded-4xl overflow-hidden flex-center relative transition-all duration-200 ${
-          isActive ? "bg-[#0fb98121] text-pri" : "bg-white hover:outline outline-gray-b gray-hover"
-        } ${isLoading ? "cursor-not-allowed" : "cursor-pointer"}`}
+        className={`h-full px-5 rounded-4xl overflow-hidden flex-center relative transition-all duration-200 
+          ${
+            isActive
+              ? "bg-[#0fb98121] text-pri"
+              : "bg-white hover:outline outline-gray-b gray-hover"
+          } ${isLoading ? "cursor-not-allowed" : "cursor-pointer"}`}
       >
         <div className={`flex items-center gap-2`}>{label}</div>
 
@@ -99,6 +99,7 @@ const TabNavigation = ({
   return (
     <div className="flex gap-[15px] h-[61px] text-[14px] border border-gray-b p-2.5 rounded-4xl">
       <TabButton label="All" isActive={!statusFilter} />
+      <TabButton status="new" label="New" isActive={statusFilter === "new"} />
       <TabButton status="hot" label="Hot" isActive={statusFilter === "hot"} />
       <TabButton status="warm" label="Warm" isActive={statusFilter === "warm"} />
       <TabButton status="cold" label="Cold" isActive={statusFilter === "cold"} />

@@ -1,11 +1,47 @@
 interface Lead {
-  id: string;
-  name: string;
-  company: string;
-  email: string;
-  followUp: string;
+  _id: string;
+  linkedinProfileUrl: string;
+  firstName?: string;
+  lastName?: string;
+  fullName?: string;
+  headline?: string;
+  email?: string;
+  phone?: string;
+  followers?: number;
+  connections?: number;
+  publicIdentifier?: string;
+  company?: string;
+  companyIndustry?: string;
+  companyWebsite?: string;
+  companyLinkedin?: string;
+  companyFoundedIn?: number;
+  companySize?: string;
+  jobTitle?: string;
+  currentJobDuration?: string;
+  currentJobDurationInYrs?: number;
+  location?: string;
+  addressCountryOnly?: string;
+  addressWithCountry?: string;
+  addressWithoutCountry?: string;
+  profilePic?: string;
+  profilePicHighQuality?: string;
+  about?: string;
+  creatorWebsite?: {
+    name?: string;
+    link?: string;
+  };
+  experiences?: any[];
+  educations?: any[];
+  skills?: any[];
+  languages?: any[];
+  interests?: any[];
   status: string;
-  date: string;
+  notes?: string;
+  assignedTo?: string;
+  tags?: string[];
+  leadScore?: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface LeadScore {

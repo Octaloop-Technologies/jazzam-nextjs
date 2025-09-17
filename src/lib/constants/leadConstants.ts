@@ -28,42 +28,69 @@ const sourceOptions = [
 ];
 
 // ==========================================================
-// Industry Options
+// Company Industry Options (Based on LinkedIn data)
 // ==========================================================
-const industryOptions = [
-  "technology",
-  "healthcare",
-  "finance",
-  "education",
-  "manufacturing",
-  "retail",
-  "real estate",
-  "consulting",
-  "marketing",
-  "legal",
-  "non-profit",
-  "government",
-  "entertainment",
-  "agriculture",
-  "transportation",
-  "energy",
-  "construction",
-  "food & beverage",
-  "telecommunications",
-  "other",
+const companyIndustryOptions = [
+  "Information Technology And Services",
+  "Computer Software",
+  "Internet",
+  "Financial Services",
+  "Banking",
+  "Healthcare",
+  "Education",
+  "Manufacturing",
+  "Retail",
+  "Real Estate",
+  "Consulting",
+  "Marketing And Advertising",
+  "Legal Services",
+  "Non-Profit Organization Management",
+  "Government Administration",
+  "Entertainment",
+  "Agriculture",
+  "Transportation",
+  "Energy",
+  "Construction",
+  "Food & Beverages",
+  "Telecommunications",
+  "Media Production",
+  "E-Learning",
+  "Computer Networking",
+  "Computer Games",
+  "Biotechnology",
+  "Pharmaceuticals",
+  "Automotive",
+  "Aerospace",
+  "Defense & Space",
+  "Other",
 ];
 
 // ==========================================================
-// Company Size Options
+// Company Size Options (Based on LinkedIn data)
 // ==========================================================
-const companySizeOptions = [
-  "1-10 employees",
-  "11-50 employees",
-  "51-200 employees",
-  "201-500 employees",
-  "501-1000 employees",
-  "1001-5000 employees",
-  "5000+ employees",
+const companySizeOptions = ["1-10", "11-50", "51-200", "201-500", "501-1000", "1001-5000", "5000+"];
+
+// ==========================================================
+// Sort Options (Based on backend model fields)
+// ==========================================================
+const sortOptions = [
+  { value: "createdAt", label: "Date Created" },
+  { value: "updatedAt", label: "Last Updated" },
+  { value: "fullName", label: "Name" },
+  { value: "company", label: "Company" },
+  { value: "companyIndustry", label: "Industry" },
+  { value: "location", label: "Location" },
+  { value: "leadScore", label: "Lead Score" },
+  { value: "followers", label: "Followers" },
+  { value: "connections", label: "Connections" },
+];
+
+// ==========================================================
+// Sort Order Options
+// ==========================================================
+const sortOrderOptions = [
+  { value: "desc", label: "Descending", icon: "↓" },
+  { value: "asc", label: "Ascending", icon: "↑" },
 ];
 
 // ==========================================================
@@ -100,20 +127,22 @@ const sourceOptionsWithLabels = sourceOptions.map((source) => ({
 }));
 
 // ==========================================================
-// Industry Options with Display Labels
+// Company Industry Options with Display Labels
 // ==========================================================
-const industryOptionsWithLabels = industryOptions.map((industry) => ({
+const companyIndustryOptionsWithLabels = companyIndustryOptions.map((industry) => ({
   value: industry,
-  label: formatDisplayLabel(industry),
+  label: industry, // LinkedIn industries are already properly formatted
 }));
 
 export {
   statusOptions,
   sourceOptions,
   sourceOptionsWithLabels,
-  industryOptions,
-  industryOptionsWithLabels,
+  companyIndustryOptions,
+  companyIndustryOptionsWithLabels,
   companySizeOptions,
+  sortOptions,
+  sortOrderOptions,
   interestsOptions,
   formatDisplayLabel,
 };

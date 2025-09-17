@@ -1,6 +1,7 @@
 import { LeftArrowSvg, RightArrowSvg } from "@/components/svgs/ArrowSvgs";
 import {
   ColdLeadsSvg,
+  NewLeadsSvg,
   ExternalLinkSvg,
   HotLeadsSvg,
   PercentageCircleSvg,
@@ -40,34 +41,14 @@ interface DashboardPageProps {
     page?: string;
     status?: string;
     search?: string;
-    industry?: string;
-    source?: string;
+    companyIndustry?: string;
+    companySize?: string;
     sortBy?: string;
     sortOrder?: string;
   }>;
 }
 
-interface Lead {
-  id: string;
-  _id: string;
-  assignedUser: {
-    avatar: string;
-  };
-  leadScore: number;
-  linkedinProfile: string;
-  companySize: string;
-  name: string;
-  company: string;
-  email: string;
-  status: string;
-  followUp: string;
-  date: string;
-}
-
 const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value || "";
-
   const params = await searchParams;
   const currentPage = parseInt(params.page || "1");
   const statusFilter = params.status;
@@ -76,8 +57,8 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
   // Search query and filters
   // ======================================================
   const searchQuery = params.search;
-  const industryFilter = params.industry;
-  const sourceFilter = params.source;
+  const companyIndustryFilter = params.companyIndustry;
+  const companySizeFilter = params.companySize;
   const sortBy = params.sortBy || "createdAt";
   const sortOrder = params.sortOrder || "desc";
 
@@ -87,27 +68,24 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
   const [leadsResponse, statsResponse] = await Promise.all([
     searchQuery
       ? searchLeads({
-          token,
           query: searchQuery,
           page: currentPage,
           limit: 5,
           status: statusFilter,
-          industry: industryFilter,
-          source: sourceFilter,
+          companyIndustry: companyIndustryFilter,
           sortBy,
           sortOrder,
         })
       : getAllLeads({
-          token,
           page: currentPage,
           limit: 5,
           status: statusFilter,
-          industry: industryFilter,
-          source: sourceFilter,
+          companyIndustry: companyIndustryFilter,
+          companySize: companySizeFilter,
           sortBy,
           sortOrder,
         }),
-    getLeadStats({ token }),
+    getLeadStats(),
   ]);
 
   const leadsData = leadsResponse.success ? leadsResponse.data?.data : null;
@@ -156,6 +134,11 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
     let textColorClass;
 
     switch (status.toLowerCase()) {
+      case "new":
+        icon = <NewLeadsSvg className="size-4" />;
+        bgColorClass = "bg-pri-light";
+        textColorClass = "text-text";
+        break;
       case "hot":
         icon = <HotLeadsSvg className="size-4" />;
         bgColorClass = "bg-hot-light";
@@ -207,8 +190,7 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
           {/* tabs */}
           <TabNavigation
             searchQuery={searchQuery}
-            industryFilter={industryFilter}
-            sourceFilter={sourceFilter}
+            companyIndustryFilter={companyIndustryFilter}
             sortBy={sortBy}
             sortOrder={sortOrder}
             statusFilter={statusFilter}
@@ -263,8 +245,9 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                   paginationParams.set("page", page.toString());
                   if (searchQuery) paginationParams.set("search", searchQuery);
                   if (statusFilter) paginationParams.set("status", statusFilter);
-                  if (industryFilter) paginationParams.set("industry", industryFilter);
-                  if (sourceFilter) paginationParams.set("source", sourceFilter);
+                  if (companyIndustryFilter)
+                    paginationParams.set("companyIndustry", companyIndustryFilter);
+                  if (companySizeFilter) paginationParams.set("companySize", companySizeFilter);
                   if (sortBy !== "createdAt") paginationParams.set("sortBy", sortBy);
                   if (sortOrder !== "desc") paginationParams.set("sortOrder", sortOrder);
 
@@ -317,24 +300,25 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
               <div className="px-[30px]">
                 {leadsData?.leads?.length > 0 ? (
                   leadsData.leads.map((lead: Lead) => (
-                    <TableRow key={lead.id}>
+                    <TableRow key={lead._id}>
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <div className="size-[40px] rounded-full overflow-hidden">
                             <OptimizedImage
-                              src={
-                                lead.assignedUser?.avatar ||
-                                "/assets/images/leads/dummy-profile.png"
-                              }
+                              src={lead.profilePic || "/assets/images/leads/dummy-profile.png"}
                               alt="avatar"
                               fill
                               className="w-full h-full object-cover"
                             />
                           </div>
                           <div className="flex flex-col leading-none">
-                            <p className="text-[16px] font-[500]">{lead.name}</p>
-                            <p className="text-[12px] text-gray-200">{lead.company}</p>
-                            <p className="text-[12px] text-gray-200">{lead.email}</p>
+                            <p className="text-[16px] font-[500]">
+                              {lead.fullName || `${lead.firstName} ${lead.lastName}`}
+                            </p>
+                            <p className="text-[12px] text-gray-200">{lead.company || "N/A"}</p>
+                            <p className="text-[12px] text-gray-200">
+                              {lead.email || lead.jobTitle || "N/A"}
+                            </p>
                           </div>
                         </div>
                       </TableCell>
@@ -346,15 +330,16 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                         </div>
                       </TableCell>
                       <TableCell>
-                        {lead.linkedinProfile ? (
+                        {lead.linkedinProfileUrl ? (
                           <Link
-                            href={lead.linkedinProfile}
+                            href={lead.linkedinProfileUrl}
                             target="_blank"
                             prefetch={false}
                             rel="noopener noreferrer"
                             className="flex items-center gap-2.5 text-cold text-sm underline-auto-from-front gray-hover"
                           >
-                            {lead.name} <ExternalLinkSvg />
+                            {lead.fullName || `${lead.firstName} ${lead.lastName}`}{" "}
+                            <ExternalLinkSvg />
                           </Link>
                         ) : (
                           <span className="text-gray-400 text-sm">No LinkedIn</span>

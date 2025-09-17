@@ -2,12 +2,17 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { industryOptionsWithLabels, sourceOptionsWithLabels } from "@/lib/constants/leadConstants";
+import {
+  companyIndustryOptionsWithLabels,
+  companySizeOptions,
+  sortOptions,
+  sortOrderOptions,
+} from "@/lib/constants/leadConstants";
 
 interface SearchFilters {
   query: string;
-  industry: string;
-  source: string;
+  companyIndustry: string;
+  companySize: string;
   sortBy: string;
   sortOrder: string;
 }
@@ -27,8 +32,8 @@ const SearchBarWithFilters = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [filters, setFilters] = useState<SearchFilters>({
     query: "",
-    industry: "",
-    source: "",
+    companyIndustry: "",
+    companySize: "",
     sortBy: "createdAt",
     sortOrder: "desc",
   });
@@ -47,8 +52,8 @@ const SearchBarWithFilters = () => {
 
     const initialFilters: SearchFilters = {
       query: searchParams.get("search") || "",
-      industry: searchParams.get("industry") || "",
-      source: searchParams.get("source") || "",
+      companyIndustry: searchParams.get("companyIndustry") || "",
+      companySize: searchParams.get("companySize") || "",
       sortBy: searchParams.get("sortBy") || "createdAt",
       sortOrder: searchParams.get("sortOrder") || "desc",
     };
@@ -143,8 +148,8 @@ const SearchBarWithFilters = () => {
   const clearAllFilters = () => {
     const clearedFilters: SearchFilters = {
       query: "",
-      industry: "",
-      source: "",
+      companyIndustry: "",
+      companySize: "",
       sortBy: "createdAt",
       sortOrder: "desc",
     };
@@ -154,8 +159,8 @@ const SearchBarWithFilters = () => {
     setIsFiltersOpen(false);
   };
 
-  const hasActiveFilters = filters.query || filters.industry || filters.source;
-  const activeFilterCount = [filters.query, filters.industry, filters.source].filter(
+  const hasActiveFilters = filters.query || filters.companyIndustry || filters.companySize;
+  const activeFilterCount = [filters.query, filters.companyIndustry, filters.companySize].filter(
     Boolean
   ).length;
 
@@ -243,16 +248,18 @@ const SearchBarWithFilters = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-4 mb-4">
-            {/* ---------------------------- Industry Filter ---------------------------- */}
+            {/* ---------------------------- Company Industry Filter ---------------------------- */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Industry</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Company Industry
+              </label>
               <select
-                value={filters.industry}
-                onChange={(e) => handleFilterChange("industry", e.target.value)}
+                value={filters.companyIndustry}
+                onChange={(e) => handleFilterChange("companyIndustry", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pri focus:border-pri outline-none"
               >
                 <option value="">All Industries</option>
-                {industryOptionsWithLabels.map((option) => (
+                {companyIndustryOptionsWithLabels.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -260,18 +267,18 @@ const SearchBarWithFilters = () => {
               </select>
             </div>
 
-            {/* ---------------------------- Source Filter ---------------------------- */}
+            {/* ---------------------------- Company Size Filter ---------------------------- */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Source</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Company Size</label>
               <select
-                value={filters.source}
-                onChange={(e) => handleFilterChange("source", e.target.value)}
+                value={filters.companySize}
+                onChange={(e) => handleFilterChange("companySize", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pri focus:border-pri outline-none"
               >
-                <option value="">All Sources</option>
-                {sourceOptionsWithLabels.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
+                <option value="">All Sizes</option>
+                {companySizeOptions.map((size) => (
+                  <option key={size} value={size}>
+                    {size} employees
                   </option>
                 ))}
               </select>
@@ -286,19 +293,22 @@ const SearchBarWithFilters = () => {
                   onChange={(e) => handleFilterChange("sortBy", e.target.value)}
                   className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pri focus:border-pri outline-none"
                 >
-                  <option value="createdAt">Date Created</option>
-                  <option value="name">Name</option>
-                  <option value="company">Company</option>
-                  <option value="leadScore">Lead Score</option>
-                  <option value="relevance">Relevance</option>
+                  {sortOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
                 </select>
                 <select
                   value={filters.sortOrder}
                   onChange={(e) => handleFilterChange("sortOrder", e.target.value)}
                   className="w-20 px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pri focus:border-pri outline-none"
                 >
-                  <option value="desc">↓</option>
-                  <option value="asc">↑</option>
+                  {sortOrderOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.icon}
+                    </option>
+                  ))}
                 </select>
               </div>
             </div>

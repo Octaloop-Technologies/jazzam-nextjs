@@ -1,5 +1,3 @@
-import Logo from "@/components/shared/logo/Logo";
-import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
 import OptimizedImage from "@/components/ui/image/OptimizedImage";
 import OptimizedVideo from "@/components/ui/video/OptimizedVideo";
 import FaqAccordion, { FaqItem } from "@/components/ui/accordion/FaqAccordion";
@@ -10,8 +8,6 @@ import { CustomInput } from "@/components/ui/input";
 import { CustomTextarea } from "@/components/ui/textarea";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { getCurrentLang } from "../action";
-import HomeNavbar from "./HomeNavbar";
-import HomeFooter from "./HomeFooter";
 import WaitlistButton from "@/components/view/(main-page)/WaitlistButton";
 
 const LandingPage = async () => {
@@ -48,10 +44,7 @@ const LandingPage = async () => {
   ];
 
   return (
-    <div className="w-full bg-white">
-      {/* ------------- navbar ------------- */}
-      <HomeNavbar dict={dict} currentLang={lang} />
-
+    <div>
       {/* ------------- hero ------------- */}
       <section className="gradient-bg pb-14 pt-20">
         <div className="home-wrapper">
@@ -333,9 +326,6 @@ const LandingPage = async () => {
           </div>
         </div>
       </section>
-
-      {/* ------------- footer ------------- */}
-      <HomeFooter dict={dict} />
     </div>
   );
 };
