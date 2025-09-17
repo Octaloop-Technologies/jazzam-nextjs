@@ -13,7 +13,7 @@ const FollowUpMenu = ({
   customTrigger,
   showSendNow = false,
 }: {
-  lead: Lead;
+  lead: Lead & { name: string };
   customTrigger?: React.ReactNode;
   showSendNow?: boolean;
 }) => {
@@ -21,7 +21,7 @@ const FollowUpMenu = ({
   // State
   // ======================================================
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedLeadId, setSelectedLeadId] = useState<string>(lead.id);
+  const [selectedLeadId, setSelectedLeadId] = useState<string>(lead._id);
   const [isLeadDetailModalOpen, setIsLeadDetailModalOpen] = useState(false);
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
 
@@ -35,7 +35,7 @@ const FollowUpMenu = ({
 
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
-    setSelectedLeadId(lead.id);
+    setSelectedLeadId(lead._id);
   };
 
   const handleConfirmDelete = () => {
@@ -50,7 +50,7 @@ const FollowUpMenu = ({
   // ======================================================
   const handleCloseLeadDetailModal = () => {
     setIsLeadDetailModalOpen(false);
-    setSelectedLeadId(lead.id);
+    setSelectedLeadId(lead._id);
   };
 
   // ======================================================
@@ -62,7 +62,7 @@ const FollowUpMenu = ({
 
   const handleConfirmSchedule = (date: Date) => {
     // Here you would implement the actual scheduling logic
-    console.log(`Scheduling follow-up for lead ${lead.id} on ${date.toLocaleDateString()}`);
+    console.log(`Scheduling follow-up for lead ${lead._id} on ${date.toLocaleDateString()}`);
     // After scheduling, you might want to update the lead status or refresh the data
     handleCloseScheduleModal();
   };
@@ -136,7 +136,7 @@ const FollowUpMenu = ({
         <DropdownItem>
           <button
             className="w-full text-danger flex gap-1 hover:text-gray-200"
-            onClick={() => handleDeleteClick(lead.id)}
+            onClick={() => handleDeleteClick(lead._id)}
           >
             <DeleteSvg />
             Delete lead
@@ -166,7 +166,7 @@ const FollowUpMenu = ({
         isOpen={isScheduleModalOpen}
         onClose={handleCloseScheduleModal}
         onConfirm={handleConfirmSchedule}
-        title={`Schedule Follow-up for ${lead.name}`}
+        title={`Schedule Follow-up for ${lead.fullName || `${lead.firstName} ${lead.lastName}`}`}
       />
     </>
   );

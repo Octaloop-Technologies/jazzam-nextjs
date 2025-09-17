@@ -42,7 +42,7 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   // ==========================================================
   // Lead Score Calculation (based on LinkedIn data)
   // ==========================================================
-  const calculateLeadScore = (lead: any) => {
+  const calculateLeadScore = (lead: Lead) => {
     let score = 0;
 
     // Base score for having LinkedIn profile
@@ -401,7 +401,7 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                 </h3>
                 <div className="flex flex-wrap gap-2.5 text-pri">
                   {lead.skills && lead.skills.length > 0 ? (
-                    lead.skills.map((skill: any, index: number) => (
+                    lead.skills.map((skill: { title: string }, index: number) => (
                       <div key={index} className="bg-pri-light rounded-4xl py-2.5 px-5">
                         {skill.title || "Skill"}
                       </div>
@@ -419,11 +419,19 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                 </h3>
                 <div className="flex flex-wrap gap-2.5 text-pri">
                   {lead.interests && lead.interests.length > 0 ? (
-                    lead.interests.map((interest: any, index: number) => (
-                      <div key={index} className="bg-pri-light rounded-4xl py-2.5 px-5">
-                        {interest.section_name || interest.titleV2 || interest.title || "Interest"}
-                      </div>
-                    ))
+                    lead.interests.map(
+                      (
+                        interest: { section_name: string; titleV2: string; title: string },
+                        index: number
+                      ) => (
+                        <div key={index} className="bg-pri-light rounded-4xl py-2.5 px-5">
+                          {interest.section_name ||
+                            interest.titleV2 ||
+                            interest.title ||
+                            "Interest"}
+                        </div>
+                      )
+                    )
                   ) : (
                     <div className="text-gray-200 text-sm">No interests available</div>
                   )}

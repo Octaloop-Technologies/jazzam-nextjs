@@ -13,7 +13,7 @@ import FollowUpMenu from "@/components/view/dashboard/follow-up/FollowUpMenu";
 // ======================================================
 const leadsData = [
   {
-    id: "1",
+    _id: "1",
     followUp: "follow-up-1",
     name: "Wade Warren",
     company: "TechCorp Inc",
@@ -23,7 +23,7 @@ const leadsData = [
     date: "01 Sep 2025, 12:00 PM",
   },
   {
-    id: "2",
+    _id: "2",
     followUp: "follow-up-2",
     name: "Wade Warren",
     company: "TechCorp Inc",
@@ -81,7 +81,7 @@ const FollowUpsPage = () => {
             </TableHeader>
             <div className="px-[30px]">
               {leadsData.map((lead) => (
-                <TableRow key={lead.id} className="!grid-cols-4">
+                <TableRow key={lead._id} className="!grid-cols-4">
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <div className="size-[40px] rounded-full overflow-hidden">
@@ -123,7 +123,7 @@ const FollowUpsPage = () => {
                   <TableCell className="flex-between">
                     <h3 className="text-[14px] text-gray-200">{lead.date}</h3>
                     <FollowUpMenu
-                      lead={lead}
+                      lead={lead as unknown as Lead & { name: string }}
                       showSendNow={lead.status.toLowerCase() === "scheduled"}
                     />
                   </TableCell>
