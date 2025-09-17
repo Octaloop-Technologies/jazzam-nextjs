@@ -32,7 +32,7 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   // Backcrumb Links and names
   // ==========================================================
   const segments = [
-    { label: "Leads", path: "/super-user/leads" },
+    { label: "Leads", path: "/super-user" },
     {
       label: lead.fullName || `${lead.firstName} ${lead.lastName}` || "Lead",
       path: `/super-user/leads/${id}`,
@@ -116,8 +116,8 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     {
       icon: <LinkedInSvg />,
       title: "Websites",
-      value: lead.creatorWebsite.link || "Not available",
-      link: lead.linkedinProfileUrl || "#",
+      value: lead.creatorWebsite?.link || "Not available",
+      website: lead.creatorWebsite?.link,
       copy: false,
     },
   ];
@@ -133,7 +133,7 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
             <div className="flex-between gap-2.5">
               <div>
                 <div className="flex items-center gap-3">
-                  <div className="size-[60px] rounded-full overflow-hidden">
+                  <div className="size-[60px] min-w-[60px] rounded-full overflow-hidden">
                     <OptimizedImage
                       src={lead.profilePic || "/assets/images/leads/dummy-profile.png"}
                       alt="avatar"
@@ -146,8 +146,8 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                       {lead.fullName || `${lead.firstName} ${lead.lastName}` || "Unknown"}
                     </p>
                     <p className="text-[12px] text-gray-200">{lead.company || "No company"}</p>
-                    <p className="text-[12px] text-gray-200">
-                      {lead.headline || lead.email || "No headline"}
+                    <p className="text-[12px] text-gray-200 line-clamp-1">
+                      {lead.email || lead.headline || "No headline"}
                     </p>
                   </div>
                 </div>
@@ -221,7 +221,23 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                       <h3 className="text-[14px] text-gray-250 leading-none font-[500]">
                         {item.title}
                       </h3>
-                      {item.link ? (
+                      {item.website ? (
+                        <h2 className="text-[14px] leading-none text-cold gray-hover">
+                          {item.website ? (
+                            <Link
+                              prefetch={false}
+                              href={item.website}
+                              target="_blank"
+                              className="underline-auto-from-front flex gap-2.5"
+                            >
+                              {item.value}
+                              <ShareSvg />
+                            </Link>
+                          ) : (
+                            <h2 className="text-[14px] leading-none font-[500]">{item.value}</h2>
+                          )}
+                        </h2>
+                      ) : item.link ? (
                         <h2 className="text-[14px] leading-none text-cold gray-hover">
                           <Link
                             prefetch={false}
