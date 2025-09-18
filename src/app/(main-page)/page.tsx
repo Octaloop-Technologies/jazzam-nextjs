@@ -289,7 +289,6 @@ const LandingPage = async () => {
                     </h5>
                   </div>
                 </div>
-
                 <div>
                   <div className="flex gap-1">
                     {Array.from({ length: 5 }).map((_, index) => (
@@ -302,27 +301,25 @@ const LandingPage = async () => {
             </div>
 
             {/* Right Side - Contact Form */}
-            <div className="">
-              <form className="space-y-[28px] text-[14px]">
-                <CustomInput
-                  label={dict?.home?.contactUs?.form?.fullName}
-                  placeholder={dict?.home?.contactUs?.form?.fullNamePlaceholder}
-                />
-                <CustomInput
-                  label={dict?.home?.contactUs?.form?.email}
-                  placeholder={dict?.home?.contactUs?.form?.emailPlaceholder}
-                />
-                <CustomInput
-                  label={dict?.home?.contactUs?.form?.company}
-                  placeholder={dict?.home?.contactUs?.form?.companyPlaceholder}
-                />
-                <CustomTextarea
-                  label={dict?.home?.contactUs?.form?.message}
-                  placeholder={dict?.home?.contactUs?.form?.messagePlaceholder}
-                />
-                <SubmitButton title={dict?.home?.contactUs?.form?.submitButton} />
-              </form>
-            </div>
+            <form className="space-y-[28px] text-[14px]">
+              <CustomInput
+                label={dict?.home?.contactUs?.form?.fullName}
+                placeholder={dict?.home?.contactUs?.form?.fullNamePlaceholder}
+              />
+              <CustomInput
+                label={dict?.home?.contactUs?.form?.email}
+                placeholder={dict?.home?.contactUs?.form?.emailPlaceholder}
+              />
+              <CustomInput
+                label={dict?.home?.contactUs?.form?.company}
+                placeholder={dict?.home?.contactUs?.form?.companyPlaceholder}
+              />
+              <CustomTextarea
+                label={dict?.home?.contactUs?.form?.message}
+                placeholder={dict?.home?.contactUs?.form?.messagePlaceholder}
+              />
+              <SubmitButton title={dict?.home?.contactUs?.form?.submitButton} />
+            </form>
           </div>
         </div>
       </section>

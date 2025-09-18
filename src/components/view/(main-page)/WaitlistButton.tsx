@@ -6,14 +6,23 @@ import { joinWaitlist } from "../../../app/(main-page)/action";
 import { useToast } from "@/lib/hooks/useToast";
 
 const WaitlistButton = () => {
+  // ======================================================
+  // Hooks
+  // ======================================================
   const { success, error: ErrorToast } = useToast();
 
+  // ======================================================
+  // States
+  // ======================================================
   const [isFocused, setIsFocused] = useState(false);
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showInput, setShowInput] = useState(false);
 
+  // ======================================================
+  // Refs
+  // ======================================================
   const containerRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -24,7 +33,9 @@ const WaitlistButton = () => {
   const shimmerRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<HTMLDivElement>(null);
 
+  // ======================================================
   // Initialize animations
+  // ======================================================
   useEffect(() => {
     if (buttonRef.current) {
       // Initial button animation
@@ -204,7 +215,9 @@ const WaitlistButton = () => {
     }
   }, [isLoading]);
 
+  // ======================================================
   // Handle form submission
+  // ======================================================
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     e.stopPropagation();

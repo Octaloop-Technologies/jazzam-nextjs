@@ -9,9 +9,13 @@ import { Dictionary } from "@/lib/i18n/getDictionary";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+import Link from "next/link";
 
+// ======================================================
 // Register GSAP plugins
-gsap.registerPlugin(ScrollTrigger);
+// ======================================================
+gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 interface HomeNavbarProps {
   dict: Dictionary;
@@ -19,21 +23,31 @@ interface HomeNavbarProps {
 }
 
 const HomeNavbar = ({ dict, currentLang }: HomeNavbarProps) => {
+  // ======================================================
+  // States
+  // ======================================================
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  // Refs for menu elements
+  // ======================================================
+  // Refs
+  // ======================================================
   const menuRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const menuContentRef = useRef<HTMLDivElement>(null);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
 
+  // ======================================================
   // Refs for menu items
+  // ======================================================
   const menuItemsRef = useRef<(HTMLAnchorElement | HTMLDivElement)[]>([]);
   const addToMenuItemsRef = useCallback((el: HTMLAnchorElement | HTMLDivElement | null) => {
     if (el) menuItemsRef.current.push(el);
   }, []);
 
+  // ======================================================
+  // Menu animations
+  // ======================================================
   const closeMenu = useCallback(() => {
     if (isMenuOpen && !isAnimating) {
       setIsAnimating(true);
@@ -49,13 +63,19 @@ const HomeNavbar = ({ dict, currentLang }: HomeNavbarProps) => {
         },
       });
 
-      // Lightning-fast close animation
+      // Enhanced close animation with blur and rotation
       tl.to(menuItemsRef.current, {
-        y: 50,
+        y: 60,
         opacity: 0,
-        scale: 0.5,
-        duration: 0.08,
-        stagger: 0.005,
+        scale: 0.3,
+        rotation: -10,
+        rotationX: 15,
+        filter: "blur(8px)",
+        duration: 0.12,
+        stagger: {
+          amount: 0.08,
+          from: "start",
+        },
         ease: "power2.in",
       })
 
@@ -124,14 +144,16 @@ const HomeNavbar = ({ dict, currentLang }: HomeNavbarProps) => {
           },
           "-=0.1"
         )
-        // Smooth bubble-up animation
+        // Enhanced bubble-up animation with blur and rotation effects
         .fromTo(
           menuItemsRef.current,
           {
-            y: 80,
+            y: 100,
             opacity: 0,
-            scale: 0.3,
-            rotation: 8,
+            scale: 0.2,
+            rotation: 15,
+            rotationX: -20,
+            filter: "blur(15px)",
             transformOrigin: "center bottom",
           },
           {
@@ -139,19 +161,47 @@ const HomeNavbar = ({ dict, currentLang }: HomeNavbarProps) => {
             opacity: 1,
             scale: 1,
             rotation: 0,
-            duration: 0.25,
+            rotationX: 0,
+            filter: "blur(0px)",
+            duration: 0.6,
             stagger: {
-              amount: 0.1,
+              amount: 0.3,
+              from: "end",
+              ease: "power2.out",
+            },
+            ease: "back.out(1.4)",
+          },
+          "-=0.02"
+        )
+        // Add a wave-like secondary animation for more intrigue
+        .to(
+          menuItemsRef.current,
+          {
+            scale: 1.08,
+            duration: 0.15,
+            stagger: {
+              amount: 0.2,
               from: "end",
             },
             ease: "power2.out",
           },
-          "-=0.02"
-        );
+          "-=0.1"
+        )
+        .to(menuItemsRef.current, {
+          scale: 1,
+          duration: 0.25,
+          stagger: {
+            amount: 0.2,
+            from: "end",
+          },
+          ease: "elastic.out(1, 0.6)",
+        });
     }
   }, [isMenuOpen, isAnimating, closeMenu]);
 
+  // ======================================================
   // Enhanced event handlers with better performance
+  // ======================================================
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape" && isMenuOpen) {
@@ -198,17 +248,121 @@ const HomeNavbar = ({ dict, currentLang }: HomeNavbarProps) => {
     };
   }, []);
 
+  // ==========================================================
+  // Enhanced Navbar Animation with Stagger and Blur Effects
+  // ==========================================================
+  useGSAP(() => {
+    const ctx = gsap.context(() => {
+      // Set initial state for navbar items
+      gsap.set(".navbar-item", {
+        opacity: 0,
+        y: -30,
+        scale: 0.8,
+        filter: "blur(10px)",
+        rotationX: -15,
+        transformOrigin: "center center",
+      });
+
+      // Create a timeline for the navbar entrance
+      const tl = gsap.timeline({ delay: 0.2 });
+
+      // Animate navbar container first
+      tl.fromTo(
+        ".navbar",
+        {
+          yPercent: -100,
+          opacity: 0,
+        },
+        {
+          yPercent: 0,
+          opacity: 1,
+          duration: 0.6,
+          ease: "power3.out",
+        }
+      )
+        // Stagger animation for navbar items with blur-to-normal effect
+        .to(
+          ".navbar-item",
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            filter: "blur(0px)",
+            rotationX: 0,
+            duration: 0.8,
+            stagger: {
+              amount: 0.4,
+              from: "start",
+              ease: "power2.out",
+            },
+            ease: "back.out(1.2)",
+          },
+          "-=0.3"
+        )
+        // Add a subtle bounce effect to make it more intriguing
+        .to(
+          ".navbar-item",
+          {
+            scale: 1.05,
+            duration: 0.1,
+            stagger: {
+              amount: 0.1,
+              from: "start",
+            },
+            ease: "power2.out",
+          },
+          "-=0.2"
+        )
+        .to(".navbar-item", {
+          scale: 1,
+          duration: 0.2,
+          stagger: {
+            amount: 0.1,
+            from: "start",
+          },
+          ease: "elastic.out(1, 0.5)",
+        });
+
+      // Add hover animations for navbar items
+      const navbarItems = document.querySelectorAll(".navbar-item");
+      navbarItems.forEach((item) => {
+        item.addEventListener("mouseenter", () => {
+          gsap.to(item, {
+            scale: 1.05,
+            y: -2,
+            duration: 0.3,
+            ease: "power2.out",
+            filter: "brightness(1.1)",
+          });
+        });
+
+        item.addEventListener("mouseleave", () => {
+          gsap.to(item, {
+            scale: 1,
+            y: 0,
+            duration: 0.3,
+            ease: "power2.out",
+            filter: "brightness(1)",
+          });
+        });
+      });
+    });
+    return () => ctx.revert();
+  }, []);
+
   return (
     <div className="home-wrapper py-[14px]">
       <nav className="flex-between">
-        <Logo />
+        <Link href="/" prefetch={false} className="navbar-item">
+          <Logo />
+        </Link>
         <div className="hidden md:flex flex-center gap-5">
-          <div className="rounded-xl-2 border border-gray-b h-[52px] w-[138px] flex-center">
+          <div className="rounded-xl-2 border border-gray-b h-[52px] w-[138px] flex-center navbar-item">
             <Language languages={languages} changeLang={changeLang} currentLang={currentLang} />
           </div>
           <PrimaryButton
             title={dict?.home?.hero?.getStarted}
-            className="h-[52px] w-[138px] rounded-xl-2"
+            className="h-[52px] w-[138px] rounded-xl-2 navbar-item"
           />
         </div>
         <div className="md:hidden">
@@ -311,20 +465,35 @@ const HomeNavbar = ({ dict, currentLang }: HomeNavbarProps) => {
           </div>
         </div>
 
-        {/* Floating bubble elements for unique visual effect */}
+        {/* Enhanced floating bubble elements with intriguing animations */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 left-1/4 w-16 h-16 bg-blue-400/20 rounded-full bubble-float"></div>
+          <div
+            className="absolute top-1/4 left-1/4 w-16 h-16 bg-blue-400/20 rounded-full bubble-float"
+            style={{
+              animation: "floatBubble 4s ease-in-out infinite",
+              animationDelay: "0s",
+            }}
+          ></div>
           <div
             className="absolute top-1/3 right-1/3 w-12 h-12 bg-purple-400/20 rounded-full bubble-float"
-            style={{ animationDelay: "0.5s" }}
+            style={{
+              animation: "floatBubble 3.5s ease-in-out infinite reverse",
+              animationDelay: "0.5s",
+            }}
           ></div>
           <div
             className="absolute bottom-1/3 left-1/3 w-20 h-20 bg-pink-400/20 rounded-full bubble-float"
-            style={{ animationDelay: "1s" }}
+            style={{
+              animation: "floatBubble 5s ease-in-out infinite",
+              animationDelay: "1s",
+            }}
           ></div>
           <div
             className="absolute bottom-1/4 right-1/4 w-14 h-14 bg-cyan-400/20 rounded-full bubble-float"
-            style={{ animationDelay: "1.5s" }}
+            style={{
+              animation: "floatBubble 4.5s ease-in-out infinite reverse",
+              animationDelay: "1.5s",
+            }}
           ></div>
         </div>
       </div>
