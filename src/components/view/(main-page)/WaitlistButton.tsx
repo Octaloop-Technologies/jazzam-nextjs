@@ -46,9 +46,7 @@ const WaitlistButton = () => {
         const floatingTl = gsap.timeline({ delay: 1.5 });
 
         floatingTl.to(buttonTextRef.current, {
-          y: -1,
           duration: 3,
-          repeat: -1,
           yoyo: true,
           ease: "power2.inOut",
         });

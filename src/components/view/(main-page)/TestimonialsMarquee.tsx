@@ -3,6 +3,7 @@
 import { Marquee, TextMarquee } from "@/components/ui/marquee";
 import OptimizedImage from "@/components/ui/image/OptimizedImage";
 import { Dictionary } from "@/lib/i18n/getDictionary";
+import { useSimpleTextAnimation } from "@/styles/animations/useSimpleTextAnimation";
 
 const TestimonialCard: React.FC<{ testimonial: Testimonial }> = ({ testimonial }) => {
   return (
@@ -108,6 +109,11 @@ const TestimonialsMarquee: React.FC<{ dict: Dictionary }> = ({ dict }) => {
     dict?.home?.marquee?.customerSatisfaction,
   ];
 
+  const { titleRef, paragraphRef, containerRef } = useSimpleTextAnimation({
+    titleText: dict?.home?.testimonials?.title || "",
+    paragraphText: dict?.home?.testimonials?.description || "",
+  });
+
   return (
     <>
       <div className="home-padding bg-bg">
@@ -136,9 +142,13 @@ const TestimonialsMarquee: React.FC<{ dict: Dictionary }> = ({ dict }) => {
         </svg>
 
         <div className="pt-[70px] flex-between home-wrapper max-md:flex-col max-md:items-start max-md:gap-5 max-2xl:pt-10">
-          <div>
-            <h1 className="home-heading">{dict?.home?.testimonials?.title}</h1>
-            <h4 className="home-desc">{dict?.home?.testimonials?.description}</h4>
+          <div ref={containerRef}>
+            <h1 className="home-heading" ref={titleRef}>
+              {dict?.home?.testimonials?.title}
+            </h1>
+            <h4 className="home-desc" ref={paragraphRef}>
+              {dict?.home?.testimonials?.description}
+            </h4>
           </div>
           <div className="flex items-end gap-12 max-lg:gap-5 max-lg:flex-col max-md:flex-row max-md:justify-between max-md:w-full">
             <div>
