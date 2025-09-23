@@ -334,7 +334,7 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
           <div className="w-full max-w-[5%]" aria-hidden="true" />
         </div>
 
-        {/* ------------------------- Lead Qualification (BANT) : Not Yet Implemented ------------------------- */}
+        {/* ------------------------- Lead Qualification (BANT) ------------------------- */}
         <div className="flex-between gap-2.5 w-full items-stretch">
           <div className="p-[30px] w-full border border-gray-b rounded-3xl bg-white max-w-[55%]">
             <h2 className="text-[16px] leading-none font-[500] capitalize pb-2 border-b border-gray-n/30">
@@ -343,7 +343,9 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
             <div className="mt-4 flex justify-between gap-2.5">
               <div className="flex flex-col gap-1">
                 <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Budget</h3>
-                <h2 className="text-[14px] leading-none font-[500]">$50K - $100K</h2>
+                <h2 className="text-[12px] leading-none font-[500]">
+                  {lead.bant?.budget?.value || "Not available"}
+                </h2>
               </div>
               <div className="flex-center px-5 h-[25px] text-[12px] text-sec bg-sec-light rounded-lg">
                 Qualified
@@ -352,7 +354,14 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
             <div className="mt-4 flex justify-between gap-2.5">
               <div className="flex flex-col gap-1">
                 <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Authority</h3>
-                <h2 className="text-[14px] leading-none font-[500]">Decision maker: Yes</h2>
+                <h2 className="text-[14px] leading-none font-[500]">
+                  Decision maker: {lead.bant?.authority?.isDecisionMaker ? "Yes" : "No"}
+                  {lead.bant?.authority?.value && (
+                    <div className="mt-1 text-[12px]">
+                      {lead.bant.authority.value}
+                    </div>
+                  )}
+                </h2>
               </div>
               <div className="flex-center px-5 h-[25px] text-[12px] text-hot bg-hot-light rounded-lg">
                 High
@@ -362,11 +371,17 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
               <div className="flex flex-col gap-1">
                 <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Need</h3>
                 <h2 className="text-[14px] leading-none font-[500]">
-                  <ul className="list-disc list-inside space-y-1">
-                    <li>Scaling challenges</li>
-                    <li>Team coordination</li>
-                    <li>Cost optimization</li>
-                  </ul>
+                  {lead.bant?.need?.needsList && lead.bant.need.needsList.length > 0 ? (
+                    <ul className="list-disc list-inside space-y-1">
+                      {lead.bant.need.needsList.map((needItem: string, index: number) => (
+                        <li key={index}>{needItem}</li>
+                      ))}
+                    </ul>
+                  ) : lead.bant?.need?.value ? (
+                    <div className="text-[12px]">{lead.bant.need.value}</div>
+                  ) : (
+                    "Not available"
+                  )}
                 </h2>
               </div>
               <div className="flex-center px-5 h-[25px] text-[12px] text-cold bg-cold-light rounded-lg">
@@ -376,7 +391,9 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
             <div className="mt-4 flex justify-between gap-2.5">
               <div className="flex flex-col gap-1">
                 <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Timeline</h3>
-                <h2 className="text-[14px] leading-none font-[500]">Expected decision timeframe</h2>
+                <h2 className="text-[12px] leading-none font-[500]">
+                  {lead.bant?.timeline?.value || "Expected decision timeframe not available"}
+                </h2>
               </div>
               <div className="flex-center px-5 h-[25px] text-[12px] text-pipeline bg-pipeline-light rounded-lg">
                 Q1 2025

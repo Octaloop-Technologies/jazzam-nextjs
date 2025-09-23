@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 // Define protected routes that require authentication
 // ==============================================================
 const protectedRoutes = ["/super-user", "/profile", "/dashboard"];
+// const protectedRoutes = ["/profile", "/dashboard"];
 
 // ==============================================================
 // Define auth routes that should not be accessible when logged in (will redirect to dashboard)

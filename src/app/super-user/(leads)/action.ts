@@ -190,6 +190,7 @@ export const getLeadById = async ({ id }: { id: string }) => {
     }
 
     const responseData = await response.json();
+    console.log(responseData)
     return { success: true, data: responseData.data };
   } catch (error) {
     console.error("Error fetching lead by id:", error);
