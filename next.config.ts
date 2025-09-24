@@ -19,6 +19,15 @@ const nextConfig: NextConfig = {
     optimizeCss: true,
     optimizePackageImports: ["gsap", "@gsap/react"],
   },
+  // Enable CORS for API routes and external requests
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: `${process.env.NEXT_PUBLIC_BASE_URL}/api/:path*`,
+      },
+    ];
+  },
   async headers() {
     return [
       {
@@ -36,6 +45,27 @@ const nextConfig: NextConfig = {
             key: "Referrer-Policy",
             value: "strict-origin-when-cross-origin",
           },
+          // Add CORS headers for development
+          ...(process.env.NODE_ENV === "development"
+            ? [
+                {
+                  key: "Access-Control-Allow-Origin",
+                  value: "*",
+                },
+                {
+                  key: "Access-Control-Allow-Methods",
+                  value: "GET, POST, PUT, DELETE, OPTIONS",
+                },
+                {
+                  key: "Access-Control-Allow-Headers",
+                  value: "Content-Type, Authorization, Cookie",
+                },
+                {
+                  key: "Access-Control-Allow-Credentials",
+                  value: "true",
+                },
+              ]
+            : []),
         ],
       },
     ];
