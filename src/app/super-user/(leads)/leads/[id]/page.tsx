@@ -34,7 +34,14 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const segments = [
     { label: "Leads", path: "/super-user" },
     {
-      label: lead.fullName || `${lead.firstName} ${lead.lastName}` || "Lead",
+      label:
+        lead.fullName && lead.fullName.trim()
+          ? lead.fullName
+          : (lead.firstName && lead.firstName.trim()) || (lead.lastName && lead.lastName.trim())
+          ? `${lead.firstName ? lead.firstName : ""}${
+              lead.lastName ? ` ${lead.lastName}` : ""
+            }`.trim() || "No Name"
+          : "No Name",
       path: `/super-user/leads/${id}`,
     },
   ];
@@ -42,40 +49,10 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   // ==========================================================
   // Lead Score Calculation (based on LinkedIn data)
   // ==========================================================
-  const calculateLeadScore = (lead: Lead) => {
-    let score = 0;
 
-    // Base score for having LinkedIn profile
-    if (lead.linkedinProfileUrl) score += 20;
-
-    // Email availability
-    if (lead.email) score += 15;
-
-    // Phone availability
-    if (lead.phone) score += 10;
-
-    // Company information
-    if (lead.company) score += 10;
-    if (lead.companyIndustry) score += 5;
-    if (lead.companySize) score += 5;
-
-    // Profile completeness
-    if (lead.headline) score += 10;
-    if (lead.about) score += 10;
-    if (lead.experiences && lead.experiences.length > 0) score += 10;
-    if (lead.educations && lead.educations.length > 0) score += 5;
-
-    // Connections and followers
-    if (lead.connections && lead.connections > 500) score += 5;
-    if (lead.followers && lead.followers > 100) score += 5;
-
-    return Math.min(score, 100);
-  };
-
-  const leadScoreValue = calculateLeadScore(lead);
   const leadScore: LeadScore = {
-    score: leadScoreValue,
-    color: leadScoreValue >= 80 ? "bg-sec" : leadScoreValue >= 60 ? "bg-pipeline" : "bg-cold",
+    score: lead.leadScore,
+    color: lead.leadScore >= 80 ? "bg-sec" : lead.leadScore >= 60 ? "bg-pipeline" : "bg-cold",
   };
 
   // ==========================================================
@@ -170,10 +147,12 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                 </div>
               </div>
 
-              <div className="flex-col gap-1 leading-none">
-                <h1 className="text-[22px] font-[600]">{lead.potentialValue || "Not available"}</h1>
+              {/* <div className="flex-col gap-1 leading-none">
+                <h1 className="text-[22px] font-[600]">
+                  {lead.bant?.budget?.value.trim() || "Not available"}
+                </h1>
                 <h3 className="text-[12px] text-gray-200">Potential Value</h3>
-              </div>
+              </div> */}
             </div>
           </div>
 
@@ -347,25 +326,30 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                   {lead.bant?.budget?.value || "Not available"}
                 </h2>
               </div>
-              <div className="flex-center px-5 h-[25px] text-[12px] text-sec bg-sec-light rounded-lg">
+              {/* <div className="flex-center px-5 h-[25px] text-[12px] text-sec bg-sec-light rounded-lg">
                 Qualified
-              </div>
+              </div> */}
             </div>
             <div className="mt-4 flex justify-between gap-2.5">
               <div className="flex flex-col gap-1">
                 <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Authority</h3>
                 <h2 className="text-[14px] leading-none font-[500]">
-                  Decision maker: {lead.bant?.authority?.isDecisionMaker ? "Yes" : "No"}
-                  {lead.bant?.authority?.value && (
-                    <div className="mt-1 text-[12px]">
-                      {lead.bant.authority.value}
-                    </div>
-                  )}
+                  Decision maker: &nbsp;
+                  <span
+                    className={`text-[12px] ${
+                      lead.bant?.authority?.isDecisionMaker ? "text-pri" : "text-hot"
+                    }`}
+                  >
+                    {lead.bant?.authority?.isDecisionMaker ? "Yes" : "No"}
+                  </span>
+                  {/* {lead.bant?.authority?.value && (
+                    <div className="mt-1 text-[12px]">{lead.bant.authority.value}</div>
+                  )} */}
                 </h2>
               </div>
-              <div className="flex-center px-5 h-[25px] text-[12px] text-hot bg-hot-light rounded-lg">
+              {/* <div className="flex-center px-5 h-[25px] text-[12px] text-hot bg-hot-light rounded-lg">
                 High
-              </div>
+              </div> */}
             </div>
             <div className="mt-4 flex justify-between gap-2.5">
               <div className="flex flex-col gap-1">
@@ -384,9 +368,9 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                   )}
                 </h2>
               </div>
-              <div className="flex-center px-5 h-[25px] text-[12px] text-cold bg-cold-light rounded-lg">
+              {/* <div className="flex-center px-5 h-[25px] text-[12px] text-cold bg-cold-light rounded-lg">
                 Urgent
-              </div>
+              </div> */}
             </div>
             <div className="mt-4 flex justify-between gap-2.5">
               <div className="flex flex-col gap-1">
@@ -395,9 +379,9 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
                   {lead.bant?.timeline?.value || "Expected decision timeframe not available"}
                 </h2>
               </div>
-              <div className="flex-center px-5 h-[25px] text-[12px] text-pipeline bg-pipeline-light rounded-lg">
+              {/* <div className="flex-center min-w-[90px] px-5 h-[25px] text-[12px] text-pipeline bg-pipeline-light rounded-lg">
                 Q1 2025
-              </div>
+              </div> */}
             </div>
           </div>
           {/* ----------------------- Not Needed : Design Only ----------------------- */}

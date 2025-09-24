@@ -8,7 +8,7 @@
 
   "home": {
     "hero": {
-      "title": "Transform Your Sales Team into a Deal-Closing Machine with A",
+      "title": "Transform Your Sales Team into a Deal-Closing Machine with Ai",
       "para": "Jazzam – Smart AI Sales Agent (SaaS) helps your team connect with the right customers and close deals 40% faster.",
       "getStarted": "Get started"
     },
@@ -62,16 +62,16 @@
       "title": "Frequently Asked Questions",
       "description": "Got questions? We've got answers. Find everything you need to know about our programs.",
       "questions": {
-        "question1": "How does the AI generate leads?",
-        "answer1": "Our AI uses advanced algorithms to analyze market data, customer behavior patterns, and industry trends to identify high-quality prospects that match your ideal customer profile. It continuously learns from successful conversions to improve lead quality over time.",
-        "question2": "Is the system easy to integrate with my CRM?",
-        "answer2": "Yes, Jazzam integrates seamlessly with popular CRM systems like Salesforce, HubSpot, Pipedrive, and more. Our setup team will help you configure the integration, usually completed within 24-48 hours with minimal disruption to your current workflow.",
-        "question3": "Can I customize the lead capture form to match my business needs?",
-        "answer3": "Absolutely! Our platform offers extensive customization options for lead capture forms. You can add custom fields, adjust the design to match your brand, set up conditional logic, and create different forms for different campaigns or landing pages.",
-        "question4": "What are the benefits of using AI in content creation?",
-        "answer4": "AI-powered content creation helps you generate personalized messages, email sequences, and follow-up content at scale. It ensures consistent messaging, saves time on content creation, and adapts content based on lead behavior and preferences to improve engagement rates.",
-        "question5": "How long will it take to set up the system?",
-        "answer5": "Most implementations are completed within 3-5 business days. This includes initial setup, CRM integration, team training, and testing. Our dedicated onboarding team will guide you through each step to ensure a smooth transition and quick time-to-value."
+        "question1": "How does Jazzam classify leads?",
+        "answer1": "Jazzam collects leads from your website and campaigns (LinkedIn & Snapchat), then analyzes behavior such as visits or interactions. It classifies them (Hot – Warm – Cold) and provides next-step recommendations: call, follow-up, or ignore.",
+        "question2": "What makes Jazzam different?",
+        "answer2": "Jazzam doesn’t just collect data, it analyzes and gives actionable recommendations. It integrates multiple channels, is built for Saudi Arabia, and is simple to use.",
+        "question3": "How does Jazzam ensure data security?",
+        "answer3": "Security is a priority: secure storage, full encryption, restricted access, and compliance with Saudi data policies.",
+        "question4": "Can I try Jazzam for free?",
+        "answer4": "Yes, you can start a free trial to run your first campaign and track leads immediately.",
+        "question5": "Does Jazzam integrate with my current systems?",
+        "answer5": "Yes, it integrates with CRMs, marketing tools, and allows easy export to Excel or CSV."
       }
     },
 

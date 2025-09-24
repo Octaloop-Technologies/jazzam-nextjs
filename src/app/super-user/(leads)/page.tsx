@@ -4,11 +4,11 @@ import {
   NewLeadsSvg,
   ExternalLinkSvg,
   HotLeadsSvg,
-  PercentageCircleSvg,
   PipelineValueSvg,
   WarmLeadsSvg,
 } from "@/components/svgs/LeadsAnalysisSvgs";
 import OptimizedImage from "@/components/ui/image/OptimizedImage";
+import PercentageCircle from "@/components/ui/percentage-circle/PercentageCircle";
 import SearchBarWithFilters from "@/components/view/dashboard/leads/SearchBarWithFilters";
 import Table from "@/components/ui/table/Table";
 import TableCell from "@/components/ui/table/TableCell";
@@ -20,7 +20,6 @@ import LeadsMenu from "@/components/view/dashboard/leads/LeadsMenu";
 import AuthStatusHandler from "@/components/view/dashboard/leads/AuthStatusHandler";
 import { Metadata } from "next";
 import { getAllLeads, getLeadStats, searchLeads } from "./action";
-import { cookies } from "next/headers";
 import TabNavigation from "@/components/view/dashboard/leads/TabNavigation";
 import TabContentLoader from "@/components/view/dashboard/leads/TabContentLoader";
 import RefreshButton from "@/components/view/dashboard/leads/RefreshButton";
@@ -313,7 +312,14 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                           </div>
                           <div className="flex flex-col leading-none">
                             <p className="text-[16px] font-[500]">
-                              {lead.fullName || `${lead.firstName} ${lead.lastName}`}
+                              {lead.fullName && lead.fullName.trim()
+                                ? lead.fullName
+                                : (lead.firstName && lead.firstName.trim()) ||
+                                  (lead.lastName && lead.lastName.trim())
+                                ? `${lead.firstName ? lead.firstName : ""}${
+                                    lead.lastName ? ` ${lead.lastName}` : ""
+                                  }`.trim() || "No Name"
+                                : "No Name"}
                             </p>
                             <p className="text-[12px] text-gray-200">{lead.company || "N/A"}</p>
                             <p className="text-[12px] text-gray-200">
@@ -325,7 +331,18 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                       <TableCell>{getStatusComponent(lead.status)}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
-                          <PercentageCircleSvg />
+                          <PercentageCircle
+                            percentage={lead.leadScore || 0}
+                            color={
+                              lead.leadScore && lead.leadScore >= 80
+                                ? "var(--sec)"
+                                : lead.leadScore && lead.leadScore >= 60
+                                ? "var(--pipeline)"
+                                : "var(--cold)"
+                            }
+                            size={18}
+                            strokeWidth={3}
+                          />
                           <span className="text-sec font-medium">{lead.leadScore || 0}%</span>
                         </div>
                       </TableCell>
