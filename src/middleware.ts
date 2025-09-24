@@ -56,6 +56,35 @@ export function middleware(request: NextRequest) {
   const isAuthenticated = !!(accessToken && refreshToken);
 
   // ==============================================================
+  // Handle OAuth callback redirects (allow access to super-user with login=success param)
+  // ==============================================================
+  const isOAuthCallback =
+    path === "/super-user" && request.nextUrl.searchParams.get("login") === "success";
+
+  if (isOAuthCallback) {
+    // Allow OAuth callback redirects to proceed without authentication check
+    // The backend has already set the cookies, they just need time to be processed
+    const response = NextResponse.next();
+
+    // Handle locale detection for OAuth callback
+    const langCookie = request.cookies.get("lang")?.value;
+    if (!langCookie || !supportedLocales.includes(langCookie)) {
+      const acceptLang = request.headers.get("accept-language");
+      const detectedLocale = getLocaleFromHeader(acceptLang);
+
+      response.cookies.set("lang", detectedLocale, {
+        path: "/",
+        maxAge: 60 * 60 * 24 * 365, // 1 year
+        httpOnly: false,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+      });
+    }
+
+    return response;
+  }
+
+  // ==============================================================
   // Handle authentication redirects
   // ==============================================================
   if (isAuthenticated) {
