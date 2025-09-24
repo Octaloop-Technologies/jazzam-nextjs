@@ -1,7 +1,7 @@
 // ==================| Metadata |=================
 export const BASE_METADATA = {
-  TITLE: "Jozzaam",
-  DESCRIPTION: "Jozzaam is a platform that generate leads for your business",
+  TITLE: "Jazzam",
+  DESCRIPTION: "Jazzam is a platform that generate leads for your business",
 };
 
 // ==================| Viewport |=================
