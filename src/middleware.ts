@@ -95,17 +95,17 @@ export function middleware(request: NextRequest) {
   // ==============================================================
   // Add security headers in production
   // ==============================================================
-  if (process.env.NODE_ENV === "production") {
-    response.headers.set("X-Frame-Options", "SAMEORIGIN");
-    response.headers.set("X-Content-Type-Options", "nosniff");
-    response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  // if (process.env.NODE_ENV === "production") {
+  //   response.headers.set("X-Frame-Options", "SAMEORIGIN");
+  //   response.headers.set("X-Content-Type-Options", "nosniff");
+  //   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
 
-    // Basic CSP
-    response.headers.set(
-      "Content-Security-Policy",
-      "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';"
-    );
-  }
+  //   // Basic CSP
+  //   response.headers.set(
+  //     "Content-Security-Policy",
+  //     "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';"
+  //   );
+  // }
 
   return response;
 }
