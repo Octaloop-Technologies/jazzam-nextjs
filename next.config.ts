@@ -19,15 +19,7 @@ const nextConfig: NextConfig = {
     optimizeCss: true,
     optimizePackageImports: ["gsap", "@gsap/react"],
   },
-  // Enable CORS for API routes and external requests
-  async rewrites() {
-    return [
-      {
-        source: "/api/:path*",
-        destination: `${process.env.NEXT_PUBLIC_BASE_URL}/api/:path*`,
-      },
-    ];
-  },
+
   async headers() {
     return [
       {
