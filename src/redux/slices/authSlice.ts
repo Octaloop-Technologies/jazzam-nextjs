@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "@/redux/store";
 import { getCurrentUser } from "@/app/(auth)/action";
 
@@ -63,10 +63,11 @@ const authSlice = createSlice({
     logout: (state) => {
       state.user = null;
       state.isAuthenticated = false;
-      state.error = null;
       state.isLoading = false;
+      state.error = null;
     },
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(fetchCurrentUser.pending, (state) => {

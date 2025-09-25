@@ -3,15 +3,12 @@
  * Handles 401 errors and token expiry globally
  */
 
-interface Window {
-  dispatchAuthLogout: () => void;
-}
+import { logoutUserAction } from "@/app/super-user/settings/action";
 
-const clearAuthCookies = (): void => {
-  if (typeof document === "undefined") return;
-
-  document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-  document.cookie = "refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
+const logoutUser = async (): Promise<void> => {
+  if (typeof window === "undefined") return;
+  await logoutUserAction();
+  window.location.href = "/login";
 };
 
 // Store original fetch
@@ -28,16 +25,8 @@ global.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Res
 
     // If 401, handle token expiry
     if (response.status === 401) {
-      clearAuthCookies();
-
-      // Dispatch logout action if we're in a Redux context
-      if (typeof window !== "undefined") {
-        if ((window as Window).dispatchAuthLogout) {
-          (window as Window).dispatchAuthLogout();
-        }
-        // Redirect to login page
-        window.location.href = "/login";
-      }
+      // Call backend logout API and redirect
+      logoutUser();
     }
 
     return response;

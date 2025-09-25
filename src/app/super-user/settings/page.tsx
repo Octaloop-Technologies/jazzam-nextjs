@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { logout, selectIsLoading, selectUser } from "@/redux/slices/authSlice";
 import { useToast } from "@/lib/hooks/useToast";
 import { ZohoIcon } from "@/components/svgs/loginButtonSvgs";
+import { logoutUserAction } from "./action";
 
 const SettingsPage = () => {
   // ==============================================================
@@ -36,19 +37,24 @@ const SettingsPage = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const isLoading = useAppSelector(selectIsLoading);
-  const { success, error } = useToast();
+  const { success, error: ToastError } = useToast();
 
   // ==============================================================
-  // Logout User - Simple client-side logout
+  // Logout User - Using backend logout API
   // ==============================================================
-  const handleLogout = () => {
-    dispatch(logout());
-    success("You have been successfully logged out.");
-    // Redirect to login page after logout
-    window.location.href = "/login";
+  const handleLogout = async () => {
+    if (typeof window === "undefined") return;
+
+    const result = await logoutUserAction();
+
+    if (result.success) {
+      dispatch(logout());
+      success(result.message || "You have been successfully logged out.");
+      window.location.href = "/login";
+    } else {
+      ToastError(result.error || "Something went wrong while logging out");
+    }
   };
-
-  console.log(user);
 
   return (
     <div>
