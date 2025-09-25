@@ -4,7 +4,6 @@ import { NextRequest, NextResponse } from "next/server";
 // Define protected routes that require authentication
 // ==============================================================
 const protectedRoutes = ["/super-user", "/profile", "/dashboard"];
-// const protectedRoutes = ["/profile", "/dashboard"];
 
 // ==============================================================
 // Define auth routes that should not be accessible when logged in (will redirect to dashboard)
@@ -91,21 +90,6 @@ export function middleware(request: NextRequest) {
       sameSite: "lax",
     });
   }
-
-  // ==============================================================
-  // Add security headers in production
-  // ==============================================================
-  // if (process.env.NODE_ENV === "production") {
-  //   response.headers.set("X-Frame-Options", "SAMEORIGIN");
-  //   response.headers.set("X-Content-Type-Options", "nosniff");
-  //   response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-
-  //   // Basic CSP
-  //   response.headers.set(
-  //     "Content-Security-Policy",
-  //     "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';"
-  //   );
-  // }
 
   return response;
 }

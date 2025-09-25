@@ -46,26 +46,11 @@ const SettingsPage = () => {
     if (typeof window === "undefined") return;
 
     const result = await logoutUserAction();
-
     if (result.success) {
+      // empty slice state
       dispatch(logout());
+
       success(result.message || "You have been successfully logged out.");
-
-      // Clear cookies on client side as well (for non-httpOnly cookies)
-      // This is a fallback in case server-side clearing doesn't work
-      try {
-        document.cookie = "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-        document.cookie = "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-
-        // Also try clearing with different domain/path combinations
-        document.cookie =
-          "accessToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost;";
-        document.cookie =
-          "refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost;";
-      } catch (error) {
-        console.log("Client-side cookie clearing failed (expected for httpOnly cookies):", error);
-      }
-
       window.location.href = "/login";
     } else {
       ToastError(result.error || "Something went wrong while logging out");

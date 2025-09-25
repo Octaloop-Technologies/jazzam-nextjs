@@ -4,10 +4,13 @@
  */
 
 import { logoutUserAction } from "@/app/super-user/settings/action";
+import { logout } from "@/redux/slices/authSlice";
+import { store } from "@/redux/store";
 
 const logoutUser = async (): Promise<void> => {
   if (typeof window === "undefined") return;
   await logoutUserAction();
+  store.dispatch(logout());
   window.location.href = "/login";
 };
 
