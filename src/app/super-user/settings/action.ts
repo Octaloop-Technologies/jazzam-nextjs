@@ -3,7 +3,9 @@
 import { cookies } from "next/headers";
 
 export const logoutUserAction = async () => {
-  const token = (await cookies()).get("accessToken")?.value;
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value;
+
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/logout`, {
       method: "POST",
@@ -16,9 +18,13 @@ export const logoutUserAction = async () => {
 
     const data = await response.json();
 
-    console.log("data", data);
+    console.log("Logout response:", data);
 
     if (response.ok) {
+      // Clear cookies on the server side as well
+      cookieStore.delete("accessToken");
+      cookieStore.delete("refreshToken");
+
       return { success: true, message: data.message };
     } else {
       return { success: false, error: data.message };
