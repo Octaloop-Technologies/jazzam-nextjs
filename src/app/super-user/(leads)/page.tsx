@@ -17,7 +17,6 @@ import TableRow from "@/components/ui/table/TableRow";
 import Link from "next/link";
 import React, { Suspense } from "react";
 import LeadsMenu from "@/components/view/dashboard/leads/LeadsMenu";
-import AuthStatusHandler from "@/components/view/dashboard/leads/AuthStatusHandler";
 import { Metadata } from "next";
 import { getAllLeads, getLeadStats, searchLeads } from "./action";
 import TabNavigation from "@/components/view/dashboard/leads/TabNavigation";
@@ -176,9 +175,6 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
 
   return (
     <section>
-      {/* Handle auth status messages (like login success) */}
-      <AuthStatusHandler searchParams={params} />
-
       {/* ---------------------------- header ---------------------------- */}
       <div className="flex-between gap-1.5">
         <h1 className="text-[32px] font-[500] capitalize">Your lead analysis</h1>

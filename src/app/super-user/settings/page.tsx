@@ -12,7 +12,7 @@ import {
   GoogleIcon,
 } from "@/components/view/dashboard/settings/settingPageIcons";
 import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { logoutUser, selectIsLoading, selectUser } from "@/redux/slices/authSlice";
+import { logout, selectIsLoading, selectUser } from "@/redux/slices/authSlice";
 import { useToast } from "@/lib/hooks/useToast";
 import { ZohoIcon } from "@/components/svgs/loginButtonSvgs";
 
@@ -39,18 +39,13 @@ const SettingsPage = () => {
   const { success, error } = useToast();
 
   // ==============================================================
-  // Logout User - Using Redux client-side logout
+  // Logout User - Simple client-side logout
   // ==============================================================
-  const handleLogout = async () => {
-    const logoutResponse = await dispatch(logoutUser());
-    if (logoutResponse.meta.requestStatus === "fulfilled") {
-      success("You have been successfully logged out.");
-      // Redirect to login page after successful logout
-      window.location.href = "/login";
-    } else {
-      // Handle logout failure
-      error("Logout failed. Please try again.");
-    }
+  const handleLogout = () => {
+    dispatch(logout());
+    success("You have been successfully logged out.");
+    // Redirect to login page after logout
+    window.location.href = "/login";
   };
 
   console.log(user);

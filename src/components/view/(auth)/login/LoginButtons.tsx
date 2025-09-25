@@ -12,16 +12,12 @@ const LoginButtons = () => {
   const handleGoogleLogin = async () => {
     setIsLoading((prev) => ({ ...prev, google: true }));
     toast.info("Redirecting to Google...");
-    // Set flag to show success toast after OAuth redirect
-    sessionStorage.setItem("freshLogin", "true");
     await loginWithGoogle();
   };
 
   const handleZohoLogin = async () => {
     setIsLoading((prev) => ({ ...prev, zoho: true }));
     toast.info("Redirecting to Zoho...");
-    // Set flag to show success toast after OAuth redirect
-    sessionStorage.setItem("freshLogin", "true");
     await loginWithZoho();
   };
 

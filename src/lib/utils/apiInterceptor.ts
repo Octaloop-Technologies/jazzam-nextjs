@@ -31,12 +31,11 @@ global.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Res
       clearAuthCookies();
 
       // Dispatch logout action if we're in a Redux context
-      if (typeof window !== "undefined" && (window as Window).dispatchAuthLogout) {
-        (window as Window).dispatchAuthLogout();
-      }
-
-      // Redirect to login page
       if (typeof window !== "undefined") {
+        if ((window as Window).dispatchAuthLogout) {
+          (window as Window).dispatchAuthLogout();
+        }
+        // Redirect to login page
         window.location.href = "/login";
       }
     }
