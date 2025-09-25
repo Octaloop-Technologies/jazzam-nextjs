@@ -50,9 +50,28 @@ const AuthStatusHandler: React.FC<AuthStatusHandlerProps> = ({ searchParams }) =
         url.searchParams.delete("logout");
         url.searchParams.delete("login");
         window.history.replaceState({}, "", url.toString());
-      }, 1000); // Shorter delay since we're using toasts
+      }, 800); // Shorter delay since we're using toasts
 
       return () => clearTimeout(timer);
+    }
+  }, [searchParams, toast]);
+
+  // Check if this is a fresh login (no URL params but user just logged in)
+  useEffect(() => {
+    // Check if we have auth cookies and no URL params, which indicates a successful login
+    const hasAuthCookies =
+      document.cookie.includes("accessToken=") && document.cookie.includes("refreshToken=");
+    const hasNoUrlParams = !searchParams.error && !searchParams.logout && !searchParams.login;
+
+    if (hasAuthCookies && hasNoUrlParams) {
+      // Check if this is likely a fresh login by checking the freshLogin cookie
+      const isFreshLogin = document.cookie.includes("freshLogin=true");
+
+      if (isFreshLogin) {
+        toast.success("Login successful!");
+        // Clear the freshLogin cookie
+        document.cookie = "freshLogin=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      }
     }
   }, [searchParams, toast]);
 

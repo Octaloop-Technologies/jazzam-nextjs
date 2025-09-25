@@ -56,32 +56,47 @@ export function middleware(request: NextRequest) {
   const isAuthenticated = !!(accessToken && refreshToken);
 
   // ==============================================================
-  // Handle OAuth callback redirects (allow access to super-user with login=success param)
+  // Handle OAuth callback redirects
   // ==============================================================
   const isOAuthCallback =
     path === "/super-user" && request.nextUrl.searchParams.get("login") === "success";
 
   if (isOAuthCallback) {
-    // Allow OAuth callback redirects to proceed without authentication check
-    // The backend has already set the cookies, they just need time to be processed
-    const response = NextResponse.next();
+    // Check if we have the authentication cookies (they should be set by the backend)
+    if (isAuthenticated) {
+      // If we have auth cookies, redirect to clean URL to trigger proper SSR
+      const cleanUrl = new URL("/super-user", request.url);
+      const response = NextResponse.redirect(cleanUrl);
 
-    // Handle locale detection for OAuth callback
-    const langCookie = request.cookies.get("lang")?.value;
-    if (!langCookie || !supportedLocales.includes(langCookie)) {
-      const acceptLang = request.headers.get("accept-language");
-      const detectedLocale = getLocaleFromHeader(acceptLang);
-
-      response.cookies.set("lang", detectedLocale, {
+      // Set a flag to indicate this is a fresh login (for toast notification)
+      response.cookies.set("freshLogin", "true", {
         path: "/",
-        maxAge: 60 * 60 * 24 * 365, // 1 year
+        maxAge: 10, // Short-lived, just for the redirect
         httpOnly: false,
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
       });
-    }
 
-    return response;
+      // Handle locale detection for OAuth callback
+      const langCookie = request.cookies.get("lang")?.value;
+      if (!langCookie || !supportedLocales.includes(langCookie)) {
+        const acceptLang = request.headers.get("accept-language");
+        const detectedLocale = getLocaleFromHeader(acceptLang);
+
+        response.cookies.set("lang", detectedLocale, {
+          path: "/",
+          maxAge: 60 * 60 * 24 * 365, // 1 year
+          httpOnly: false,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+        });
+      }
+
+      return response;
+    } else {
+      // If no auth cookies yet, redirect to login with error
+      return NextResponse.redirect(new URL("/login?error=auth_failed", request.url));
+    }
   }
 
   // ==============================================================
