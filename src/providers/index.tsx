@@ -5,6 +5,9 @@ import { ReduxProvider } from "./ReduxProvider";
 import ReduxToastContainer from "@/components/ui/toast/ReduxToastContainer";
 import AuthInitializer from "./AuthInitializer";
 
+// Initialize global API interceptor
+import "@/lib/utils/apiInterceptor";
+
 interface ProvidersProps {
   children: React.ReactNode;
 }

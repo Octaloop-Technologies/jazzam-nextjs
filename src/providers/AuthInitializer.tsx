@@ -7,7 +7,9 @@ import {
   selectIsAuthenticated,
   selectIsLoading,
   fetchCurrentUser,
+  logout,
 } from "@/redux/slices/authSlice";
+import { useToast } from "@/lib/hooks/useToast";
 
 interface AuthInitializerProps {
   children: React.ReactNode;
@@ -19,29 +21,30 @@ const AuthInitializer: React.FC<AuthInitializerProps> = ({ children }) => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const isLoading = useAppSelector(selectIsLoading);
   const hasInitialized = useRef(false);
+  const toast = useToast();
 
   useEffect(() => {
+    // Set up global logout callback for the interceptor
+    if (typeof window !== "undefined") {
+      (window as unknown as { dispatchAuthLogout: () => void }).dispatchAuthLogout = () => {
+        dispatch(logout());
+        toast.error("Your session has expired. Please login again.");
+      };
+    }
+
     // Initialize auth state only once per app session
     if (!hasInitialized.current && !user && !isLoading && !isAuthenticated) {
       hasInitialized.current = true;
 
-      // Silently attempt to fetch user - if tokens are valid, user will be fetched
-      // If not, the request will fail silently without exposing token information
+      // Attempt to fetch user
       dispatch(fetchCurrentUser()).catch((error) => {
         // Silent failure - don't log auth failures in production for security
         if (process.env.NODE_ENV !== "production") {
           console.log("AuthInitializer: User not authenticated or session expired");
         }
-
-        // If it's an auth error, clear any invalid tokens to prevent retry loops
-        if (error?.message?.includes("401") || error?.message?.includes("Unauthorized")) {
-          // Clear any potentially invalid tokens from cookies
-          document.cookie = "accessToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-          document.cookie = "refreshToken=; path=/; expires=Thu, 01 Jan 1970 00:00:01 GMT;";
-        }
       });
     }
-  }, [dispatch]);
+  }, [dispatch, toast]);
 
   return <>{children}</>;
 };

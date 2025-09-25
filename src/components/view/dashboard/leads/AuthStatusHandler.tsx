@@ -64,13 +64,14 @@ const AuthStatusHandler: React.FC<AuthStatusHandlerProps> = ({ searchParams }) =
     const hasNoUrlParams = !searchParams.error && !searchParams.logout && !searchParams.login;
 
     if (hasAuthCookies && hasNoUrlParams) {
-      // Check if this is likely a fresh login by checking the freshLogin cookie
-      const isFreshLogin = document.cookie.includes("freshLogin=true");
+      // Check if this is likely a fresh login by checking session storage
+      // We'll set this flag when user clicks login button
+      const isFreshLogin = sessionStorage.getItem("freshLogin") === "true";
 
       if (isFreshLogin) {
         toast.success("Login successful!");
-        // Clear the freshLogin cookie
-        document.cookie = "freshLogin=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        // Clear the session storage flag
+        sessionStorage.removeItem("freshLogin");
       }
     }
   }, [searchParams, toast]);
