@@ -3,6 +3,10 @@
  * Handles 401 errors and token expiry globally
  */
 
+interface Window {
+  dispatchAuthLogout: () => void;
+}
+
 const clearAuthCookies = (): void => {
   if (typeof document === "undefined") return;
 
@@ -27,8 +31,8 @@ global.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Res
       clearAuthCookies();
 
       // Dispatch logout action if we're in a Redux context
-      if (typeof window !== "undefined" && (window as any).dispatchAuthLogout) {
-        (window as any).dispatchAuthLogout();
+      if (typeof window !== "undefined" && (window as Window).dispatchAuthLogout) {
+        (window as Window).dispatchAuthLogout();
       }
 
       // Redirect to login page
