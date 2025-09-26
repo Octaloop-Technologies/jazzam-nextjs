@@ -77,6 +77,31 @@ export const clearClientCookies = () => {
         });
       }
     }
+
+    // Attempt 5: Specific jazzam.ai domain handling
+    if (currentDomain.includes("jazzam.ai")) {
+      clearAttempts.push({
+        domain: ".jazzam.ai",
+        options: [
+          "expires=Thu, 01 Jan 1970 00:00:00 UTC",
+          "path=/",
+          "domain=.jazzam.ai",
+          "secure",
+          "samesite=strict",
+        ].join("; "),
+      });
+
+      clearAttempts.push({
+        domain: "jazzam.ai",
+        options: [
+          "expires=Thu, 01 Jan 1970 00:00:00 UTC",
+          "path=/",
+          "domain=jazzam.ai",
+          "secure",
+          "samesite=strict",
+        ].join("; "),
+      });
+    }
   }
 
   // Try to clear cookies with all different domain configurations
@@ -97,18 +122,24 @@ export const clearClientCookies = () => {
     if (currentDomain !== "localhost") {
       document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=localhost;`;
     }
+
+    // Additional production-specific clearing attempts
+    if (isProduction) {
+      // Try clearing with .jazzam.ai domain
+      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.jazzam.ai; secure; samesite=strict;`;
+      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=jazzam.ai; secure; samesite=strict;`;
+
+      // Try clearing with different path variations
+      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=.jazzam.ai; secure;`;
+      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/super-user; domain=.jazzam.ai; secure;`;
+      document.cookie = `${cookieName}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/login; domain=.jazzam.ai; secure;`;
+    }
   });
 
   // Clear session storage
   if (typeof sessionStorage !== "undefined") {
     sessionStorage.clear();
     console.log("Session storage cleared");
-  }
-
-  // Clear localStorage
-  if (typeof localStorage !== "undefined") {
-    localStorage.clear();
-    console.log("Local storage cleared");
   }
 
   // Clear any service worker caches

@@ -73,7 +73,7 @@ const SettingsPage = () => {
       // Add a small delay to ensure cookies are cleared before redirect
       setTimeout(() => {
         // Use Next.js router with logout flag to prevent middleware interference
-        router.push("/login");
+        router.push("/login?logout=true&t=" + Date.now());
       }, 200);
     } catch (error) {
       // Even if everything fails, we've already cleared client-side cookies
@@ -81,7 +81,7 @@ const SettingsPage = () => {
       console.warn("Logout error but client cookies cleared:", error);
 
       setTimeout(() => {
-        router.push("/login");
+        router.push("/login?logout=true&t=" + Date.now());
       }, 200);
     }
   };
