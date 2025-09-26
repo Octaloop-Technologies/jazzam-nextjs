@@ -11,11 +11,13 @@ import {
   trashIcon,
   GoogleIcon,
 } from "@/components/view/dashboard/settings/settingPageIcons";
-import { useAppDispatch, useAppSelector } from "@/redux/store";
-import { logout, selectIsLoading, selectUser } from "@/redux/slices/authSlice";
-import { useToast } from "@/lib/hooks/useToast";
+import { useAppSelector } from "@/redux/store";
+import { selectUser } from "@/redux/slices/authSlice";
+import { logout } from "@/redux/slices/authSlice";
+import { useAppDispatch } from "@/redux/store";
 import { ZohoIcon } from "@/components/svgs/loginButtonSvgs";
-import { logoutUserAction } from "./action";
+import { logoutAndRedirect } from "@/app/logout/action";
+import { useToast } from "@/lib/hooks/useToast";
 
 const SettingsPage = () => {
   // ==============================================================
@@ -30,30 +32,33 @@ const SettingsPage = () => {
     weeklySummary: false,
   });
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const { success } = useToast();
 
   // ==============================================================
   // Hooks
   // ==============================================================
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
-  const isLoading = useAppSelector(selectIsLoading);
-  const { success, error: ToastError } = useToast();
 
   // ==============================================================
-  // Logout User - Using backend logout API
+  // Logout User - Using server-side logout
   // ==============================================================
   const handleLogout = async () => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || isLoggingOut) return;
 
-    const result = await logoutUserAction();
-    if (result.success) {
-      // empty slice state
+    setIsLoggingOut(true);
+    success("Logging out...");
+
+    try {
+      // Clear Redux state for immediate UI feedback
       dispatch(logout());
 
-      success(result.message || "You have been successfully logged out.");
-      window.location.href = "/login";
-    } else {
-      ToastError(result.error || "Something went wrong while logging out");
+      // Server-side logout handles everything else (API call, cookies, redirect)
+      await logoutAndRedirect();
+    } catch (error) {
+      console.error("Logout error:", error);
+      setIsLoggingOut(false);
     }
   };
 
@@ -125,16 +130,18 @@ const SettingsPage = () => {
                       </h3>
                     </div>
                   </div>
-                  <button
-                    onClick={handleLogout}
-                    disabled={isLoading}
-                    className={`w-fit flex gap-1 text-sm transition-colors duration-200 ${
-                      isLoading ? "text-gray-400 cursor-not-allowed" : "text-danger gray-hover"
-                    }`}
-                  >
-                    <div>{logoutIcon()}</div>
-                    <div>{isLoading ? "Logging out..." : "Logout"}</div>
-                  </button>
+                  <form action={handleLogout}>
+                    <button
+                      type="submit"
+                      disabled={isLoggingOut}
+                      className={`w-fit flex gap-1 text-sm transition-colors duration-200 ${
+                        isLoggingOut ? "text-gray-400 cursor-not-allowed" : "text-danger gray-hover"
+                      }`}
+                    >
+                      <div>{logoutIcon()}</div>
+                      <div>{isLoggingOut ? "Logging out..." : "Logout"}</div>
+                    </button>
+                  </form>
                 </div>
               </div>
 

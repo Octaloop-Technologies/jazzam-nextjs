@@ -1,8 +1,9 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
-export const logoutUserAction = async () => {
+export const logoutAndRedirect = async () => {
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value;
   const refreshToken = cookieStore.get("refreshToken")?.value;
@@ -16,6 +17,7 @@ export const logoutUserAction = async () => {
     .join("; ");
 
   try {
+    // Call backend logout API
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/logout`, {
       method: "POST",
       credentials: "include",
@@ -26,20 +28,20 @@ export const logoutUserAction = async () => {
       },
     });
 
-    const data = await response.json();
+    // Clear cookies on the frontend side as well
+    cookieStore.delete("accessToken");
+    cookieStore.delete("refreshToken");
+
     if (response.ok) {
-      // Clear cookies on the client side
-      cookieStore.delete("accessToken");
-      cookieStore.delete("refreshToken");
-      return { success: true, message: data.message };
+      // Server-side redirect to login page
+      redirect("/login");
     } else {
-      return { success: false, error: data.message };
+      // Even if logout fails, redirect to login
+      redirect("/login");
     }
   } catch (error) {
     console.error("Logout error:", error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Something went wrong while logging out",
-    };
+    // Even if logout fails, redirect to login
+    redirect("/login");
   }
 };

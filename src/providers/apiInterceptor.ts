@@ -3,15 +3,17 @@
  * Handles 401 errors and token expiry globally
  */
 
-import { logoutUserAction } from "@/app/super-user/settings/action";
 import { logout } from "@/redux/slices/authSlice";
 import { store } from "@/redux/store";
 
 const logoutUser = async (): Promise<void> => {
   if (typeof window === "undefined") return;
-  await logoutUserAction();
+
+  // Clear Redux state
   store.dispatch(logout());
-  window.location.href = "/login";
+
+  // Redirect to logout page for server-side handling
+  window.location.href = "/logout";
 };
 
 // Store original fetch
@@ -28,7 +30,6 @@ global.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Res
 
     // If 401, handle token expiry
     if (response.status === 401) {
-      // Call backend logout API and redirect
       logoutUser();
     }
 
