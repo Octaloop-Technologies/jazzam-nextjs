@@ -16,7 +16,6 @@ import { selectUser } from "@/redux/slices/authSlice";
 import { logout } from "@/redux/slices/authSlice";
 import { useAppDispatch } from "@/redux/store";
 import { ZohoIcon } from "@/components/svgs/loginButtonSvgs";
-import { logoutAndRedirect } from "@/app/logout/action";
 import { useToast } from "@/lib/hooks/useToast";
 
 const SettingsPage = () => {
@@ -42,7 +41,7 @@ const SettingsPage = () => {
   const user = useAppSelector(selectUser);
 
   // ==============================================================
-  // Logout User - Using server-side logout
+  // Logout User - Client-side logout with backend API call
   // ==============================================================
   const handleLogout = async () => {
     if (typeof window === "undefined" || isLoggingOut) return;
@@ -54,8 +53,45 @@ const SettingsPage = () => {
       // Clear Redux state for immediate UI feedback
       dispatch(logout());
 
-      // Server-side logout handles everything else (API call, cookies, redirect)
-      await logoutAndRedirect();
+      // Clear client-side cookies immediately
+      const clearCookie = (name: string) => {
+        const isProduction = process.env.NODE_ENV === "production";
+        const domain = isProduction ? process.env.NEXT_PUBLIC_COOKIE_DOMAIN || "" : "localhost";
+        const secure = isProduction ? "; secure" : "";
+        const sameSite = isProduction ? "; samesite=strict" : "; samesite=lax";
+        const domainAttr = domain ? `; domain=${domain}` : "";
+
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/${secure}${sameSite}${domainAttr}`;
+      };
+
+      // Clear both auth cookies
+      clearCookie("accessToken");
+      clearCookie("refreshToken");
+
+      // Call backend logout API
+      try {
+        const token = document.cookie
+          .split("; ")
+          .find((row) => row.startsWith("accessToken="))
+          ?.split("=")[1];
+
+        if (token) {
+          await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/logout`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+        }
+      } catch (error) {
+        console.error("Backend logout error:", error);
+        // Continue with frontend logout even if backend fails
+      }
+
+      // Redirect to login page
+      window.location.href = "/login";
     } catch (error) {
       console.error("Logout error:", error);
       setIsLoggingOut(false);

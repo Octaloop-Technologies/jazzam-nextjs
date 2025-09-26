@@ -11,11 +11,6 @@ const protectedRoutes = ["/super-user", "/profile", "/dashboard"];
 const authRoutes = ["/login"];
 
 // ==============================================================
-// Define routes that should bypass authentication checks
-// ==============================================================
-const bypassRoutes = ["/logout"];
-
-// ==============================================================
 // Locale configuration
 // ==============================================================
 const supportedLocales = ["en", "ar"];
@@ -56,17 +51,8 @@ export function middleware(request: NextRequest) {
   const accessToken = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
 
-  // ==============================================================
-  // Check if this is a bypass route (like logout)
-  // ==============================================================
-  const isBypassRoute = bypassRoutes.some((route) => path.startsWith(route));
-
-  // Check for logout query parameter to bypass authentication check
-  const isLogoutRequest = request.nextUrl.searchParams.get("logout") === "true";
-
   // Check if user is authenticated (has valid tokens)
-  // Skip authentication check if this is a logout request or bypass route
-  const isAuthenticated = !isBypassRoute && !isLogoutRequest && !!(accessToken && refreshToken);
+  const isAuthenticated = !!(accessToken && refreshToken);
 
   // ==============================================================
   // Handle authentication redirects
