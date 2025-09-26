@@ -41,7 +41,7 @@ const SettingsPage = () => {
   const user = useAppSelector(selectUser);
 
   // ==============================================================
-  // Logout User - Client-side logout with backend API call
+  // Logout User - Backend handles cookie clearing (httpOnly cookies)
   // ==============================================================
   const handleLogout = async () => {
     if (typeof window === "undefined" || isLoggingOut) return;
@@ -53,42 +53,58 @@ const SettingsPage = () => {
       // Clear Redux state for immediate UI feedback
       dispatch(logout());
 
-      // Clear client-side cookies immediately
-      const clearCookie = (name: string) => {
-        const isProduction = process.env.NODE_ENV === "production";
-        const domain = isProduction ? process.env.NEXT_PUBLIC_COOKIE_DOMAIN || "" : "localhost";
-        const secure = isProduction ? "; secure" : "";
-        const sameSite = isProduction ? "; samesite=strict" : "; samesite=lax";
-        const domainAttr = domain ? `; domain=${domain}` : "";
-
-        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/${secure}${sameSite}${domainAttr}`;
-      };
-
-      // Clear both auth cookies
-      clearCookie("accessToken");
-      clearCookie("refreshToken");
-
-      // Call backend logout API
+      // Call backend logout API - this will clear httpOnly cookies
       try {
         const token = document.cookie
           .split("; ")
           .find((row) => row.startsWith("accessToken="))
           ?.split("=")[1];
 
+        console.log("Current cookies before logout:", document.cookie);
+        console.log("Token found:", token ? "Yes" : "No");
+
         if (token) {
-          await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/logout`, {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/logout`, {
             method: "POST",
-            credentials: "include",
+            credentials: "include", // Important: include cookies for backend to clear them
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
           });
+
+          console.log("Backend logout response:", response.status, response.ok);
+
+          if (response.ok) {
+            // Backend successfully cleared cookies, redirect to login
+            console.log("Cookies after backend logout:", document.cookie);
+            window.location.href = "/login";
+            return;
+          }
         }
       } catch (error) {
         console.error("Backend logout error:", error);
-        // Continue with frontend logout even if backend fails
       }
+
+      // Fallback: if backend logout fails, try client-side clearing for non-httpOnly cookies
+      const clearCookie = (name: string) => {
+        const isProduction = process.env.NODE_ENV === "production";
+        const domain = isProduction ? "jazzam.ai" : "localhost";
+        const secure = isProduction ? "; secure" : "";
+        const sameSite = isProduction ? "; samesite=strict" : "; samesite=lax";
+        const domainAttr = domain ? `; domain=${domain}` : "";
+
+        // Try clearing with exact domain
+        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/${secure}${sameSite}${domainAttr}`;
+
+        // Try clearing with subdomain domain
+        if (isProduction) {
+          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/${secure}${sameSite}; domain=.jazzam.ai`;
+        }
+      };
+
+      clearCookie("accessToken");
+      clearCookie("refreshToken");
 
       // Redirect to login page
       window.location.href = "/login";

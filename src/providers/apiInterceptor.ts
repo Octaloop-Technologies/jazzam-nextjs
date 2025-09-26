@@ -18,32 +18,43 @@ const logoutUser = async (): Promise<void> => {
     .find((row) => row.startsWith("accessToken="))
     ?.split("=")[1];
 
-  // Attempt backend logout to remove refresh token from DB
+  // Attempt backend logout to remove refresh token from DB and clear httpOnly cookies
   try {
     if (token) {
-      await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/logout`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/logout`, {
         method: "POST",
-        credentials: "include",
+        credentials: "include", // Important: include cookies for backend to clear them
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
+
+      if (response.ok) {
+        // Backend successfully cleared cookies, redirect to login
+        window.location.href = "/login";
+        return;
+      }
     }
   } catch (e) {
-    // Ignore errors; proceed to client cleanup
+    // Ignore errors; proceed to fallback cleanup
   }
 
-  // Clear client-side cookies immediately
-  // Match the exact same options used by the backend
+  // Fallback: if backend logout fails, try client-side clearing for non-httpOnly cookies
   const clearCookie = (name: string) => {
     const isProduction = process.env.NODE_ENV === "production";
-    const domain = isProduction ? process.env.NEXT_PUBLIC_COOKIE_DOMAIN || "" : "localhost";
+    const domain = isProduction ? "jazzam.ai" : "localhost";
     const secure = isProduction ? "; secure" : "";
     const sameSite = isProduction ? "; samesite=strict" : "; samesite=lax";
     const domainAttr = domain ? `; domain=${domain}` : "";
 
+    // Try clearing with exact domain
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/${secure}${sameSite}${domainAttr}`;
+
+    // Try clearing with subdomain domain
+    if (isProduction) {
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/${secure}${sameSite}; domain=.jazzam.ai`;
+    }
   };
 
   // Clear both auth cookies
