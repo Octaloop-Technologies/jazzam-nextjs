@@ -17,6 +17,9 @@ import { logout } from "@/redux/slices/authSlice";
 import { useAppDispatch } from "@/redux/store";
 import { ZohoIcon } from "@/components/svgs/loginButtonSvgs";
 import { useToast } from "@/lib/hooks/useToast";
+import { logoutUserAction } from "./action";
+import { clearClientCookies } from "@/lib/utils/cookieUtils";
+import { useRouter } from "next/navigation";
 
 const SettingsPage = () => {
   // ==============================================================
@@ -32,13 +35,14 @@ const SettingsPage = () => {
   });
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const { success } = useToast();
+  const { success: ToastSuccess, error: ToastError } = useToast();
 
   // ==============================================================
   // Hooks
   // ==============================================================
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
+  const router = useRouter();
 
   // ==============================================================
   // Logout User - Backend handles cookie clearing (httpOnly cookies)
@@ -47,70 +51,28 @@ const SettingsPage = () => {
     if (typeof window === "undefined" || isLoggingOut) return;
 
     setIsLoggingOut(true);
-    success("Logging out...");
 
     try {
-      // Clear Redux state for immediate UI feedback
-      dispatch(logout());
+      const { success, error, message } = await logoutUserAction();
 
-      // Call backend logout API - this will clear httpOnly cookies
-      try {
-        const token = document.cookie
-          .split("; ")
-          .find((row) => row.startsWith("accessToken="))
-          ?.split("=")[1];
+      if (success) {
+        // Clear Redux state for immediate UI feedback
+        dispatch(logout());
 
-        console.log("Current cookies before logout:", document.cookie);
-        console.log("Token found:", token ? "Yes" : "No");
+        // Clear cookies and storage on client side
+        clearClientCookies();
 
-        if (token) {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/logout`, {
-            method: "POST",
-            credentials: "include", // Important: include cookies for backend to clear them
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
+        ToastSuccess("Logged out successfully");
 
-          console.log("Backend logout response:", response.status, response.ok);
-
-          if (response.ok) {
-            // Backend successfully cleared cookies, redirect to login
-            console.log("Cookies after backend logout:", document.cookie);
-            window.location.href = "/login";
-            return;
-          }
-        }
-      } catch (error) {
-        console.error("Backend logout error:", error);
+        // Use Next.js router instead of window.location for better handling
+        router.push("/login");
+      } else {
+        setIsLoggingOut(false);
+        ToastError(error || message || "Something went wrong while logging out");
       }
-
-      // Fallback: if backend logout fails, try client-side clearing for non-httpOnly cookies
-      const clearCookie = (name: string) => {
-        const isProduction = process.env.NODE_ENV === "production";
-        const domain = isProduction ? "jazzam.ai" : "localhost";
-        const secure = isProduction ? "; secure" : "";
-        const sameSite = isProduction ? "; samesite=strict" : "; samesite=lax";
-        const domainAttr = domain ? `; domain=${domain}` : "";
-
-        // Try clearing with exact domain
-        document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/${secure}${sameSite}${domainAttr}`;
-
-        // Try clearing with subdomain domain
-        if (isProduction) {
-          document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/${secure}${sameSite}; domain=.jazzam.ai`;
-        }
-      };
-
-      clearCookie("accessToken");
-      clearCookie("refreshToken");
-
-      // Redirect to login page
-      window.location.href = "/login";
     } catch (error) {
-      console.error("Logout error:", error);
       setIsLoggingOut(false);
+      ToastError(error instanceof Error ? error.message : "Something went wrong while logging out");
     }
   };
 

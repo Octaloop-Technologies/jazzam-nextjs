@@ -41,6 +41,21 @@ function getLocaleFromHeader(acceptLanguage: string | null): string {
   return defaultLocale;
 }
 
+// Helper function to check if JWT token is expired
+function isTokenExpired(token: string): boolean {
+  try {
+    // Decode JWT token payload (without verification)
+    const payload = JSON.parse(atob(token.split(".")[1]));
+    const currentTime = Date.now() / 1000;
+
+    // Check if token has expired
+    return payload.exp ? payload.exp < currentTime : false;
+  } catch (error) {
+    // If token can't be decoded, consider it invalid/expired
+    return true;
+  }
+}
+
 // ==============================================================
 // Middleware function
 // ==============================================================
@@ -52,7 +67,15 @@ export function middleware(request: NextRequest) {
   const refreshToken = request.cookies.get("refreshToken")?.value;
 
   // Check if user is authenticated (has valid tokens)
-  const isAuthenticated = !!(accessToken && refreshToken);
+  // Only consider authenticated if both tokens exist, are not empty, and are not expired
+  const isAuthenticated = !!(
+    accessToken &&
+    refreshToken &&
+    accessToken.trim() !== "" &&
+    refreshToken.trim() !== "" &&
+    !isTokenExpired(accessToken) &&
+    !isTokenExpired(refreshToken)
+  );
 
   // ==============================================================
   // Handle authentication redirects
