@@ -5,6 +5,17 @@ import { cookies } from "next/headers";
 export const logoutUserAction = async () => {
   try {
     const token = (await cookies()).get("accessToken")?.value;
+
+    if (process.env.NODE_ENV === "development") {
+      console.log("Logout token found:", token ? "Yes" : "No");
+      console.log("Token length:", token?.length || 0);
+    }
+
+    if (!token) {
+      console.warn("No access token found for logout");
+      return { success: false, error: "No authentication token found" };
+    }
+
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/logout`, {
       method: "POST",
       credentials: "include",
@@ -25,10 +36,25 @@ export const logoutUserAction = async () => {
     const data = await response.json();
 
     if (response.ok) {
-      // Clear cookies on server side as well
+      // Clear cookies on server side with proper options
       const cookieStore = await cookies();
-      cookieStore.delete("accessToken");
-      cookieStore.delete("refreshToken");
+
+      // Clear cookies with explicit options to match backend clearing
+      cookieStore.set("accessToken", "", {
+        expires: new Date(0),
+        path: "/",
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+      });
+
+      cookieStore.set("refreshToken", "", {
+        expires: new Date(0),
+        path: "/",
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+      });
 
       return { success: true, message: data.message || "Logged out successfully" };
     } else {

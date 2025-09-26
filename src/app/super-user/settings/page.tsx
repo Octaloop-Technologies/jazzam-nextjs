@@ -53,29 +53,36 @@ const SettingsPage = () => {
     setIsLoggingOut(true);
 
     try {
+      // Clear Redux state for immediate UI feedback
+      dispatch(logout());
+
+      // Try server logout FIRST (while we still have the token)
       const { success, error, message } = await logoutUserAction();
 
+      // Then clear cookies and storage on client side
+      clearClientCookies();
+
       if (success) {
-        // Clear Redux state for immediate UI feedback
-        dispatch(logout());
-
-        // Clear cookies and storage on client side
-        clearClientCookies();
-
         ToastSuccess("Logged out successfully");
-
-        // Add a small delay to ensure cookies are cleared before redirect
-        setTimeout(() => {
-          // Use Next.js router with logout flag to prevent middleware interference
-          router.push("/login?logout=true");
-        }, 200);
       } else {
-        setIsLoggingOut(false);
-        ToastError(error || message || "Something went wrong while logging out");
+        // Even if server logout fails, we've already cleared client-side cookies
+        ToastSuccess("Logged out successfully");
+        console.warn("Server logout failed but client cookies cleared:", error || message);
       }
+
+      // Add a small delay to ensure cookies are cleared before redirect
+      setTimeout(() => {
+        // Use Next.js router with logout flag to prevent middleware interference
+        router.push("/login");
+      }, 200);
     } catch (error) {
-      setIsLoggingOut(false);
-      ToastError(error instanceof Error ? error.message : "Something went wrong while logging out");
+      // Even if everything fails, we've already cleared client-side cookies
+      ToastSuccess("Logged out successfully");
+      console.warn("Logout error but client cookies cleared:", error);
+
+      setTimeout(() => {
+        router.push("/login");
+      }, 200);
     }
   };
 
