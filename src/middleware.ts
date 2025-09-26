@@ -99,8 +99,16 @@ export function middleware(request: NextRequest) {
   // ==============================================================
   const langCookie = request.cookies.get("lang")?.value;
 
-  // If we don't have a valid language cookie, detect and set locale
-  if (!langCookie || !supportedLocales.includes(langCookie)) {
+  // Skip setting lang cookie during logout scenarios:
+  // 1. When accessing login page without valid tokens (logout redirect)
+  // 2. When user has no authentication tokens and is on login page
+  // 3. When login page has logout query parameter (from our cache-busting redirect)
+  const isLogoutScenario =
+    (path.startsWith("/login") && (!accessToken || !refreshToken || !isAuthenticated)) ||
+    request.nextUrl.searchParams.has("logout");
+
+  // If we don't have a valid language cookie and it's not a logout scenario, detect and set locale
+  if ((!langCookie || !supportedLocales.includes(langCookie)) && !isLogoutScenario) {
     const acceptLang = request.headers.get("accept-language");
     const detectedLocale = getLocaleFromHeader(acceptLang);
 

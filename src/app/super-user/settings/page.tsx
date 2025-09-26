@@ -64,8 +64,11 @@ const SettingsPage = () => {
 
         ToastSuccess("Logged out successfully");
 
-        // Use Next.js router instead of window.location for better handling
-        router.push("/login");
+        // Add a small delay to ensure cookies are cleared before redirect
+        setTimeout(() => {
+          // Use Next.js router with logout flag to prevent middleware interference
+          router.push("/login?logout=true");
+        }, 200);
       } else {
         setIsLoggingOut(false);
         ToastError(error || message || "Something went wrong while logging out");

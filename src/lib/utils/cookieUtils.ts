@@ -65,6 +65,22 @@ export const clearClientCookies = () => {
   if (typeof sessionStorage !== "undefined") {
     sessionStorage.clear();
   }
+
+  // Clear any service worker caches to prevent cached responses
+  if (typeof window !== "undefined" && "serviceWorker" in navigator && "caches" in window) {
+    caches
+      .keys()
+      .then((cacheNames) => {
+        cacheNames.forEach((cacheName) => {
+          caches.delete(cacheName);
+        });
+      })
+      .catch((error) => {
+        if (process.env.NODE_ENV === "development") {
+          console.warn("Failed to clear service worker caches:", error);
+        }
+      });
+  }
 };
 
 /**

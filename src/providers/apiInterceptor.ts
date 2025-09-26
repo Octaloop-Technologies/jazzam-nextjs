@@ -21,12 +21,17 @@ const logoutUser = async (): Promise<void> => {
     // Call server logout action
     await logoutUserAction();
 
-    // Navigate to login page
-    window.location.href = "/login";
+    // Add a small delay to ensure cookies are cleared before redirect
+    setTimeout(() => {
+      // Navigate to login page with cache-busting and logout flag
+      window.location.href = "/login?&t=" + Date.now();
+    }, 200);
   } catch (error) {
     console.error("Logout error:", error);
     // Even if server logout fails, clear local state and redirect
-    window.location.href = "/login";
+    setTimeout(() => {
+      window.location.href = "/login?&t=" + Date.now();
+    }, 200);
   }
 };
 

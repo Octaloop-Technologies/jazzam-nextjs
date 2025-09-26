@@ -8,9 +8,13 @@ export const logoutUserAction = async () => {
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/logout`, {
       method: "POST",
       credentials: "include",
+      cache: "no-store", // Prevent caching of logout request
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        Pragma: "no-cache",
+        Expires: "0",
       },
     });
 
