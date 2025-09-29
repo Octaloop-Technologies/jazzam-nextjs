@@ -62,8 +62,13 @@ const SettingsPage = () => {
         ToastError(message || "Something went wrong while logging out");
       }
     } catch (error) {
-      setIsLoggingOut(false);
-      ToastError(error instanceof Error ? error.message : "Something went wrong while logging out");
+      // Even if everything fails, we've already cleared client-side cookies
+      ToastSuccess("Logged out successfully");
+      console.warn("Logout error but client cookies cleared:", error);
+
+      setTimeout(() => {
+        router.push("/login?logout=true&t=" + Date.now());
+      }, 200);
     }
   };
 
