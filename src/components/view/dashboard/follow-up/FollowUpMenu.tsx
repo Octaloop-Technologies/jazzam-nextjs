@@ -149,7 +149,6 @@ const FollowUpMenu = ({
         isOpen={isDeleteModalOpen}
         onClose={handleCloseDeleteModal}
         onConfirm={handleConfirmDelete}
-        leadId={selectedLeadId}
       />
 
       {/* ---------------------------- lead detail modal ---------------------------- */}

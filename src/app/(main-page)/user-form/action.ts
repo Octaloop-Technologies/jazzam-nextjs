@@ -17,7 +17,7 @@ export const getLinkedinProfile = async (linkedinUrl: string) => {
       return { success: false, error: responseData.message || "Failed to get linkedin profile" };
     }
 
-    return { success: true, data: responseData.message || "Successfully got linkedin profile" };
+    return { success: true, message: responseData.message || "Successfully got linkedin profile" };
   } catch (error) {
     console.error("Error getting linkedin profile:", error);
     return {

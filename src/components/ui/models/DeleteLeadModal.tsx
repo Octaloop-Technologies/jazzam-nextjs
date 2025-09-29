@@ -7,15 +7,15 @@ import { DeleteSvg } from "../../svgs/LeadsAnalysisSvgs";
 interface DeleteLeadModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (leadId: string) => void;
-  leadId: string;
+  onConfirm: () => void;
+  isLoading?: boolean;
 }
 
 const DeleteLeadModal: React.FC<DeleteLeadModalProps> = ({
   isOpen,
   onClose,
   onConfirm,
-  leadId,
+  isLoading = false,
 }) => {
   if (!isOpen) return null;
 
@@ -26,8 +26,9 @@ const DeleteLeadModal: React.FC<DeleteLeadModalProps> = ({
   };
 
   const handleConfirm = () => {
-    onConfirm(leadId);
-    onClose();
+    if (!isLoading) {
+      onConfirm();
+    }
   };
 
   return (
@@ -51,14 +52,17 @@ const DeleteLeadModal: React.FC<DeleteLeadModalProps> = ({
             title="Cancel"
             titleClass="font-[500]"
             iconRight={<CloseSvg />}
+            disabled={isLoading}
           />
 
           <PrimaryButton
             onClick={handleConfirm}
             className="w-full h-[50px] !gap-2.5 rounded-xl-2"
-            title="Delete now"
+            title={isLoading ? "Deleting..." : "Delete now"}
             titleClass="font-[500]"
             iconRight={<DeleteSvg className="size-4.5" />}
+            isLoading={isLoading}
+            disabled={isLoading}
           />
         </div>
       </div>

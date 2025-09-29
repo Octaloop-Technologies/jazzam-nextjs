@@ -27,7 +27,7 @@ const UserFormPage = () => {
     return null;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     // Validate form
@@ -42,11 +42,8 @@ const UserFormPage = () => {
 
     try {
       const response = await getLinkedinProfile(linkedinUrl);
-      console.log(response);
       if (response.success) {
-        success(
-          response.data.message || "LinkedIn URL submitted successfully! We'll be in touch soon."
-        );
+        success("LinkedIn URL submitted successfully! We'll be in touch soon.");
       } else {
         error(response.error || "Failed to submit LinkedIn URL. Please try again.");
       }
@@ -106,7 +103,7 @@ const UserFormPage = () => {
               </div>
 
               {/* Form */}
-              <form onSubmit={handleSubmit} className="space-y-8">
+              <form onSubmit={handleFormSubmit} className="space-y-8">
                 <div>
                   <Input
                     label="LinkedIn Profile URL"

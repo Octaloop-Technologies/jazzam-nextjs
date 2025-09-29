@@ -6,40 +6,70 @@ import Dropdown, { DropdownItem } from "@/components/ui/dropdown/Dropdown";
 import DeleteLeadModal from "@/components/ui/models/DeleteLeadModal";
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useToast } from "@/lib/hooks/useToast";
+import { deleteLead } from "@/app/super-user/(leads)/action";
 
 const LeadsMenu = ({
   lead,
   showViewDetails = true,
   customTrigger,
+  navigate = "/super-user",
 }: {
   lead: Lead;
   showViewDetails?: boolean;
   customTrigger?: React.ReactNode;
+  navigate?: string;
 }) => {
   // ======================================================
   // State
   // ======================================================
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedLeadId, setSelectedLeadId] = useState<string>(lead._id);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // ======================================================
+  // Hooks
+  // ======================================================
+  const router = useRouter();
+  const { success: ToastSuccess, error: ToastError } = useToast();
 
   // ======================================================
   // Delete lead
   // ======================================================
-  const handleDeleteClick = (leadId: string) => {
-    setSelectedLeadId(leadId);
+  const handleDeleteClick = () => {
     setIsDeleteModalOpen(true);
   };
 
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
-    setSelectedLeadId(lead._id);
   };
 
-  const handleConfirmDelete = () => {
-    // Here you would implement the actual lead deletion logic
-    console.log(`Deleting lead with ID: ${selectedLeadId}`);
-    // After deletion, you might want to refresh the leads data or remove the lead from the state
-    handleCloseDeleteModal();
+  const handleConfirmDelete = async () => {
+    if (isDeleting) return;
+
+    setIsDeleting(true);
+    try {
+      const result = await deleteLead({ id: lead._id });
+      if (result.success) {
+        ToastSuccess(result.message);
+        // Refresh the page to update the leads list
+        if (navigate) {
+          router.push(navigate);
+        } else {
+          router.refresh();
+        }
+        handleCloseDeleteModal();
+      } else {
+        ToastError(result.error || "Failed to delete lead");
+      }
+    } catch (error) {
+      if (process.env.NODE_ENV === "development") {
+        console.error("Error deleting lead:", error);
+      }
+      ToastError("An unexpected error occurred while deleting the lead");
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   return (
@@ -97,7 +127,7 @@ const LeadsMenu = ({
         <DropdownItem>
           <button
             className="w-full text-danger flex gap-1 hover:text-gray-200"
-            onClick={() => handleDeleteClick(lead._id)}
+            onClick={handleDeleteClick}
           >
             <DeleteSvg />
             Delete lead
@@ -110,7 +140,7 @@ const LeadsMenu = ({
         isOpen={isDeleteModalOpen}
         onClose={handleCloseDeleteModal}
         onConfirm={handleConfirmDelete}
-        leadId={selectedLeadId}
+        isLoading={isDeleting}
       />
     </>
   );

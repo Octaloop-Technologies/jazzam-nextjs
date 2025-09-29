@@ -103,7 +103,6 @@ export const getLeadStats = async () => {
 // ======================================================
 // Search leads
 // ======================================================
-
 interface SearchLeadsParams {
   query: string;
   page?: number;
@@ -197,6 +196,38 @@ export const getLeadById = async ({ id }: { id: string }) => {
     return {
       success: false,
       data: null,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+};
+
+// ======================================================
+// Delete lead
+// ======================================================
+export const deleteLead = async ({ id }: { id: string }) => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value || "";
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/lead/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(errorData?.message || `HTTP error! status: ${response.status}`);
+    }
+
+    const responseData = await response.json();
+    return { success: true, message: responseData.message };
+  } catch (error) {
+    console.error("Error deleting lead:", error);
+    return {
+      success: false,
+      message: null,
       error: error instanceof Error ? error.message : "Unknown error",
     };
   }

@@ -169,6 +169,7 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
             <LeadsMenu
               showViewDetails={false}
               lead={lead}
+              navigate={`/super-user`}
               customTrigger={
                 <button
                   className="size-[40px] flex-center rounded-full border border-gray-150 bg-white
