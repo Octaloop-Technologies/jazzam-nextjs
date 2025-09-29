@@ -18,7 +18,6 @@ import { useAppDispatch } from "@/redux/store";
 import { ZohoIcon } from "@/components/svgs/loginButtonSvgs";
 import { useToast } from "@/lib/hooks/useToast";
 import { logoutUserAction } from "./action";
-import { clearClientCookies } from "@/lib/utils/cookieUtils";
 import { useRouter } from "next/navigation";
 
 const SettingsPage = () => {
@@ -49,29 +48,18 @@ const SettingsPage = () => {
   // ==============================================================
   const handleLogout = async () => {
     if (typeof window === "undefined" || isLoggingOut) return;
-
     setIsLoggingOut(true);
-
     try {
-      const { success, error, message } = await logoutUserAction();
+      const { success, message } = await logoutUserAction();
 
       if (success) {
         // Clear Redux state for immediate UI feedback
         dispatch(logout());
-
-        // Clear cookies and storage on client side
-        clearClientCookies();
-
         ToastSuccess("Logged out successfully");
-
-        // Add a small delay to ensure cookies are cleared before redirect
-        setTimeout(() => {
-          // Use Next.js router with logout flag to prevent middleware interference
-          router.push("/login?logout=true");
-        }, 200);
+        router.push("/login");
       } else {
         setIsLoggingOut(false);
-        ToastError(error || message || "Something went wrong while logging out");
+        ToastError(message || "Something went wrong while logging out");
       }
     } catch (error) {
       setIsLoggingOut(false);

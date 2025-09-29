@@ -4,7 +4,8 @@ import { cookies } from "next/headers";
 
 export const logoutUserAction = async () => {
   try {
-    const token = (await cookies()).get("accessToken")?.value;
+    const cookieStore = await cookies();
+    const token = cookieStore.get("accessToken")?.value;
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/logout`, {
       method: "POST",
       credentials: "include",
@@ -12,9 +13,6 @@ export const logoutUserAction = async () => {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        Pragma: "no-cache",
-        Expires: "0",
       },
     });
 
@@ -26,18 +24,17 @@ export const logoutUserAction = async () => {
 
     if (response.ok) {
       // Clear cookies on server side as well
-      const cookieStore = await cookies();
       cookieStore.delete("accessToken");
       cookieStore.delete("refreshToken");
 
       return { success: true, message: data.message || "Logged out successfully" };
     } else {
-      return { success: false, error: data.message || "Something went wrong while logging out" };
+      return { success: false, message: data.message || "Something went wrong while logging out" };
     }
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Something went wrong while logging out",
+      message: error instanceof Error ? error.message : "Something went wrong while logging out",
     };
   }
 };

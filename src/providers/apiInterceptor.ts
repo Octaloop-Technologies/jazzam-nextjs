@@ -6,7 +6,6 @@
 import { logout } from "@/redux/slices/authSlice";
 import { store } from "@/redux/store";
 import { logoutUserAction } from "@/app/super-user/settings/action";
-import { clearClientCookies, isTokenExpired } from "@/lib/utils/cookieUtils";
 
 const logoutUser = async (): Promise<void> => {
   if (typeof window === "undefined") return;
@@ -15,23 +14,10 @@ const logoutUser = async (): Promise<void> => {
     // Clear Redux state first for immediate UI feedback
     store.dispatch(logout());
 
-    // Clear client-side cookies and storage
-    clearClientCookies();
-
     // Call server logout action
     await logoutUserAction();
-
-    // Add a small delay to ensure cookies are cleared before redirect
-    setTimeout(() => {
-      // Navigate to login page with cache-busting and logout flag
-      window.location.href = "/login?&t=" + Date.now();
-    }, 200);
   } catch (error) {
     console.error("Logout error:", error);
-    // Even if server logout fails, clear local state and redirect
-    setTimeout(() => {
-      window.location.href = "/login?&t=" + Date.now();
-    }, 200);
   }
 };
 
@@ -52,7 +38,7 @@ global.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Res
         .find((row) => row.startsWith("accessToken="))
         ?.split("=")[1];
 
-      if (accessToken && isTokenExpired(accessToken)) {
+      if (accessToken) {
         // Token is expired, logout immediately
         logoutUser();
         // Return a 401 response to prevent the actual API call
