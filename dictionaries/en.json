@@ -8,9 +8,14 @@
 
   "home": {
     "hero": {
-      "title": "Transform Your Sales Team into a Deal-Closing Machine with Ai",
-      "para": "Jazzam – Smart AI Sales Agent (SaaS) helps your team connect with the right customers and close deals 40% faster.",
-      "getStarted": "Get started"
+      "title": "Jazzam ",
+      "titele2":"Miss a Lead",
+      "spanTitle": "Never",
+      "para": "Every visit turns into a real opportunity. Jazzam collects your leads, analyzes them, and guides your next step.",
+      "heading":"Join the waitlist today!",
+      "sendNow": "Send now",
+      "emailHeading":"Your email address",
+      "getStarted":"GET STARTED"
     },
 
     "whyChooseJazzam": {
