@@ -43,6 +43,13 @@ export interface Company {
   };
   isActive: boolean;
   lastLoginAt?: Date;
+  onboarding?: {
+    completed: boolean;
+    currentStep: number;
+    completedSteps: number[];
+    skipped: boolean;
+    completedAt?: Date;
+  };
   createdAt: Date;
   updatedAt: Date;
 }

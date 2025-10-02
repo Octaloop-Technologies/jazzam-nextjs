@@ -23,6 +23,7 @@ import TabNavigation from "@/components/view/dashboard/leads/TabNavigation";
 import TabContentLoader from "@/components/view/dashboard/leads/TabContentLoader";
 import RefreshButton from "@/components/view/dashboard/leads/RefreshButton";
 import { getCurrentUser } from "@/app/(auth)/action";
+import WelcomeBanner from "@/components/view/dashboard/leads/WelcomeBanner";
 
 // ======================================================
 // Meta Data
@@ -185,6 +186,9 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
 
   return (
     <section>
+      {/* ---------------------------- Welcome Banner ---------------------------- */}
+      <WelcomeBanner />
+
       {/* ---------------------------- header ---------------------------- */}
       <div className="flex-between gap-1.5">
         <div>

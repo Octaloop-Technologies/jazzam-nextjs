@@ -232,3 +232,46 @@ export const deleteLead = async ({ id }: { id: string }) => {
     };
   }
 };
+
+// ======================================================
+// Update onboarding status
+// ======================================================
+export const updateOnboardingStatus = async (data: {
+  completed?: boolean;
+  currentStep?: number;
+  completedSteps?: number[];
+  skipped?: boolean;
+}) => {
+  try {
+    const accessToken = (await cookies()).get("accessToken")?.value;
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/onboarding`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify(data),
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update onboarding status");
+    }
+
+    const result = await response.json();
+    return { success: true, data: result.data };
+  } catch (error) {
+    console.error("Update onboarding error:", error);
+    return { success: false, error: "Failed to update onboarding status" };
+  }
+};
+
+export const restartOnboarding = async () => {
+  return updateOnboardingStatus({
+    completed: false,
+    currentStep: 0,
+    completedSteps: [],
+    skipped: false,
+  });
+};

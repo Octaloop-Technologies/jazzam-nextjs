@@ -19,6 +19,7 @@ import { ZohoIcon } from "@/components/svgs/loginButtonSvgs";
 import { useToast } from "@/lib/hooks/useToast";
 import { logoutUserAction } from "./action";
 import { useRouter } from "next/navigation";
+import { restartOnboarding } from "../(leads)/action";
 
 const SettingsPage = () => {
   // ==============================================================
@@ -34,6 +35,7 @@ const SettingsPage = () => {
   });
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isRestartingTour, setIsRestartingTour] = useState(false);
   const { success: ToastSuccess, error: ToastError } = useToast();
 
   // ==============================================================
@@ -64,6 +66,32 @@ const SettingsPage = () => {
     } catch (error) {
       if (process.env.NODE_ENV === "development") {
         console.error("Logout error:", error);
+      }
+    }
+  };
+
+  // ==============================================================
+  // Restart Onboarding Tour
+  // ==============================================================
+  const handleRestartTour = async () => {
+    if (isRestartingTour) return;
+    setIsRestartingTour(true);
+    try {
+      const result = await restartOnboarding();
+      if (result.success) {
+        ToastSuccess("Onboarding tour restarted! Redirecting...");
+        setTimeout(() => {
+          window.location.href = "/super-user";
+        }, 1000);
+      } else {
+        ToastError("Failed to restart tour. Please try again.");
+        setIsRestartingTour(false);
+      }
+    } catch (error) {
+      ToastError("Failed to restart tour. Please try again.");
+      setIsRestartingTour(false);
+      if (process.env.NODE_ENV === "development") {
+        console.error("Restart tour error:", error);
       }
     }
   };
@@ -216,6 +244,30 @@ const SettingsPage = () => {
                     />
                   </div>
                 ))}
+              </div>
+
+              {/* Onboarding Tour */}
+              <h1 className="text-[14px] text-gray-200 mt-4">Help & Support</h1>
+              <div className="p-[15px] border border-gray-b rounded-2xl">
+                <div className="flex-between">
+                  <div>
+                    <h2 className="text-[14px] leading-[16px] font-medium">Dashboard Tour</h2>
+                    <p className="text-xs text-gray-400 mt-1">
+                      Take a guided tour through the dashboard features
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleRestartTour}
+                    disabled={isRestartingTour}
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+                      isRestartingTour
+                        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                        : "bg-blue-500 text-white hover:bg-blue-600"
+                    }`}
+                  >
+                    {isRestartingTour ? "Restarting..." : "Restart Tour"}
+                  </button>
+                </div>
               </div>
             </div>
           )}
