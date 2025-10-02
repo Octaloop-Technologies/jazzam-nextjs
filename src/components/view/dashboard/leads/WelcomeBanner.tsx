@@ -35,12 +35,12 @@ export default function WelcomeBanner() {
                 <h2 className="text-2xl font-bold text-gray-900">
                   Welcome to {user?.companyName || "Your Dashboard"}!
                 </h2>
-                <p className="text-sm text-gray-600">We're excited to have you here</p>
+                <p className="text-sm text-gray-600">We&apos;re excited to have you here</p>
               </div>
             </div>
 
             <p className="text-gray-700 mb-4 max-w-2xl">
-              Ready to get started? We've prepared a quick tour to help you discover all the
+              Ready to get started? We&apos;ve prepared a quick tour to help you discover all the
               powerful features available to manage your leads effectively. It only takes a minute!
             </p>
 

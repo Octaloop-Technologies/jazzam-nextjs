@@ -176,7 +176,7 @@ const PublicForm = ({ accessToken }: PublicFormProps) => {
       <div className="text-center">
         <h1 className="text-2xl font-bold text-gray-800 mb-4">Form Not Found</h1>
         <p className="text-gray-600">
-          The form you're looking for doesn't exist or has been removed.
+          The form you&apos;re looking for doesn&apos;t exist or has been removed.
         </p>
       </div>
     );

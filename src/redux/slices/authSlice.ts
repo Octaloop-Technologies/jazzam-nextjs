@@ -54,9 +54,6 @@ export interface Company {
   updatedAt: Date;
 }
 
-// Keep User interface for backward compatibility
-export interface User extends Company {}
-
 // Auth state interface
 interface AuthState {
   user: Company | null;
