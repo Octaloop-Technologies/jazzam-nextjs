@@ -2,23 +2,57 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "@/redux/store";
 import { getCurrentUser } from "@/app/(auth)/action";
 
-// User interface matching the backend
-export interface User {
+// Company interface matching the backend
+export interface Company {
   _id: string;
-  name: string;
+  companyName: string;
   email: string;
-  fullName: string;
-  avatar?: {
+  website?: string;
+  industry?: string;
+  companySize?: string;
+  contactPerson?: {
+    name?: string;
+    phone?: string;
+  };
+  subscriptionStatus: string;
+  subscriptionPlan: string;
+  trialEndDate?: Date;
+  subscriptionStartDate?: Date;
+  subscriptionEndDate?: Date;
+  paymentMethod: string;
+  settings: {
+    timezone: string;
+    currency: string;
+    language: string;
+    emailNotifications: boolean;
+    leadNotifications: boolean;
+  };
+  logo?: {
     url: string;
     public_id: string;
   };
-  provider?: string;
   isVerified: boolean;
+  googleId?: string;
+  zohoId?: string;
+  provider: string;
+  usageStats: {
+    totalLeads: number;
+    leadsThisMonth: number;
+    formsCreated: number;
+    emailsSent: number;
+  };
+  isActive: boolean;
+  lastLoginAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
 }
+
+// Keep User interface for backward compatibility
+export interface User extends Company {}
 
 // Auth state interface
 interface AuthState {
-  user: User | null;
+  user: Company | null;
   isLoading: boolean;
   isAuthenticated: boolean;
   error: string | null;
@@ -94,6 +128,7 @@ export const { logout } = authSlice.actions;
 
 // Export selectors
 export const selectUser = (state: RootState) => state.auth.user;
+export const selectCompany = (state: RootState) => state.auth.user; // Alias for clarity
 export const selectIsAuthenticated = (state: RootState) => state.auth.isAuthenticated;
 export const selectIsLoading = (state: RootState) => state.auth.isLoading;
 export const selectAuthError = (state: RootState) => state.auth.error;

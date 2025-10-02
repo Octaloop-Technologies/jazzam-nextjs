@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 
 // ======================================================
-// Get all leads
+// Get all leads (automatically filtered by logged-in company via JWT)
 // ======================================================
 interface GetLeadsParams {
   page?: number;
@@ -42,7 +42,7 @@ export const getAllLeads = async ({
     if (assignedTo) params.append("assignedTo", assignedTo);
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/lead/all?${params.toString()}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/leads/all?${params.toString()}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -76,7 +76,7 @@ export const getLeadStats = async () => {
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value || "";
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/lead/stats`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/stats`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -101,7 +101,7 @@ export const getLeadStats = async () => {
 };
 
 // ======================================================
-// Search leads
+// Search leads (automatically filtered by logged-in company via JWT)
 // ======================================================
 interface SearchLeadsParams {
   query: string;
@@ -142,7 +142,7 @@ export const searchLeads = async ({
     if (companyIndustry) params.append("companyIndustry", companyIndustry);
 
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/lead/search?${params.toString()}`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/leads/search?${params.toString()}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -176,7 +176,7 @@ export const getLeadById = async ({ id }: { id: string }) => {
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value || "";
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/lead/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -208,7 +208,7 @@ export const deleteLead = async ({ id }: { id: string }) => {
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value || "";
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/lead/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",

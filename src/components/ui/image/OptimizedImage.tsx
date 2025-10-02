@@ -42,8 +42,7 @@ const isValidImageUrl = (url: string): boolean => {
     // Many CDNs don't include file extensions in URLs or use query parameters
     // So we'll be more lenient and just ensure it's a valid URL
     return true;
-  } catch (e) {
-    console.error("Invalid image URL:", url, e);
+  } catch {
     // console.error("Invalid image URL:", url, e);
     return false;
   }

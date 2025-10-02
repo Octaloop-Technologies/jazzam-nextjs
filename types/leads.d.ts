@@ -1,6 +1,10 @@
 interface Lead {
   _id: string;
-  linkedinProfileUrl: string;
+  platform?: string; // Platform source (linkedin, meta, twitter, instagram, other)
+  platformUrl?: string; // Platform-specific URL/identifier
+  profileUrl?: string; // Generic profile URL (works for all platforms)
+  profilePic?: string; // Profile picture URL
+  linkedinProfileUrl?: string; // Deprecated: Use profileUrl instead (kept for backward compatibility)
   firstName?: string;
   lastName?: string;
   fullName?: string;
@@ -20,10 +24,11 @@ interface Lead {
   currentJobDuration?: string;
   currentJobDurationInYrs?: number;
   location?: string;
+  country?: string;
+  city?: string;
   addressCountryOnly?: string;
   addressWithCountry?: string;
   addressWithoutCountry?: string;
-  profilePic?: string;
   profilePicHighQuality?: string;
   about?: string;
   creatorWebsite?: {

@@ -31,6 +31,12 @@ global.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Res
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
   if (url.includes(baseUrl || "") || url.startsWith("/api/")) {
+    // Skip authentication check for public form endpoints
+    if (url.includes("/forms/") && !url.includes("/forms/platform")) {
+      // This is a public form endpoint, skip authentication
+      return originalFetch(input, init);
+    }
+
     if (typeof window !== "undefined") {
       // Check if we have tokens and they're not expired before making the request
       const accessToken = document.cookie

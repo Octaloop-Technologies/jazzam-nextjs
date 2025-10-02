@@ -1,4 +1,4 @@
-import { FollowUpsIcon, LeadsIcon, SummaryIcon } from "@/components/svgs/NavbarSvgs";
+import { FollowUpsIcon, LeadsIcon, SummaryIcon, FormsIcon } from "@/components/svgs/NavbarSvgs";
 
 // ====================================================================
 // ==========================| Navbar Links |==========================
@@ -8,6 +8,11 @@ const navItems = [
     href: "/super-user",
     icon: <LeadsIcon />,
     title: "Leads",
+  },
+  {
+    href: "/super-user/forms",
+    icon: <FormsIcon />,
+    title: "Forms",
   },
   {
     href: "/super-user/summary",

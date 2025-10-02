@@ -1,72 +1,186 @@
 "use client";
 
-import React, { useState } from "react";
-import Input from "@/components/ui/input/Input";
+import { useState, useEffect } from "react";
+import { getFormByAccessToken } from "@/app/super-user/forms/action";
+import { useToast } from "@/lib/hooks/useToast";
+import { submitFormData } from "@/app/(main-page)/form/[accessToken]/action";
 import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
 import { LinkedInSvg } from "@/components/svgs/leadsDetailSvgs";
-import { useToast } from "@/lib/hooks/useToast";
-import { getLinkedinProfile } from "./action";
+import Input from "@/components/ui/input";
 
-const UserFormPage = () => {
+interface FormField {
+  id: string;
+  name: string;
+  type: string;
+  label: string;
+  placeholder?: string;
+  required: boolean;
+  validation?: {
+    pattern: string;
+    message: string;
+  };
+}
+
+interface Form {
+  _id: string;
+  name: string;
+  description: string;
+  formType: string;
+  config: {
+    fields: FormField[];
+    settings: {
+      theme: string;
+      submitButtonText: string;
+      successMessage: string;
+    };
+  };
+  styling: {
+    primaryColor: string;
+    secondaryColor: string;
+    fontFamily: string;
+    borderRadius: number;
+  };
+}
+
+interface PublicFormProps {
+  accessToken: string;
+}
+
+const PublicForm = ({ accessToken }: PublicFormProps) => {
+  const [form, setForm] = useState<Form | null>(null);
+  const [loading, setLoading] = useState(true);
   const { success, error } = useToast();
-  const [linkedinUrl, setLinkedinUrl] = useState("");
+  const [formData, setFormData] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [errors, setErrors] = useState<{ linkedinUrl?: string }>({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // LinkedIn URL validation
-  const validateLinkedInUrl = (url: string): string | null => {
-    if (!url.trim()) {
-      return "LinkedIn URL is required";
+  useEffect(() => {
+    fetchFormData();
+  }, [accessToken]);
+
+  const fetchFormData = async () => {
+    try {
+      setLoading(true);
+      const response = await getFormByAccessToken(accessToken);
+
+      if (response.success) {
+        setForm(response.data);
+        // Initialize form data with empty values
+        const initialData: Record<string, string> = {};
+        response.data.config.fields.forEach((field: FormField) => {
+          initialData[field.name] = "";
+        });
+        setFormData(initialData);
+      } else {
+        error(response.message || "Form not found");
+      }
+    } catch (err) {
+      console.error("Error fetching form:", err);
+      error("Error loading form");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Dynamic field validation
+  const validateField = (field: FormField, value: string): string | null => {
+    if (field.required && !value.trim()) {
+      return `${field.label} is required`;
     }
 
-    const linkedinRegex = /^https?:\/\/(www\.)?linkedin\.com\/in\/[a-zA-Z0-9-]+\/?$/;
-    if (!linkedinRegex.test(url)) {
-      return "Please enter a valid LinkedIn profile URL (e.g., https://linkedin.com/in/yourname)";
+    if (field.validation && value.trim()) {
+      const regex = new RegExp(field.validation.pattern);
+      if (!regex.test(value)) {
+        return field.validation.message;
+      }
     }
 
     return null;
   };
 
+  const validateForm = (): boolean => {
+    if (!form) return false;
+
+    const newErrors: Record<string, string> = {};
+    let isValid = true;
+
+    form.config.fields.forEach((field) => {
+      const error = validateField(field, formData[field.name] || "");
+      if (error) {
+        newErrors[field.name] = error;
+        isValid = false;
+      }
+    });
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const handleFormSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validate form
-    const validationError = validateLinkedInUrl(linkedinUrl);
-    if (validationError) {
-      setErrors({ linkedinUrl: validationError });
+    if (!validateForm()) {
       return;
     }
 
     setIsSubmitting(true);
-    setErrors({});
 
     try {
-      const response = await getLinkedinProfile(linkedinUrl);
+      const response = await submitFormData(formData, accessToken);
       if (response.success) {
-        success("LinkedIn URL submitted successfully! We'll be in touch soon.");
+        success(form?.config.settings.successMessage || "Form submitted successfully!");
+        // Clear form data
+        const clearedData: Record<string, string> = {};
+        form?.config.fields.forEach((field) => {
+          clearedData[field.name] = "";
+        });
+        setFormData(clearedData);
       } else {
-        error(response.error || "Failed to submit LinkedIn URL. Please try again.");
+        error(response.error || "Failed to submit form. Please try again.");
       }
-
-      setLinkedinUrl("");
     } catch (err) {
-      error(
-        err instanceof Error ? err.message : "Failed to submit LinkedIn URL. Please try again."
-      );
+      error(err instanceof Error ? err.message : "Failed to submit form. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setLinkedinUrl(value);
+  const handleInputChange = (fieldName: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [fieldName]: value }));
 
     // Clear error when user starts typing
-    if (errors.linkedinUrl) {
-      setErrors({});
+    if (errors[fieldName]) {
+      setErrors((prev) => ({ ...prev, [fieldName]: "" }));
     }
   };
+
+  const getFieldIcon = (fieldType: string) => {
+    switch (fieldType) {
+      case "url":
+        return <LinkedInSvg />;
+      default:
+        return null;
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (!form) {
+    return (
+      <div className="text-center">
+        <h1 className="text-2xl font-bold text-gray-800 mb-4">Form Not Found</h1>
+        <p className="text-gray-600">
+          The form you're looking for doesn't exist or has been removed.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-bg">
@@ -78,12 +192,11 @@ const UserFormPage = () => {
               Join Our Network
             </h1>
             <p className="mt-4 text-[20px] capitalize font-[500] max-sm:text-[16px] max-w-2xl mx-auto">
-              Connect with us on LinkedIn and be part of our professional community
+              Connect with us and be part of our professional community
             </p>
           </div>
         </div>
       </section>
-
       {/* Form Section */}
       <section className="home-padding">
         <div className="home-wrapper">
@@ -95,36 +208,40 @@ const UserFormPage = () => {
                   <LinkedInSvg />
                 </div>
                 <h2 className="text-[32px] font-[600] text-text mb-4 max-sm:text-[24px]">
-                  Share Your LinkedIn Profile
+                  {form.name}
                 </h2>
-                <p className="text-[16px] text-gray-250 max-sm:text-[14px]">
-                  Help us connect with you professionally by sharing your LinkedIn profile URL
-                </p>
+                <p className="text-[16px] text-gray-250 max-sm:text-[14px]">{form.description}</p>
               </div>
 
-              {/* Form */}
+              {/* Dynamic Form */}
               <form onSubmit={handleFormSubmit} className="space-y-8">
-                <div>
-                  <Input
-                    label="LinkedIn Profile URL"
-                    name="linkedinUrl"
-                    type="url"
-                    placeholder="https://linkedin.com/in/yourname"
-                    value={linkedinUrl}
-                    onChange={handleInputChange}
-                    error={errors.linkedinUrl}
-                    required
-                    leftIcon={<LinkedInSvg />}
-                    inputSize="lg"
-                    className="text-center"
-                  />
-                </div>
+                {form.config.fields.map((field) => (
+                  <div key={field.id}>
+                    <Input
+                      label={field.label}
+                      name={field.name}
+                      type={field.type}
+                      placeholder={field.placeholder}
+                      value={formData[field.name] || ""}
+                      onChange={(e) => handleInputChange(field.name, e.target.value)}
+                      error={errors[field.name]}
+                      required={field.required}
+                      leftIcon={getFieldIcon(field.type)}
+                      inputSize="lg"
+                      className="text-center"
+                    />
+                  </div>
+                ))}
 
                 {/* Submit Button */}
                 <div className="pt-6">
                   <PrimaryButton
                     type="submit"
-                    title={isSubmitting ? "Submitting..." : "Submit LinkedIn URL"}
+                    title={
+                      isSubmitting
+                        ? "Submitting..."
+                        : form.config.settings.submitButtonText || "Submit"
+                    }
                     className="w-full h-[60px] text-[16px] font-[600]"
                     disabled={isSubmitting}
                     isLoading={isSubmitting}
@@ -209,4 +326,4 @@ const UserFormPage = () => {
   );
 };
 
-export default UserFormPage;
+export default PublicForm;

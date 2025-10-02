@@ -6,7 +6,7 @@ export const logoutUserAction = async () => {
   try {
     const cookieStore = await cookies();
     const token = cookieStore.get("accessToken")?.value;
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/logout`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/logout`, {
       method: "POST",
       credentials: "include",
       cache: "no-store", // Prevent caching of logout request

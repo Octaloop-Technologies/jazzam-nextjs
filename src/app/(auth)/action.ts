@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 // ==============================================================
 export const loginWithGoogle = async () => {
   // Redirect to backend Google OAuth endpoint
-  const googleAuthUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/google`;
+  const googleAuthUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/google`;
   redirect(googleAuthUrl);
 };
 
@@ -17,7 +17,7 @@ export const loginWithGoogle = async () => {
 // ==============================================================
 export const loginWithZoho = async () => {
   // Redirect to backend Zoho CRM OAuth endpoint
-  const zohoAuthUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/zohocrm`;
+  const zohoAuthUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/zohocrm`;
   redirect(zohoAuthUrl);
 };
 
@@ -31,16 +31,19 @@ export const getCurrentUser = async () => {
 
   try {
     const accessToken = (await cookies()).get("accessToken")?.value;
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/users/auth/current-user`, {
-      method: "GET",
-      credentials: "include", // Include cookies
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      cache: "no-store", // Ensure fresh data
-      signal: controller.signal,
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/current-company`,
+      {
+        method: "GET",
+        credentials: "include", // Include cookies
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        cache: "no-store", // Ensure fresh data
+        signal: controller.signal,
+      }
+    );
 
     clearTimeout(timeoutId);
 

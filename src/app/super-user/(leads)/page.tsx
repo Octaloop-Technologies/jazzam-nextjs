@@ -22,6 +22,7 @@ import { getAllLeads, getLeadStats, searchLeads } from "./action";
 import TabNavigation from "@/components/view/dashboard/leads/TabNavigation";
 import TabContentLoader from "@/components/view/dashboard/leads/TabContentLoader";
 import RefreshButton from "@/components/view/dashboard/leads/RefreshButton";
+import { getCurrentUser } from "@/app/(auth)/action";
 
 // ======================================================
 // Meta Data
@@ -61,9 +62,9 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
   const sortOrder = params.sortOrder || "desc";
 
   // ======================================================
-  // Fetch leads and stats
+  // Fetch leads and stats (automatically filtered by logged-in company)
   // ======================================================
-  const [leadsResponse, statsResponse] = await Promise.all([
+  const [leadsResponse, statsResponse, currentUserResponse] = await Promise.all([
     searchQuery
       ? searchLeads({
           query: searchQuery,
@@ -84,15 +85,24 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
           sortOrder,
         }),
     getLeadStats(),
+    getCurrentUser(),
   ]);
 
   const leadsData = leadsResponse.success ? leadsResponse.data?.data : null;
   const statsData = statsResponse.success ? statsResponse.data?.data : null;
+  const currentUser = currentUserResponse.success ? currentUserResponse.user : null;
 
   // ======================================================
   // Generate cards from stats data
   // ======================================================
   const cards = [
+    {
+      title: "New Leads",
+      value: statsData?.overview?.newLeads || 0,
+      icon: <NewLeadsSvg />,
+      color: "text-pri",
+      bgColor: "bg-pri-light",
+    },
     {
       title: "Hot Leads",
       value: statsData?.overview?.hotLeads || 0,
@@ -177,7 +187,14 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
     <section>
       {/* ---------------------------- header ---------------------------- */}
       <div className="flex-between gap-1.5">
-        <h1 className="text-[32px] font-[500] capitalize">Your lead analysis</h1>
+        <div>
+          <h1 className="text-[32px] font-[500] capitalize">Your lead analysis</h1>
+          {currentUser && (
+            <p className="text-sm text-gray-500 mt-1">
+              Showing leads for {currentUser.companyName}
+            </p>
+          )}
+        </div>
         <div className="flex items-center gap-2.5">
           {/* Advanced search bar with filters - supports text search, industry, source, company size filters */}
           <SearchBarWithFilters />
@@ -289,12 +306,12 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                 <TableCell>Lead</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>Score</TableCell>
-                <TableCell>LinkedIn Profile</TableCell>
+                <TableCell>Profile Link</TableCell>
                 <TableCell>Company Size</TableCell>
               </TableHeader>
-              <div className="px-[30px]">
-                {leadsData?.leads?.length > 0 ? (
-                  leadsData.leads.map((lead: Lead) => (
+              {leadsData?.leads?.length > 0 ? (
+                <>
+                  {leadsData.leads.map((lead: Lead) => (
                     <TableRow key={lead._id}>
                       <TableCell>
                         <div className="flex items-center gap-3">
@@ -343,9 +360,9 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                         </div>
                       </TableCell>
                       <TableCell>
-                        {lead.linkedinProfileUrl ? (
+                        {lead.profileUrl ? (
                           <Link
-                            href={lead.linkedinProfileUrl}
+                            href={lead.profileUrl}
                             target="_blank"
                             prefetch={false}
                             rel="noopener noreferrer"
@@ -355,7 +372,7 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                             <ExternalLinkSvg />
                           </Link>
                         ) : (
-                          <span className="text-gray-400 text-sm">No LinkedIn</span>
+                          <span className="text-gray-400 text-sm">No Profile</span>
                         )}
                       </TableCell>
                       <TableCell className="flex-between">
@@ -363,17 +380,17 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                         <LeadsMenu lead={lead} />
                       </TableCell>
                     </TableRow>
-                  ))
-                ) : (
-                  <div className="py-8 text-center text-gray-500">
-                    {leadsResponse.success
-                      ? searchQuery
-                        ? `No leads found matching "${searchQuery}". Try adjusting your search or filters.`
-                        : "No leads found"
-                      : "Error loading leads"}
-                  </div>
-                )}
-              </div>
+                  ))}
+                </>
+              ) : (
+                <div className="py-8 px-[30px] text-center text-gray-500">
+                  {leadsResponse.success
+                    ? searchQuery
+                      ? `No leads found matching "${searchQuery}". Try adjusting your search or filters.`
+                      : "No leads found"
+                    : "Error loading leads"}
+                </div>
+              )}
             </Table>
           </div>
         </div>

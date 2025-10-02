@@ -47,7 +47,7 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   ];
 
   // ==========================================================
-  // Lead Score Calculation (based on LinkedIn data)
+  // Lead Score Calculation
   // ==========================================================
 
   const leadScore: LeadScore = {
@@ -85,9 +85,9 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     },
     {
       icon: <LinkedInSvg />,
-      title: "LinkedIn profile",
-      value: lead.fullName || `${lead.firstName} ${lead.lastName}` || "LinkedIn Profile",
-      link: lead.linkedinProfileUrl || "#",
+      title: lead.platform === "linkedin" ? "LinkedIn profile" : "Profile",
+      value: lead.fullName || `${lead.firstName} ${lead.lastName}` || "Profile",
+      link: lead.profileUrl || lead.linkedinProfileUrl || "#",
       copy: false,
     },
     {
@@ -307,7 +307,9 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
               </div>
               <div className="flex flex-col gap-1">
                 <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Source</h3>
-                <h2 className="text-[14px] leading-none font-[500]">LinkedIn</h2>
+                <h2 className="text-[14px] leading-none font-[500] capitalize">
+                  {lead.platform || "Unknown"}
+                </h2>
               </div>
             </div>
           </div>
