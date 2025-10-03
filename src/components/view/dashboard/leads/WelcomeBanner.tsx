@@ -41,7 +41,7 @@ export default function WelcomeBanner() {
               <span className="text-4xl">👋</span>
               <div>
                 <h2 className="text-2xl font-bold text-gray-900">
-                  Welcome to {user?.companyName || "Your Dashboard"}!
+                  Welcome {user?.companyName || "to Your Dashboard"}!
                 </h2>
                 <p className="text-sm text-gray-600">We&apos;re excited to have you here</p>
               </div>
