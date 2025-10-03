@@ -1,14 +1,21 @@
 "use client";
 
 import { useAppSelector } from "@/redux/store";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function WelcomeBanner() {
   const user = useAppSelector((state) => state.auth.user);
   const [isVisible, setIsVisible] = useState(true);
+  const [isClient, setIsClient] = useState(false);
+
+  // Ensure this component only renders on the client to prevent hydration mismatch
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Only show if onboarding is not completed and not skipped
   const shouldShow =
+    isClient &&
     user &&
     !user.onboarding?.completed &&
     !user.onboarding?.skipped &&
@@ -18,7 +25,8 @@ export default function WelcomeBanner() {
     setIsVisible(false);
   };
 
-  if (!shouldShow || !isVisible) return null;
+  // Don't render anything during SSR to prevent hydration mismatch
+  if (!isClient || !shouldShow || !isVisible) return null;
 
   return (
     <div className="mb-6 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-3xl p-6 shadow-sm relative overflow-hidden">

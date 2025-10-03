@@ -170,15 +170,15 @@ export default function OnboardingTour() {
   return (
     <>
       {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998]" />
+      {/* <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9998]" /> */}
 
       {/* Onboarding Modal */}
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-        <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full mx-auto animate-in fade-in slide-in-from-bottom-4 duration-300">
+      <div className="fixed inset-0 z-[9999] bottom-0 left-0 flex justify-end items-end p-4">
+        <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full animate-in fade-in slide-in-from-bottom-4 duration-300">
           {/* Progress Bar */}
           <div className="h-2 bg-gray-200 rounded-t-3xl overflow-hidden">
             <div
-              className="h-full bg-gradient-to-r from-blue-500 to-purple-600 transition-all duration-500 ease-out"
+              className="h-full bg-gradient-to-l from-pri to-sec transition-all duration-500 ease-out"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -217,10 +217,10 @@ export default function OnboardingTour() {
                   key={index}
                   className={`h-2 rounded-full transition-all duration-300 ${
                     index === currentStep
-                      ? "w-8 bg-blue-500"
+                      ? "w-8 bg-gradient-to-l from-pri to-pri/0"
                       : index < currentStep
-                      ? "w-2 bg-blue-300"
-                      : "w-2 bg-gray-300"
+                      ? "w-2 bg-pri/20"
+                      : "w-2 bg-gray-200"
                   }`}
                 />
               ))}
@@ -249,7 +249,7 @@ export default function OnboardingTour() {
               <button
                 onClick={handleNext}
                 disabled={isLoading}
-                className="px-8 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="px-8 py-3 bg-gradient-to-r from-pri to-sec text-white font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               >
                 {isLoading ? (
                   <span className="flex items-center gap-2">
