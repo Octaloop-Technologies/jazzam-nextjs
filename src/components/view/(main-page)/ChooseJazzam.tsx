@@ -130,6 +130,31 @@ const ChooseJazzam = ({ dict }: { dict: Dictionary }) => {
           ))}
         </div>
 
+
+        {/* text */}
+         <div className="flex flex-row justify-between items-center mx-[60px] py-[54px]">
+        <div className="flex flex-col justify-center ">
+          <h1 className="text-black font-medium text-[60px] mb-[-17px]">85%</h1>
+          <p className="text-[#444]">Lead Quality Improvement</p>
+        </div>
+
+         <div className="flex flex-col justify-center ">
+          <h1 className="text-black font-medium text-[60px] mb-[-17px]">60%</h1>
+          <p className="text-[#444]">Time Saved Daily</p>
+        </div>
+
+         <div className="flex flex-col justify-center ">
+          <h1 className="text-black font-medium text-[60px] mb-[-17px]">3X</h1>
+          <p className="text-[#444]">Faster Conversions</p>
+        </div>
+
+        <div className="flex flex-col justify-center ">
+          <h1 className="text-black font-medium text-[60px] mb-[-17px]">16k</h1>
+          <p className="text-[#444]">Happy Customers</p>
+        </div>
+
+      </div>
+
         <button
           ref={buttonRef}
           className="mt-10 w-full relative max-w-[290px] h-[60px] bg-[#EEB600] text-white text-[16px] font-[600] rounded-4xl max-sm:h-[50px] max-sm:text-[14px]"
@@ -152,6 +177,8 @@ const ChooseJazzam = ({ dict }: { dict: Dictionary }) => {
             />
           </svg>
         </button>
+
+        
       </div>
     </section>
   );

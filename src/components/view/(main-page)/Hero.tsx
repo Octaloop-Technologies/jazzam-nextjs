@@ -52,7 +52,7 @@ import React from 'react'
 import { Dictionary } from "@/lib/i18n/getDictionary";
 const Hero = ({ dict }: { dict: Dictionary }) => {
   return (
-    <section className='bg-bg px-[100px] pt-[154px] max-w-[1536px]  mx-auto flex  gap-11.5'>
+    <section className=' px-[100px] pt-[154px] max-w-[1536px]  mx-auto flex  gap-11.5'>
       <div>
         <p className='text-[72px]! pb-8.5 text-black font-bold leading-20 pt-25 uppercase'><span>{dict?.home?.hero?.title}</span><span className='text-[#1BA54E]'>{dict?.home?.hero?.spanTitle}</span> <span>{dict?.home?.hero?.titele2}</span></p>
         <p className='text-[#444] text-lg! pb-13.5 font-medium leading-6 capitalize max-w-[546px] w-full'>{dict?.home?.hero?.para}</p>

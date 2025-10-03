@@ -65,9 +65,9 @@
 
     "frequentlyAskedQuestions": {
       "title": "Frequently Asked Questions",
-      "description": "Got questions? We've got answers. Find everything you need to know about our programs.",
+      "description": "Everything you need to know about Jazzam",
       "questions": {
-        "question1": "How does Jazzam classify leads?",
+        "question1": "How does the AI generate leads?",
         "answer1": "Jazzam collects leads from your website and campaigns (LinkedIn & Snapchat), then analyzes behavior such as visits or interactions. It classifies them (Hot – Warm – Cold) and provides next-step recommendations: call, follow-up, or ignore.",
         "question2": "What makes Jazzam different?",
         "answer2": "Jazzam doesn’t just collect data, it analyzes and gives actionable recommendations. It integrates multiple channels, is built for Saudi Arabia, and is simple to use.",
