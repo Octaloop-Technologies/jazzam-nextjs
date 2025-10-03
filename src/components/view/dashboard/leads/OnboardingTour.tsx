@@ -81,14 +81,20 @@ export default function OnboardingTour() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Wait for component to mount on client side
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   useEffect(() => {
     // Show onboarding if user hasn't completed it and hasn't skipped it
-    if (user && !user.onboarding?.completed && !user.onboarding?.skipped) {
+    if (isMounted && user && !user.onboarding?.completed && !user.onboarding?.skipped) {
       setIsVisible(true);
       setCurrentStep(user.onboarding?.currentStep || 0);
     }
-  }, [user]);
+  }, [user, isMounted]);
 
   const updateOnboardingStatus = async (data: {
     completed?: boolean;
@@ -160,7 +166,8 @@ export default function OnboardingTour() {
     router.push("/super-user");
   };
 
-  if (!isVisible || !user) return null;
+  // Don't render until mounted to prevent hydration mismatch
+  if (!isMounted || !isVisible || !user) return null;
 
   const step = onboardingSteps[currentStep];
   const progress = ((currentStep + 1) / onboardingSteps.length) * 100;
