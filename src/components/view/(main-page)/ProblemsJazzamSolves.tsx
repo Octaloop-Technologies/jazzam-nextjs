@@ -39,7 +39,7 @@ const ProblemsJazzamSolves: React.FC = () => {
             </div>
 
             {/* Card 2 */}
-            <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col gap-3">
+            <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col gap-3 max-w-[320px]">
              
               <h3 className="font-bold text-black text-[16px] leading-[21px] tracking-[0.64px]">Save Team Time</h3>
               <p className="text-[14px] font-normal text-[#333] leading-[21px] tracking-[0.56px] ">
@@ -54,7 +54,7 @@ const ProblemsJazzamSolves: React.FC = () => {
             </div>
 
             {/* Card 3 */}
-            <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col gap-3">
+            <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col gap-3 max-w-[320px]">
               
               <h3 className="font-bold text-black text-[16px] leading-[21px] tracking-[0.64px]">Smarter Decisions</h3>
               <p className="text-[14px] font-normal text-[#333] leading-[21px] tracking-[0.56px] ">
@@ -69,7 +69,7 @@ const ProblemsJazzamSolves: React.FC = () => {
             </div>
 
             {/* Card 4 */}
-            <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col gap-3">
+            <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col gap-3 max-w-[320px]">
               
               <h3 className="font-bold text-black text-[16px] leading-[21px] tracking-[0.64px]">Faster Sales</h3>
               <p className="text-[14px] font-normal text-[#333] leading-[21px] tracking-[0.56px] ">
