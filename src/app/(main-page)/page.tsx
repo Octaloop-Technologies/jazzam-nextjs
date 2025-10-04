@@ -10,6 +10,7 @@ import ContactUs from "@/components/view/(main-page)/ContactUs";
 import ProblemsJazzamSolves from "@/components/view/(main-page)/ProblemsJazzamSolves";
 import Letsstarttoday from "@/components/view/(main-page)/Letsstarttoday";
 import BeforeJazzam from "@/components/view/(main-page)/BeforeJazzam";
+// import Animation from "@/components/view/(main-page)/Animation";
 
 const LandingPage = async () => {
   const lang = await getCurrentLang();
@@ -22,6 +23,8 @@ const LandingPage = async () => {
 
    {/* ------------- See How Jazzam Works ------------- */}
       <HowJazzamWork />
+
+      {/* <Animation /> */}
 
     {/* -------------  BeforeJazzam  ------------- */}
     <BeforeJazzam />

@@ -1,10 +1,9 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 
 const BeforeJazzam: React.FC = () => {
-  const items = [
+  const items: string[] = [
     "INNOVATION",
     "DEVELOPMENT",
     "IMMERSION",
@@ -14,32 +13,34 @@ const BeforeJazzam: React.FC = () => {
     "TRANSFORMATION",
   ];
 
-  const duplicatedItems = [...items, ...items];
+  const duplicatedItems: string[] = [...items, ...items];
 
-  const beforeItems = [
+  const beforeItems: string[] = [
     "Manual lead tracking and data entry",
     "No way to prioritize leads effectively",
     "Lost opportunities from delayed follow-ups",
     "Wasted time on unqualified prospects",
   ];
 
-  const withItems = [
+  const withItems: string[] = [
     "Automated lead collection and analysis",
     "Smart lead scoring and prioritization",
     "Instant notifications for hot leads",
     "Focus only on qualified opportunities",
   ];
 
+  const PLACEHOLDER_IMG: string = "https://placehold.co/128x200/064e3b/16a34a?text=Pattern";
+
   return (
     <section
-      className="BeforeJazzam  relative w-full pb-32 overflow-visible pt-28"
+      className="BeforeJazzam relative w-full pb-48 overflow-visible pt-10"
       style={{
         backgroundImage: "url('/assets/images/home/bg-wave.svg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
     >
-      {/* Top slider */}
+      {/* Top Slider (Marquee) */}
       <div className="w-full flex overflow-hidden relative py-8">
         <div className="flex animate-marquee-reverse whitespace-nowrap">
           {duplicatedItems.map((item, index) => (
@@ -51,21 +52,43 @@ const BeforeJazzam: React.FC = () => {
             </div>
           ))}
         </div>
+        <div className="flex animate-marquee-reverse whitespace-nowrap">
+          {duplicatedItems.map((item, index) => (
+            <div key={index + duplicatedItems.length} className="flex items-center mx-4">
+              <span className="bg-green-600 text-white font-normal px-8 py-4 rounded-full text-[14px] leading-[100%] tracking-[2px] uppercase">
+                {item}
+              </span>
+              <span className="text-yellow-400 text-2xl mx-4">✦</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Main Content */}
-      <div className="w-full max-w-[1200px] mx-auto px-6 mt-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <div className="w-full max-w-[1200px] mx-auto px-6 mt-16 relative">
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0 hidden md:flex items-center justify-center w-[500px] h-[350px]">
+          <div className="absolute w-[300px] h-full flex flex-col justify-center items-center">
+            <div className="w-full h-1 bg-[#EBEBEB] rounded-full relative mb-12">
+              <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineLtoR" />
+            </div>
+            <div className="w-full h-1 bg-[#EBEBEB] rounded-full relative mt-12">
+              <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineRtoL" />
+            </div>
+          </div>
+        </div>
+
+        {/* Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 place-items-center relative z-10">
           {/* Before Jazzam Card */}
-          <div className="bg-white max-w-[532px] rounded-2xl shadow-lg p-8">
+          <div className="bg-white w-full max-w-[532px] rounded-2xl shadow-xl p-8 order-1 z-10">
             <h3 className="text-[34px] font-semibold text-black leading-[21px] tracking-[2px] mb-6">
               Before Jazzam
             </h3>
 
-            <div className="space-y-4">
+            <div className="space-y-6">
               {beforeItems.map((text, index) => (
-                <div key={index} className="flex items-center gap-2">
-                  <div className="mt-1">
+                <div key={index} className="flex items-start gap-4">
+                  <div className="mt-1 flex-shrink-0">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="34"
@@ -83,7 +106,7 @@ const BeforeJazzam: React.FC = () => {
                       />
                     </svg>
                   </div>
-                  <p className="text-[#333] text-[16px] font-noraml leading-[21px] tracking-[1px]">
+                  <p className="text-[#333] text-[16px] font-normal leading-relaxed tracking-[1px] pt-1">
                     {text}
                   </p>
                 </div>
@@ -92,15 +115,15 @@ const BeforeJazzam: React.FC = () => {
           </div>
 
           {/* With Jazzam Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 max-w-[532px]">
+          <div className="bg-white w-full max-w-[532px] rounded-2xl shadow-xl p-8 order-3 z-10">
             <h3 className="text-[34px] font-semibold text-black leading-[21px] tracking-[2px] mb-6">
               With Jazzam
             </h3>
 
-            <div className="space-y-4">
+            <div className="space-y-6">
               {withItems.map((text, index) => (
-                <div key={index} className="flex items-center gap-3">
-                  <div className="mt-1">
+                <div key={index} className="flex items-start gap-4">
+                  <div className="mt-1 flex-shrink-0">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="34"
@@ -117,7 +140,7 @@ const BeforeJazzam: React.FC = () => {
                       />
                     </svg>
                   </div>
-                  <p className="text-[#333] text-[16px] font-noraml leading-[21px] tracking-[1px]">
+                  <p className="text-[#333] text-[16px] font-normal leading-relaxed tracking-[1px] pt-1">
                     {text}
                   </p>
                 </div>
@@ -127,39 +150,46 @@ const BeforeJazzam: React.FC = () => {
         </div>
       </div>
 
-      {/* Bottom Card - Join The Waitlist */}
+      {/* Bottom Card */}
       <div className="absolute bottom-[-80px] left-1/2 transform -translate-x-1/2 z-[100] w-full max-w-[900px] px-4">
         <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl shadow-2xl relative overflow-hidden">
-          {/* Left decorative image */}
-          <div className="absolute left-0 top-0 bottom-0 max-w-[233px] h-[244px] overflow-hidden opacity-30">
-            <Image
-              src="/assets/icons/home/beforeleft.png"
-              alt="decorative"
-              width={128}
-              height={200}
-              className="h-full w-full object-cover"
+          <div className="absolute left-[-50px] top-0 bottom-0 max-w-[200px] h-[244px] overflow-hidden opacity-30">
+            <img
+              src={PLACEHOLDER_IMG}
+              alt="decorative left"
+              width={200}
+              height={244}
+              className="h-full w-full object-cover rounded-full"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.onerror = null;
+                target.src = "https://placehold.co/200x244/064e3b/16a34a?text=Pattern";
+              }}
             />
           </div>
 
-          {/* Right decorative image */}
-          <div className="absolute right-0 top-0 bottom-0 w-32 overflow-hidden opacity-30">
-            <Image
-              src="/assets/icons/home/beforetop.png"
-              alt="decorative"
-              width={128}
-              height={200}
-              className="h-full w-full object-cover"
+          <div className="absolute right-[-50px] top-0 bottom-0 w-[150px] h-[244px] overflow-hidden opacity-30">
+            <img
+              src={PLACEHOLDER_IMG}
+              alt="decorative right"
+              width={150}
+              height={244}
+              className="h-full w-full object-cover rounded-full"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement;
+                target.onerror = null;
+                target.src = "https://placehold.co/150x244/064e3b/16a34a?text=Pattern";
+              }}
             />
           </div>
 
-          {/* Card content */}
           <div className="relative px-8 py-8 md:px-16 md:py-10">
-            <h3 className="text-white text-[34px] md:text-[20px] font-medium leading-[29px] text-center mb-6">
+            <h3 className="text-white text-3xl md:text-4xl font-semibold leading-tight text-center mb-6">
               Join The Waitlist Today!
             </h3>
 
-            <div className="flex items-center gap-3 max-w-[600px] mx-auto">
-              <div className="flex-1 relative">
+            <div className="flex flex-col md:flex-row items-center gap-3 max-w-[600px] mx-auto">
+              <div className="flex-1 relative w-full">
                 <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
                   <svg
                     width="20"
@@ -190,8 +220,8 @@ const BeforeJazzam: React.FC = () => {
                   className="w-full pl-12 pr-4 py-3 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                 />
               </div>
-              <button className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-8 py-3 rounded-lg transition uppercase text-sm tracking-wide whitespace-nowrap">
-                JOIN NOW
+              <button className="w-full md:w-auto bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-8 py-3 rounded-lg transition uppercase text-sm tracking-wide whitespace-nowrap shadow-md">
+                SEND NOW
               </button>
             </div>
           </div>
@@ -210,6 +240,36 @@ const BeforeJazzam: React.FC = () => {
         .animate-marquee-reverse {
           display: inline-flex;
           animation: marquee-reverse 8s linear infinite;
+        }
+
+        @keyframes moveLineLtoR {
+          0% {
+            left: 0;
+            transform: translateX(0%);
+          }
+          100% {
+            left: 100%;
+            transform: translateX(-100%);
+          }
+        }
+        .animate-moveLineLtoR {
+          animation: moveLineLtoR 3.5s linear infinite;
+        }
+
+        @keyframes moveLineRtoL {
+          0% {
+            right: 0;
+            transform: translateX(0%);
+          }
+          100% {
+            right: 100%;
+            transform: translateX(100%);
+          }
+        }
+        .animate-moveLineRtoL {
+          left: auto;
+          right: 0;
+          animation: moveLineRtoL 3.5s linear infinite;
         }
       `}</style>
     </section>
