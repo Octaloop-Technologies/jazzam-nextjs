@@ -6,6 +6,7 @@ import { Dictionary } from "@/lib/i18n/getDictionary";
 import { useSimpleTextAnimation } from "@/styles/animations/useSimpleTextAnimation";
 import { useRef } from "react";
 import { useButtonAnimation } from "@/styles/animations/useButtonAnimation";
+import Image from "next/image";
 
 const ContactUs = ({ dict }: { dict: Dictionary }) => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -108,19 +109,44 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
               <div className="flex-center gap-3 max-xs:hidden">
                 <div className="flex flex-col -space-y-8">
                   <div className="flex items-center -space-x-2">
-                    <div className="size-[83.065px] z-30 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 border-2 border-white flex items-center justify-center text-white font-bold">
-                      J
-                    </div>
-                    <div className="size-[70.365px] z-20 rounded-full bg-gradient-to-r from-green-400 to-blue-500 border-2 border-white flex items-center justify-center text-white font-bold">
-                      A
+                    
+                     <div className="size-[83.065px] z-30 rounded-full  border-2 border-white flex items-center justify-center text-white font-bold">
+      <Image
+        src="/assets/icons/home/contact1.png"
+        alt="Profile"
+        width={83}
+        height={83}
+        className="rounded-full object-cover w-full h-full"
+      />
+    </div>
+                    <div className="size-[70.365px] z-20 rounded-full  border-2 border-white flex items-center justify-center text-white font-bold">
+                      <Image
+        src="/assets/icons/home/contact2.png"
+        alt="Profile"
+        width={83}
+        height={83}
+        className="rounded-full object-cover w-full h-full"
+      />
                     </div>
                   </div>
                   <div className="flex items-center -space-x-2">
-                    <div className="size-[70.365px] z-40 rounded-full bg-gradient-to-r from-pink-400 to-red-500 border-2 border-white flex items-center justify-center text-white font-bold">
-                      M
+                    <div className="size-[70.365px] z-40 rounded-full  border-2 border-white flex items-center justify-center text-white font-bold">
+                      <Image
+        src="/assets/icons/home/contact3.png"
+        alt="Profile"
+        width={83}
+        height={83}
+        className="rounded-full object-cover w-full h-full"
+      />
                     </div>
-                    <div className="size-[83.065px] z-50 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 border-2 border-white flex items-center justify-center text-white font-bold">
-                      S
+                    <div className="size-[83.065px] z-50 rounded-full  border-2 border-white flex items-center justify-center text-white font-bold">
+                      <Image
+        src="/assets/icons/home/contact4.png"
+        alt="Profile"
+        width={83}
+        height={83}
+        className="rounded-full object-cover w-full h-full"
+      />
                     </div>
                   </div>
                 </div>
