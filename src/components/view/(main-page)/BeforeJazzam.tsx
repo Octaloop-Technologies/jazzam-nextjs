@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import Image from "next/image"; 
 
 const BeforeJazzam: React.FC = () => {
   const items: string[] = [
@@ -29,7 +30,8 @@ const BeforeJazzam: React.FC = () => {
     "Focus only on qualified opportunities",
   ];
 
-  const PLACEHOLDER_IMG: string = "https://placehold.co/128x200/064e3b/16a34a?text=Pattern";
+  const PLACEHOLDER_IMG: string =
+    "https://placehold.co/128x200/064e3b/16a34a?text=Pattern";
 
   return (
     <section
@@ -54,7 +56,10 @@ const BeforeJazzam: React.FC = () => {
         </div>
         <div className="flex animate-marquee-reverse whitespace-nowrap">
           {duplicatedItems.map((item, index) => (
-            <div key={index + duplicatedItems.length} className="flex items-center mx-4">
+            <div
+              key={index + duplicatedItems.length}
+              className="flex items-center mx-4"
+            >
               <span className="bg-green-600 text-white font-normal px-8 py-4 rounded-full text-[14px] leading-[100%] tracking-[2px] uppercase">
                 {item}
               </span>
@@ -152,39 +157,31 @@ const BeforeJazzam: React.FC = () => {
 
       {/* Bottom Card */}
       <div className="absolute bottom-[-80px] left-1/2 transform -translate-x-1/2 z-[100] w-full max-w-[900px] px-4">
-        <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-2xl shadow-2xl relative overflow-hidden">
-          <div className="absolute left-[-50px] top-0 bottom-0 max-w-[200px] h-[244px] overflow-hidden opacity-30">
-            <img
-              src={PLACEHOLDER_IMG}
+        <div className=" z-[90px] bg-gradient-to-r from-[#1BA64E] to-[#51C77C] rounded-2xl shadow-2xl relative overflow-hidden">
+          <div className="absolute left-[-50px] z-40 top-0  max-w-[200px] h-[244px] overflow-hidden opacity-30">
+            <Image
+              src={"/assets/icons/home/beforeleft.png"}
               alt="decorative left"
-              width={200}
-              height={244}
-              className="h-full w-full object-cover rounded-full"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.onerror = null;
-                target.src = "https://placehold.co/200x244/064e3b/16a34a?text=Pattern";
-              }}
+              width={499}
+              height={521}
+              unoptimized
+              className="h-full w-full z-23 object-cover rounded-full"
             />
           </div>
 
-          <div className="absolute right-[-50px] top-0 bottom-0 w-[150px] h-[244px] overflow-hidden opacity-30">
-            <img
-              src={PLACEHOLDER_IMG}
+          <div className="absolute right-[-50px] top-0  w-[150px] h-[244px] overflow-hidden opacity-30">
+            <Image
+              src={"/assets/icons/home/beforetop.png"}
               alt="decorative right"
               width={150}
               height={244}
+              unoptimized
               className="h-full w-full object-cover rounded-full"
-              onError={(e) => {
-                const target = e.target as HTMLImageElement;
-                target.onerror = null;
-                target.src = "https://placehold.co/150x244/064e3b/16a34a?text=Pattern";
-              }}
             />
           </div>
 
           <div className="relative px-8 py-8 md:px-16 md:py-10">
-            <h3 className="text-white text-3xl md:text-4xl font-semibold leading-tight text-center mb-6">
+            <h3 className="text-[#FFF] text-[34px] md:text-[24px] font-normal leading-[29px] text-center mb-6">
               Join The Waitlist Today!
             </h3>
 
@@ -192,35 +189,25 @@ const BeforeJazzam: React.FC = () => {
               <div className="flex-1 relative w-full">
                 <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
                   <svg
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
                     xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
                   >
                     <path
-                      d="M3 4H17C17.55 4 18 4.45 18 5V15C18 15.55 17.55 16 17 16H3C2.45 16 2 15.55 2 15V5C2 4.45 2.45 4 3 4Z"
-                      stroke="#9CA3AF"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <path
-                      d="M18 5L10 11L2 5"
-                      stroke="#9CA3AF"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                      d="M4.875 3.75C3.97989 3.75 3.12145 4.10558 2.48851 4.73851C1.85558 5.37145 1.5 6.22989 1.5 7.125V16.875C1.5 17.7701 1.85558 18.6285 2.48851 19.2615C3.12145 19.8944 3.97989 20.25 4.875 20.25H19.125C20.0201 20.25 20.8785 19.8944 21.5115 19.2615C22.1444 18.6285 22.5 17.7701 22.5 16.875V7.125C22.5 6.22989 22.1444 5.37145 21.5115 4.73851C20.8785 4.10558 20.0201 3.75 19.125 3.75H4.875ZM21 7.80225L12 12.648L3 7.80225V7.125C3 6.62772 3.19754 6.15081 3.54917 5.79917C3.90081 5.44754 4.37772 5.25 4.875 5.25H19.125C19.6223 5.25 20.0992 5.44754 20.4508 5.79917C20.8025 6.15081 21 6.62772 21 7.125V7.80225ZM3 9.5055L11.6445 14.1608C11.7538 14.2196 11.8759 14.2504 12 14.2504C12.1241 14.2504 12.2462 14.2196 12.3555 14.1608L21 9.5055V16.875C21 17.3723 20.8025 17.8492 20.4508 18.2008C20.0992 18.5525 19.6223 18.75 19.125 18.75H4.875C4.37772 18.75 3.90081 18.5525 3.54917 18.2008C3.19754 17.8492 3 17.3723 3 16.875V9.5055Z"
+                      fill="black"
                     />
                   </svg>
                 </div>
                 <input
                   type="email"
                   placeholder="Your email address"
-                  className="w-full pl-12 pr-4 py-3 rounded-lg text-gray-700 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                  className="w-full pl-12 pr-4 py-3 rounded-lg text-[14px] leading-normal text-[#999] focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-[#FFF]"
                 />
               </div>
-              <button className="w-full md:w-auto bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-8 py-3 rounded-lg transition uppercase text-sm tracking-wide whitespace-nowrap shadow-md">
+              <button className="w-full md:w-auto bg-[#EEB600]  font-semibold px-8 py-3 rounded-lg transition uppercase  tracking-wide whitespace-nowrap shadow-md text-[16px] tracking-normal text-[#FFF]">
                 SEND NOW
               </button>
             </div>

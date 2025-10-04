@@ -10,6 +10,7 @@ import ContactUs from "@/components/view/(main-page)/ContactUs";
 import ProblemsJazzamSolves from "@/components/view/(main-page)/ProblemsJazzamSolves";
 import Letsstarttoday from "@/components/view/(main-page)/Letsstarttoday";
 import BeforeJazzam from "@/components/view/(main-page)/BeforeJazzam";
+import Chasing from "@/components/view/(main-page)/Chassing";
 // import Animation from "@/components/view/(main-page)/Animation";
 
 const LandingPage = async () => {
@@ -25,6 +26,10 @@ const LandingPage = async () => {
       <HowJazzamWork />
 
       {/* <Animation /> */}
+
+
+    {/* -------------  BeforeJazzam  ------------- */}
+    <Chasing />
 
     {/* -------------  BeforeJazzam  ------------- */}
     <BeforeJazzam />
@@ -44,7 +49,6 @@ const LandingPage = async () => {
 
 
        {/* ------------- Letsstarttoday ------------- */}
-
       <Letsstarttoday />
 
       {/* ------------- FAQs ------------- */}

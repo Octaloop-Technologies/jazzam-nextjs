@@ -42,7 +42,7 @@ const Letsstarttoday: React.FC = () => {
         </p>
 
         {/* Button */}
-        <button className="mt-6 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-8 py-4 rounded-md flex items-center mx-auto gap-3 transition uppercase text-sm tracking-wide">
+        <button className="mt-6 bg-yellow-400 hover:bg-yellow-500 text-[#FFF] font-semibold px-8 py-4 rounded-md flex items-center mx-auto gap-3 transition uppercase text-sm tracking-wide">
           REGISTER YOUR COMPANY
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -82,11 +82,11 @@ const Letsstarttoday: React.FC = () => {
 
     {/* Card content */}
     <div className="relative px-32 py-12 max-md:px-8">
-      <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">
+      <div className="text-center mb-6">
+        <h3 className="text-[20px] font-bold text-[#000] leading-[108%] tracking-[1px] mb-[6px]">
           Join Industry Leaders
         </h3>
-        <p className="text-gray-600">
+        <p className="text-[#333] font-normal text-[14px] leading-[155%] tracking-[0.5%]">
           Trusted by companies across Saudi Arabia
         </p>
       </div>
@@ -94,20 +94,20 @@ const Letsstarttoday: React.FC = () => {
       <div className="flex items-center justify-center gap-16 max-md:gap-8 max-md:flex-wrap">
         {/* Active Users */}
         <div className="text-center">
-          <div className="text-4xl font-bold text-gray-900 mb-2">500+</div>
-          <div className="text-sm text-gray-600">Active Users</div>
+          <div className="text-[44px] font-normal text-[#000] leading-[113%] mb-2">500+</div>
+          <div className="text-[14px] leading-[100%] font-normal text-[#444]">Active Users</div>
         </div>
 
         {/* Satisfaction */}
         <div className="text-center">
-          <div className="text-4xl font-bold text-gray-900 mb-2">98%</div>
-          <div className="text-sm text-gray-600">Satisfaction</div>
+          <div className="text-[44px] font-normal text-[#000] leading-[113%] mb-2">98%</div>
+          <div className="text-[14px] leading-[100%] font-normal text-[#444]">Satisfaction</div>
         </div>
 
         {/* Support */}
         <div className="text-center">
-          <div className="text-4xl font-bold text-gray-900 mb-2">24/7</div>
-          <div className="text-sm text-gray-600">Support</div>
+          <div className="text-[44px] font-normal text-[#000] leading-[113%] mb-2">24/7</div>
+          <div className="text-[14px] leading-[100%] font-normal text-[#444]">Support</div>
         </div>
       </div>
     </div>
