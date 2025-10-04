@@ -46,7 +46,6 @@
 
 // export default Hero;
 
-
 import Image from 'next/image'
 import React from 'react'
 import { Dictionary } from "@/lib/i18n/getDictionary";

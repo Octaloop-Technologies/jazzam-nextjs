@@ -1,15 +1,14 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { Dictionary } from "@/lib/i18n/getDictionary";
 import { FollowSvg, MeetingSvg, PredictionSvg } from "@/components/view/(main-page)/mainPageSvgs";
 import { useSimpleTextAnimation } from "@/styles/animations/useSimpleTextAnimation";
 import { useButtonAnimation } from "@/styles/animations/useButtonAnimation";
 import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(useGSAP, ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger);
 
 const ChooseJazzam = ({ dict }: { dict: Dictionary }) => {
   const { titleRef, containerRef } = useSimpleTextAnimation({
@@ -19,7 +18,6 @@ const ChooseJazzam = ({ dict }: { dict: Dictionary }) => {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
 
-  // Use the reusable button animation hook
   useButtonAnimation({
     buttonRef,
     svgRef,
@@ -27,17 +25,14 @@ const ChooseJazzam = ({ dict }: { dict: Dictionary }) => {
     enablePulsing: true,
     enableRipple: true,
     enableBackgroundFill: true,
-    delay: 0.8, // Start after cards animation
+    delay: 0.8,
     gradientColors: ["#FFD700", "#FFA500", "#FF8C00"],
   });
 
-  // Stagger animation for cards
-  useGSAP(() => {
+  useEffect(() => {
     if (!cardsRef.current) return;
-
     const cards = cardsRef.current.children;
 
-    // Set initial state for all cards
     gsap.set(cards, {
       opacity: 0,
       y: 60,
@@ -45,7 +40,6 @@ const ChooseJazzam = ({ dict }: { dict: Dictionary }) => {
       rotationX: 15,
     });
 
-    // Create stagger animation
     gsap.to(cards, {
       opacity: 1,
       y: 0,
@@ -54,8 +48,8 @@ const ChooseJazzam = ({ dict }: { dict: Dictionary }) => {
       duration: 0.8,
       ease: "power2.out",
       stagger: {
-        amount: 0.6, // Total time for all animations
-        from: "start", // Start from the first card
+        amount: 0.6,
+        from: "start",
       },
       scrollTrigger: {
         trigger: cardsRef.current,
@@ -65,10 +59,8 @@ const ChooseJazzam = ({ dict }: { dict: Dictionary }) => {
       },
     });
 
-    // Add hover animation for individual cards
     Array.from(cards).forEach((card: Element) => {
       const cardElement = card as HTMLElement;
-
       cardElement.addEventListener("mouseenter", () => {
         gsap.to(cardElement, {
           scale: 1.01,
@@ -77,7 +69,6 @@ const ChooseJazzam = ({ dict }: { dict: Dictionary }) => {
           ease: "power2.out",
         });
       });
-
       cardElement.addEventListener("mouseleave", () => {
         gsap.to(cardElement, {
           scale: 1,
@@ -92,13 +83,15 @@ const ChooseJazzam = ({ dict }: { dict: Dictionary }) => {
   return (
     <section className="home-padding bg-bg">
       <div className="home-wrapper text-center" ref={containerRef}>
-        <h1 className="home-heading" ref={titleRef}>
+        <h1 className="home-heading pt-[120px]" ref={titleRef}>
           {dict?.home?.whyChooseJazzam?.title}
         </h1>
 
+        {/* cards */}
         <div
           ref={cardsRef}
-          className="mt-11 grid grid-cols-3 gap-2.5 items-start max-xl:grid-cols-2 max-md:grid-cols-1"
+          className="mt-11 grid grid-cols-3 gap-2.5 items-start 
+            max-xl:grid-cols-2 max-md:grid-cols-1"
         >
           {[
             {
@@ -119,45 +112,59 @@ const ChooseJazzam = ({ dict }: { dict: Dictionary }) => {
           ].map((item, index) => (
             <div
               key={item.title}
-              className={`bg-white h-full rounded-4xl-0 px-[72px] py-[60px] flex-col-center gap-14 max-3xl:gap-10 max-2xl:gap-5 max-sm:px-5 max-sm:py-5 
-                  ${index === 2 ? "max-xl:col-span-2" : ""} 
-                  ${index === 1 ? "max-md:col-span-2" : ""}`}
+              className={`bg-white h-full rounded-4xl-0 px-[72px] py-[60px] flex-col-center gap-14
+                max-3xl:gap-10 max-2xl:gap-5 max-lg:px-10 max-lg:py-8 
+                max-sm:px-5 max-sm:py-5
+                ${index === 2 ? "max-xl:col-span-2" : ""} 
+                ${index === 1 ? "max-md:col-span-2" : ""}`}
             >
-              <h2 className="text-[18px] font-[600]">{item.title}</h2>
-              <div className="size-[120px] max-2xl:size-[80px] max-sm:size-[60px]">{item.icon}</div>
+              <div className="size-[120px] max-2xl:size-[80px] max-sm:size-[60px] mx-auto">
+                {item.icon}
+              </div>
               <p className="text-[14px] font-[500] text-[#333333]">{item.description}</p>
             </div>
           ))}
         </div>
 
+        {/* stats */}
+        <div
+          className="flex flex-row justify-between items-center mx-[60px] py-[54px] 
+          max-lg:mx-[20px] max-md:flex-wrap max-md:justify-center max-md:gap-8 max-sm:mx-2 max-sm:py-6"
+        >
+          <div className="flex flex-col justify-center text-center">
+            <h1 className="text-black font-medium text-[60px] max-lg:text-[48px] max-md:text-[40px] max-sm:text-[32px] mb-[-17px]">
+              85%
+            </h1>
+            <p className="text-[#444] text-[14px] max-sm:text-[12px]">Lead Quality Improvement</p>
+          </div>
 
-        {/* text */}
-         <div className="flex flex-row justify-between items-center mx-[60px] py-[54px]">
-        <div className="flex flex-col justify-center ">
-          <h1 className="text-black font-medium text-[60px] mb-[-17px]">85%</h1>
-          <p className="text-[#444]">Lead Quality Improvement</p>
+          <div className="flex flex-col justify-center text-center">
+            <h1 className="text-black font-medium text-[60px] max-lg:text-[48px] max-md:text-[40px] max-sm:text-[32px] mb-[-17px]">
+              60%
+            </h1>
+            <p className="text-[#444] text-[14px] max-sm:text-[12px]">Time Saved Daily</p>
+          </div>
+
+          <div className="flex flex-col justify-center text-center">
+            <h1 className="text-black font-medium text-[60px] max-lg:text-[48px] max-md:text-[40px] max-sm:text-[32px] mb-[-17px]">
+              3X
+            </h1>
+            <p className="text-[#444] text-[14px] max-sm:text-[12px]">Faster Conversions</p>
+          </div>
+
+          <div className="flex flex-col justify-center text-center">
+            <h1 className="text-black font-medium text-[60px] max-lg:text-[48px] max-md:text-[40px] max-sm:text-[32px] mb-[-17px]">
+              16k
+            </h1>
+            <p className="text-[#444] text-[14px] max-sm:text-[12px]">Happy Customers</p>
+          </div>
         </div>
 
-         <div className="flex flex-col justify-center ">
-          <h1 className="text-black font-medium text-[60px] mb-[-17px]">60%</h1>
-          <p className="text-[#444]">Time Saved Daily</p>
-        </div>
-
-         <div className="flex flex-col justify-center ">
-          <h1 className="text-black font-medium text-[60px] mb-[-17px]">3X</h1>
-          <p className="text-[#444]">Faster Conversions</p>
-        </div>
-
-        <div className="flex flex-col justify-center ">
-          <h1 className="text-black font-medium text-[60px] mb-[-17px]">16k</h1>
-          <p className="text-[#444]">Happy Customers</p>
-        </div>
-
-      </div>
-
+        {/* button */}
         <button
           ref={buttonRef}
-          className="mt-10 w-full relative max-w-[290px] h-[60px] bg-[#EEB600] text-white text-[16px] font-[600] rounded-4xl max-sm:h-[50px] max-sm:text-[14px]"
+          className="mt-10 w-full relative max-w-[290px] h-[60px] bg-[#EEB600] text-white 
+          text-[16px] font-[600] rounded-4xl max-sm:h-[50px] max-sm:text-[14px]"
         >
           {dict?.home?.whyChooseJazzam?.registerYourCompany?.title}
           <svg
@@ -177,8 +184,6 @@ const ChooseJazzam = ({ dict }: { dict: Dictionary }) => {
             />
           </svg>
         </button>
-
-        
       </div>
     </section>
   );

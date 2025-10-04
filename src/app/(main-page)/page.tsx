@@ -9,6 +9,7 @@ import Faqs from "@/components/view/(main-page)/Faqs";
 import ContactUs from "@/components/view/(main-page)/ContactUs";
 import ProblemsJazzamSolves from "@/components/view/(main-page)/ProblemsJazzamSolves";
 import Letsstarttoday from "@/components/view/(main-page)/Letsstarttoday";
+import BeforeJazzam from "@/components/view/(main-page)/BeforeJazzam";
 
 const LandingPage = async () => {
   const lang = await getCurrentLang();
@@ -21,8 +22,13 @@ const LandingPage = async () => {
 
    {/* ------------- See How Jazzam Works ------------- */}
       <HowJazzamWork />
-      {/* ------------- Choose Jazzam ------------- */}
-      <ChooseJazzam dict={dict} />
+
+    {/* -------------  BeforeJazzam  ------------- */}
+    <BeforeJazzam />
+
+
+    {/* ------------- Choose Jazzam ------------- */}
+    <ChooseJazzam dict={dict} />
 
    
 
