@@ -69,7 +69,7 @@ const Hero = ({ dict }: { dict: Dictionary }) => {
           {dict?.home?.hero?.sendNow}</button>
       </div>
       </div>
-<div className="relative w-[666px] h-[707px] z-10 overflow-hidden rounded-4xl">
+<div className="relative w-[666px] 3xl:h-[707px] h-auto z-10 overflow-hidden rounded-4xl">
   {/* Background video */}
   <video
     autoPlay

@@ -84,7 +84,59 @@
         }
       ]
     },
+ "beforeJazzam": {
+    "marquee": [
+      "Innovation",
+      "Development",
+      "Integration",
+      "Scalability",
+      "Visualization",
+      "Intelligence",
+      "Transformation"
+    ],
+    "beforeTitle": "Before Jazzam",
+    "beforeItems": [
+      "Manual lead tracking and data entry",
+      "No effective way to prioritize leads",
+      "Missed opportunities due to delayed follow-ups",
+      "Wasted time with unqualified leads"
+    ],
+    "withTitle": "With Jazzam",
+    "withItems": [
+      "Automatic lead capture and analysis",
+      "Smart classification and prioritization of leads",
+      "Instant notifications for high-priority leads",
+      "Focus only on qualified prospects"
+    ],
+    "waitlist": {
+      "heading": "Join the waitlist today!",
+      "placeholder": "Your email",
+      "button": "Send Now"
+    }
+  },
+  "problemSolved":{
+ "Title": "PROBLEMS JAZZAM SOLVES",
+ "para":"Transform your lead management challenges into opportunities",
+ "cardTitle1":" Focus only on prospects with genuine buying intent.",
+ "cardpara1":"More Qualified Leads",
+ "cardpara2":"Save Team Time",
+  "cardpara3":"Smarter Decisions",
+   "cardpara4":"Faster Sales",
+  "cardTitle2":" Reduce manual work and increase productivity.",
+   "cardTitle3":"  Data-driven insights for better conversion rates.",
+    "cardTitle4":"   Accelerate your sales cycle with prioritized leads."
+  },
+  "chasing":{
+    "title":"   PROBLEMS JAZZAM SOLVES",
+    "para":"Transform your lead management challenges into opportunities",
+    "cardTitle1":"Chasing Disappearing Leads",
+    "cardPara1":"No more lost opportunities from visitors who left without a trace.",
+       "cardTitle2":"Excessive Manual Data Entry",
+    "cardPara2":"Eliminate hours of tedious manual work and human errors.",
+       "cardTitle3":"Identifying Serious Buyers",
+    "cardPara3":" Know exactly which leads are worth your time and attention."
 
+  },
     "frequentlyAskedQuestions": {
       "title": "Frequently Asked Questions",
       "description": "Everything you need to know about Jazzam",

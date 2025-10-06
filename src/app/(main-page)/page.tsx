@@ -29,10 +29,10 @@ const LandingPage = async () => {
 
 
     {/* -------------  BeforeJazzam  ------------- */}
-    <Chasing />
+    <Chasing dict={dict}/>
 
     {/* -------------  BeforeJazzam  ------------- */}
-    <BeforeJazzam />
+    <BeforeJazzam dict={dict} />
 
 
     {/* ------------- Choose Jazzam ------------- */}
@@ -45,7 +45,7 @@ const LandingPage = async () => {
 
 
       {/* ------------- ProblemsJazzamSolves ------------- */}
-      <ProblemsJazzamSolves />
+      <ProblemsJazzamSolves dict={dict} />
 
 
        {/* ------------- Letsstarttoday ------------- */}

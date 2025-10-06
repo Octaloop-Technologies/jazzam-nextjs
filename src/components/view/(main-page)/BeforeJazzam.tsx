@@ -2,33 +2,13 @@
 
 import React from "react";
 import Image from "next/image"; 
-
-const BeforeJazzam: React.FC = () => {
-  const items: string[] = [
-    "INNOVATION",
-    "DEVELOPMENT",
-    "IMMERSION",
-    "SCALABILITY",
-    "VISUALIZATION",
-    "INTELLIGENCE",
-    "TRANSFORMATION",
-  ];
+import { Dictionary } from "@/lib/i18n/getDictionary";
+const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
+  const items = dict.home.beforeJazzam.marquee;
 
   const duplicatedItems: string[] = [...items, ...items];
-
-  const beforeItems: string[] = [
-    "Manual lead tracking and data entry",
-    "No way to prioritize leads effectively",
-    "Lost opportunities from delayed follow-ups",
-    "Wasted time on unqualified prospects",
-  ];
-
-  const withItems: string[] = [
-    "Automated lead collection and analysis",
-    "Smart lead scoring and prioritization",
-    "Instant notifications for hot leads",
-    "Focus only on qualified opportunities",
-  ];
+ const beforeItems = dict.home.beforeJazzam.beforeItems;
+  const withItems = dict.home.beforeJazzam.withItems;
 
   const PLACEHOLDER_IMG: string =
     "https://placehold.co/128x200/064e3b/16a34a?text=Pattern";
@@ -87,7 +67,7 @@ const BeforeJazzam: React.FC = () => {
           {/* Before Jazzam Card */}
           <div className="bg-white w-full max-w-[532px] rounded-2xl shadow-xl p-8 order-1 z-10">
             <h3 className="text-[34px] font-semibold text-black leading-[21px] tracking-[2px] mb-6">
-              Before Jazzam
+                   {dict.home.beforeJazzam.beforeTitle}
             </h3>
 
             <div className="space-y-6">
@@ -122,7 +102,8 @@ const BeforeJazzam: React.FC = () => {
           {/* With Jazzam Card */}
           <div className="bg-white w-full max-w-[532px] rounded-2xl shadow-xl p-8 order-3 z-10">
             <h3 className="text-[34px] font-semibold text-black leading-[21px] tracking-[2px] mb-6">
-              With Jazzam
+                            {dict.home.beforeJazzam.withTitle}
+
             </h3>
 
             <div className="space-y-6">
@@ -182,7 +163,7 @@ const BeforeJazzam: React.FC = () => {
 
           <div className="relative px-8 py-8 md:px-16 md:py-10">
             <h3 className="text-[#FFF] text-[34px] md:text-[24px] font-normal leading-[29px] text-center mb-6">
-              Join The Waitlist Today!
+                {dict.home.beforeJazzam.waitlist.heading}
             </h3>
 
             <div className="flex flex-col md:flex-row items-center gap-3 z-50 max-w-[600px] mx-auto">
@@ -203,12 +184,12 @@ const BeforeJazzam: React.FC = () => {
                 </div>
                 <input
                   type="email"
-                  placeholder="Your email address"
+                  placeholder={dict.home.beforeJazzam.waitlist.placeholder}
                   className="w-full pl-12 pr-4 py-3 rounded-lg text-[14px] leading-normal text-[#999] focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-[#FFF]"
                 />
               </div>
               <button className="w-full md:w-auto bg-[#EEB600]  font-semibold px-8 py-3 rounded-lg transition uppercase  tracking-wide whitespace-nowrap shadow-md text-[16px] tracking-normal text-[#FFF]">
-                SEND NOW
+                 {dict.home.beforeJazzam.waitlist.button}
               </button>
             </div>
           </div>

@@ -2,8 +2,8 @@
 
 import React from "react";
 import Image from "next/image";
-
-const ProblemsJazzamSolves: React.FC = () => {
+import { Dictionary } from "@/lib/i18n/getDictionary";
+const ProblemsJazzamSolves: React.FC<{ dict: Dictionary }> = ({ dict }) => {
   return (
     <section
       className=" ProblemsJazzamSolves relative py-20 overflow-hidden"
@@ -13,12 +13,12 @@ const ProblemsJazzamSolves: React.FC = () => {
         backgroundPosition: "center",
       }}
     >
-      <div className="w-full px-6 flex flex-col lg:flex-row items-center gap-10 max-w-[1400px] mx-auto">
+      <div className="w-full px-6 flex flex-col lg:flex-row  gap-10 max-w-[1536px] mx-auto">
         {/* LEFT SIDE CONTENT */}
         <div className="flex-1 max-w-[650px] z-20">
-          <h2 className="home-heading">PROBLEMS JAZZAM SOLVES</h2>
+          <h2 className="home-heading">{dict.home.problemSolved.Title}</h2>
           <p className="text-[#777777] text-lg! font-medium mb-7 ">
-            Transform your lead management challenges into opportunities
+            {dict.home.problemSolved.para}
           </p>
 
           {/* Cards Grid */}
@@ -26,9 +26,9 @@ const ProblemsJazzamSolves: React.FC = () => {
             {/* Card 1 */}
             <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col gap-3
             max-w-[320px]">
-              <h3 className="font-bold text-black text-[16px] leading-[21px] tracking-[0.64px]">More Qualified Leads</h3>
+              <h3 className="font-bold text-black text-[16px] leading-[21px] tracking-[0.64px]">{dict.home.problemSolved.cardpara1}</h3>
               <p className="text-[14px] font-normal text-[#333] leading-[21px] tracking-[0.56px] ">
-                Focus only on prospects with genuine buying intent.
+               {dict.home.problemSolved.cardTitle1}.
               </p>
                <Image
                 src="/assets/icons/home/problemicon1.png"
@@ -41,9 +41,9 @@ const ProblemsJazzamSolves: React.FC = () => {
             {/* Card 2 */}
             <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col gap-3 max-w-[320px]">
              
-              <h3 className="font-bold text-black text-[16px] leading-[21px] tracking-[0.64px]">Save Team Time</h3>
+              <h3 className="font-bold text-black text-[16px] leading-[21px] tracking-[0.64px]">{dict.home.problemSolved.cardpara2}</h3>
               <p className="text-[14px] font-normal text-[#333] leading-[21px] tracking-[0.56px] ">
-                Reduce manual work and increase productivity.
+              {dict.home.problemSolved.cardTitle2}.
               </p>
                <Image
                 src="/assets/icons/home/problemicon2.png"
@@ -56,9 +56,9 @@ const ProblemsJazzamSolves: React.FC = () => {
             {/* Card 3 */}
             <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col gap-3 max-w-[320px]">
               
-              <h3 className="font-bold text-black text-[16px] leading-[21px] tracking-[0.64px]">Smarter Decisions</h3>
+              <h3 className="font-bold text-black text-[16px] leading-[21px] tracking-[0.64px]">{dict.home.problemSolved.cardpara3}</h3>
               <p className="text-[14px] font-normal text-[#333] leading-[21px] tracking-[0.56px] ">
-                Data-driven insights for better conversion rates.
+               {dict.home.problemSolved.cardTitle3}.
               </p>
               <Image
                 src="/assets/icons/home/problemicon3.png"
@@ -71,9 +71,9 @@ const ProblemsJazzamSolves: React.FC = () => {
             {/* Card 4 */}
             <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col gap-3 max-w-[320px]">
               
-              <h3 className="font-bold text-black text-[16px] leading-[21px] tracking-[0.64px]">Faster Sales</h3>
+              <h3 className="font-bold text-black text-[16px] leading-[21px] tracking-[0.64px]">{dict.home.problemSolved.cardpara4}</h3>
               <p className="text-[14px] font-normal text-[#333] leading-[21px] tracking-[0.56px] ">
-                Accelerate your sales cycle with prioritized leads.
+              {dict.home.problemSolved.cardTitle4}.
               </p>
               <Image
                 src="/assets/icons/home/problemicon4.png"
@@ -86,15 +86,11 @@ const ProblemsJazzamSolves: React.FC = () => {
         </div>
 
         {/* RIGHT SIDE LAPTOP IMAGE */}
-        <div className="flex-1 relative flex justify-center">
-          <Image
-            src="/assets/images/home/laptop.svg" 
-            alt="Jazzam Dashboard"
-            width={1534}
-            height={732}
-            className="absolute z-10 w-full h-auto max-w-[700px] bottom-[-352px] left-[-120px]"
-          />
-        </div>
+       <div
+    className="flex-1 bg-no-repeat bg-right bg-cover max-w-[640px] ml-auto w-full"
+    style={{ backgroundImage: "url('/assets/images/home/laptop.svg')" }}
+  />
+
       </div>
 
       {/* Bottom Shadow Effect */}
