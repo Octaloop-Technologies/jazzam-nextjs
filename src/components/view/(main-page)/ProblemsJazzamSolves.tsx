@@ -22,9 +22,9 @@ const ProblemsJazzamSolves: React.FC<{ dict: Dictionary }> = ({ dict }) => {
           </p>
 
           {/* Cards Grid */}
-          <div className="grid grid-cols-2 gap-6 max-md:grid-cols-1">
+          <div className="grid grid-cols-2 z-0 gap-[5px] max-md:grid-cols-1">
             {/* Card 1 */}
-            <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col gap-3
+            <div className="bg-white shadow-lg rounded-[34px] p-6 flex flex-col gap-3
             max-w-[320px]">
               <h3 className="font-bold text-black text-[16px] leading-[21px] tracking-[0.64px]">{dict.home.problemSolved.cardpara1}</h3>
               <p className="text-[14px] font-normal text-[#333] leading-[21px] tracking-[0.56px] ">
@@ -39,7 +39,7 @@ const ProblemsJazzamSolves: React.FC<{ dict: Dictionary }> = ({ dict }) => {
             </div>
 
             {/* Card 2 */}
-            <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col gap-3 max-w-[320px]">
+            <div className="bg-white shadow-lg rounded-[34px] p-6 flex flex-col gap-3 max-w-[320px]">
              
               <h3 className="font-bold text-black text-[16px] leading-[21px] tracking-[0.64px]">{dict.home.problemSolved.cardpara2}</h3>
               <p className="text-[14px] font-normal text-[#333] leading-[21px] tracking-[0.56px] ">
@@ -54,7 +54,7 @@ const ProblemsJazzamSolves: React.FC<{ dict: Dictionary }> = ({ dict }) => {
             </div>
 
             {/* Card 3 */}
-            <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col gap-3 max-w-[320px]">
+            <div className="bg-white shadow-lg rounded-[34px] p-6 flex flex-col gap-3 max-w-[320px]">
               
               <h3 className="font-bold text-black text-[16px] leading-[21px] tracking-[0.64px]">{dict.home.problemSolved.cardpara3}</h3>
               <p className="text-[14px] font-normal text-[#333] leading-[21px] tracking-[0.56px] ">
@@ -69,7 +69,7 @@ const ProblemsJazzamSolves: React.FC<{ dict: Dictionary }> = ({ dict }) => {
             </div>
 
             {/* Card 4 */}
-            <div className="bg-white shadow-lg rounded-xl p-6 flex flex-col gap-3 max-w-[320px]">
+            <div className="bg-white shadow-lg rounded-[34px] p-6 flex flex-col gap-3 max-w-[320px]">
               
               <h3 className="font-bold text-black text-[16px] leading-[21px] tracking-[0.64px]">{dict.home.problemSolved.cardpara4}</h3>
               <p className="text-[14px] font-normal text-[#333] leading-[21px] tracking-[0.56px] ">
@@ -87,7 +87,7 @@ const ProblemsJazzamSolves: React.FC<{ dict: Dictionary }> = ({ dict }) => {
 
         {/* RIGHT SIDE LAPTOP IMAGE */}
        <div
-    className="flex-1 bg-no-repeat bg-right bg-cover max-w-[640px] ml-auto w-full"
+    className="flex-1 bg-no-repeat bg-right bg-cover z-50  w-full"
     style={{ backgroundImage: "url('/assets/images/home/laptop.svg')" }}
   />
 

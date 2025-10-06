@@ -19,7 +19,7 @@ const Letsstarttoday: React.FC = () => {
   return (
     <section className=" Letsstarttoday  relative w-full bg-gradient-to-b from-[#fff] to-[#15803C66] pb-32 overflow-visible">
       {/* Top slider */}
-      <div className="w-full flex overflow-hidden relative py-8">
+      <div className="w-full flex overflow-hidden relative py-8 -mt-8">
         <div className="flex animate-marquee-reverse whitespace-nowrap">
           {duplicatedItems.map((item, index) => (
             <div key={index} className="flex items-center mx-4">
@@ -34,22 +34,22 @@ const Letsstarttoday: React.FC = () => {
 
       {/* Center Content */}
       <div className="w-full max-w-[800px] mx-auto text-center pt-[123px] mb-16 px-4">
-        <h2 className="home-heading !text-[#fff]">
+        <h2 className="home-heading  text-[52px]! !text-[#fff] ">
           LET&apos;S START TODAY
         </h2>
-        <p className="home-desc !text-[#fff]">
+        <p className="home-desc max-w-[500px] mx-auto !text-[#fff]">
           Join hundreds of businesses already using Jazzam to qualify their leads
         </p>
 
         {/* Button */}
         <div className="flex justify-center mt-6">
   {/* Button text */}
-  <button className="text-[#FFF]  bg-[#EEB600] text-white font-semibold px-8 py-4 rounded-lg uppercase text-sm tracking-wide">
+  <button className="text-[#FFF]  bg-[#EEB600]  font-semibold px-8 py-4 rounded-lg uppercase text-sm tracking-wide">
     REGISTER YOUR COMPANY
   </button>
 
   {/* Arrow part */}
-  <div className="bg-[#EEB600] px-4 flex items-center justify-center rounded-lg">
+  <div className="bg-[#EEB600] px-4 flex cursor-pointer items-center justify-center rounded-lg">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width={30}

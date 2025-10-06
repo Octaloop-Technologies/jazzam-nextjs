@@ -15,7 +15,7 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
 
   return (
     <section
-      className="BeforeJazzam relative w-full pb-48 overflow-visible pt-10"
+      className="BeforeJazzam relative w-full pb-48 overflow-visible -mt-18 pt-10"
       style={{
         backgroundImage: "url('/assets/images/home/bg-wave.svg')",
         backgroundSize: "cover",
@@ -53,17 +53,17 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
       <div className="w-full max-w-[1200px] mx-auto px-6 mt-16 relative">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0 hidden md:flex items-center justify-center w-[500px] h-[350px]">
           <div className="absolute w-[300px] h-full flex flex-col justify-center items-center">
-            <div className="w-full h-1 bg-[#EBEBEB] rounded-full relative mb-12">
+            <div className="w-full h-1 bg-[#EBEBEB] rounded-full relative mb-4">
               <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineLtoR" />
             </div>
-            <div className="w-full h-1 bg-[#EBEBEB] rounded-full relative mt-12">
+            <div className="w-full h-1 bg-[#EBEBEB] rounded-full relative mt-4">
               <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineRtoL" />
             </div>
           </div>
         </div>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 place-items-center relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-36 place-items-center relative z-10">
           {/* Before Jazzam Card */}
           <div className="bg-white w-full max-w-[532px] rounded-2xl shadow-xl p-8 order-1 z-10">
             <h3 className="text-[34px] font-semibold text-black leading-[21px] tracking-[2px] mb-6">
@@ -137,8 +137,8 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
       </div>
 
       {/* Bottom Card */}
-      <div className="absolute bottom-[-80px] left-1/2 transform -translate-x-1/2 z-[100]  w-full max-w-[940px] h-[215px] ">
-        <div className=" z-0 bg-gradient-to-r from-[#1BA64E] to-[#51C77C] rounded-2xl shadow-2xl relative overflow-hidden ">
+      <div className="absolute bottom-[-90px] left-1/2 transform -translate-x-1/2 z-[100]  w-full max-w-[940px] h-[215px] ">
+        <div className=" z-0 bg-gradient-to-r from-[#1BA64E] to-[#51C77C] pb-9 rounded-2xl shadow-2xl relative overflow-hidden ">
           <div className="absolute h-full z-0 top-0 -left-20 overflow-hidden ">
             <Image
               src={"/assets/images/home/circle.png"}
