@@ -188,7 +188,12 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
               label={dict?.home?.contactUs?.form?.message}
               placeholder={dict?.home?.contactUs?.form?.messagePlaceholder}
             />
-            <SubmitButton title={dict?.home?.contactUs?.form?.submitButton} />
+            <div className="flex justify-end  ">
+              <button className="bg-[#EEB600] h-15 px-[50px] py-[12px] rounded-[14px] text-[#FFF] text-[16px] text-semibold leading-normal">
+                SEND NOW
+              </button>
+            </div>
+            {/* <SubmitButton title={dict?.home?.contactUs?.form?.submitButton} /> */}
           </form>
         </div>
       </div>

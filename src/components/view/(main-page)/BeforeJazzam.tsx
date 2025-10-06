@@ -137,22 +137,22 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
       </div>
 
       {/* Bottom Card */}
-      <div className="absolute bottom-[-80px] left-1/2 transform -translate-x-1/2 z-[100]  w-full max-w-[900px] ">
-        <div className=" z-0 bg-gradient-to-r from-[#1BA64E] to-[#51C77C] rounded-2xl shadow-2xl relative overflow-hidden">
+      <div className="absolute bottom-[-80px] left-1/2 transform -translate-x-1/2 z-[100]  w-full max-w-[940px] h-[215px] ">
+        <div className=" z-0 bg-gradient-to-r from-[#1BA64E] to-[#51C77C] rounded-2xl shadow-2xl relative overflow-hidden ">
           <div className="absolute h-full z-0 top-0 -left-20 overflow-hidden ">
             <Image
-              src={"/assets/icons/home/12.png"}
+              src={"/assets/images/home/circle.png"}
               alt="decorative left"
               width={599}
               height={600}
               unoptimized
-              className="h-full w-[299px] z-0 object-cover rounded-[30px] ml-5 rotate-2"
+              className="h-full w-[299px] z-0 object-cover rounded-[30px] ml-5 "
             />
           </div>
 
-          <div className="absolute right-[-40px] -top-40  w-[150px] h-[244px] overflow-hidden ">
+          <div className="absolute right-[-90px]  -top-35  w-[250px] h-[244px] overflow-hidden ">
             <Image
-              src={"/assets/icons/home/beforeleft.png"}
+              src={"/assets/images/home/circle.png"}
               alt="decorative right"
               width={150}
               height={244}
