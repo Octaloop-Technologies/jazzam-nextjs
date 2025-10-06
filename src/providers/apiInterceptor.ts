@@ -37,24 +37,6 @@ global.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Res
       return originalFetch(input, init);
     }
 
-    if (typeof window !== "undefined") {
-      // Check if we have tokens and they're not expired before making the request
-      const accessToken = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("accessToken="))
-        ?.split("=")[1];
-
-      if (accessToken) {
-        // Token is expired, logout immediately
-        logoutUser();
-        // Return a 401 response to prevent the actual API call
-        return new Response(JSON.stringify({ message: "Token expired" }), {
-          status: 401,
-          headers: { "Content-Type": "application/json" },
-        });
-      }
-    }
-
     const response = await originalFetch(input, init);
 
     // If 401, handle token expiry

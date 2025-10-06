@@ -10,6 +10,7 @@ import {
   logoutIcon,
   trashIcon,
   GoogleIcon,
+  SubscriptionIcon,
 } from "@/components/view/dashboard/settings/settingPageIcons";
 import { useAppSelector } from "@/redux/store";
 import { selectUser } from "@/redux/slices/authSlice";
@@ -20,12 +21,18 @@ import { useToast } from "@/lib/hooks/useToast";
 import { logoutUserAction } from "./action";
 import { useRouter } from "next/navigation";
 import { restartOnboarding } from "../(leads)/action";
+import dynamic from "next/dynamic";
+
+const SubscriptionSettings = dynamic(
+  () => import("@/components/view/dashboard/settings/SubscriptionSettings"),
+  { ssr: false }
+);
 
 const SettingsPage = () => {
   // ==============================================================
   // States
   // ==============================================================
-  const [activeTab, setActiveTab] = useState<"profile" | "general">("profile");
+  const [activeTab, setActiveTab] = useState<"profile" | "general" | "subscription">("profile");
   const [notificationSettings, setNotificationSettings] = useState({
     emailNotifications: false,
     leadUpdates: false,
@@ -131,13 +138,31 @@ const SettingsPage = () => {
                 <h3 className="text-[14px] capitalize">General settings</h3>
               </div>
             </button>
+            <button
+              className={`px-2.5 h-[44px] flex-between gap-2 rounded-[110px] 
+                  ${
+                    activeTab === "subscription"
+                      ? "bg-pri text-white"
+                      : "bg-transparent text-gray-200 hover:bg-gray"
+                  }`}
+              onClick={() => setActiveTab("subscription")}
+            >
+              <div className="flex-center gap-2">
+                <SubscriptionIcon />
+                <h3 className="text-[14px] capitalize">Subscription & Billing</h3>
+              </div>
+            </button>
           </div>
         </div>
 
         {/* ---------------------------- right ---------------------------- */}
         <div className="w-full max-w-[75%] p-[30px] border border-gray-b rounded-3xl bg-white flex flex-col gap-[18px]">
           <h1 className="text-[16px] font-[500] capitalize border-b border-gray-n/30 pb-1">
-            {activeTab === "profile" ? "Profile settings" : "General settings"}
+            {activeTab === "profile"
+              ? "Profile settings"
+              : activeTab === "general"
+              ? "General settings"
+              : "Subscription & Billing"}
           </h1>
           {/* -- profile -- */}
           {activeTab === "profile" ? (
@@ -187,7 +212,7 @@ const SettingsPage = () => {
                 </button>
               </div>
             </>
-          ) : (
+          ) : activeTab === "general" ? (
             // -- general --
             <div className="flex flex-col gap-[14px]">
               <h1 className="text-[14px] text-gray-200">Language</h1>
@@ -270,6 +295,9 @@ const SettingsPage = () => {
                 </div>
               </div>
             </div>
+          ) : (
+            // -- subscription --
+            <SubscriptionSettings />
           )}
         </div>
       </div>

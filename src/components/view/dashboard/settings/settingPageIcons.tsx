@@ -57,6 +57,27 @@ export const trashIcon = () => {
   );
 };
 
+export const SubscriptionIcon = () => {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path
+        d="M3.33317 5.83333C3.33317 5.39131 3.5088 4.96738 3.82136 4.65482C4.13393 4.34226 4.55785 4.16667 4.99984 4.16667H14.9998C15.4418 4.16667 15.8658 4.34226 16.1783 4.65482C16.4909 4.96738 16.6665 5.39131 16.6665 5.83333V14.1667C16.6665 14.6087 16.4909 15.0326 16.1783 15.3452C15.8658 15.6577 15.4418 15.8333 14.9998 15.8333H4.99984C4.55785 15.8333 4.13393 15.6577 3.82136 15.3452C3.5088 15.0326 3.33317 14.6087 3.33317 14.1667V5.83333Z"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M3.33317 8.33333H16.6665M6.6665 11.6667H7.49984M9.99984 11.6667H12.4998"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
 export const GoogleIcon = () => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">

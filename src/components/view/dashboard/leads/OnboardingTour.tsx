@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useAppSelector } from "@/redux/store";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { updateOnboardingStatus as updateOnboardingAction } from "@/app/super-user/(leads)/action";
 
 interface OnboardingStep {
@@ -78,23 +78,42 @@ const onboardingSteps: OnboardingStep[] = [
 export default function OnboardingTour() {
   const user = useAppSelector((state) => state.auth.user);
   const router = useRouter();
+  const pathname = usePathname();
   const [currentStep, setCurrentStep] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false); // Track if user has interacted
 
   // Wait for component to mount on client side
   useEffect(() => {
     setIsMounted(true);
   }, []);
 
+  // Check on mount only - don't re-check on route changes
   useEffect(() => {
-    // Show onboarding if user hasn't completed it and hasn't skipped it
-    if (isMounted && user && !user.onboarding?.completed && !user.onboarding?.skipped) {
-      setIsVisible(true);
-      setCurrentStep(user.onboarding?.currentStep || 0);
+    if (isMounted && user && !hasInteracted) {
+      const isOnSubscriptionPage = pathname?.includes("/subscription");
+      const shouldShow =
+        !user.onboarding?.completed && !user.onboarding?.skipped && !isOnSubscriptionPage;
+
+      if (shouldShow) {
+        setIsVisible(true);
+        setCurrentStep(user.onboarding?.currentStep || 0);
+      }
     }
-  }, [user, isMounted]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user, isMounted]); // Only run when user or mounted state changes, NOT pathname
+
+  // Handle subscription page - hide onboarding there
+  useEffect(() => {
+    if (!hasInteracted) return; // Don't affect initial mount logic
+
+    const isOnSubscriptionPage = pathname?.includes("/subscription");
+    if (isOnSubscriptionPage) {
+      setIsVisible(false);
+    }
+  }, [pathname, hasInteracted]);
 
   const updateOnboardingStatus = async (data: {
     completed?: boolean;
@@ -113,6 +132,7 @@ export default function OnboardingTour() {
   };
 
   const handleNext = async () => {
+    setHasInteracted(true);
     const nextStep = currentStep + 1;
     const completedSteps = [...(user?.onboarding?.completedSteps || []), currentStep];
 
@@ -155,10 +175,13 @@ export default function OnboardingTour() {
   };
 
   const handleSkip = async () => {
+    setHasInteracted(true);
+    setIsVisible(false);
+    setIsLoading(true);
     await updateOnboardingStatus({
       skipped: true,
     });
-    setIsVisible(false);
+    setIsLoading(false);
   };
 
   const handleRestart = () => {

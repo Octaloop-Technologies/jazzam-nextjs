@@ -20,6 +20,13 @@ export interface Company {
   subscriptionStartDate?: Date;
   subscriptionEndDate?: Date;
   paymentMethod: string;
+  paymentDetails?: {
+    stripeCustomerId?: string;
+    stripeSubscriptionId?: string;
+    payfortReference?: string;
+    lastPaymentDate?: Date;
+    nextPaymentDate?: Date;
+  };
   settings: {
     timezone: string;
     currency: string;

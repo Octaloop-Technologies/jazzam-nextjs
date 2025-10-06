@@ -18,6 +18,10 @@ const LoginPage = async () => {
         </div>
 
         <LoginButtons />
+        <p className="mt-3 text-[12px] text-gray-400">
+          By continuing you agree that you can select a plan after login, or skip now and start on
+          the free plan. You can upgrade anytime. 14-day free trial available for paid plans.
+        </p>
       </div>
     </div>
   );
