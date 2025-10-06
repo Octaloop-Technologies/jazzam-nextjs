@@ -118,7 +118,7 @@ const ChooseJazzam = ({ dict }: { dict: Dictionary }) => {
                 ${index === 2 ? "max-xl:col-span-2" : ""} 
                 ${index === 1 ? "max-md:col-span-2" : ""}`}
             >
-              <div className="size-[120px] max-2xl:size-[80px] max-sm:size-[60px] mx-auto">
+              <div className=" mx-auto">
                 {item.icon}
               </div>
               <p className="text-[14px] font-[500] text-[#333333]">{item.description}</p>

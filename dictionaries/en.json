@@ -58,9 +58,31 @@
       }
     },
 
-    "seeHowJazzamWorks": {
-      "title": "See How Jazzam Works",
-      "description": "A Short video explaining the customer journey from registration to deal closure"
+    "jazzamWorks": {
+      "title": "How Jazzam Works",
+      "description": "Simple, powerful, and intelligent lead qualification",
+      "features":[
+        {
+          "title":"Collect Leads",
+          "desc":"Gathers leads from your website, LinkedIn, & Snapchat."
+        },
+         {
+          "title":"Analyze Behavior",
+          "desc":"Studies visitor behavior to measure genuine interest and intent."
+        },
+         {
+          "title":"Classify Leads",
+          "desc":"Categorizes leads as Hot, Warm, or Cold based on engagement."
+        },
+          {
+          "title":"Recommend Actions",
+          "desc":"Suggests next steps call immediately, follow-up, or archive."
+        },
+          {
+          "title":"Learn & Improve",
+          "desc":"Continuously learns from your feedback for smarter results."
+        }
+      ]
     },
 
     "frequentlyAskedQuestions": {

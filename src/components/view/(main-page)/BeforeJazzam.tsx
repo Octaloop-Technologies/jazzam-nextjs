@@ -156,27 +156,27 @@ const BeforeJazzam: React.FC = () => {
       </div>
 
       {/* Bottom Card */}
-      <div className="absolute bottom-[-80px] left-1/2 transform -translate-x-1/2 z-[100] w-full max-w-[900px] px-4">
-        <div className=" z-[90px] bg-gradient-to-r from-[#1BA64E] to-[#51C77C] rounded-2xl shadow-2xl relative overflow-hidden">
-          <div className="absolute left-[-50px] z-40 top-0  max-w-[200px] h-[244px] overflow-hidden opacity-30">
+      <div className="absolute bottom-[-80px] left-1/2 transform -translate-x-1/2 z-[100]  w-full max-w-[900px] ">
+        <div className=" z-0 bg-gradient-to-r from-[#1BA64E] to-[#51C77C] rounded-2xl shadow-2xl relative overflow-hidden">
+          <div className="absolute h-full z-0 top-0 -left-20 overflow-hidden ">
             <Image
-              src={"/assets/icons/home/beforeleft.png"}
+              src={"/assets/icons/home/12.png"}
               alt="decorative left"
-              width={499}
-              height={521}
+              width={599}
+              height={600}
               unoptimized
-              className="h-full w-full z-23 object-cover rounded-full"
+              className="h-full w-[299px] z-0 object-cover rounded-[30px] ml-5 rotate-2"
             />
           </div>
 
-          <div className="absolute right-[-50px] top-0  w-[150px] h-[244px] overflow-hidden opacity-30">
+          <div className="absolute right-[-40px] -top-40  w-[150px] h-[244px] overflow-hidden ">
             <Image
-              src={"/assets/icons/home/beforetop.png"}
+              src={"/assets/icons/home/beforeleft.png"}
               alt="decorative right"
               width={150}
               height={244}
               unoptimized
-              className="h-full w-full object-cover rounded-full"
+              className="h-full w-full  rounded-full"
             />
           </div>
 
@@ -185,7 +185,7 @@ const BeforeJazzam: React.FC = () => {
               Join The Waitlist Today!
             </h3>
 
-            <div className="flex flex-col md:flex-row items-center gap-3 max-w-[600px] mx-auto">
+            <div className="flex flex-col md:flex-row items-center gap-3 z-50 max-w-[600px] mx-auto">
               <div className="flex-1 relative w-full">
                 <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
                   <svg
