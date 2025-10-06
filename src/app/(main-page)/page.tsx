@@ -22,23 +22,23 @@ const LandingPage = async () => {
       {/* ------------- hero ------------- */}
       <Hero dict={dict} />
 
-   {/* ------------- See How Jazzam Works ------------- */}
+      {/* ------------- See How Jazzam Works ------------- */}
       <HowJazzamWork dict={dict} />
 
       {/* <Animation /> */}
 
 
-    {/* -------------  BeforeJazzam  ------------- */}
-    <Chasing dict={dict}/>
+      {/* -------------  BeforeJazzam  ------------- */}
+      <Chasing dict={dict} />
 
-    {/* -------------  BeforeJazzam  ------------- */}
-    <BeforeJazzam dict={dict} />
+      {/* -------------  BeforeJazzam  ------------- */}
+      <BeforeJazzam dict={dict} />
 
 
-    {/* ------------- Choose Jazzam ------------- */}
-    <ChooseJazzam dict={dict} />
+      {/* ------------- Choose Jazzam ------------- */}
+      <ChooseJazzam dict={dict} />
 
-   
+
 
       {/* ------------- Testimonials ------------- */}
       {/* <TestimonialsMarquee dict={dict} /> */}
@@ -48,7 +48,7 @@ const LandingPage = async () => {
       <ProblemsJazzamSolves dict={dict} />
 
 
-       {/* ------------- Letsstarttoday ------------- */}
+      {/* ------------- Letsstarttoday ------------- */}
       <Letsstarttoday dict={dict} />
 
       {/* ------------- FAQs ------------- */}

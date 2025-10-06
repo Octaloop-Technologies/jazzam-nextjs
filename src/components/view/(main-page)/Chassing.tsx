@@ -115,7 +115,7 @@ const Chasing = ({ dict }: { dict: Dictionary }) => {
   ];
 
   const steps = stepsData.map((step, index) => (
-    <div className="w-full flex flex-col items-center" key={`step${index + 1}`}>
+    <div className="w-[90%] mx-auto md:w-full flex flex-col items-center" key={`step${index + 1}`}>
       <div className="w-full sm:w-80 md:w-96 bg-white p-6 rounded-2xl transition-all duration-300 transform hover:scale-[1.02]">
         <h3 className="text-[22px]! md:text-xl font-semibold text-center text-black mb-4">
           {step.title}
@@ -176,7 +176,7 @@ const Chasing = ({ dict }: { dict: Dictionary }) => {
         </div>
 
 
-        <div className="toptop h-[300px]"></div>
+        <div className="toptop h-[300px] hidden md:block"></div>
         <div className="bg-grad opacity-70 w-full h-full absolute top-0 left-0">
           {/* <video src="\assets\glass.mp4" autoPlay loop muted className="w-full h-full object-cover"></video> */}
           <img src="\assets\images\background.png" alt="" className="w-full h-full object-cover" />

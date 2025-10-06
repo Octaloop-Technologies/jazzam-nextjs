@@ -133,82 +133,82 @@ const ChooseJazzam = ({ dict }: { dict: Dictionary }) => {
         >
 
 
-      <div className=" absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0 hidden md:flex items-center justify-center w-full h-[350px] ">
-          <div className="absolute w-full h-full flex flex-col gap-3 justify-center items-center mt-5">
-            <div className="w-full  h-1 bg-[#EBEBEB] rounded-full relative mb-2">
-              <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineLtoR" />
-              <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineLtoR" />
-              <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineLtoR" />
-            </div>
-            <div className="w-full h-1 bg-[#EBEBEB] rounded-full relative mt-2 ">
-              <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineRtoL" />
-             <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineRtoL" />
-              <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineRtoL" />
+          <div className=" absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0 hidden md:flex items-center justify-center w-full h-[350px] ">
+            <div className="absolute w-full h-full flex flex-col gap-3 justify-center items-center mt-5">
+              <div className="w-full  h-1 bg-[#EBEBEB] rounded-full relative mb-2">
+                <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineLtoR" />
+                <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineLtoR" />
+                <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineLtoR" />
+              </div>
+              <div className="w-full h-1 bg-[#EBEBEB] rounded-full relative mt-2 ">
+                <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineRtoL" />
+                <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineRtoL" />
+                <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineRtoL" />
 
+              </div>
             </div>
           </div>
-        </div>
 
           <div className="backdrop-blur-md z-50 flex flex-col justify-center text-center">
             <h1 className="text-black font-medium text-[60px] max-lg:text-[48px] max-md:text-[40px] max-sm:text-[32px] mb-[-17px]">
               85%
             </h1>
-            <p className="text-[#444] text-[14px] max-sm:text-[12px]">{dict?.home?.whyChooseJazzam?.numbers1}</p>
+            <p className="text-[#444] text-[14px] pt-5 md:pt-0 max-sm:text-[12px]">{dict?.home?.whyChooseJazzam?.numbers1}</p>
           </div>
 
           <div className="backdrop-blur-md  z-50 flex flex-col justify-center text-center">
             <h1 className="text-black font-medium text-[60px] max-lg:text-[48px] max-md:text-[40px] max-sm:text-[32px] mb-[-17px]">
               60%
             </h1>
-            <p className="text-[#444] text-[14px] max-sm:text-[12px]">{dict?.home?.whyChooseJazzam?.numbers2}</p>
+            <p className="text-[#444] text-[14px] max-sm:text-[12px] pt-5 md:pt-0">{dict?.home?.whyChooseJazzam?.numbers2}</p>
           </div>
 
           <div className="backdrop-blur-md  z-50 flex flex-col justify-center text-center">
             <h1 className="text-black font-medium text-[60px] max-lg:text-[48px] max-md:text-[40px] max-sm:text-[32px] mb-[-17px]">
               3X
             </h1>
-            <p className="text-[#444] text-[14px] max-sm:text-[12px]">{dict?.home?.whyChooseJazzam?.numbers3}</p>
+            <p className="text-[#444] text-[14px] max-sm:text-[12px] pt-5 md:pt-0">{dict?.home?.whyChooseJazzam?.numbers3}</p>
           </div>
 
           <div className="backdrop-blur-md  z-50 flex flex-col justify-center text-center">
             <h1 className="text-black font-medium text-[60px] max-lg:text-[48px] max-md:text-[40px] max-sm:text-[32px] mb-[-17px]">
               16k
             </h1>
-            <p className="text-[#444] text-[14px] max-sm:text-[12px]">{dict?.home?.whyChooseJazzam?.numbers4}</p>
+            <p className="text-[#444] text-[14px] max-sm:text-[12px] pt-5 md:pt-0">{dict?.home?.whyChooseJazzam?.numbers4}</p>
           </div>
         </div>
 
         {/* button */}
-        
-         <div className="flex justify-center mt-6">
-  {/* Button text */}
-  <button className="text-[#FFF] bg-[#EEB600]  font-semibold px-8 py-4 rounded-lg uppercase text-sm tracking-wide shadow-[0_18px_16px_0_rgba(238,182,0,0.4)]">
-    {dict?.home?.whyChooseJazzam?.button}
-  </button>
 
-  {/* Arrow part */}
-  <div className="bg-[#EEB600] px-4 flex items-center justify-center rounded-lg shadow-[0_18px_16px_0_rgba(238,182,0,0.4)]">
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={30}
-      height={30}
-      viewBox="0 0 24 24"
-      fill="none"
-    >
-      <path
-        d="M10 17L17 10M17 10V17M17 10H10"
-        stroke="white"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  </div>
-</div>
+        <div className="flex justify-center mt-6">
+          {/* Button text */}
+          <button className="text-[#FFF] bg-[#EEB600]  font-semibold px-8 py-4 rounded-lg uppercase text-sm tracking-wide shadow-[0_18px_16px_0_rgba(238,182,0,0.4)]">
+            {dict?.home?.whyChooseJazzam?.button}
+          </button>
+
+          {/* Arrow part */}
+          <div className="bg-[#EEB600] px-4 flex items-center justify-center rounded-lg shadow-[0_18px_16px_0_rgba(238,182,0,0.4)]">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width={30}
+              height={30}
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M10 17L17 10M17 10V17M17 10H10"
+                stroke="white"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </div>
+        </div>
 
       </div>
 
-      
+
     </section>
   );
 };
