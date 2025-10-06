@@ -23,7 +23,7 @@ const LandingPage = async () => {
       <Hero dict={dict} />
 
    {/* ------------- See How Jazzam Works ------------- */}
-      <HowJazzamWork />
+      <HowJazzamWork dict={dict} />
 
       {/* <Animation /> */}
 
