@@ -94,7 +94,7 @@ const ProblemsJazzamSolves: React.FC<{ dict: Dictionary }> = ({ dict }) => {
       </div>
 
       {/* Bottom Shadow Effect */}
-      <div className="absolute bottom-0 z-50 left-0 w-full h-40 bg-gradient-to-t from-white via-white/90 to-transparent " />
+      <div className="absolute bottom-0 z-50 left-0 w-full !h-5 sm:h-40 bg-gradient-to-t from-white via-white/90 to-transparent " />
     </section>
   );
 };

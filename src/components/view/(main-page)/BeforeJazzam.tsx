@@ -63,10 +63,10 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
         </div>
 
         {/* Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-36 place-items-center relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-20 sm:gap-36 place-items-center relative z-10">
           {/* Before Jazzam Card */}
           <div className="bg-white w-full max-w-[532px] rounded-2xl shadow-xl p-8 order-1 z-10">
-            <h3 className="text-[34px] font-semibold text-black leading-[21px] tracking-[2px] mb-6">
+            <h3 className="text-[26px] sm:text-[34px] font-semibold text-black leading-[21px] tracking-[2px] mb-6">
                    {dict.home.beforeJazzam.beforeTitle}
             </h3>
 
@@ -101,7 +101,7 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
 
           {/* With Jazzam Card */}
           <div className="bg-white w-full max-w-[532px] rounded-2xl shadow-xl p-8 order-3 z-10">
-            <h3 className="text-[34px] font-semibold text-black leading-[21px] tracking-[2px] mb-6">
+            <h3 className="text-[26px] sm:text-[34px] font-semibold text-black leading-[21px] tracking-[2px] mb-6">
                             {dict.home.beforeJazzam.withTitle}
 
             </h3>
@@ -137,7 +137,7 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
       </div>
 
       {/* Bottom Card */}
-      <div className="absolute bottom-[-90px] left-1/2 transform -translate-x-1/2 z-[100]  w-full max-w-[940px] h-[215px] ">
+      <div className="absolute  bottom-[-70px] sm:bottom-[-90px] left-1/2 transform -translate-x-1/2 z-[100]  w-full max-w-[940px] h-[215px] ">
         <div className=" z-0 bg-gradient-to-r from-[#1BA64E] to-[#51C77C] pb-9 rounded-2xl shadow-2xl relative overflow-hidden ">
           <div className="absolute h-full z-0 top-0 -left-20 overflow-hidden ">
             <Image

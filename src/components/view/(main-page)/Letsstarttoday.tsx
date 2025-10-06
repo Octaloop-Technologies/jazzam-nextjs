@@ -14,7 +14,7 @@ const items = dict.home.beforeJazzam.marquee;
   const duplicatedItems: string[] = [...items, ...items];
 
   return (
-    <section className=" Letsstarttoday  relative w-full bg-gradient-to-b from-[#fff] to-[#15803C66] pb-32 overflow-visible">
+    <section className=" Letsstarttoday  relative w-full bg-gradient-to-b from-[#fff] to-[#15803C66] pb-32 overflow-visible ">
       {/* Top slider */}
       <div className="w-full flex overflow-hidden relative py-8 -mt-8">
         <div className="flex animate-marquee-reverse whitespace-nowrap">
@@ -30,7 +30,7 @@ const items = dict.home.beforeJazzam.marquee;
       </div>
 
       {/* Center Content */}
-      <div className="w-full max-w-[800px] mx-auto text-center pt-[123px] mb-16 px-4">
+      <div className="w-full max-w-[800px] mx-auto text-center pt-[50px] sm:pt-[123px] mb-16 px-4">
         <h2 className="home-heading  text-[52px]! !text-[#fff] ">
          {dict?.home?.letsstarttoday?.title}
         </h2>
