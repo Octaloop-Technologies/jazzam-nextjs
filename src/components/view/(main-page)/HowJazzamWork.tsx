@@ -21,27 +21,27 @@ const HowJazzamWork = ({ dict }: { dict: Dictionary }) => {
             </div>
           </div>
         </div>
-      <div className='relative !size-[60px] border rounded-full bg-[#FFF] border-[6px] border-[#FFC300] p-[12px]'>
+      <div className='relative !size-[60px]  rounded-full bg-[#FFF] border-[6px] border-[#FFC300] p-[12px]'>
         <p className=' absolute text-[#000] bottom-[4px] text-[24px] font-bold upercase'>
           01
         </p>
       </div>
-      <div className='relative !size-[60px] border rounded-full bg-[#FFF] border-[6px] border-[#FFC300] p-[12px]'>
+      <div className='relative !size-[60px]  rounded-full bg-[#FFF] border-[6px] border-[#FFC300] p-[12px]'>
         <p className=' absolute text-[#000] bottom-[4px] text-[24px] font-bold upercase'>
           02
         </p>
       </div>
-      <div className='relative !size-[60px] border rounded-full bg-[#FFF] border-[6px] border-[#FFC300] p-[12px]'>
+      <div className='relative !size-[60px]  rounded-full bg-[#FFF] border-[6px] border-[#FFC300] p-[12px]'>
         <p className=' absolute text-[#000] bottom-[4px] text-[24px] font-bold upercase'>
           03
         </p>
       </div>
-      <div className='relative !size-[60px] border rounded-full bg-[#FFF] border-[6px] border-[#FFC300] p-[12px]'>
+      <div className='relative !size-[60px] border-[6px] rounded-full bg-[#FFF]  border-[#FFC300] p-[12px]'>
         <p className=' absolute text-[#000] bottom-[4px] text-[24px] font-bold upercase'>
           04
         </p>
       </div>
-      <div className='relative !size-[60px] border rounded-full bg-[#FFF] border-[6px] border-[#FFC300] p-[12px]'>
+      <div className='relative !size-[60px]  rounded-full bg-[#FFF] border-[6px] border-[#FFC300] p-[12px]'>
         <p className=' absolute text-[#000] bottom-[4px] text-[24px] font-bold upercase'>
           05
         </p>

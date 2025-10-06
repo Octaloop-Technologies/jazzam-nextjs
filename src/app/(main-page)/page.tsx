@@ -39,13 +39,12 @@ const LandingPage = async () => {
     <ChooseJazzam dict={dict} />
 
    
+    {/* ------------- Testimonials ------------- */}
+    {/* <TestimonialsMarquee dict={dict} /> */}
 
-      {/* ------------- Testimonials ------------- */}
-      {/* <TestimonialsMarquee dict={dict} /> */}
 
-
-      {/* ------------- ProblemsJazzamSolves ------------- */}
-      <ProblemsJazzamSolves />
+    {/* ------------- ProblemsJazzamSolves ------------- */}
+    <ProblemsJazzamSolves />
 
 
        {/* ------------- Letsstarttoday ------------- */}
