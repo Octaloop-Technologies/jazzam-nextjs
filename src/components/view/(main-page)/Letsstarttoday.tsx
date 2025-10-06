@@ -2,19 +2,16 @@
 
 import React from "react";
 import Image from "next/image";
+import { Dictionary } from "@/lib/i18n/getDictionary";
 
-const Letsstarttoday: React.FC = () => {
-  const items = [
-    "INNOVATION",
-    "DEVELOPMENT",
-    "IMMERSION",
-    "SCALABILITY",
-    "VISUALIZATION",
-    "INTELLIGENCE",
-    "TRANSFORMATION",
-  ];
 
-  const duplicatedItems = [...items, ...items];
+const Letsstarttoday = ({ dict }: { dict: Dictionary }) => {
+
+  
+
+const items = dict.home.beforeJazzam.marquee;
+
+  const duplicatedItems: string[] = [...items, ...items];
 
   return (
     <section className=" Letsstarttoday  relative w-full bg-gradient-to-b from-[#fff] to-[#15803C66] pb-32 overflow-visible">
@@ -35,17 +32,17 @@ const Letsstarttoday: React.FC = () => {
       {/* Center Content */}
       <div className="w-full max-w-[800px] mx-auto text-center pt-[123px] mb-16 px-4">
         <h2 className="home-heading  text-[52px]! !text-[#fff] ">
-          LET&apos;S START TODAY
+         {dict?.home?.letsstarttoday?.title}
         </h2>
         <p className="home-desc max-w-[500px] mx-auto !text-[#fff]">
-          Join hundreds of businesses already using Jazzam to qualify their leads
+          {dict?.home?.letsstarttoday?.description}
         </p>
 
         {/* Button */}
         <div className="flex justify-center mt-6">
   {/* Button text */}
   <button className="text-[#FFF]  bg-[#EEB600]  font-semibold px-8 py-4 rounded-lg uppercase text-sm tracking-wide">
-    REGISTER YOUR COMPANY
+    {dict?.home?.letsstarttoday?.button}
   </button>
 
   {/* Arrow part */}
@@ -70,7 +67,7 @@ const Letsstarttoday: React.FC = () => {
 
 
         <p className="text-[16px] leading-[26px] text-[#fff] font-normal mt-4">
-          No credit card required • 14-day free trial
+          {dict?.home?.letsstarttoday?.para}
         </p>
       </div>
 
@@ -105,10 +102,10 @@ const Letsstarttoday: React.FC = () => {
 
       <div className="text-center mb-6">
         <h3 className="text-[20px] font-bold text-[#000] leading-[108%] tracking-[1px] mb-[6px]">
-          Join Industry Leaders
+          {dict?.home?.letsstarttoday?.cardtitle}
         </h3>
         <p className="text-[#333] font-normal text-[14px] leading-[155%] tracking-[0.5%]">
-          Trusted by companies across Saudi Arabia
+          {dict?.home?.letsstarttoday?.cardpara}
         </p>
       </div>
 
@@ -133,19 +130,19 @@ const Letsstarttoday: React.FC = () => {
         {/* Active Users */}
         <div className="text-center z-50 bg-white">
           <div className="text-[44px]  font-normal text-[#000] leading-[113%] mb-2">500+</div>
-          <div className="text-[14px] leading-[100%] font-normal text-[#444]">Active Users</div>
+          <div className="text-[14px] leading-[100%] font-normal text-[#444]">{dict?.home?.letsstarttoday?.number1}</div>
         </div>
 
         {/* Satisfaction */}
         <div className="text-center z-50 bg-white">
           <div className="text-[44px] font-normal text-[#000] leading-[113%] mb-2">98%</div>
-          <div className="text-[14px] leading-[100%] font-normal text-[#444]">Satisfaction</div>
+          <div className="text-[14px] leading-[100%] font-normal text-[#444]">{dict?.home?.letsstarttoday?.number2}</div>
         </div>
 
         {/* Support */}
         <div className="text-center z-50 bg-white">
           <div className="text-[44px] font-normal text-[#000] leading-[113%] mb-2">24/7</div>
-          <div className="text-[14px] leading-[100%] font-normal text-[#444]">Support</div>
+          <div className="text-[14px] leading-[100%] font-normal text-[#444]">{dict?.home?.letsstarttoday?.number3}</div>
         </div>
       </div>
     </div>

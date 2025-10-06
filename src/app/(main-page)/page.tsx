@@ -49,7 +49,7 @@ const LandingPage = async () => {
 
 
        {/* ------------- Letsstarttoday ------------- */}
-      <Letsstarttoday />
+      <Letsstarttoday dict={dict} />
 
       {/* ------------- FAQs ------------- */}
       <Faqs dict={dict} />

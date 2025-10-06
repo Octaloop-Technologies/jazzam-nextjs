@@ -20,6 +20,11 @@
 
     "whyChooseJazzam": {
       "title": "Why Choose Jazzam?",
+      "numbers1":"Lead Quality Improvement",
+      "numbers2":"Time Saved Daily",
+      "numbers3":"Faster Conversions",
+      "numbers4":"Happy Customers",
+      "button":"REGISTER YOUR COMPANY",
       "smartCustomerFollowUp": {
         "title": "Smart Customer Follow-up",
         "description": "Time to stop wasting valuable hours on leads that are not qualified."
@@ -137,6 +142,18 @@
     "cardPara3":" Know exactly which leads are worth your time and attention."
 
   },
+
+"letsstarttoday":{
+  "title":"LET'S START TODAY",
+  "description":"Join hundreds of businesses already using Jazzam to qualify their leads",
+  "para":"No credit card required • 14-day free trial",
+  "cardtitle":"Join Industry Leaders",
+  "cardpara":"Trusted by companies across Saudi Arabia",
+  "number1":"Active Users",
+  "number2":"Satisfaction",
+  "number3":"Support",
+  "button":"REGISTER YOUR COMPANY"
+},
     "frequentlyAskedQuestions": {
       "title": "Frequently Asked Questions",
       "description": "Everything you need to know about Jazzam",
@@ -187,7 +204,8 @@
 
     "footer": {
       "title": "Transform Your Sales Team into a Deal-Closing Machine with AI. Jazzam – Smart AI Sales Agent (SaaS) helps your team connect with the right customers and close deals 40% faster.",
-      "copyright": "All rights reserved."
+      "copyright": "All rights reserved.",
+      "button":"SEND NOW"
     }
   }
 }
