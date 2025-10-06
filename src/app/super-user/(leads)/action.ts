@@ -181,6 +181,7 @@ export const getLeadById = async ({ id }: { id: string }) => {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
+      cache: "no-store", // Ensure fresh data on every request
     });
 
     if (!response.ok) {
@@ -274,4 +275,43 @@ export const restartOnboarding = async () => {
     completedSteps: [],
     skipped: false,
   });
+};
+
+// ======================================================
+// Re-qualify lead using BANT
+// ======================================================
+export const requalifyLeadBANT = async ({ id }: { id: string }) => {
+  const { revalidatePath } = await import("next/cache");
+  const cookieStore = await cookies();
+  const token = cookieStore.get("accessToken")?.value || "";
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${id}/bant`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(errorData?.message || `HTTP error! status: ${response.status}`);
+    }
+
+    const responseData = await response.json();
+
+    // Revalidate the lead detail page and leads list to show updated data
+    revalidatePath(`/super-user/leads/${id}`);
+    revalidatePath("/super-user");
+
+    return { success: true, data: responseData.data, message: responseData.message };
+  } catch (error) {
+    console.error("Error re-qualifying lead with BANT:", error);
+    return {
+      success: false,
+      data: null,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
 };

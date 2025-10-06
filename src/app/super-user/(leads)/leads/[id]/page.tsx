@@ -15,6 +15,7 @@ import LeadsMenu from "@/components/view/dashboard/leads/LeadsMenu";
 import Link from "next/link";
 import { getLeadById } from "../../action";
 import { notFound } from "next/navigation";
+import BantButton from "@/components/view/dashboard/leads/BantButton";
 
 const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
@@ -319,9 +320,12 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
         {/* ------------------------- Lead Qualification (BANT) ------------------------- */}
         <div className="flex-between gap-2.5 w-full items-stretch">
           <div className="p-[30px] w-full border border-gray-b rounded-3xl bg-white max-w-[55%]">
-            <h2 className="text-[16px] leading-none font-[500] capitalize pb-2 border-b border-gray-n/30">
-              Lead Qualification (BANT)
-            </h2>
+            <div className="flex-between-start gap-2.5">
+              <h2 className="text-[16px] font-[500] capitalize pb-2 border-b border-gray-n/30">
+                Lead Qualification (BANT)
+              </h2>
+              <BantButton leadId={id} />
+            </div>
             <div className="mt-4 flex justify-between gap-2.5">
               <div className="flex flex-col gap-1">
                 <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Budget</h3>
