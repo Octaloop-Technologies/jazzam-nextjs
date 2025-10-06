@@ -1,13 +1,13 @@
 "use client";
 
 import React from "react";
-import Image from "next/image"; 
+import Image from "next/image";
 import { Dictionary } from "@/lib/i18n/getDictionary";
 const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
   const items = dict.home.beforeJazzam.marquee;
 
   const duplicatedItems: string[] = [...items, ...items];
- const beforeItems = dict.home.beforeJazzam.beforeItems;
+  const beforeItems = dict.home.beforeJazzam.beforeItems;
   const withItems = dict.home.beforeJazzam.withItems;
 
   const PLACEHOLDER_IMG: string =
@@ -23,7 +23,7 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
       }}
     >
       {/* Top Slider (Marquee) */}
-      <div className="w-full flex overflow-hidden relative py-8">
+      <div className="w-full flex overflow-hidden relative py-8 mt-5">
         <div className="flex animate-marquee-reverse whitespace-nowrap">
           {duplicatedItems.map((item, index) => (
             <div key={index} className="flex items-center mx-4">
@@ -67,7 +67,7 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
           {/* Before Jazzam Card */}
           <div className="bg-white w-full max-w-[532px] rounded-2xl shadow-xl p-8 order-1 z-10">
             <h3 className="text-[26px] sm:text-[34px] font-semibold text-black leading-[21px] tracking-[2px] mb-6">
-                   {dict.home.beforeJazzam.beforeTitle}
+              {dict.home.beforeJazzam.beforeTitle}
             </h3>
 
             <div className="space-y-6">
@@ -102,7 +102,7 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
           {/* With Jazzam Card */}
           <div className="bg-white w-full max-w-[532px] rounded-2xl shadow-xl p-8 order-3 z-10">
             <h3 className="text-[26px] sm:text-[34px] font-semibold text-black leading-[21px] tracking-[2px] mb-6">
-                            {dict.home.beforeJazzam.withTitle}
+              {dict.home.beforeJazzam.withTitle}
 
             </h3>
 
@@ -163,7 +163,7 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
 
           <div className="relative px-8 py-8 md:px-16 md:py-10">
             <h3 className="text-[#FFF] text-[34px] md:text-[24px] font-normal leading-[29px] text-center mb-6">
-                {dict.home.beforeJazzam.waitlist.heading}
+              {dict.home.beforeJazzam.waitlist.heading}
             </h3>
 
             <div className="flex flex-col md:flex-row items-center gap-3 z-50 max-w-[600px] mx-auto">
@@ -189,7 +189,7 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
                 />
               </div>
               <button className="w-full md:w-auto bg-[#EEB600]  font-semibold px-8 py-3 rounded-lg transition uppercase  tracking-wide whitespace-nowrap shadow-md text-[16px] tracking-normal text-[#FFF]">
-                 {dict.home.beforeJazzam.waitlist.button}
+                {dict.home.beforeJazzam.waitlist.button}
               </button>
             </div>
           </div>

@@ -36,7 +36,7 @@ const Chasing = ({ dict }: { dict: Dictionary }) => {
           ease: "power2.in",
           onComplete: () => {
             if (currentImageRef.current) {
-              currentImageRef.current.src = steps[index].image;
+              currentImageRef.current.src = stepsData[index].image;
               gsap.to(imageContainerRef.current, {
                 opacity: 1,
                 duration: 0,
@@ -96,74 +96,46 @@ const Chasing = ({ dict }: { dict: Dictionary }) => {
 
 
 
-  const steps = [
-    (
-      <div className="w-full flex flex-col items-center" key="step1">
-        <div className="w-full sm:w-80 md:w-96 bg-white p-6 rounded-2xl transition-all duration-300 transform hover:scale-[1.02]">
-          <h3 className="text-[22px]! md:text-xl font-semibold text-center text-black mb-4">
-            {dict.home.chasing.cardTitle1}
-          </h3>
-
-          <div className="flex justify-center mb-4">
-            <Image
-              src="/assets/images/home/habib2.png"
-              width={231}
-              height={216}
-              alt="habib"
-            />
-          </div>
-
-          <p className="text-lg text-center text-[#333] ">
-            {dict.home.chasing.cardPara1}
-          </p>
-        </div>
-      </div>
-    ),
-    (
-      <div className="w-full flex flex-col items-center" key="step2">
-        <div className="w-full sm:w-80 md:w-96 bg-white p-6 rounded-2xl transition-all duration-300 transform hover:scale-[1.02]">
-          <h3 className="text-[22px]! md:text-xl font-semibold text-center text-black mb-4">
-            {dict.home.chasing.cardTitle2}
-          </h3>
-
-          <div className="flex justify-center mb-4">
-            <Image
-              src="/assets/images/home/secondImg.svg"
-              width={231}
-              height={216}
-              alt="habib"
-            />
-          </div>
-
-          <p className="text-lg text-center text-[#333] ">
-            {dict.home.chasing.cardPara2}
-          </p>
-        </div>
-      </div>
-    ),
-    (
-      <div className="w-full flex flex-col items-center" key="step3">
-        <div className="w-full sm:w-80 md:w-96 bg-white p-6 rounded-2xl transition-all duration-300 transform hover:scale-[1.02]">
-          <h3 className="text-[22px]! md:text-xl font-semibold text-center text-black mb-4">
-            {dict.home.chasing.cardTitle3}
-          </h3>
-
-          <div className="flex justify-center mb-4">
-            <Image
-              src="/assets/images/home/identify.svg"
-              width={231}
-              height={216}
-              alt="habib"
-            />
-          </div>
-
-          <p className="text-lg text-center text-[#333] ">
-            {dict.home.chasing.cardPara3}
-          </p>
-        </div>
-      </div>
-    ),
+  const stepsData = [
+    {
+      image: "/assets/images/home/habib2.png",
+      title: dict.home.chasing.cardTitle1,
+      description: dict.home.chasing.cardPara1,
+    },
+    {
+      image: "/assets/images/home/secondImg.svg",
+      title: dict.home.chasing.cardTitle2,
+      description: dict.home.chasing.cardPara2,
+    },
+    {
+      image: "/assets/images/home/identify.svg",
+      title: dict.home.chasing.cardTitle3,
+      description: dict.home.chasing.cardPara3,
+    },
   ];
+
+  const steps = stepsData.map((step, index) => (
+    <div className="w-full flex flex-col items-center" key={`step${index + 1}`}>
+      <div className="w-full sm:w-80 md:w-96 bg-white p-6 rounded-2xl transition-all duration-300 transform hover:scale-[1.02]">
+        <h3 className="text-[22px]! md:text-xl font-semibold text-center text-black mb-4">
+          {step.title}
+        </h3>
+
+        <div className="flex justify-center mb-4">
+          <Image
+            src={step.image}
+            width={231}
+            height={216}
+            alt="step image"
+          />
+        </div>
+
+        <p className="text-lg text-center text-[#333] ">
+          {step.description}
+        </p>
+      </div>
+    </div>
+  ));
 
 
   return (
