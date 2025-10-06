@@ -1,76 +1,220 @@
 "use client";
 
 import Image from "next/image";
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
 
 
 import { Dictionary } from "@/lib/i18n/getDictionary";
 const Chasing = ({ dict }: { dict: Dictionary }) => {
-  return (
-    <section className=" p-8 mt-36 flex items-start bg-gradient-to-b from-white via-[#c8e6c8] to-white">    
-      <div className="max-w-[1536px] mx-auto flex flex-col lg:flex-row  items-center">
-        {/* Left Side */}
-        <div className="w-full max-w-[550px]   lg:pr-20 pt-10 text-center lg:text-left mb-10 lg:mb-0">
-          <h2 className="text-[36px] md:text-[52px] font-bold text-white leading-[110%] mb-4">
-           {dict.home.chasing.title}
-          </h2>
-          <p className="text-[16px] md:text-[18px] text-normal leading-normal text-white">
-            {dict.home.chasing.para}
+  const stepsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const imageContainerRef = useRef<HTMLDivElement>(null);
+  const currentImageRef = useRef<HTMLImageElement>(null);
+
+
+  useEffect(() => {
+    // Animate content change on scroll
+    const changeContent = (index: number) => {
+      // Animate step opacity
+      stepsRef.current.forEach((s, i) => {
+        if (s) {
+          gsap.to(s, {
+            opacity: i === index ? 1 : 0.4,
+            duration: 0,
+            ease: "power2.out",
+          });
+        }
+      });
+
+      // Animate image change
+      if (imageContainerRef.current && currentImageRef.current) {
+        gsap.to(imageContainerRef.current, {
+          opacity: 0,
+          duration: 0,
+          ease: "power2.in",
+          onComplete: () => {
+            if (currentImageRef.current) {
+              currentImageRef.current.src = steps[index].image;
+              gsap.to(imageContainerRef.current, {
+                opacity: 1,
+                duration: 0,
+                ease: "power2.out",
+              });
+            }
+          },
+        });
+      }
+    };
+
+    // ScrollTrigger animations for the steps and images
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        scrub: 1,
+        pin: true,
+        trigger: "#pin-shopdesign",
+        start: "top 10%",
+        end: "bottom 90%",
+      },
+    });
+
+    // Pinning and animating the left content and image
+    tl.to("#left-content", {
+      opacity: 0.5,
+      duration: 0.4,
+      ease: "power2.out",
+    }).to("#image-container", {
+      opacity: 0.5,
+      duration: 0.4,
+      ease: "power2.out",
+    });
+
+    // Setting up ScrollTrigger for each step to change content on scroll
+    const ctx = gsap.context(() => {
+      stepsRef.current.forEach((step, index) => {
+        if (!step) return;
+
+        ScrollTrigger.create({
+          trigger: step,
+          start: "top 50%",
+          end: "bottom 50%",
+          onEnter: () => changeContent(index),
+          onEnterBack: () => changeContent(index),
+        });
+      });
+    });
+
+    // Initialize first step as active
+    changeContent(0);
+
+    return () => {
+      ctx.revert();
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, []);
+
+
+
+  const steps = [
+    (
+      <div className="w-full flex flex-col items-center" key="step1">
+        <div className="w-full sm:w-80 md:w-96 bg-white p-6 rounded-2xl transition-all duration-300 transform hover:scale-[1.02]">
+          <h3 className="text-[22px]! md:text-xl font-semibold text-center text-black mb-4">
+            {dict.home.chasing.cardTitle1}
+          </h3>
+
+          <div className="flex justify-center mb-4">
+            <Image
+              src="/assets/images/home/habib2.png"
+              width={231}
+              height={216}
+              alt="habib"
+            />
+          </div>
+
+          <p className="text-lg text-center text-[#333] ">
+            {dict.home.chasing.cardPara1}
           </p>
         </div>
+      </div>
+    ),
+    (
+      <div className="w-full flex flex-col items-center" key="step2">
+        <div className="w-full sm:w-80 md:w-96 bg-white p-6 rounded-2xl transition-all duration-300 transform hover:scale-[1.02]">
+          <h3 className="text-[22px]! md:text-xl font-semibold text-center text-black mb-4">
+            {dict.home.chasing.cardTitle2}
+          </h3>
 
-        {/* Right Side */}
-<div className="flex-col space-y-2 bg-transparent lg:w-1/2 h-[550px] overflow-y-auto">
-        <div className="w-full  flex flex-col items-center">
-          <div className="w-full sm:w-80 md:w-96 bg-white p-6 rounded-2xl  transition-all duration-300 transform hover:scale-[1.02]">
-            <h3 className="text-[22px]!  md:text-xl font-semibold text-center text-black mb-4">
-              {dict.home.chasing.cardTitle1}
-            </h3>
+          <div className="flex justify-center mb-4">
+            <Image
+              src="/assets/images/home/secondImg.svg"
+              width={231}
+              height={216}
+              alt="habib"
+            />
+          </div>
 
-            <div className="flex justify-center mb-4">
-             <Image src="/assets/images/home/habib2.png" width={231} height={216} alt="habib"/>
+          <p className="text-lg text-center text-[#333] ">
+            {dict.home.chasing.cardPara2}
+          </p>
+        </div>
+      </div>
+    ),
+    (
+      <div className="w-full flex flex-col items-center" key="step3">
+        <div className="w-full sm:w-80 md:w-96 bg-white p-6 rounded-2xl transition-all duration-300 transform hover:scale-[1.02]">
+          <h3 className="text-[22px]! md:text-xl font-semibold text-center text-black mb-4">
+            {dict.home.chasing.cardTitle3}
+          </h3>
+
+          <div className="flex justify-center mb-4">
+            <Image
+              src="/assets/images/home/identify.svg"
+              width={231}
+              height={216}
+              alt="habib"
+            />
+          </div>
+
+          <p className="text-lg text-center text-[#333] ">
+            {dict.home.chasing.cardPara3}
+          </p>
+        </div>
+      </div>
+    ),
+  ];
+
+
+  return (
+    <>
+
+      <div className="  relative ">
+        <div className="max-w-[1336px] mx-auto !py-[40px] !lg:py-[71px] flex flex-col gap-12 lg:gap-[121px] relative z-10">
+
+
+          <div className="lg:grid grid-cols-2 gap-10 pt-32">
+            <div className="relative col-span-1  ">
+              <div id="image-container" className="sticky top-50">
+                <div
+                  ref={imageContainerRef}
+                  className="w-full h-full relative rounded-lg overflow-hidden"
+                >
+                  <div className="w-full max-w-[550px]   lg:pr-20 pt-10 text-center lg:text-left mb-10 lg:mb-0">
+                    <h2 className="text-[36px] md:text-[52px] font-bold text-white leading-[110%] mb-4">
+                      {dict.home.chasing.title}
+                    </h2>
+                    <p className="text-[16px] md:text-[18px] text-normal leading-normal text-white">
+                      {dict.home.chasing.para}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <p className="text-lg text-center text-[#333] ">
-              {dict.home.chasing.cardPara1}
-            </p>
+            <div
+              id="right-content"
+              className="col-span-1 space-y-[50px] py-[100px]"
+            >
+              {steps.map((step, index) => (
+                <React.Fragment key={index}>{step}</React.Fragment>
+              ))}
+            </div>
           </div>
         </div>
-          <div className="w-full flex flex-col items-center">
-          <div className="w-full sm:w-80 md:w-96 bg-white p-6 rounded-2xl  transition-all duration-300 transform hover:scale-[1.02]">
-            <h3 className="text-[22px]!  md:text-xl font-semibold text-center text-black mb-4">
-              {dict.home.chasing.cardTitle2}
-            </h3>
 
-            <div className="flex justify-center mb-4">
-             <Image src="/assets/images/home/secondImg.svg" width={231} height={216} alt="habib"/>
-            </div>
 
-            <p className="text-lg text-center text-[#333] ">
-             {dict.home.chasing.cardPara2}
+        <div className="toptop h-[300px]"></div>
+        <div className="bg-grad opacity-70 w-full h-full absolute top-0 left-0">
+          {/* <video src="\assets\glass.mp4" autoPlay loop muted className="w-full h-full object-cover"></video> */}
+          <img src="\assets\images\background.png" alt="" className="w-full h-full object-cover" />
+        </div>
+      </div >
 
-            </p>
-          </div>
-           </div>
-             <div className="w-full flex flex-col items-center">
-           <div className="w-full sm:w-80 md:w-96 bg-white p-6 rounded-2xl  transition-all duration-300 transform hover:scale-[1.02]">
-            <h3 className="text-[22px]!  md:text-xl font-semibold text-center text-black mb-4">
-              {dict.home.chasing.cardTitle3}
-            </h3>
+    </>
 
-            <div className="flex justify-center mb-4">
-             <Image src="/assets/images/home/identify.svg" width={231} height={216} alt="habib"/>
-            </div>
 
-            <p className="text-lg text-center text-[#333] ">
-            {dict.home.chasing.cardPara3}
 
-            </p>
-          </div>
-       </div>
-      </div>
-      </div>
-    </section>
   );
 };
 

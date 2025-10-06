@@ -366,48 +366,52 @@ button {
   }
 }
 
+@keyframes marquee-reverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+.animate-marquee-reverse {
+  display: inline-flex;
+  animation: marquee-reverse 8s linear infinite;
+}
 
- @keyframes marquee-reverse {
-          0% {
-            transform: translateX(-50%);
-          }
-          100% {
-            transform: translateX(0%);
-          }
-        }
-        .animate-marquee-reverse {
-          display: inline-flex;
-          animation: marquee-reverse 8s linear infinite;
-        }
+@keyframes moveLineLtoR {
+  0% {
+    left: 0;
+    transform: translateX(0%);
+  }
+  100% {
+    left: 100%;
+    transform: translateX(-100%);
+  }
+}
+.animate-moveLineLtoR {
+  animation: moveLineLtoR 3.5s linear infinite;
+}
 
-        @keyframes moveLineLtoR {
-          0% {
-            left: 0;
-            transform: translateX(0%);
-          }
-          100% {
-            left: 100%;
-            transform: translateX(-100%);
-          }
-        }
-        .animate-moveLineLtoR {
-          animation: moveLineLtoR 3.5s linear infinite;
-        }
+@keyframes moveLineRtoL {
+  0% {
+    right: 0;
+    transform: translateX(0%);
+  }
+  100% {
+    right: 100%;
+    transform: translateX(100%);
+  }
+}
+.animate-moveLineRtoL {
+  left: auto;
+  right: 0;
+  animation: moveLineRtoL 3.5s linear infinite;
+}
 
-        @keyframes moveLineRtoL {
-          0% {
-            right: 0;
-            transform: translateX(0%);
-          }
-          100% {
-            right: 100%;
-            transform: translateX(100%);
-          }
-          
-        }
-        .animate-moveLineRtoL {
-          left: auto;
-          right: 0;
-          animation: moveLineRtoL 3.5s linear infinite;
-        }
-        
+.bg-grad {
+  background: linear-gradient(180deg, #ffffff 0%, #c8e6c8 100%);
+}
+.toptop {
+  background: linear-gradient(180deg, #ffffff 0%, #c8e6c8 100%);
+}
