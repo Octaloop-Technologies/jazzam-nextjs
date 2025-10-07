@@ -19,7 +19,7 @@ const HowJazzamWork = ({ dict }: { dict: Dictionary }) => {
       </p>
 
       {/* Yellow Circles — Desktop Only */}
-      <div className="relative justify-between mx-auto pt-12 max-w-[1300px] hidden md:flex">
+      <div className="relative justify-between mx-auto pt-12 max-w-[1300px] hidden lg:flex">
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0 hidden md:flex items-center justify-center w-[1132px] h-[120px]">
           <div className="absolute w-[300px] h-full flex flex-col justify-center items-center">
             <div className="w-[1280px] h-1 bg-[#EBEBEB] rounded-full relative mt-12">
@@ -49,7 +49,7 @@ const HowJazzamWork = ({ dict }: { dict: Dictionary }) => {
         className="bg-no-repeat bg-cover bg-center h-auto z-50 mt-10 md:mt-0"
         style={{ backgroundImage: "url('/assets/images/home/bg-wave.svg')" }}
       >
-        <div className="flex flex-wrap justify-center gap-5 pt-10 z-20 max-w-[1536px] mx-auto px-4">
+        <div className="flex lg:flex-nowrap flex-wrap justify-center gap-5 pt-10 z-20 max-w-[1536px] mx-auto px-4">
           {features.map((item, idx) => (
             <div
               key={idx}
@@ -57,7 +57,7 @@ const HowJazzamWork = ({ dict }: { dict: Dictionary }) => {
               style={{ backgroundImage: "url('/assets/images/home/radiant.svg')" }}
             >
               {/* Circle for mobile */}
-              <div className="md:hidden absolute -top-7 left-1/2 -translate-x-1/2 size-[50px] rounded-full bg-[#FFF] border-[5px] border-[#FFC300] flex items-center justify-center">
+              <div className="lg:hidden absolute -top-7 left-1/2 -translate-x-1/2 size-[50px] rounded-full bg-[#FFF] border-[5px] border-[#FFC300] flex items-center justify-center">
                 <p className="text-[#000] text-[20px] font-bold">
                   {(idx + 1).toString().padStart(2, "0")}
                 </p>

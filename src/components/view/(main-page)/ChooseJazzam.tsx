@@ -118,7 +118,7 @@ const ChooseJazzam = ({ dict }: { dict: Dictionary }) => {
                 ${index === 2 ? "max-xl:col-span-2" : ""} 
                 ${index === 1 ? "max-md:col-span-2" : ""}`}
             >
-              <div className=" mx-auto">
+              <div className=" mx-auto ">
                 {item.icon}
               </div>
               <p className="text-[14px] font-[500] text-[#333333]">{item.description}</p>
@@ -149,28 +149,28 @@ const ChooseJazzam = ({ dict }: { dict: Dictionary }) => {
           </div>
         </div>
 
-          <div className="backdrop-blur-md z-50 flex flex-col justify-center text-center">
+          <div className="backdrop-blur-md z-50 flex gap-2 sm:gap-0 flex-col justify-center text-center">
             <h1 className="text-black font-medium text-[60px] max-lg:text-[48px] max-md:text-[40px] max-sm:text-[32px] mb-[-17px]">
               85%
             </h1>
             <p className="text-[#444] text-[14px] max-sm:text-[12px]">{dict?.home?.whyChooseJazzam?.numbers1}</p>
           </div>
 
-          <div className="backdrop-blur-md  z-50 flex flex-col justify-center text-center">
+          <div className="backdrop-blur-md  z-50 flex gap-2 sm:gap-0  flex-col justify-center text-center">
             <h1 className="text-black font-medium text-[60px] max-lg:text-[48px] max-md:text-[40px] max-sm:text-[32px] mb-[-17px]">
               60%
             </h1>
             <p className="text-[#444] text-[14px] max-sm:text-[12px]">{dict?.home?.whyChooseJazzam?.numbers2}</p>
           </div>
 
-          <div className="backdrop-blur-md  z-50 flex flex-col justify-center text-center">
+          <div className="backdrop-blur-md  z-50 gap-2 sm:gap-0  flex flex-col justify-center text-center">
             <h1 className="text-black font-medium text-[60px] max-lg:text-[48px] max-md:text-[40px] max-sm:text-[32px] mb-[-17px]">
               3X
             </h1>
             <p className="text-[#444] text-[14px] max-sm:text-[12px]">{dict?.home?.whyChooseJazzam?.numbers3}</p>
           </div>
 
-          <div className="backdrop-blur-md  z-50 flex flex-col justify-center text-center">
+          <div className="backdrop-blur-md  z-50 gap-2 sm:gap-0  flex flex-col justify-center text-center">
             <h1 className="text-black font-medium text-[60px] max-lg:text-[48px] max-md:text-[40px] max-sm:text-[32px] mb-[-17px]">
               16k
             </h1>
