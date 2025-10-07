@@ -1,4 +1,3 @@
-// import TestimonialsMarquee from "@/components/view/(main-page)/TestimonialsMarquee";
 import React from "react";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { getCurrentLang } from "../action";
