@@ -24,6 +24,7 @@ import TabContentLoader from "@/components/view/dashboard/leads/TabContentLoader
 import RefreshButton from "@/components/view/dashboard/leads/RefreshButton";
 import { getCurrentUser } from "@/app/(auth)/action";
 import WelcomeBanner from "@/components/view/dashboard/leads/WelcomeBanner";
+import PaymentSuccessNotification from "@/components/view/dashboard/leads/PaymentSuccessNotification";
 
 // ======================================================
 // Meta Data
@@ -45,6 +46,8 @@ interface DashboardPageProps {
     companySize?: string;
     sortBy?: string;
     sortOrder?: string;
+    payment?: string;
+    session_id?: string;
   }>;
 }
 
@@ -186,6 +189,9 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
 
   return (
     <section>
+      {/* ---------------------------- Payment Success Notification ---------------------------- */}
+      <PaymentSuccessNotification />
+
       {/* ---------------------------- Welcome Banner ---------------------------- */}
       <WelcomeBanner />
 
