@@ -2,16 +2,23 @@
 
 import React, { useState } from "react";
 import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
+import { changeLang } from "@/app/action";
 import { LanguageOption } from "@/components/ui/language";
 
 interface LanguageModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (language: string) => void;
+  onConfirm: (languageCode: string) => void;
+  currentLanguage?: string;
 }
 
-const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose, onConfirm }) => {
-  const [selectedLanguage, setSelectedLanguage] = useState("English, UK");
+const LanguageModal: React.FC<LanguageModalProps> = ({
+  isOpen,
+  onClose,
+  onConfirm,
+  currentLanguage,
+}) => {
+  const [selectedLanguage, setSelectedLanguage] = useState(currentLanguage || "en");
 
   if (!isOpen) return null;
 
@@ -29,13 +36,13 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose, onConfir
   const languages = [
     {
       flag: "/assets/images/flags/uk-flag.svg",
-      name: "English, UK",
-      value: "English, UK",
+      name: "English (UK)",
+      value: "en",
     },
     {
       flag: "/assets/images/flags/arabic.svg",
-      name: "arabic",
-      value: "arabic",
+      name: "Arabic",
+      value: "ar",
     },
   ];
 
@@ -63,7 +70,17 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose, onConfir
         </div>
 
         {/* buttons */}
-        <div className="flex justify-around space-x-5">
+        <form action={changeLang} className="flex justify-around space-x-5">
+          <input type="hidden" name="lang" value={selectedLanguage} />
+          <input
+            type="hidden"
+            name="redirect"
+            value={
+              typeof window !== "undefined"
+                ? window.location.pathname + window.location.search
+                : "/"
+            }
+          />
           <PrimaryButton
             onClick={onClose}
             bordered
@@ -75,11 +92,12 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isOpen, onClose, onConfir
 
           <PrimaryButton
             onClick={handleConfirm}
+            type="submit"
             className="w-full h-[50px] !gap-2.5 rounded-xl-2"
             title="Apply changes"
             titleClass="font-[500]"
           />
-        </div>
+        </form>
       </div>
     </div>
   );

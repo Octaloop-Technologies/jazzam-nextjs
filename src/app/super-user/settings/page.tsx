@@ -18,10 +18,12 @@ import { logout } from "@/redux/slices/authSlice";
 import { useAppDispatch } from "@/redux/store";
 import { ZohoIcon } from "@/components/svgs/loginButtonSvgs";
 import { useToast } from "@/lib/hooks/useToast";
-import { logoutUserAction } from "./action";
+import { logoutUserAction, updateCompanySettings } from "./action";
 import { useRouter } from "next/navigation";
 import { restartOnboarding } from "../(leads)/action";
 import dynamic from "next/dynamic";
+import Link from "next/link";
+import { useI18n } from "@/providers/I18nProvider";
 
 const SubscriptionSettings = dynamic(
   () => import("@/components/view/dashboard/settings/SubscriptionSettings"),
@@ -35,10 +37,11 @@ const SettingsPage = () => {
   const [activeTab, setActiveTab] = useState<"profile" | "general" | "subscription">("profile");
   const [notificationSettings, setNotificationSettings] = useState({
     emailNotifications: false,
-    leadUpdates: false,
-    systemMaintenance: false,
-    fundraisingUpdates: false,
-    weeklySummary: false,
+    leadNotifications: true,
+  });
+  const [leadSettings, setLeadSettings] = useState({
+    autoBANTQualification: false,
+    language: "en",
   });
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -51,6 +54,41 @@ const SettingsPage = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector(selectUser);
   const router = useRouter();
+  const { setLocale: i18nSetLocale } = useI18n();
+
+  // ==============================================================
+  // Update BANT Setting
+  // ==============================================================
+  const handleBANTSettingChange = async (checked: boolean) => {
+    setLeadSettings((prev) => ({
+      ...prev,
+      autoBANTQualification: checked,
+    }));
+
+    const result = await updateCompanySettings({ autoBANTQualification: checked });
+
+    if (result.success) {
+      ToastSuccess(
+        checked ? "Auto BANT qualification enabled" : "Auto BANT qualification disabled"
+      );
+    } else {
+      ToastError(result.message || "Failed to update setting");
+      // Revert on error
+      setLeadSettings((prev) => ({
+        ...prev,
+        autoBANTQualification: !checked,
+      }));
+    }
+  };
+
+  // Persist language choice into lang cookie for middleware to pick up on future requests
+  const persistLangCookie = (code: string) => {
+    if (typeof document !== "undefined") {
+      const expires = new Date();
+      expires.setFullYear(expires.getFullYear() + 1);
+      document.cookie = `lang=${code}; path=/; SameSite=Lax; Expires=${expires.toUTCString()}`;
+    }
+  };
 
   // ==============================================================
   // Logout User - Backend handles cookie clearing (httpOnly cookies)
@@ -217,10 +255,12 @@ const SettingsPage = () => {
             <div className="flex flex-col gap-[14px]">
               <h1 className="text-[14px] text-gray-200">Language</h1>
               <div className="p-[15px] border border-gray-b rounded-2xl flex-between">
-                <h2 className="text-[14px] leading-[16px]">English (UK)</h2>
+                <h2 className="text-[14px] leading-[16px]">
+                  {leadSettings?.language === "ar" ? "Arabic" : "English (UK)"}
+                </h2>
                 <button
                   onClick={() => setIsOpen(true)}
-                  className="text-sec flex items-center gap-2.5"
+                  className="text-sec flex items-center gap-2.5 gray-hover"
                 >
                   Change language <RightArrowSvg />
                 </button>
@@ -229,29 +269,9 @@ const SettingsPage = () => {
               <div className="flex flex-col gap-[15px] p-[15px] border border-gray-b rounded-2xl">
                 {[
                   {
-                    title: "Email Notifications",
-                    id: "email-notifications",
-                    key: "emailNotifications",
-                  },
-                  {
-                    title: "Lead Updates",
-                    id: "lead-updates",
-                    key: "leadUpdates",
-                  },
-                  {
-                    title: "System Maintenance",
-                    id: "system-maintenance",
-                    key: "systemMaintenance",
-                  },
-                  {
-                    title: "Fundraising Challenge Updates",
-                    id: "fundraising-updates",
-                    key: "fundraisingUpdates",
-                  },
-                  {
-                    title: "Weekly Activity Summary",
-                    id: "weekly-summary",
-                    key: "weeklySummary",
+                    title: "New Lead Notifications",
+                    id: "lead-notifications",
+                    key: "leadNotifications",
                   },
                 ].map((item, index) => (
                   <div key={index} className="flex-between">
@@ -259,16 +279,69 @@ const SettingsPage = () => {
                     <ToggleSwitch
                       id={item.id}
                       checked={notificationSettings[item.key as keyof typeof notificationSettings]}
-                      onChange={(checked) =>
+                      onChange={async (checked) => {
                         setNotificationSettings((prev) => ({
                           ...prev,
                           [item.key]: checked,
-                        }))
-                      }
+                        }));
+                        // Persist to backend
+                        try {
+                          const res = await updateCompanySettings({ leadNotifications: checked });
+                          if (res.success) {
+                            ToastSuccess(
+                              checked
+                                ? "New lead notifications enabled"
+                                : "New lead notifications disabled"
+                            );
+                          } else {
+                            ToastError(res.message || "Failed to update setting");
+                          }
+                        } catch (e) {
+                          ToastError("Failed to update setting");
+                        }
+                      }}
                       size="md"
                     />
                   </div>
                 ))}
+              </div>
+
+              <h1 className="text-[14px] text-gray-200 mt-4">Lead Management</h1>
+              <div className="p-[15px] border border-gray-b rounded-2xl">
+                <div className="flex-between">
+                  <div>
+                    <h2 className="text-[14px] leading-[16px] font-medium">
+                      Auto BANT Qualification
+                    </h2>
+                    <p className="text-xs text-gray-400 mt-1">
+                      Automatically qualify leads using AI (Budget, Authority, Need, Timeline)
+                    </p>
+                  </div>
+                  <ToggleSwitch
+                    id="auto-bant-qualification"
+                    checked={leadSettings.autoBANTQualification}
+                    onChange={handleBANTSettingChange}
+                    size="md"
+                  />
+                </div>
+              </div>
+
+              <h1 className="text-[14px] text-gray-200 mt-4">CRM Integration</h1>
+              <div className="p-[15px] border border-gray-b rounded-2xl">
+                <div className="flex-between">
+                  <p className="text-xs text-gray-400">
+                    Connect your Zoho CRM to sync leads automatically
+                  </p>
+
+                  <Link
+                    href="/super-user/integrations"
+                    prefetch={false}
+                    className="flex-center gap-2 text-sec gray-hover"
+                  >
+                    <p>Manage CRM</p>
+                    <RightArrowSvg />
+                  </Link>
+                </div>
               </div>
 
               {/* Onboarding Tour */}
@@ -287,7 +360,7 @@ const SettingsPage = () => {
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
                       isRestartingTour
                         ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                        : "bg-blue-500 text-white hover:bg-blue-600"
+                        : "bg-pri text-white hover:bg-pri/80"
                     }`}
                   >
                     {isRestartingTour ? "Restarting..." : "Restart Tour"}
@@ -302,7 +375,28 @@ const SettingsPage = () => {
         </div>
       </div>
 
-      <LanguageModal isOpen={isOpen} onClose={() => setIsOpen(false)} onConfirm={() => {}} />
+      <LanguageModal
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        currentLanguage={leadSettings.language}
+        onConfirm={async (languageCode) => {
+          // persist
+          const res = await updateCompanySettings({ language: languageCode });
+          if (res.success) {
+            setLeadSettings((prev) => ({ ...prev, language: languageCode }));
+            ToastSuccess("Language updated successfully");
+            persistLangCookie(languageCode);
+            // Update client-side i18n without full refresh
+            try {
+              await i18nSetLocale(languageCode);
+            } catch (e) {
+              // no-op
+            }
+          } else {
+            ToastError(res.message || "Failed to update language");
+          }
+        }}
+      />
     </div>
   );
 };

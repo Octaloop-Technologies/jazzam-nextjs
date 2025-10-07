@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "@/styles/css/globals.css";
 import { Providers } from "@/providers/index";
+import { getDictionary } from "@/lib/i18n/getDictionary";
+import { I18nProvider } from "@/providers/I18nProvider";
 import { ICONS, VIEWPORT } from "@/lib/constants/website";
 import { BASE_METADATA } from "@/lib/constants/website";
 import { Suspense } from "react";
@@ -42,6 +44,7 @@ export default async function RootLayout({
 }>) {
   const cookieStore = await cookies();
   const lang = cookieStore.get("lang")?.value || "en";
+  const dict = await getDictionary(lang);
 
   return (
     <html lang={lang} dir={lang === "ar" ? "rtl" : "ltr"}>
@@ -62,7 +65,9 @@ export default async function RootLayout({
       <body className={`antialiased`}>
         <NavigationIndicator />
         <Suspense fallback={null}>
-          <Providers>{children}</Providers>
+          <I18nProvider lang={lang} dict={dict}>
+            <Providers>{children}</Providers>
+          </I18nProvider>
         </Suspense>
       </body>
     </html>

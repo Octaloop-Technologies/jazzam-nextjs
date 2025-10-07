@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 export async function changeLang(formData: FormData) {
   const newLang = formData.get("lang");
+  const redirectTo = (formData.get("redirect") as string) || "/";
 
   // Set the language cookie
   (await cookies()).set("lang", newLang as string, {
@@ -16,7 +17,7 @@ export async function changeLang(formData: FormData) {
   });
 
   // Redirect to refresh the page with new language
-  redirect("/");
+  redirect(redirectTo);
 }
 
 export async function getCurrentLang() {
