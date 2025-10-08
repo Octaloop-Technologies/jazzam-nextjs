@@ -1,23 +1,40 @@
 "use client";
 
 import Image from "next/image";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
-
 import { Dictionary } from "@/lib/i18n/getDictionary";
+
 const Chasing = ({ dict }: { dict: Dictionary }) => {
+  const [lang, setLang] = useState("en"); 
+
   const stepsRef = useRef<(HTMLDivElement | null)[]>([]);
   const imageContainerRef = useRef<HTMLDivElement>(null);
   const currentImageRef = useRef<HTMLImageElement>(null);
 
+  // Language ko detect karne ke liye effect
+  useEffect(() => {
+    const detectLanguage = () => {
+      const match = document.cookie.match(/lang=([^;]+)/);
+      if (match && match[1] !== lang) {
+        setLang(match[1]);
+      }
+    };
+
+    detectLanguage();
+    
+    // Cookie changes ko detect karne ke liye interval
+    const interval = setInterval(detectLanguage, 100);
+    
+    return () => clearInterval(interval);
+  }, [lang]);
 
   useEffect(() => {
-    // Animate content change on scroll
+    // ScrollTrigger setup
     const changeContent = (index: number) => {
-      // Animate step opacity
       stepsRef.current.forEach((s, i) => {
         if (s) {
           gsap.to(s, {
@@ -28,7 +45,6 @@ const Chasing = ({ dict }: { dict: Dictionary }) => {
         }
       });
 
-      // Animate image change
       if (imageContainerRef.current && currentImageRef.current) {
         gsap.to(imageContainerRef.current, {
           opacity: 0,
@@ -48,7 +64,6 @@ const Chasing = ({ dict }: { dict: Dictionary }) => {
       }
     };
 
-    // ScrollTrigger animations for the steps and images
     const tl = gsap.timeline({
       scrollTrigger: {
         scrub: 1,
@@ -59,7 +74,6 @@ const Chasing = ({ dict }: { dict: Dictionary }) => {
       },
     });
 
-    // Pinning and animating the left content and image
     tl.to("#left-content", {
       opacity: 0.5,
       duration: 0.4,
@@ -69,12 +83,10 @@ const Chasing = ({ dict }: { dict: Dictionary }) => {
       duration: 0.4,
       ease: "power2.out",
     });
-
-    // Setting up ScrollTrigger for each step to change content on scroll
+    
     const ctx = gsap.context(() => {
       stepsRef.current.forEach((step, index) => {
         if (!step) return;
-
         ScrollTrigger.create({
           trigger: step,
           start: "top 50%",
@@ -85,16 +97,12 @@ const Chasing = ({ dict }: { dict: Dictionary }) => {
       });
     });
 
-    // Initialize first step as active
     changeContent(0);
-
     return () => {
       ctx.revert();
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
-  }, []);
-
-
+  }, [lang]); // lang ko dependency mein add kiya
 
   const stepsData = [
     {
@@ -120,73 +128,53 @@ const Chasing = ({ dict }: { dict: Dictionary }) => {
         <h3 className="text-[22px]! md:text-xl font-semibold text-center text-black mb-4">
           {step.title}
         </h3>
-
         <div className="flex justify-center mb-4">
-          <Image
-            src={step.image}
-            width={231}
-            height={216}
-            alt="step image"
-          />
+          <Image src={step.image} width={231} height={216} alt="step image" />
         </div>
-
-        <p className="text-lg text-center text-[#333] ">
-          {step.description}
-        </p>
+        <p className="text-lg text-center text-[#333]">{step.description}</p>
       </div>
     </div>
   ));
 
-
   return (
-    <>
-
-      <div className="  relative ">
-        <div className="max-w-[1336px] mx-auto !py-[40px] !lg:py-[71px] flex flex-col gap-12 lg:gap-[121px] relative z-10">
-
-
-          <div className="lg:grid grid-cols-2 gap-10 pt-32">
-            <div className="relative col-span-1  ">
-              <div id="image-container" className="sticky top-50">
+    <div className="relative">
+      <div className="max-w-[1336px] mx-auto !py-[40px] !lg:py-[71px] flex flex-col gap-12 lg:gap-[121px] relative z-10">
+        <div className="lg:grid grid-cols-2 gap-10 pt-32">
+          <div className="relative col-span-1">
+            <div id="image-container" className="sticky top-50">
+              <div
+                ref={imageContainerRef}
+                className="w-full h-full relative rounded-lg overflow-hidden"
+              >
                 <div
-                  ref={imageContainerRef}
-                  className="w-full h-full relative rounded-lg overflow-hidden"
+                  className={`w-full max-w-[550px] lg:pr-20 pt-10 text-center ${
+                    lang === "ar" ? "lg:text-right" : "lg:text-left"
+                  } mb-10 lg:mb-0`}
                 >
-                  <div className="w-full max-w-[550px]   lg:pr-20 pt-10 text-center lg:text-left mb-10 lg:mb-0">
-                    <h2 className="text-[36px] md:text-[52px] font-bold text-white leading-[110%] mb-4">
-                      {dict.home.chasing.title}
-                    </h2>
-                    <p className="text-[16px] md:text-[18px] text-normal leading-normal text-white">
-                      {dict.home.chasing.para}
-                    </p>
-                  </div>
+                  <h2 className="text-[36px] md:text-[52px] font-bold text-white leading-[110%] mb-4">
+                    {dict.home.chasing.title}
+                  </h2>
+                  <p className="text-[16px] md:text-[18px] text-normal leading-normal text-white">
+                    {dict.home.chasing.para}
+                  </p>
                 </div>
               </div>
             </div>
+          </div>
 
-            <div
-              id="right-content"
-              className="col-span-1 space-y-[50px] py-[100px]"
-            >
-              {steps.map((step, index) => (
-                <React.Fragment key={index}>{step}</React.Fragment>
-              ))}
-            </div>
+          <div id="right-content" className="col-span-1 space-y-[50px] py-[100px]">
+            {steps.map((step, index) => (
+              <React.Fragment key={index}>{step}</React.Fragment>
+            ))}
           </div>
         </div>
+      </div>
 
-
-        <div className="toptop h-[300px] hidden md:block"></div>
-        <div className="bg-grad opacity-70 w-full h-full absolute top-0 left-0">
-          {/* <video src="\assets\glass.mp4" autoPlay loop muted className="w-full h-full object-cover"></video> */}
-          <img src="\assets\images\background.png" alt="" className="w-full h-full object-cover" />
-        </div>
-      </div >
-
-    </>
-
-
-
+      <div className="toptop h-[300px] hidden md:block"></div>
+      <div className="bg-grad opacity-70 w-full h-full absolute top-0 left-0">
+        <img src="\assets\images\background.png" alt="" className="w-full h-full object-cover" />
+      </div>
+    </div>
   );
 };
 

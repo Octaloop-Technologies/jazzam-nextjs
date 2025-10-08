@@ -10,7 +10,6 @@ import ProblemsJazzamSolves from "@/components/view/(main-page)/ProblemsJazzamSo
 import Letsstarttoday from "@/components/view/(main-page)/Letsstarttoday";
 import BeforeJazzam from "@/components/view/(main-page)/BeforeJazzam";
 import Chasing from "@/components/view/(main-page)/Chassing";
-// import Animation from "@/components/view/(main-page)/Animation";
 
 const LandingPage = async () => {
   const lang = await getCurrentLang();
@@ -24,28 +23,20 @@ const LandingPage = async () => {
       {/* ------------- See How Jazzam Works ------------- */}
       <HowJazzamWork dict={dict} />
 
-      {/* <Animation /> */}
-
-
       {/* -------------  BeforeJazzam  ------------- */}
       <Chasing dict={dict} />
 
       {/* -------------  BeforeJazzam  ------------- */}
       <BeforeJazzam dict={dict} />
 
-
       {/* ------------- Choose Jazzam ------------- */}
       <ChooseJazzam dict={dict} />
-
-
 
       {/* ------------- Testimonials ------------- */}
       {/* <TestimonialsMarquee dict={dict} /> */}
 
-
       {/* ------------- ProblemsJazzamSolves ------------- */}
       <ProblemsJazzamSolves dict={dict} />
-
 
       {/* ------------- Letsstarttoday ------------- */}
       <Letsstarttoday dict={dict} />
