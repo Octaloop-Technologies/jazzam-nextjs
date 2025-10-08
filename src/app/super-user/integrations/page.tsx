@@ -30,6 +30,10 @@ interface CRMIntegration {
   };
 }
 
+interface Error {
+  message: string;
+}
+
 export default function IntegrationsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -87,8 +91,8 @@ export default function IntegrationsPage() {
 
       // Redirect to OAuth URL
       window.location.href = data.data.authUrl;
-    } catch (error: any) {
-      toast.error(error.message || "Failed to initiate connection");
+    } catch (error: Error | unknown) {
+      toast.error((error as Error).message || "Failed to initiate connection");
     }
   };
 
@@ -106,8 +110,8 @@ export default function IntegrationsPage() {
 
       toast.success("Integration disconnected successfully");
       fetchCRMData();
-    } catch (error: any) {
-      toast.error(error.message || "Failed to disconnect");
+    } catch (error: Error | unknown) {
+      toast.error((error as Error).message || "Failed to disconnect");
     }
   };
 
@@ -120,8 +124,8 @@ export default function IntegrationsPage() {
       }
 
       toast.success("Connection test successful!");
-    } catch (error: any) {
-      toast.error(error.message || "Connection test failed");
+    } catch (error: Error | unknown) {
+      toast.error((error as Error).message || "Connection test failed");
     }
   };
 

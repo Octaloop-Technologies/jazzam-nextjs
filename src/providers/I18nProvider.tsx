@@ -2,7 +2,10 @@
 
 import React, { createContext, useContext, useMemo, useState } from "react";
 
-type Dict = Record<string, any>;
+// Define the dictionary structure based on the actual JSON files
+type Dict = {
+  [key: string]: string | number | Dict;
+};
 
 interface I18nContextValue {
   lang: string;
@@ -28,10 +31,13 @@ export function I18nProvider({
   const value = useMemo<I18nContextValue>(() => {
     const t = (key: string, fallback: string = key) => {
       const parts = key.split(".");
-      let node: string | Record<string, string> = currentDict;
+      let node: string | number | Dict = currentDict;
       for (const part of parts) {
-        if (node && typeof node === "object" && part in node) node = (node as any)[part];
-        else return fallback;
+        if (node && typeof node === "object" && part in node) {
+          node = node[part];
+        } else {
+          return fallback;
+        }
       }
       return typeof node === "string" ? node : fallback;
     };
