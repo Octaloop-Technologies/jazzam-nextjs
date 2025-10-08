@@ -74,28 +74,31 @@ export const CRMIntegrationCard: React.FC<CRMIntegrationCardProps> = ({
 
   return (
     <div className="p-4 border border-gray-b rounded-2xl hover:shadow-md transition-shadow">
-      <div className="flex items-start justify-between">
-        <div className="flex items-start gap-3 flex-1">
-          <div className="w-12 h-12 rounded-lg bg-gray-50 flex items-center justify-center">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3 flex-1">
+          <div className="size-10 rounded-lg relative flex items-center justify-center">
             <Image
               src={getProviderIcon(provider.id)}
               alt={provider.name}
-              width={32}
-              height={32}
               className="rounded"
+              fill
             />
           </div>
-          <div className="flex-1">
+          <div>
             <h3 className="text-base font-semibold">{provider.name}</h3>
-            <p className="text-sm text-gray-400 mt-1">{provider.description}</p>
-            {isConnected && accountInfo && (
-              <div className="mt-2 text-xs text-gray-500">
-                <p>
-                  <span className="font-medium">Account:</span>{" "}
-                  {accountInfo.accountName || accountInfo.accountEmail}
-                </p>
-              </div>
+            {provider.description && (
+              <p className="text-sm text-gray-400 leading-1">{provider.description}</p>
             )}
+            {isConnected &&
+              accountInfo &&
+              (accountInfo.accountName || accountInfo.accountEmail) && (
+                <div className="mt-2 text-xs text-gray-500 leading-0.5">
+                  <p>
+                    <span className="font-medium">Account:</span>{" "}
+                    {accountInfo.accountName || accountInfo.accountEmail}
+                  </p>
+                </div>
+              )}
           </div>
         </div>
         <div className="flex items-center gap-2">

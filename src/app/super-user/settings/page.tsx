@@ -2,7 +2,7 @@
 
 import { RightArrowSvg } from "@/components/svgs/ArrowSvgs";
 import { ToggleSwitch } from "@/components/ui/toggle";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import LanguageModal from "@/components/view/dashboard/settings/LanguageModal";
 import {
   ProfileSettingsIcon,
@@ -24,6 +24,7 @@ import { restartOnboarding } from "../(leads)/action";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useI18n } from "@/providers/I18nProvider";
+import { updateUserSettings } from "@/redux/slices/authSlice";
 
 const SubscriptionSettings = dynamic(
   () => import("@/components/view/dashboard/settings/SubscriptionSettings"),
@@ -57,6 +58,25 @@ const SettingsPage = () => {
   const { setLocale: i18nSetLocale } = useI18n();
 
   // ==============================================================
+  // Load user settings on component mount
+  // ==============================================================
+  useEffect(() => {
+    if (user?.settings) {
+      const newLeadSettings = {
+        autoBANTQualification: user.settings.autoBANTQualification ?? false,
+        language: user.settings.language || "en",
+      };
+      const newNotificationSettings = {
+        emailNotifications: user.settings.emailNotifications ?? false,
+        leadNotifications: user.settings.leadNotifications ?? true,
+      };
+
+      setLeadSettings(newLeadSettings);
+      setNotificationSettings(newNotificationSettings);
+    }
+  }, [user]);
+
+  // ==============================================================
   // Update BANT Setting
   // ==============================================================
   const handleBANTSettingChange = async (checked: boolean) => {
@@ -68,6 +88,9 @@ const SettingsPage = () => {
     const result = await updateCompanySettings({ autoBANTQualification: checked });
 
     if (result.success) {
+      // Update Redux store
+      dispatch(updateUserSettings({ autoBANTQualification: checked }));
+
       ToastSuccess(
         checked ? "Auto BANT qualification enabled" : "Auto BANT qualification disabled"
       );
@@ -287,7 +310,11 @@ const SettingsPage = () => {
                         // Persist to backend
                         try {
                           const res = await updateCompanySettings({ leadNotifications: checked });
+
                           if (res.success) {
+                            // Update Redux store
+                            dispatch(updateUserSettings({ leadNotifications: checked }));
+
                             ToastSuccess(
                               checked
                                 ? "New lead notifications enabled"
@@ -295,9 +322,19 @@ const SettingsPage = () => {
                             );
                           } else {
                             ToastError(res.message || "Failed to update setting");
+                            // Revert on error
+                            setNotificationSettings((prev) => ({
+                              ...prev,
+                              [item.key]: !checked,
+                            }));
                           }
                         } catch (e) {
                           ToastError("Failed to update setting");
+                          // Revert on error
+                          setNotificationSettings((prev) => ({
+                            ...prev,
+                            [item.key]: !checked,
+                          }));
                         }
                       }}
                       size="md"
@@ -330,7 +367,7 @@ const SettingsPage = () => {
               <div className="p-[15px] border border-gray-b rounded-2xl">
                 <div className="flex-between">
                   <p className="text-xs text-gray-400">
-                    Connect your Zoho CRM to sync leads automatically
+                    Connect your CRM to sync leads automatically
                   </p>
 
                   <Link

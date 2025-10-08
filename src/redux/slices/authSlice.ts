@@ -33,6 +33,7 @@ export interface Company {
     language: string;
     emailNotifications: boolean;
     leadNotifications: boolean;
+    autoBANTQualification: boolean;
   };
   logo?: {
     url: string;
@@ -111,6 +112,11 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.error = null;
     },
+    updateUserSettings: (state, action) => {
+      if (state.user) {
+        state.user.settings = { ...state.user.settings, ...action.payload };
+      }
+    },
   },
 
   extraReducers: (builder) => {
@@ -135,7 +141,7 @@ const authSlice = createSlice({
 });
 
 // Export actions
-export const { logout } = authSlice.actions;
+export const { logout, updateUserSettings } = authSlice.actions;
 
 // Export selectors
 export const selectUser = (state: RootState) => state.auth.user;
