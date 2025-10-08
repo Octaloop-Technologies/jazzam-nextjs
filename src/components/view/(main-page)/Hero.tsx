@@ -4,16 +4,16 @@ import { Dictionary } from "@/lib/i18n/getDictionary";
 
 const Hero = ({ dict }: { dict: Dictionary }) => {
   return (
-    <section className="px-4 sm:px-8 md:px-[60px] lg:px-[100px] pt-[100px] md:pt-[130px] lg:pt-[154px] max-w-[1536px] mx-auto flex flex-col lg:flex-row gap-10 lg:gap-11.5 items-center">
+    <section className="px-4 sm:px-8 md:px-[60px] lg:px-[100px] pb-[50px] md:pb-[100px] pt-[30px] md:pt-[130px] lg:pt-[154px] max-w-[1536px] mx-auto flex flex-col lg:flex-row gap-10 lg:gap-11.5 items-start">
       {/* Left Side Content */}
       <div className="flex-1 text-center lg:text-left">
-        <p className="text-[36px] sm:text-[48px] md:text-[60px] lg:text-[72px] pb-5 md:pb-8.5 text-black font-bold leading-[1.2] uppercase pt-10 lg:pt-25">
+        <p className="text-[28px] sm:text-[48px] md:text-[60px] lg:text-[72px] pb-5 md:pb-8.5 text-black font-bold leading-[1.2] uppercase pt-10 lg:pt-25">
           <span>{dict?.home?.hero?.title}</span>
           <span className="text-[#1BA54E]">{dict?.home?.hero?.spanTitle}</span>{" "}
           <span>{dict?.home?.hero?.titele2}</span>
         </p>
 
-        <p className="text-[#444] text-base sm:text-lg pb-6 md:pb-13.5 font-medium leading-[1.6] capitalize max-w-[546px] w-full mx-auto lg:mx-0">
+        <p className="text-[#444] text-sm sm:text-lg pb-6 md:pb-13.5 font-medium leading-[1.6] capitalize max-w-[546px] w-full mx-auto lg:mx-0">
           {dict?.home?.hero?.para}
         </p>
 

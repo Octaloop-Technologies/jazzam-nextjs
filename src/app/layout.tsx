@@ -6,6 +6,21 @@ import { BASE_METADATA } from "@/lib/constants/website";
 import { Suspense } from "react";
 import NavigationIndicator from "@/components/ui/navigation/NavigationIndicator";
 import { cookies } from "next/headers";
+import { Roboto,Cairo } from "next/font/google";
+
+
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-roboto",
+});
+
+const cairo = Cairo({
+  subsets: ["arabic"],
+  weight: ["400", "500", "700"],
+  variable: "--font-cairo",
+});
+
 
 // ----------------| METADATA |--------------------------
 export const metadata: Metadata = {
@@ -59,7 +74,7 @@ export default async function RootLayout({
         {/* -- MANIFEST -- */}
         <link rel="manifest" href={ICONS.MANIFEST} />
       </head>
-      <body className={`antialiased`}>
+      <body className={`${roboto.variable} ${cairo.variable} antialiased`} >
         <NavigationIndicator />
         <Suspense fallback={null}>
           <Providers>{children}</Providers>

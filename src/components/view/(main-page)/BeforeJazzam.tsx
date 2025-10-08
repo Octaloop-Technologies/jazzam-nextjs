@@ -66,7 +66,7 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-20 sm:gap-36 place-items-center relative z-10">
           {/* Before Jazzam Card */}
           <div className="bg-white w-full max-w-[532px] rounded-2xl shadow-xl p-8 order-1 z-10">
-            <h3 className="text-[26px] sm:text-[34px] font-semibold text-black leading-[21px] tracking-[2px] mb-6">
+            <h3 className="text-[26px] sm:text-[34px] font-semibold text-black leading-[21px] tracking-[2px] mb-3 sm:mb-6">
               {dict.home.beforeJazzam.beforeTitle}
             </h3>
 
@@ -101,7 +101,7 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
 
           {/* With Jazzam Card */}
           <div className="bg-white w-full max-w-[532px] rounded-2xl shadow-xl p-8 order-3 z-10">
-            <h3 className="text-[26px] sm:text-[34px] font-semibold text-black leading-[21px] tracking-[2px] mb-6">
+            <h3 className="text-[26px] sm:text-[34px] font-semibold text-black leading-[21px] tracking-[2px] mb-3 sm:mb-6">
               {dict.home.beforeJazzam.withTitle}
 
             </h3>
