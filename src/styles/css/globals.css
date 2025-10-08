@@ -17,7 +17,7 @@
 :root {
 
 --font-roboto: "Roboto", sans-serif;
---font-cairo: "Cairo", sans-serif;
+--font-tajawal: "Tajawal", sans-serif;
      
   /* -- Colors -- */
   --scrollbar-thumb: #15803c;
@@ -212,7 +212,7 @@ body {
   overflow-x: hidden;
 }
 :lang(ar) body {
-  font-family: var(--font-cairo), sans-serif;
+  font-family: var(--font-tajawal), sans-serif;
 }
 
 button {
