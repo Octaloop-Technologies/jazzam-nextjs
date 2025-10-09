@@ -3,8 +3,10 @@
 import React, { createContext, useContext, useMemo, useState } from "react";
 
 // Define the dictionary structure based on the actual JSON files
+type DictValue = string | number | Dict | DictArray;
+type DictArray = Array<string | number | { [key: string]: string | number }>;
 type Dict = {
-  [key: string]: string | number | Dict;
+  [key: string]: DictValue;
 };
 
 interface I18nContextValue {
@@ -31,9 +33,9 @@ export function I18nProvider({
   const value = useMemo<I18nContextValue>(() => {
     const t = (key: string, fallback: string = key) => {
       const parts = key.split(".");
-      let node: string | number | Dict = currentDict;
+      let node: DictValue = currentDict;
       for (const part of parts) {
-        if (node && typeof node === "object" && part in node) {
+        if (node && typeof node === "object" && !Array.isArray(node) && part in node) {
           node = node[part];
         } else {
           return fallback;
