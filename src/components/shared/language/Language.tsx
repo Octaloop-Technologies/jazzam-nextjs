@@ -1,6 +1,5 @@
 "use client";
 
-import Dropdown, { DropdownItem } from "@/components/ui/dropdown/Dropdown";
 import { CheckSvg, GlobeSvg } from "@/components/svgs/NavbarSvgs";
 
 interface LanguageProps {
@@ -17,39 +16,46 @@ const Language = ({ languages, changeLang, currentLang }: LanguageProps) => {
     changeLang(formData);
   };
 
-  const handleLanguageChange = (language: string) => {
-    handleLangChange(language);
+  // Get the next language in the list
+  const getNextLanguage = () => {
+    const currentIndex = languages.findIndex(lang => lang.code === currentLang);
+    const nextIndex = (currentIndex + 1) % languages.length;
+    return languages[nextIndex];
   };
 
+  // Handle direct click to switch to next language
+  const handleLanguageSwitch = () => {
+    const nextLanguage = getNextLanguage();
+    handleLangChange(nextLanguage.code);
+  };
+
+  // Get current language display info
+  const currentLanguageInfo = languages.find(lang => lang.code === currentLang) || languages[0];
+
   return (
-    <Dropdown
-      trigger={
-        <button className="flex-center gap-1 gray-hover">
-          <GlobeSvg />
-          <span className="uppercase text-[14px]">{currentLang}</span>
-        </button>
-      }
-      dropDownClass="w-[176px]"
-      position="bottom-left"
-      lang={currentLang}
+    <button 
+      onClick={handleLanguageSwitch}
+      className="flex items-center gap-2 gray-hover p-2 rounded-lg transition-all duration-200 ease-in-out"
+      title={`Switch to ${getNextLanguage().label}`}
     >
-      {languages &&
-        languages.map((language) => (
-          <DropdownItem key={language.code} onClick={() => handleLanguageChange(language.code)}>
-            <button
-              className={`p-2.5 flex-between w-full rounded-lg transition-all duration-200 ease-in-out
-              ${
-                language.code === currentLang
-                  ? "text-sec bg-gray-100"
-                  : "text-text hover:bg-gray-100"
-              }`}
-            >
-              <h2 className={`text-[14px]`}>{language.label}</h2>
-              {language.code === currentLang && <CheckSvg />}
-            </button>
-          </DropdownItem>
-        ))}
-    </Dropdown>
+      <GlobeSvg />
+      <div className="flex items-center gap-1">
+        <span className="uppercase text-[14px] font-medium">
+          {currentLanguageInfo.code}
+        </span>
+        {/* Optional: Show small indicator that it's clickable */}
+        <svg 
+          width="12" 
+          height="12" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          className="text-gray-500"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7l4-4m0 0l4 4m-4-4v18" />
+        </svg>
+      </div>
+    </button>
   );
 };
 
