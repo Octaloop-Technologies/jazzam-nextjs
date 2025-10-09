@@ -16,9 +16,9 @@ export interface PlanDetails {
 export const SUBSCRIPTION_PLANS: Record<PlanKey, PlanDetails> = {
   free: {
     name: "Free",
-    price: "$0",
+    price: "0 SAR",
     priceValue: 0,
-    features: ["100 leads/month", "1 form", "Community support"],
+    features: ["Basic features", "Community support"],
     color: "bg-gray-100",
     limits: {
       leadsPerMonth: 100,
@@ -27,9 +27,9 @@ export const SUBSCRIPTION_PLANS: Record<PlanKey, PlanDetails> = {
   },
   starter: {
     name: "Starter",
-    price: "$29",
-    priceValue: 29,
-    features: ["2,000 leads/month", "5 forms", "Email support"],
+    price: "499 SAR",
+    priceValue: 499,
+    features: ["One channel", "One user", "Basic reports"],
     color: "bg-blue-50",
     limits: {
       leadsPerMonth: 2000,
@@ -38,9 +38,9 @@ export const SUBSCRIPTION_PLANS: Record<PlanKey, PlanDetails> = {
   },
   growth: {
     name: "Growth",
-    price: "$79",
-    priceValue: 79,
-    features: ["10,000 leads/month", "25 forms", "Priority support"],
+    price: "1499 SAR",
+    priceValue: 1499,
+    features: ["Multi-channel", "Smart recommendations", "Fast support"],
     color: "bg-purple-50",
     limits: {
       leadsPerMonth: 10000,
@@ -49,13 +49,13 @@ export const SUBSCRIPTION_PLANS: Record<PlanKey, PlanDetails> = {
   },
   pro: {
     name: "Pro",
-    price: "$199",
-    priceValue: 199,
-    features: ["Unlimited leads", "Unlimited forms", "SLA & premium support"],
+    price: "999 SAR",
+    priceValue: 999,
+    features: ["Two channels", "Three users", "Insights dashboard", "Basic support"],
     color: "bg-emerald-50",
     limits: {
-      leadsPerMonth: "unlimited",
-      forms: "unlimited",
+      leadsPerMonth: 10000,
+      forms: 25,
     },
   },
 };
