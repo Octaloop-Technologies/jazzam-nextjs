@@ -117,6 +117,26 @@ const authSlice = createSlice({
         state.user.settings = { ...state.user.settings, ...action.payload };
       }
     },
+    updateUserSubscription: (state, action) => {
+      if (state.user) {
+        state.user.subscriptionStatus =
+          action.payload.subscriptionStatus || state.user.subscriptionStatus;
+        state.user.subscriptionPlan =
+          action.payload.subscriptionPlan || state.user.subscriptionPlan;
+        state.user.trialEndDate = action.payload.trialEndDate || state.user.trialEndDate;
+        state.user.subscriptionStartDate =
+          action.payload.subscriptionStartDate || state.user.subscriptionStartDate;
+        state.user.subscriptionEndDate =
+          action.payload.subscriptionEndDate || state.user.subscriptionEndDate;
+        state.user.paymentMethod = action.payload.paymentMethod || state.user.paymentMethod;
+        if (action.payload.paymentDetails) {
+          state.user.paymentDetails = {
+            ...state.user.paymentDetails,
+            ...action.payload.paymentDetails,
+          };
+        }
+      }
+    },
   },
 
   extraReducers: (builder) => {
@@ -141,7 +161,7 @@ const authSlice = createSlice({
 });
 
 // Export actions
-export const { logout, updateUserSettings } = authSlice.actions;
+export const { logout, updateUserSettings, updateUserSubscription } = authSlice.actions;
 
 // Export selectors
 export const selectUser = (state: RootState) => state.auth.user;

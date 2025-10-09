@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { useAppSelector } from "@/redux/store";
-import { selectUser } from "@/redux/slices/authSlice";
+import { useAppSelector, useAppDispatch } from "@/redux/store";
+import { selectUser, updateUserSubscription, fetchCurrentUser } from "@/redux/slices/authSlice";
 import { useToast } from "@/lib/hooks/useToast";
 import {
   SUBSCRIPTION_PLANS,
@@ -13,6 +13,7 @@ import {
 
 export default function SubscriptionSelectionPage() {
   const user = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
   const toast = useToast();
   const [loading, setLoading] = useState<PlanKey | null>(null);
 
@@ -36,7 +37,24 @@ export default function SubscriptionSelectionPage() {
         }),
       });
       if (!res.ok) throw new Error("Failed to start trial");
+
+      const data = await res.json();
+
+      // Update Redux store with new subscription data
+      dispatch(
+        updateUserSubscription({
+          subscriptionStatus: "trial",
+          subscriptionPlan: plan,
+          trialEndDate: getTrialEndDate().toISOString(),
+          subscriptionStartDate: new Date().toISOString(),
+        })
+      );
+
       toast.success("Trial started. Enjoy 14 days free!");
+
+      // Refresh user data to ensure we have the latest information
+      dispatch(fetchCurrentUser());
+
       // Redirect to dashboard - onboarding will start automatically
       window.location.href = "/super-user";
     } catch (e) {
@@ -61,7 +79,24 @@ export default function SubscriptionSelectionPage() {
         }),
       });
       if (!res.ok) throw new Error("Failed to set free plan");
+
+      const data = await res.json();
+
+      // Update Redux store with new subscription data
+      dispatch(
+        updateUserSubscription({
+          subscriptionStatus: "active",
+          subscriptionPlan: "free",
+          subscriptionEndDate: null,
+          subscriptionStartDate: new Date().toISOString(),
+        })
+      );
+
       toast.info("Using free plan. You can upgrade anytime.");
+
+      // Refresh user data to ensure we have the latest information
+      dispatch(fetchCurrentUser());
+
       // Redirect to dashboard - onboarding will start automatically
       window.location.href = "/super-user";
     } catch (e) {

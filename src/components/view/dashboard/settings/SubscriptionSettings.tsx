@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { useAppSelector } from "@/redux/store";
-import { selectUser } from "@/redux/slices/authSlice";
+import { useAppSelector, useAppDispatch } from "@/redux/store";
+import { selectUser, updateUserSubscription, fetchCurrentUser } from "@/redux/slices/authSlice";
 import { useToast } from "@/lib/hooks/useToast";
 import { useRouter } from "next/navigation";
 import {
@@ -13,6 +13,7 @@ import {
 
 const SubscriptionSettings = () => {
   const user = useAppSelector(selectUser);
+  const dispatch = useAppDispatch();
   const toast = useToast();
   const router = useRouter();
   const [isChanging, setIsChanging] = useState(false);
@@ -51,8 +52,21 @@ const SubscriptionSettings = () => {
 
       if (!res.ok) throw new Error("Failed to cancel subscription");
 
+      const data = await res.json();
+
+      // Update Redux store with new subscription data
+      dispatch(
+        updateUserSubscription({
+          subscriptionStatus: "cancelled",
+          subscriptionPlan: "free",
+          subscriptionEndDate: null,
+        })
+      );
+
       toast.success("Subscription cancelled. Switched to Free plan.");
-      window.location.reload();
+
+      // Refresh user data to ensure we have the latest information
+      dispatch(fetchCurrentUser());
     } catch (error) {
       toast.error("Failed to cancel subscription");
     }

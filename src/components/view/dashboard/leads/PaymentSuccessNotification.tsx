@@ -3,6 +3,8 @@
 import { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useToast } from "@/lib/hooks/useToast";
+import { useAppDispatch } from "@/redux/store";
+import { fetchCurrentUser } from "@/redux/slices/authSlice";
 
 /**
  * Component to show payment success/failure notifications
@@ -12,6 +14,7 @@ export default function PaymentSuccessNotification() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const toast = useToast();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (!searchParams) return;
@@ -21,6 +24,9 @@ export default function PaymentSuccessNotification() {
     if (payment === "success") {
       // Show success message
       toast.success("🎉 Payment successful! Your subscription is now active.");
+
+      // Refresh user data to get updated subscription information
+      dispatch(fetchCurrentUser());
 
       // Clean up URL by removing query params
       const url = new URL(window.location.href);
@@ -44,7 +50,7 @@ export default function PaymentSuccessNotification() {
       url.searchParams.delete("payment");
       router.replace(url.pathname + url.search, { scroll: false });
     }
-  }, [searchParams, router, toast]);
+  }, [searchParams, router, toast, dispatch]);
 
   return null; // This component doesn't render anything
 }
