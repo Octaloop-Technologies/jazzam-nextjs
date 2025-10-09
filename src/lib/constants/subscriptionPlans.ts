@@ -10,6 +10,7 @@ export interface PlanDetails {
   limits: {
     leadsPerMonth: number | "unlimited";
     forms: number | "unlimited";
+    channels: number | "unlimited";
   };
 }
 
@@ -23,6 +24,7 @@ export const SUBSCRIPTION_PLANS: Record<PlanKey, PlanDetails> = {
     limits: {
       leadsPerMonth: 100,
       forms: 1,
+      channels: 0,
     },
   },
   starter: {
@@ -34,6 +36,7 @@ export const SUBSCRIPTION_PLANS: Record<PlanKey, PlanDetails> = {
     limits: {
       leadsPerMonth: 2000,
       forms: 5,
+      channels: 1,
     },
   },
   growth: {
@@ -45,6 +48,7 @@ export const SUBSCRIPTION_PLANS: Record<PlanKey, PlanDetails> = {
     limits: {
       leadsPerMonth: 10000,
       forms: 25,
+      channels: "unlimited",
     },
   },
   pro: {
@@ -56,6 +60,7 @@ export const SUBSCRIPTION_PLANS: Record<PlanKey, PlanDetails> = {
     limits: {
       leadsPerMonth: 10000,
       forms: 25,
+      channels: 2,
     },
   },
 };
@@ -79,4 +84,25 @@ export const isPaidPlan = (planKey: PlanKey): boolean => {
 export const getTrialDaysRemaining = (trialEndDate: Date): number => {
   const diff = trialEndDate.getTime() - new Date().getTime();
   return Math.ceil(diff / (1000 * 60 * 60 * 24));
+};
+
+// Helper to check if plan allows channels
+export const canUseChannels = (planKey: PlanKey): boolean => {
+  const plan = SUBSCRIPTION_PLANS[planKey];
+  return (
+    plan.limits.channels === "unlimited" ||
+    (typeof plan.limits.channels === "number" && plan.limits.channels > 0)
+  );
+};
+
+// Helper to get channel limit for a plan
+export const getChannelLimit = (planKey: PlanKey): number | "unlimited" => {
+  return SUBSCRIPTION_PLANS[planKey].limits.channels;
+};
+
+// Helper to check if company can add more channels
+export const canAddChannel = (planKey: PlanKey, currentChannels: number): boolean => {
+  const limit = getChannelLimit(planKey);
+  if (limit === "unlimited") return true;
+  return currentChannels < limit;
 };

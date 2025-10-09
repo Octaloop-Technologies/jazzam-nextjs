@@ -44,9 +44,9 @@ export async function initCRMOAuth(provider: string) {
   return response.json();
 }
 
-export async function disconnectCRM() {
+export async function disconnectCRM(integrationId: string) {
   const token = await getAuthToken();
-  const response = await fetch(`${API_BASE_URL}/crm-integration`, {
+  const response = await fetch(`${API_BASE_URL}/crm-integration/${integrationId}`, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
@@ -56,9 +56,9 @@ export async function disconnectCRM() {
   return response.json();
 }
 
-export async function testCRMConnection() {
+export async function testCRMConnection(integrationId: string) {
   const token = await getAuthToken();
-  const response = await fetch(`${API_BASE_URL}/crm-integration/test-connection`, {
+  const response = await fetch(`${API_BASE_URL}/crm-integration/${integrationId}/test-connection`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

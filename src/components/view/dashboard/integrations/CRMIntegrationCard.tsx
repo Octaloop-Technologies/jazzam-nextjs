@@ -18,9 +18,10 @@ interface CRMIntegrationCardProps {
     accountName?: string;
     accountEmail?: string;
   };
-  onConnect: (providerId: string) => void;
-  onDisconnect: (providerId: string) => void;
-  onTest?: (providerId: string) => void;
+  onConnect: () => void;
+  onDisconnect: () => void;
+  onTest?: () => void;
+  disabled?: boolean;
 }
 
 export const CRMIntegrationCard: React.FC<CRMIntegrationCardProps> = ({
@@ -30,13 +31,14 @@ export const CRMIntegrationCard: React.FC<CRMIntegrationCardProps> = ({
   onConnect,
   onDisconnect,
   onTest,
+  disabled = false,
 }) => {
   const [loading, setLoading] = useState(false);
 
   const handleConnect = async () => {
     setLoading(true);
     try {
-      await onConnect(provider.id);
+      await onConnect();
     } finally {
       setLoading(false);
     }
@@ -45,7 +47,7 @@ export const CRMIntegrationCard: React.FC<CRMIntegrationCardProps> = ({
   const handleDisconnect = async () => {
     setLoading(true);
     try {
-      await onDisconnect(provider.id);
+      await onDisconnect();
     } finally {
       setLoading(false);
     }
@@ -55,7 +57,7 @@ export const CRMIntegrationCard: React.FC<CRMIntegrationCardProps> = ({
     if (onTest) {
       setLoading(true);
       try {
-        await onTest(provider.id);
+        await onTest();
       } finally {
         setLoading(false);
       }
@@ -127,10 +129,10 @@ export const CRMIntegrationCard: React.FC<CRMIntegrationCardProps> = ({
           ) : (
             <button
               onClick={handleConnect}
-              disabled={loading || !provider.configured}
+              disabled={loading || !provider.configured || disabled}
               className="px-4 py-2 text-sm font-medium text-white bg-sec rounded-lg hover:bg-sec-hover disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "Connecting..." : "Connect"}
+              {loading ? "Connecting..." : disabled ? "Channel Limit Reached" : "Connect"}
             </button>
           )}
         </div>

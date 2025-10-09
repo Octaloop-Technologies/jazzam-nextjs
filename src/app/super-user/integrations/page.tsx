@@ -4,6 +4,9 @@ import React, { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CRMIntegrationCard } from "@/components/view/dashboard/integrations/CRMIntegrationCard";
 import { useToast } from "@/lib/hooks/useToast";
+import { useAppSelector } from "@/redux/store";
+import { selectUser } from "@/redux/slices/authSlice";
+import { getChannelLimit, canAddChannel, PlanKey } from "@/lib/constants/subscriptionPlans";
 import {
   getCRMProviders,
   getCRMIntegration,
@@ -38,11 +41,19 @@ export default function IntegrationsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const toast = useToast();
+  const user = useAppSelector(selectUser);
   const [loading, setLoading] = useState(true);
 
   // CRM State
   const [providers, setProviders] = useState<CRMProvider[]>([]);
-  const [crmIntegration, setCrmIntegration] = useState<CRMIntegration | null>(null);
+  const [crmIntegrations, setCrmIntegrations] = useState<CRMIntegration[]>([]);
+
+  // Get channel limits
+  const channelLimit = getChannelLimit((user?.subscriptionPlan as PlanKey) || "free");
+  const canAddMoreChannels = canAddChannel(
+    (user?.subscriptionPlan as PlanKey) || "free",
+    crmIntegrations.length
+  );
 
   useEffect(() => {
     // Check for OAuth callback
@@ -72,7 +83,7 @@ export default function IntegrationsPage() {
       ]);
 
       setProviders(providersData.data || []);
-      setCrmIntegration(integrationData.data);
+      setCrmIntegrations(integrationData.data || []);
     } catch (error) {
       console.error("Error fetching CRM data:", error);
       toast.error("Failed to load CRM integration data");
@@ -83,6 +94,16 @@ export default function IntegrationsPage() {
 
   const handleCRMConnect = async (providerId: string) => {
     try {
+      // Check if user can add more channels
+      if (!canAddMoreChannels) {
+        toast.error(
+          `You've reached your channel limit. Your ${user?.subscriptionPlan} plan allows ${
+            channelLimit === "unlimited" ? "unlimited" : channelLimit
+          } channel${channelLimit === 1 ? "" : "s"}. Please upgrade your plan to add more channels.`
+        );
+        return;
+      }
+
       const data = await initCRMOAuth(providerId);
 
       if (!data.success) {
@@ -96,13 +117,13 @@ export default function IntegrationsPage() {
     }
   };
 
-  const handleCRMDisconnect = async (providerId: string) => {
+  const handleCRMDisconnect = async (integrationId: string) => {
     if (!confirm("Are you sure you want to disconnect this integration?")) {
       return;
     }
 
     try {
-      const data = await disconnectCRM();
+      const data = await disconnectCRM(integrationId);
 
       if (!data.success) {
         throw new Error(data.message || "Failed to disconnect");
@@ -115,9 +136,9 @@ export default function IntegrationsPage() {
     }
   };
 
-  const handleCRMTest = async (providerId: string) => {
+  const handleCRMTest = async (integrationId: string) => {
     try {
-      const data = await testCRMConnection();
+      const data = await testCRMConnection(integrationId);
 
       if (!data.success) {
         throw new Error(data.message || "Connection test failed");
@@ -134,6 +155,30 @@ export default function IntegrationsPage() {
       <div className="mb-8">
         <h1 className="text-3xl font-bold">CRM Integration</h1>
         <p className="text-gray-600 mt-2">Connect your CRM to automatically sync leads</p>
+
+        {/* Channel Limits Info */}
+        <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="font-semibold text-blue-900">Channel Usage</h3>
+              <p className="text-sm text-blue-700">
+                {crmIntegrations.length} of {channelLimit === "unlimited" ? "∞" : channelLimit}{" "}
+                channels used
+              </p>
+            </div>
+            {!canAddMoreChannels && (
+              <div className="text-right">
+                <p className="text-sm text-red-600 font-medium">Channel limit reached</p>
+                <button
+                  onClick={() => router.push("/super-user/subscription")}
+                  className="text-sm text-blue-600 hover:text-blue-800 underline"
+                >
+                  Upgrade plan
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Content */}
@@ -151,17 +196,25 @@ export default function IntegrationsPage() {
           </div>
 
           <div className="grid gap-4">
-            {providers.map((provider) => (
-              <CRMIntegrationCard
-                key={provider.id}
-                provider={provider}
-                isConnected={crmIntegration?.provider === provider.id}
-                accountInfo={crmIntegration?.accountInfo}
-                onConnect={handleCRMConnect}
-                onDisconnect={handleCRMDisconnect}
-                onTest={handleCRMTest}
-              />
-            ))}
+            {providers.map((provider) => {
+              const connectedIntegration = crmIntegrations.find(
+                (integration) => integration.provider === provider.id
+              );
+              const isConnected = !!connectedIntegration;
+
+              return (
+                <CRMIntegrationCard
+                  key={provider.id}
+                  provider={provider}
+                  isConnected={isConnected}
+                  accountInfo={connectedIntegration?.accountInfo}
+                  onConnect={() => handleCRMConnect(provider.id)}
+                  onDisconnect={() => handleCRMDisconnect(connectedIntegration?._id || "")}
+                  onTest={() => handleCRMTest(connectedIntegration?._id || "")}
+                  disabled={!canAddMoreChannels && !isConnected}
+                />
+              );
+            })}
           </div>
 
           {!providers.length && (
