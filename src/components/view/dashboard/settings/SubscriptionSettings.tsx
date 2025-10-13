@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "@/redux/store";
 import { selectUser, updateUserSubscription, fetchCurrentUser } from "@/redux/slices/authSlice";
 import { useToast } from "@/lib/hooks/useToast";
@@ -17,6 +17,7 @@ const SubscriptionSettings = () => {
   const toast = useToast();
   const router = useRouter();
   const [isChanging, setIsChanging] = useState(false);
+  const [billingData, setBilingData] = useState<any[]>([]);
 
   const currentPlan = (user?.subscriptionPlan || "free") as PlanKey;
   const subscriptionStatus = user?.subscriptionStatus || "active";
@@ -73,6 +74,35 @@ const SubscriptionSettings = () => {
   };
 
   const plan = SUBSCRIPTION_PLANS[currentPlan];
+
+  useEffect(() => {
+    const cookieString = document.cookie;
+    const cookies = Object.fromEntries(
+      cookieString.split("; ").map(c => c.split("="))
+    );
+    console.log("cookies:*******", cookies.accessToken)
+    const fetchBillingHistory = async() => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/billing/${user?._id}/billing-history`, {
+          method: "GET",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${cookies.accessToken}`,
+          }
+        });
+        if(response.ok){
+          const data = await response.json();
+          console.log("data***********", data.data)
+          setBilingData(data?.data)
+        }
+      } catch (error) {
+        console.log("error******", error)
+        console.error("unable to get billing history")
+      }
+    }
+    fetchBillingHistory()
+  }, [])
 
   return (
     <div className="flex flex-col gap-5">
@@ -212,7 +242,13 @@ const SubscriptionSettings = () => {
         <div className="text-center py-8 text-gray-400 text-sm">
           {currentPlan === "free"
             ? "No billing history on free plan"
-            : "Billing history will appear here"}
+            : <>
+            <ul>
+              {billingData?.map((bill: any, i: number) => (
+              <li key={i}>{new Date(bill.month).toDateString()} - {bill?.status} - {bill?.amount}</li>
+              ))}
+            </ul>
+            </>}
         </div>
       </div>
     </div>

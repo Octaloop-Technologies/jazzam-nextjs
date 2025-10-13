@@ -11,6 +11,8 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 
 // ======================================================
 // Register GSAP plugins
@@ -37,6 +39,10 @@ const HomeNavbar = ({ dict, currentLang }: HomeNavbarProps) => {
   const menuContentRef = useRef<HTMLDivElement>(null);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
 
+  // ======================
+  // Next router
+  // ======================
+  const router = useRouter();
   // ======================================================
   // Refs for menu items
   // ======================================================
@@ -363,6 +369,7 @@ const HomeNavbar = ({ dict, currentLang }: HomeNavbarProps) => {
           <PrimaryButton
             title={dict?.home?.hero?.getStarted}
             className="h-[52px] w-[138px] rounded-xl-2 navbar-item"
+            onClick={() => router.push('/login')}
           />
         </div>
         <div className="md:hidden">
