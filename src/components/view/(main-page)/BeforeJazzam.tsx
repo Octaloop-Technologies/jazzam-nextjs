@@ -10,8 +10,10 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
   const beforeItems = dict.home.beforeJazzam.beforeItems;
   const withItems = dict.home.beforeJazzam.withItems;
 
-  const PLACEHOLDER_IMG: string =
-    "https://placehold.co/128x200/064e3b/16a34a?text=Pattern";
+  // const PLACEHOLDER_IMG: string =
+  //   "https://placehold.co/128x200/064e3b/16a34a?text=Pattern";
+
+
 
   return (
     <section

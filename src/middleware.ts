@@ -51,6 +51,7 @@ function isTokenExpired(token: string): boolean {
     // Check if token has expired
     return payload.exp ? payload.exp < currentTime : false;
   } catch (error) {
+    console.log("error***", error)
     // If token can't be decoded, consider it invalid/expired
     return true;
   }

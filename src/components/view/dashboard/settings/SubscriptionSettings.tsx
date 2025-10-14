@@ -11,13 +11,19 @@ import {
   getTrialDaysRemaining,
 } from "@/lib/constants/subscriptionPlans";
 
+interface Bill {
+  month: string;
+  status: string;
+  amount: number;
+}
+
 const SubscriptionSettings = () => {
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const toast = useToast();
   const router = useRouter();
   const [isChanging, setIsChanging] = useState(false);
-  const [billingData, setBilingData] = useState<any[]>([]);
+  const [billingData, setBilingData] = useState<Bill[]>([]);
 
   const currentPlan = (user?.subscriptionPlan || "free") as PlanKey;
   const subscriptionStatus = user?.subscriptionStatus || "active";
@@ -244,7 +250,7 @@ const SubscriptionSettings = () => {
             ? "No billing history on free plan"
             : <>
             <ul>
-              {billingData?.map((bill: any, i: number) => (
+              {billingData?.map((bill, i) => (
               <li key={i}>{new Date(bill.month).toDateString()} - {bill?.status} - {bill?.amount}</li>
               ))}
             </ul>
