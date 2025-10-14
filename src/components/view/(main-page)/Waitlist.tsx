@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { Dictionary } from "@/lib/i18n/getDictionary";
 import { useToast } from '@/lib/hooks/useToast';
 import { joinWaitlist } from '@/app/(main-page)/action';
-import WaitlistButton from './WaitlistButton';
 
 interface WaitlistProps {
     dict: Dictionary,
@@ -31,6 +30,7 @@ const Waitlist = ({ dict, lang }: WaitlistProps) => {
                 ErrorToast(response.error || "Error submitting email");
             }
         } catch (error) {
+            console.error("error*******:", error)
             ErrorToast(`Unable to add email ${waitlistEmail} due to server error`)
             setWaitlistEmail("")
         }
