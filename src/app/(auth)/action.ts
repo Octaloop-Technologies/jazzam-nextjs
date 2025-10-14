@@ -31,6 +31,8 @@ export const getCurrentUser = async () => {
 
   try {
     const accessToken = (await cookies()).get("accessToken")?.value;
+
+    console.log("accessToken", accessToken)
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/current-company`,
       {
