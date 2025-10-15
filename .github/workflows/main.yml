@@ -22,7 +22,8 @@ jobs:
       - name: Build Docker Image
         run: |
           cd /home/actions-runner-frontend/jazzam-frontend/jazzaam-nextjs/jazzaam-nextjs
-          sudo -u jazzam docker build -t jazzam-frontend-image:latest .
+          sudo -u jazzam docker build --no-cache -t jazzam-frontend-image:latest .
+
 
       - name: Stop & Remove Existing Container
         run: |
