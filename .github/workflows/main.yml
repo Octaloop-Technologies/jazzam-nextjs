@@ -16,13 +16,14 @@ jobs:
 
       - name: Create .env file from GitHub Secrets
         run: |
-          echo "${{ secrets.DOCKER_ENV_FILE }}" > /home/jazzam/actions-runner-frontend/jazzam-frontend/jazzaam-nextjs/jazzaam-nextjs/.env
+          echo "${{ secrets.DOCKER_ENV_FILE }}" > /home/jazzam/actions-runner-frontend/jazzam-nextjs-frontend/jazzam-nextjs/jazzam-nextjs/.env
           echo ".env file created successfully."
     
 
       - name: Build Docker Image
         run: |
-          cd /home/jazzam/actions-runner-frontend/jazzam-frontend/jazzaam-nextjs/jazzaam-nextjs
+          cd /home/jazzam/actions-runner-frontend/jazzam-nextjs-frontend/jazzam-nextjs/jazzam-nextjs
+
           sudo -u jazzam docker build --no-cache -t jazzam-frontend-image:latest .
       
       - name: List Docker Images
@@ -40,7 +41,7 @@ jobs:
       
       - name: Run New Container
         run: |
-          sudo -u jazzam docker run -d -p 3000:3000 --name jazzam-frontend-container --env-file /home/jazzam/actions-runner-frontend/jazzam-frontend/jazzaam-nextjs/jazzaam-nextjs/.env jazzam-frontend-image:latest
+          sudo -u jazzam docker run -d -p 3000:3000 --name jazzam-frontend-container --env-file /home/jazzam/actions-runner-frontend/jazzam-nextjs-frontend/jazzam-nextjs/jazzam-nextjs/.env jazzam-frontend-image:latest
 
       - name: Verify New Container is Running
         run: |
