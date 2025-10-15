@@ -4,7 +4,9 @@ const CustomTextarea = ({
   className,
   error,
   value,
-  setValue
+  setValue,
+  missingField,
+  setMissingField
 }: {
   label: string;
   placeholder: string;
@@ -12,7 +14,13 @@ const CustomTextarea = ({
   error?: string;
   value?: string,
   setValue?: (value: string) => void;
+  missingField: Boolean,
+  setMissingField?:(value: boolean) => void
 }) => {
+  function onChange(e: React.ChangeEvent<HTMLTextAreaElement>){
+    setValue && setValue(e.target.value)
+    setMissingField && setMissingField(false)
+  }
   return (
     <div>
       <label className="block font-[500] mb-2">{label}</label>
@@ -24,8 +32,9 @@ const CustomTextarea = ({
             ${className} 
             ${error ? "border-red-500 focus:ring-red-500" : "focus:ring-pri focus:border-pri"}`}
         value={value}
-        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setValue && setValue(e.target.value)}
+        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => onChange(e)}
       ></textarea>
+      {missingField && <label className="text-red-500">Message is missing</label>}
     </div>
   );
 };
