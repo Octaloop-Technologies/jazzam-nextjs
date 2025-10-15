@@ -1,14 +1,45 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { Dictionary } from "@/lib/i18n/getDictionary";
+import { joinWaitlist } from "@/app/(main-page)/action";
+import { useToast } from "@/lib/hooks/useToast";
 const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
   const items = dict.home.beforeJazzam.marquee;
 
   const duplicatedItems: string[] = [...items, ...items];
   const beforeItems = dict.home.beforeJazzam.beforeItems;
   const withItems = dict.home.beforeJazzam.withItems;
+    const { success, error: ErrorToast } = useToast()
+
+        const [waitlistEmail, setWaitlistEmail] = useState("");
+        const [loading, setLoading] = useState(false);
+
+  
+      const callWaitlistApi = async () => {
+          try {
+            setLoading(true)
+              const response = await joinWaitlist(waitlistEmail.trim(), "", "website", {
+                  userAgent: navigator.userAgent,
+                  timestamp: new Date().toISOString(),
+                  referrer: document.referrer || "direct",
+              });
+              if (response.success) {
+                  success("Successfully joined waitlist!");
+                  setWaitlistEmail("")
+              } else {
+                  ErrorToast(response.error || "Error submitting email");
+              }
+          } catch (error) {
+              console.error("error*******:", error)
+              ErrorToast(`Unable to add email ${waitlistEmail} due to server error`)
+              setWaitlistEmail("");
+              setLoading(false);
+          }finally{
+            setLoading(false);
+          }
+      }
 
   // const PLACEHOLDER_IMG: string =
   //   "https://placehold.co/128x200/064e3b/16a34a?text=Pattern";
@@ -188,10 +219,12 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
                   type="email"
                   placeholder={dict.home.beforeJazzam.waitlist.placeholder}
                   className="w-full pl-12 pr-4 py-3 rounded-lg text-[14px] leading-normal text-[#999] focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-[#FFF]"
+                  value={waitlistEmail}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWaitlistEmail(e.target.value)}
                 />
               </div>
-              <button className="w-full md:w-auto bg-[#EEB600]  font-semibold px-8 py-3 rounded-lg transition uppercase  tracking-wide whitespace-nowrap shadow-md text-[16px] tracking-normal text-[#FFF]">
-                {dict.home.beforeJazzam.waitlist.button}
+              <button onClick={callWaitlistApi} className="w-full md:w-auto bg-[#EEB600]  font-semibold px-8 py-3 rounded-lg transition uppercase  tracking-wide whitespace-nowrap shadow-md text-[16px] tracking-normal text-[#FFF]">
+                { loading ? 'Sending' : dict.home.beforeJazzam.waitlist.button}
               </button>
             </div>
           </div>

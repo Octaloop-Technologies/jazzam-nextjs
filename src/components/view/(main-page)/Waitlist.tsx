@@ -13,11 +13,13 @@ interface WaitlistProps {
 const Waitlist = ({ dict, lang }: WaitlistProps) => {
 
     const [waitlistEmail, setWaitlistEmail] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const { success, error: ErrorToast } = useToast()
 
     const callWaitlistApi = async () => {
         try {
+            setLoading(true)
             const response = await joinWaitlist(waitlistEmail.trim(), "", "website", {
                 userAgent: navigator.userAgent,
                 timestamp: new Date().toISOString(),
@@ -33,6 +35,9 @@ const Waitlist = ({ dict, lang }: WaitlistProps) => {
             console.error("error*******:", error)
             ErrorToast(`Unable to add email ${waitlistEmail} due to server error`)
             setWaitlistEmail("")
+            setLoading(false);
+        }finally{
+            setLoading(false)
         }
     }
     return (
@@ -75,7 +80,7 @@ const Waitlist = ({ dict, lang }: WaitlistProps) => {
                         />
                     </div>
                     <button onClick={callWaitlistApi} className="h-[55px] sm:h-15 w-full sm:w-auto px-6 sm:pl-12.5 sm:pr-[35px] flex items-center justify-center bg-[#EEB600] border-[1.5px] border-[#EEB600] rounded-[14px] text-white text-base uppercase font-semibold">
-                        {dict?.home?.hero?.sendNow}
+                        {loading ? 'Sending' : dict?.home?.hero?.sendNow}
                     </button>
                 </div>
             </div>

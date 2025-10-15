@@ -4,9 +4,10 @@ import { CustomInput } from "@/components/ui/input";
 import { CustomTextarea } from "@/components/ui/textarea";
 import { Dictionary } from "@/lib/i18n/getDictionary";
 import { useSimpleTextAnimation } from "@/styles/animations/useSimpleTextAnimation";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { useButtonAnimation } from "@/styles/animations/useButtonAnimation";
 import Image from "next/image";
+import { useToast } from "@/lib/hooks/useToast";
 
 const ContactUs = ({ dict }: { dict: Dictionary }) => {
   const formRef = useRef<HTMLFormElement>(null);
@@ -14,6 +15,42 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
     titleText: dict?.home?.contactUs?.title || "",
     paragraphText: dict?.home?.contactUs?.description || "",
   });
+  const [loading, setLoading] = useState(false);
+
+  const [email, setEmail] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [message, setMessage] = useState("");
+
+  const { success, error: ToastError } = useToast()
+
+  async function sendContactMessage(e: React.MouseEvent<HTMLButtonElement>){
+    e.preventDefault()
+    try {
+      setLoading(true);
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/contact/contact-us`, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json"
+        },
+        body: JSON.stringify({name: fullName, email, companyName, message})
+      });
+      if(response.ok){
+        const data = await response.json();
+        console.log("data", data);
+        success('Contact Us mail is sent')
+      }
+      setEmail("");
+      setCompanyName("");
+      setMessage("");
+      setFullName("");
+    } catch (error) {
+      console.error("error*****", error)
+      setLoading(false);
+    }finally{
+      setLoading(false);
+    }
+  }
 
   return (
     <section className="home-padding">
@@ -109,44 +146,44 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
               <div className="flex-center gap-3 max-xs:hidden">
                 <div className="flex flex-col -space-y-8">
                   <div className="flex items-center -space-x-2">
-                    
-                     <div className="size-[83.065px] z-30 rounded-full  border-2 border-white flex items-center justify-center text-white font-bold">
-      <Image
-        src="/assets/icons/home/contact1.png"
-        alt="Profile"
-        width={83}
-        height={83}
-        className="rounded-full object-cover w-full h-full"
-      />
-    </div>
+
+                    <div className="size-[83.065px] z-30 rounded-full  border-2 border-white flex items-center justify-center text-white font-bold">
+                      <Image
+                        src="/assets/icons/home/contact1.png"
+                        alt="Profile"
+                        width={83}
+                        height={83}
+                        className="rounded-full object-cover w-full h-full"
+                      />
+                    </div>
                     <div className="size-[70.365px] z-20 rounded-full  border-2 border-white flex items-center justify-center text-white font-bold">
                       <Image
-        src="/assets/icons/home/contact2.png"
-        alt="Profile"
-        width={83}
-        height={83}
-        className="rounded-full object-cover w-full h-full"
-      />
+                        src="/assets/icons/home/contact2.png"
+                        alt="Profile"
+                        width={83}
+                        height={83}
+                        className="rounded-full object-cover w-full h-full"
+                      />
                     </div>
                   </div>
                   <div className="flex items-center -space-x-2">
                     <div className="size-[70.365px] z-40 rounded-full  border-2 border-white flex items-center justify-center text-white font-bold">
                       <Image
-        src="/assets/icons/home/contact3.png"
-        alt="Profile"
-        width={83}
-        height={83}
-        className="rounded-full object-cover w-full h-full"
-      />
+                        src="/assets/icons/home/contact3.png"
+                        alt="Profile"
+                        width={83}
+                        height={83}
+                        className="rounded-full object-cover w-full h-full"
+                      />
                     </div>
                     <div className="size-[83.065px] z-50 rounded-full  border-2 border-white flex items-center justify-center text-white font-bold">
                       <Image
-        src="/assets/icons/home/contact4.png"
-        alt="Profile"
-        width={83}
-        height={83}
-        className="rounded-full object-cover w-full h-full"
-      />
+                        src="/assets/icons/home/contact4.png"
+                        alt="Profile"
+                        width={83}
+                        height={83}
+                        className="rounded-full object-cover w-full h-full"
+                      />
                     </div>
                   </div>
                 </div>
@@ -175,22 +212,30 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
             <CustomInput
               label={dict?.home?.contactUs?.form?.fullName}
               placeholder={dict?.home?.contactUs?.form?.fullNamePlaceholder}
+              value={fullName}
+              setValue={setFullName}
             />
             <CustomInput
               label={dict?.home?.contactUs?.form?.email}
               placeholder={dict?.home?.contactUs?.form?.emailPlaceholder}
+              value={email}
+              setValue={setEmail}
             />
             <CustomInput
               label={dict?.home?.contactUs?.form?.company}
               placeholder={dict?.home?.contactUs?.form?.companyPlaceholder}
+              value={companyName}
+              setValue={setCompanyName}
             />
             <CustomTextarea
               label={dict?.home?.contactUs?.form?.message}
               placeholder={dict?.home?.contactUs?.form?.messagePlaceholder}
+              value={message}
+              setValue={setMessage}
             />
-            <div className="flex justify-end  ">
-              <button className="bg-[#EEB600] h-15 px-[50px] py-[12px] rounded-[14px] text-[#FFF] text-[16px] text-semibold leading-normal">
-               {dict?.home?.footer.button}
+            <div className="flex justify-end">
+              <button onClick={(e: React.MouseEvent<HTMLButtonElement>) => sendContactMessage(e)} className="bg-[#EEB600] h-15 px-[50px] py-[12px] rounded-[14px] text-[#FFF] text-[16px] text-semibold leading-normal">
+                {dict?.home?.footer.button}
               </button>
             </div>
             {/* <SubmitButton title={dict?.home?.contactUs?.form?.submitButton} /> */}

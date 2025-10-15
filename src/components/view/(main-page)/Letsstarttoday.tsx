@@ -3,11 +3,12 @@
 import React from "react";
 import Image from "next/image";
 import { Dictionary } from "@/lib/i18n/getDictionary";
+import { useRouter } from "next/navigation";
 
 
 const Letsstarttoday = ({ dict }: { dict: Dictionary }) => {
 
-
+  const router = useRouter()
 
   const items = dict.home.beforeJazzam.marquee;
 
@@ -41,7 +42,7 @@ const Letsstarttoday = ({ dict }: { dict: Dictionary }) => {
         {/* Button */}
         <div className="flex justify-center mt-6">
           {/* Button text */}
-          <button className="text-[#FFF]  bg-[#EEB600]  font-semibold px-8 py-4 rounded-lg uppercase text-sm tracking-wide">
+          <button onClick={() => router.push('/login')} className="text-[#FFF]  bg-[#EEB600]  font-semibold px-8 py-4 rounded-lg uppercase text-sm tracking-wide">
             {dict?.home?.letsstarttoday?.button}
           </button>
 
