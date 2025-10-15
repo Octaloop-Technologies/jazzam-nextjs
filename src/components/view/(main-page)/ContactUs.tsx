@@ -21,11 +21,30 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
   const [fullName, setFullName] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [message, setMessage] = useState("");
+  const [missingCompanyName, setMissingCompanyName] = useState(false);
+  const [missingFullName, setMissingFullName] = useState(false);
+  const [missingEmail, setMissingEmail] = useState(false);
+  const [missingMessage, setMissingMessage] = useState(false);
+
+  
+
 
   const { success, error: ToastError } = useToast()
 
   async function sendContactMessage(e: React.MouseEvent<HTMLButtonElement>){
-    e.preventDefault()
+    e.preventDefault();
+    if(email === "" || fullName === "" || companyName === "" || message === ""){
+      if(email=== ""){
+        setMissingEmail(true)
+      }if(fullName=== ""){
+        setMissingFullName(true)
+      }if(companyName=== ""){
+        setMissingCompanyName(true)
+      }if(message === ""){
+        setMissingMessage(true)
+      }
+      return;
+    }
     try {
       setLoading(true);
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/contact/contact-us`, {
@@ -214,24 +233,32 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
               placeholder={dict?.home?.contactUs?.form?.fullNamePlaceholder}
               value={fullName}
               setValue={setFullName}
+              missingField={missingFullName}
+              setMissingField={setMissingFullName}
             />
             <CustomInput
               label={dict?.home?.contactUs?.form?.email}
               placeholder={dict?.home?.contactUs?.form?.emailPlaceholder}
               value={email}
               setValue={setEmail}
+              missingField={missingEmail}
+              setMissingField={setMissingEmail}
             />
             <CustomInput
               label={dict?.home?.contactUs?.form?.company}
               placeholder={dict?.home?.contactUs?.form?.companyPlaceholder}
               value={companyName}
               setValue={setCompanyName}
+              missingField={missingCompanyName}
+              setMissingField={setMissingCompanyName}
             />
             <CustomTextarea
               label={dict?.home?.contactUs?.form?.message}
               placeholder={dict?.home?.contactUs?.form?.messagePlaceholder}
               value={message}
               setValue={setMessage}
+              missingField={missingMessage}
+              setMissingField={setMissingMessage}
             />
             <div className="flex justify-end">
               <button onClick={(e: React.MouseEvent<HTMLButtonElement>) => sendContactMessage(e)} className="bg-[#EEB600] h-15 px-[50px] py-[12px] rounded-[14px] text-[#FFF] text-[16px] text-semibold leading-normal">
