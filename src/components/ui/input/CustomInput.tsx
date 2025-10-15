@@ -14,7 +14,7 @@ const CustomInput = ({
   error?: string;
   value?: string,
   setValue?: (value:string) => void,
-  missingField?: Boolean,
+  missingField?: boolean,
   setMissingField: (value: boolean) => void
 }) => {
   function onChange(e:React.ChangeEvent<HTMLInputElement>){
