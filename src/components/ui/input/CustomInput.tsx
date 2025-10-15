@@ -3,11 +3,15 @@ const CustomInput = ({
   placeholder,
   className,
   error,
+  value,
+  setValue
 }: {
   label: string;
   placeholder: string;
   className?: string;
   error?: string;
+  value?: string,
+  setValue?: (value:string) => void
 }) => {
   return (
     <div>
@@ -19,6 +23,8 @@ const CustomInput = ({
                 transition-all duration-200
                 ${className} 
                 ${error ? "border-red-500 focus:ring-red-500" : "focus:ring-pri focus:border-pri"}`}
+        value={value}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setValue && setValue(e.target.value)}
       />
     </div>
   );

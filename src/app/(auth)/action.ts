@@ -9,6 +9,7 @@ import { redirect } from "next/navigation";
 export const loginWithGoogle = async () => {
   // Redirect to backend Google OAuth endpoint
   const googleAuthUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/google`;
+  console.log("google auth url:", )
   redirect(googleAuthUrl);
 };
 

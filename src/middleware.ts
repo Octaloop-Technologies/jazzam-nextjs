@@ -67,6 +67,9 @@ export function middleware(request: NextRequest) {
   const accessToken = request.cookies.get("accessToken")?.value;
   const refreshToken = request.cookies.get("refreshToken")?.value;
 
+  console.log("Access Token:", accessToken);
+  console.log("Refresh Token:", refreshToken);
+
   // Check if user is authenticated (has valid tokens)
   // Only consider authenticated if both tokens exist, are not empty, and are not expired
   const isAuthenticated = !!(

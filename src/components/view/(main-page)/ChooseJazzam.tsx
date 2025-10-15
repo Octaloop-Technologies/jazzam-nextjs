@@ -180,14 +180,14 @@ const ChooseJazzam = ({ dict }: { dict: Dictionary }) => {
 
         {/* button */}
 
-        <div className="flex justify-center mt-6">
+        <div  className="flex justify-center mt-6">
           {/* Button text */}
-          <button className="text-[#FFF] bg-[#EEB600]  font-semibold px-8 py-4 rounded-lg uppercase text-sm tracking-wide shadow-[0_18px_16px_0_rgba(238,182,0,0.4)]">
+          {/* <button onClick={() => alert("hellle")} className="text-[#FFF] bg-[#EEB600] cursor-pointer font-semibold px-8 py-4 rounded-lg uppercase text-sm tracking-wide shadow-[0_18px_16px_0_rgba(238,182,0,0.4)]">
             {dict?.home?.whyChooseJazzam?.button}
-          </button>
+          </button> */}
 
           {/* Arrow part */}
-          <div className="bg-[#EEB600] px-4 flex items-center justify-center rounded-lg shadow-[0_18px_16px_0_rgba(238,182,0,0.4)]">
+          {/* <div className="bg-[#EEB600] px-4 flex items-center justify-center rounded-lg shadow-[0_18px_16px_0_rgba(238,182,0,0.4)]">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width={30}
@@ -203,7 +203,7 @@ const ChooseJazzam = ({ dict }: { dict: Dictionary }) => {
                 strokeLinejoin="round"
               />
             </svg>
-          </div>
+          </div> */}
         </div>
 
       </div>
