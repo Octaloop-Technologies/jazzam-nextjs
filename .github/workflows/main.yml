@@ -35,7 +35,8 @@ jobs:
 
       - name: Run New Container
         run: |
-          sudo -u jazzam docker run -d -p 3000:3000 --name jazzam-frontend-container --env-file .env jazzam-frontend-image:latest
+          sudo -u jazzam docker run -d -p 3000:3000 --name jazzam-frontend-container --env-file /home/actions-runner-frontend/jazzam-frontend/jazzaam-nextjs/jazzaam-nextjs/.env jazzam-frontend-image:latest
+
 
       - name: Prune Unused Images & Containers
         run: |
