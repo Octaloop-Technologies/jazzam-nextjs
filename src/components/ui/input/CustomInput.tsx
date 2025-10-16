@@ -4,6 +4,7 @@ const CustomInput = ({
   className,
   error,
   value,
+  name,
   setValue,
   missingField,
   setMissingField
@@ -13,13 +14,17 @@ const CustomInput = ({
   className?: string;
   error?: string;
   value?: string,
-  setValue?: (value:string) => void,
+  name: string,
+  setValue?: React.Dispatch<React.SetStateAction<any>>,
   missingField?: boolean,
-  setMissingField: (value: boolean) => void
+  setMissingField: React.Dispatch<React.SetStateAction<any>>
 }) => {
   function onChange(e:React.ChangeEvent<HTMLInputElement>){
-    setValue && setValue(e.target.value)
-    setMissingField(false);
+
+    const { name, value } = e.target;
+
+    setValue && setValue((prev: any) => ({ ...prev, [name]: value }))
+    setMissingField((prev: any) => ({ ...prev, [name]: false }))
   }
   return (
     <div>
@@ -32,6 +37,7 @@ const CustomInput = ({
                 ${className} 
                 ${error ? "border-red-500 focus:ring-red-500" : "focus:ring-pri focus:border-pri"}`}
         value={value}
+        name={name}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e) }
         />
         {missingField && <label className="text-red-500">{label} is missing</label>}

@@ -17,34 +17,43 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
   });
   const [loading, setLoading] = useState(false);
 
-  const [email, setEmail] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [companyName, setCompanyName] = useState("");
-  const [message, setMessage] = useState("");
-  const [missingCompanyName, setMissingCompanyName] = useState(false);
-  const [missingFullName, setMissingFullName] = useState(false);
-  const [missingEmail, setMissingEmail] = useState(false);
-  const [missingMessage, setMissingMessage] = useState(false);
+  const [data, setData] = useState({
+    name: "",
+    email: "",
+    companyName: "",
+    message: ""
+  });
 
-  
+  const [missing, setMissing] = useState({
+    name: false,
+    email: false,
+    companyName: false,
+    message: false,
+  })
 
 
-  const { success, error: ToastError } = useToast()
+  const { success, error: ToastError } = useToast();
 
-  async function sendContactMessage(e: React.MouseEvent<HTMLButtonElement>){
+  const checkEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  }
+
+  async function sendContactMessage(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
-    if(email === "" || fullName === "" || companyName === "" || message === ""){
-      if(email=== ""){
-        setMissingEmail(true)
-      }if(fullName=== ""){
-        setMissingFullName(true)
-      }if(companyName=== ""){
-        setMissingCompanyName(true)
-      }if(message === ""){
-        setMissingMessage(true)
-      }
+    const newMissing: any = Object.fromEntries(
+      Object.entries(data).map(([Key, value]) => ([Key, value === ""]))
+    );
+
+    setMissing(newMissing);
+
+    const hasMissing = Object.values(newMissing).some(Boolean);
+    if (hasMissing) return;
+
+    if (!checkEmail(data.email)) {
+      ToastError("Email is not valid!")
       return;
     }
+    
     try {
       setLoading(true);
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/contact/contact-us`, {
@@ -52,21 +61,23 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
         headers: {
           "Content-type": "application/json"
         },
-        body: JSON.stringify({name: fullName, email, companyName, message})
+        body: JSON.stringify({ data })
       });
-      if(response.ok){
+      if (response.ok) {
         const data = await response.json();
         console.log("data", data);
         success('Contact Us mail is sent')
       }
-      setEmail("");
-      setCompanyName("");
-      setMessage("");
-      setFullName("");
+      setData({
+        name: "",
+        email: "",
+        companyName: "",
+        message: ""
+      })
     } catch (error) {
       console.error("error*****", error)
       setLoading(false);
-    }finally{
+    } finally {
       setLoading(false);
     }
   }
@@ -231,34 +242,38 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
             <CustomInput
               label={dict?.home?.contactUs?.form?.fullName}
               placeholder={dict?.home?.contactUs?.form?.fullNamePlaceholder}
-              value={fullName}
-              setValue={setFullName}
-              missingField={missingFullName}
-              setMissingField={setMissingFullName}
+              value={data.name}
+              name="name"
+              setValue={setData}
+              missingField={missing.name}
+              setMissingField={setMissing}
             />
             <CustomInput
               label={dict?.home?.contactUs?.form?.email}
               placeholder={dict?.home?.contactUs?.form?.emailPlaceholder}
-              value={email}
-              setValue={setEmail}
-              missingField={missingEmail}
-              setMissingField={setMissingEmail}
+              value={data.email}
+              name="email"
+              setValue={setData}
+              missingField={missing.email}
+              setMissingField={setMissing}
             />
             <CustomInput
               label={dict?.home?.contactUs?.form?.company}
               placeholder={dict?.home?.contactUs?.form?.companyPlaceholder}
-              value={companyName}
-              setValue={setCompanyName}
-              missingField={missingCompanyName}
-              setMissingField={setMissingCompanyName}
+              value={data.companyName}
+              name="companyName"
+              setValue={setData}
+              missingField={missing.companyName}
+              setMissingField={setMissing}
             />
             <CustomTextarea
               label={dict?.home?.contactUs?.form?.message}
               placeholder={dict?.home?.contactUs?.form?.messagePlaceholder}
-              value={message}
-              setValue={setMessage}
-              missingField={missingMessage}
-              setMissingField={setMissingMessage}
+              value={data.message}
+              name="message"
+              setValue={setData}
+              missingField={missing.message}
+              setMissingField={setMissing}
             />
             <div className="flex justify-end">
               <button onClick={(e: React.MouseEvent<HTMLButtonElement>) => sendContactMessage(e)} className="bg-[#EEB600] h-15 px-[50px] py-[12px] rounded-[14px] text-[#FFF] text-[16px] text-semibold leading-normal">
