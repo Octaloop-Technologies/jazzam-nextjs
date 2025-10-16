@@ -84,16 +84,14 @@ export function middleware(request: NextRequest) {
   // ==============================================================
   // Handle authentication redirects
   // ==============================================================
-  if (isAuthenticated) {
-    // If user is logged in and trying to access login page, redirect to dashboard
-    if (authRoutes.some((route) => path.startsWith(route))) {
-      return NextResponse.redirect(new URL("/super-user", request.url));
-    }
-  } else {
-    // If user is not logged in and trying to access protected routes, redirect to login
-    if (protectedRoutes.some((route) => path.startsWith(route))) {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
+  // If trying to access protected routes and NOT authenticated
+  if (protectedRoutes.some((route) => path.startsWith(route)) && !isAuthenticated) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  // If trying to access auth routes (login) and IS authenticated
+  if (authRoutes.some((route) => path.startsWith(route)) && isAuthenticated) {
+    return NextResponse.redirect(new URL("/super-user", request.url));
   }
 
   const response = NextResponse.next();
@@ -103,12 +101,8 @@ export function middleware(request: NextRequest) {
   // ==============================================================
   const langCookie = request.cookies.get("lang")?.value;
 
-  const isLogoutScenario =
-    (path.startsWith("/login") && (!accessToken || !refreshToken || !isAuthenticated)) ||
-    request.nextUrl.searchParams.has("logout");
-
   // If we don't have a valid language cookie and it's not a logout scenario, detect and set locale
-  if ((!langCookie || !supportedLocales.includes(langCookie)) && !isLogoutScenario) {
+  if ((!langCookie || !supportedLocales.includes(langCookie))) {
     const acceptLang = request.headers.get("accept-language");
     const detectedLocale = getLocaleFromHeader(acceptLang);
 
