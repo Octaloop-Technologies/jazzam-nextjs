@@ -25,6 +25,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useI18n } from "@/providers/I18nProvider";
 import { updateUserSettings } from "@/redux/slices/authSlice";
+import { clearAuthCookies } from "@/lib/utils/clearCookies";
 
 const SubscriptionSettings = dynamic(
   () => import("@/components/view/dashboard/settings/SubscriptionSettings"),
@@ -124,8 +125,9 @@ const SettingsPage = () => {
 
       if (success) {
         // Clear Redux state for immediate UI feedback
-        dispatch(logout());
+        // dispatch(logout());
         ToastSuccess("Logged out successfully");
+        clearAuthCookies()
         router.push("/login");
       } else {
         setIsLoggingOut(false);
