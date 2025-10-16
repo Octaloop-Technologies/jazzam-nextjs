@@ -3,7 +3,7 @@
 export const clearAuthCookies = () => {
   // Helper to delete a specific cookie by name
   const deleteCookie = (name: string) => {
-    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
+    document.cookie = `${name}=; domain=.jazzam.ai; Max-Age=0; path=/;`;
   };
 
   deleteCookie("accessToken");
