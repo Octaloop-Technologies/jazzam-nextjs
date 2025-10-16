@@ -57,8 +57,10 @@ export const logoutUserAction = async () => {
 
     if (response.ok) {
       // Clear cookies on server side as well
-      cookieStore.delete("accessToken");
-      cookieStore.delete("refreshToken");
+      const store = await cookies()
+      store.delete("accessToken");
+      store.delete("refreshToken");
+
 
       return { success: true, message: data.message || "Logged out successfully" };
     } else {

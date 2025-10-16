@@ -124,10 +124,9 @@ const SettingsPage = () => {
       const { success, message } = await logoutUserAction();
 
       if (success) {
+        ToastSuccess("Logged out successfully");
         // Clear Redux state for immediate UI feedback
         // dispatch(logout());
-        ToastSuccess("Logged out successfully");
-        clearAuthCookies()
         router.push("/login");
       } else {
         setIsLoggingOut(false);
