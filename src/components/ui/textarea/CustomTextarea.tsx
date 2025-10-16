@@ -1,3 +1,17 @@
+interface Values{
+  name: string,
+  email: string,
+  companyName: string,
+  message: string
+}
+
+type MissingFields = {
+  name: boolean;
+  email: boolean;
+  companyName: boolean;
+  message: boolean;
+};
+
 const CustomTextarea = ({
   label,
   placeholder,
@@ -15,14 +29,14 @@ const CustomTextarea = ({
   error?: string;
   value?: string,
   name?: string,
-  setValue?: React.Dispatch<React.SetStateAction<any>>;
+  setValue?: React.Dispatch<React.SetStateAction<Values>>;
   missingField: boolean,
-  setMissingField?:React.Dispatch<React.SetStateAction<any>>
+  setMissingField?:React.Dispatch<React.SetStateAction<MissingFields>>
 }) => {
   function onChange(e: React.ChangeEvent<HTMLTextAreaElement>){
     const { name, value } = e.target
-    setValue && setValue((prev: any) => ({ ...prev, [name]: value }))
-    setMissingField && setMissingField((prev: any) => ({...prev, [name]: false}))
+    setValue && setValue((prev: Values) => ({ ...prev, [name]: value }))
+    setMissingField && setMissingField((prev: MissingFields) => ({...prev, [name]: false}))
   }
   return (
     <div>

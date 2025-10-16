@@ -9,6 +9,13 @@ import { useButtonAnimation } from "@/styles/animations/useButtonAnimation";
 import Image from "next/image";
 import { useToast } from "@/lib/hooks/useToast";
 
+type MissingFields = {
+  name: boolean;
+  email: boolean;
+  companyName: boolean;
+  message: boolean;
+};
+
 const ContactUs = ({ dict }: { dict: Dictionary }) => {
   const formRef = useRef<HTMLFormElement>(null);
   const { titleRef, paragraphRef, containerRef } = useSimpleTextAnimation({
@@ -24,7 +31,7 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
     message: ""
   });
 
-  const [missing, setMissing] = useState({
+  const [missing, setMissing] = useState<MissingFields>({
     name: false,
     email: false,
     companyName: false,
@@ -40,9 +47,9 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
 
   async function sendContactMessage(e: React.MouseEvent<HTMLButtonElement>) {
     e.preventDefault();
-    const newMissing: any = Object.fromEntries(
+    const newMissing = Object.fromEntries(
       Object.entries(data).map(([Key, value]) => ([Key, value === ""]))
-    );
+    ) as MissingFields;
 
     setMissing(newMissing);
 
@@ -53,7 +60,7 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
       ToastError("Email is not valid!")
       return;
     }
-    
+
     try {
       setLoading(true);
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/contact/contact-us`, {
