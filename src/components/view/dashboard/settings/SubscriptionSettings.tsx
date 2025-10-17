@@ -249,11 +249,27 @@ const SubscriptionSettings = () => {
           {currentPlan === "free"
             ? "No billing history on free plan"
             : <>
-            <ul>
+              <table className="w-full">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Month</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
               {billingData?.map((bill, i) => (
-              <li key={i}>{new Date(bill.month).toDateString()} - {bill?.status} - {bill?.amount}</li>
+                <tr className="" key={i}>
+                    <th className="mx-4" key={i}>{i+1}</th>
+                    <td key={bill?.month}>{new Date(bill.month).toDateString()}</td>
+                    <td key={bill?.amount}>{bill?.amount}</td>
+                    <td key={bill?.status}>{bill?.status}</td>
+                  </tr>
               ))}
-            </ul>
+                </tbody>
+              </table>
+
             </>}
         </div>
       </div>

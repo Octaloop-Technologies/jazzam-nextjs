@@ -47,7 +47,7 @@ const Letsstarttoday = ({ dict }: { dict: Dictionary }) => {
           </button>
 
           {/* Arrow part */}
-          <div className="bg-[#EEB600] px-4 flex cursor-pointer items-center justify-center rounded-lg">
+          <div onClick={() => router.push('/login')} className="bg-[#EEB600] px-4 flex cursor-pointer items-center justify-center rounded-lg">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width={30}
