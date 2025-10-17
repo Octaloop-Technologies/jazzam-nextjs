@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emailjs/browser": "^4.4.1",
     "@gsap/react": "^2.1.2",
     "@reduxjs/toolkit": "^2.8.2",
     "@types/d3": "^7.4.3",

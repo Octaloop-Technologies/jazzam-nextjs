@@ -4,22 +4,33 @@ import React, { useState } from 'react';
 import { Dictionary } from "@/lib/i18n/getDictionary";
 import { useToast } from '@/lib/hooks/useToast';
 import { joinWaitlist } from '@/app/(main-page)/action';
+import emailjs from "@emailjs/browser";
 
 interface WaitlistProps {
     dict: Dictionary,
     lang: string
 }
 
+const emailJsKey: string = process.env.NEXT_PUBLIC_EMAIL_JS_PUBLIC_KEY ?? ''
+
+emailjs.init(emailJsKey);
+
+
 const Waitlist = ({ dict, lang }: WaitlistProps) => {
 
     const [waitlistEmail, setWaitlistEmail] = useState("");
     const [loading, setLoading] = useState(false);
+    const emailServiceId: string = process.env.NEXT_PUBLIC_EMAIL_SERVICE_ID ?? '';
+    const emailTemplateId: string = process.env.NEXT_PUBLIC_EMAIL_TEMPLATE_ID ?? '';
 
     const { success, error: ErrorToast } = useToast()
 
     const callWaitlistApi = async () => {
         try {
-            setLoading(true)
+            setLoading(true);
+            await emailjs.send(emailServiceId,emailTemplateId, {
+                email: waitlistEmail.trim()
+            })
             const response = await joinWaitlist(waitlistEmail.trim(), "", "website", {
                 userAgent: navigator.userAgent,
                 timestamp: new Date().toISOString(),
