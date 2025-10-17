@@ -5,41 +5,55 @@ import Image from "next/image";
 import { Dictionary } from "@/lib/i18n/getDictionary";
 import { joinWaitlist } from "@/app/(main-page)/action";
 import { useToast } from "@/lib/hooks/useToast";
+import emailjs from "@emailjs/browser"
+
+
+const emailJsKey: string = process.env.NEXT_PUBLIC_EMAIL_JS_PUBLIC_KEY ?? ''
+
+emailjs.init(emailJsKey);
+
+
 const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
   const items = dict.home.beforeJazzam.marquee;
 
   const duplicatedItems: string[] = [...items, ...items];
   const beforeItems = dict.home.beforeJazzam.beforeItems;
   const withItems = dict.home.beforeJazzam.withItems;
-    const { success, error: ErrorToast } = useToast()
+  const { success, error: ErrorToast } = useToast()
 
-        const [waitlistEmail, setWaitlistEmail] = useState("");
-        const [loading, setLoading] = useState(false);
+  const [waitlistEmail, setWaitlistEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+  const emailServiceId: string = process.env.NEXT_PUBLIC_EMAIL_SERVICE_ID ?? '';
+  const emailTemplateId: string = process.env.NEXT_PUBLIC_EMAIL_TEMPLATE_ID ?? '';
 
-  
-      const callWaitlistApi = async () => {
-          try {
-            setLoading(true)
-              const response = await joinWaitlist(waitlistEmail.trim(), "", "website", {
-                  userAgent: navigator.userAgent,
-                  timestamp: new Date().toISOString(),
-                  referrer: document.referrer || "direct",
-              });
-              if (response.success) {
-                  success("Successfully joined waitlist!");
-                  setWaitlistEmail("")
-              } else {
-                  ErrorToast(response.error || "Error submitting email");
-              }
-          } catch (error) {
-              console.error("error*******:", error)
-              ErrorToast(`Unable to add email ${waitlistEmail} due to server error`)
-              setWaitlistEmail("");
-              setLoading(false);
-          }finally{
-            setLoading(false);
-          }
+
+  const callWaitlistApi = async () => {
+
+    try {
+      setLoading(true);
+      await emailjs.send(emailServiceId, emailTemplateId, {
+        email: waitlistEmail.trim()
+      })
+      const response = await joinWaitlist(waitlistEmail.trim(), "", "website", {
+        userAgent: navigator.userAgent,
+        timestamp: new Date().toISOString(),
+        referrer: document.referrer || "direct",
+      });
+      if (response.success) {
+        success("Successfully joined waitlist!");
+        setWaitlistEmail("")
+      } else {
+        ErrorToast(response.error || "Error submitting email");
       }
+    } catch (error) {
+      console.error("error*******:", error)
+      ErrorToast(`Unable to add email ${waitlistEmail} due to server error`)
+      setWaitlistEmail("");
+      setLoading(false);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   // const PLACEHOLDER_IMG: string =
   //   "https://placehold.co/128x200/064e3b/16a34a?text=Pattern";
@@ -224,7 +238,7 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
                 />
               </div>
               <button onClick={callWaitlistApi} className="w-full md:w-auto bg-[#EEB600]  font-semibold px-8 py-3 rounded-lg transition uppercase  tracking-wide whitespace-nowrap shadow-md text-[16px] tracking-normal text-[#FFF]">
-                { loading ? 'Sending' : dict.home.beforeJazzam.waitlist.button}
+                {loading ? 'Sending' : dict.home.beforeJazzam.waitlist.button}
               </button>
             </div>
           </div>
