@@ -6,6 +6,8 @@ import { Dictionary } from "@/lib/i18n/getDictionary";
 import { joinWaitlist } from "@/app/(main-page)/action";
 import { useToast } from "@/lib/hooks/useToast";
 import emailjs from "@emailjs/browser"
+import { useSelector } from "react-redux";
+import { selectIsModalOpen } from "@/redux/slices/uiSlice";
 
 
 const emailJsKey: string = process.env.NEXT_PUBLIC_EMAIL_JS_PUBLIC_KEY ?? ''
@@ -25,6 +27,11 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
   const [loading, setLoading] = useState(false);
   const emailServiceId: string = process.env.NEXT_PUBLIC_EMAIL_SERVICE_ID ?? '';
   const emailTemplateId: string = process.env.NEXT_PUBLIC_EMAIL_TEMPLATE_ID ?? '';
+
+    const isModalOpen = useSelector(selectIsModalOpen);
+
+
+
 
 
   const callWaitlistApi = async () => {
@@ -188,7 +195,7 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
       </div>
 
       {/* Bottom Card */}
-      <div className="absolute  bottom-[-70px] sm:bottom-[-90px] left-1/2 transform -translate-x-1/2 z-[100]  w-full max-w-[940px] h-[215px] ">
+      <div className={`${isModalOpen ? 'z-0' : 'z-[100]'} absolute  bottom-[-70px] sm:bottom-[-90px] left-1/2 transform -translate-x-1/2  w-full max-w-[940px] h-[215px]`}>
         <div className=" z-0 bg-gradient-to-r from-[#1BA64E] to-[#51C77C] pb-9 rounded-2xl shadow-2xl relative overflow-hidden ">
           <div className="absolute h-full z-0 top-0 -left-20 overflow-hidden ">
             <Image

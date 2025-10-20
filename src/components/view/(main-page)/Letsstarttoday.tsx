@@ -3,20 +3,18 @@
 import React from "react";
 import Image from "next/image";
 import { Dictionary } from "@/lib/i18n/getDictionary";
-import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
-import { openModal } from "@/redux/slices/uiSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { openModal, selectIsModalOpen } from "@/redux/slices/uiSlice";
 
 
 const Letsstarttoday = ({ dict }: { dict: Dictionary }) => {
-
-  const router = useRouter()
 
   const items = dict.home.beforeJazzam.marquee;
 
   const duplicatedItems: string[] = [...items, ...items];
 
   const dispatch = useDispatch();
+  const isModalOpen = useSelector(selectIsModalOpen);
 
 
   return (
@@ -78,7 +76,7 @@ const Letsstarttoday = ({ dict }: { dict: Dictionary }) => {
       </div>
 
       {/* Bottom Card - Positioned to overlap with next section */}
-      <div className="absolute bottom-[-80px] left-1/2 transform -translate-x-1/2 z-[100] w-full max-w-[900px] h-[214px] px-4 ">
+      <div className={`${!isModalOpen ? 'z-[100]' : 'z-0' } absolute bottom-[-80px] left-1/2 transform -translate-x-1/2 w-full max-w-[900px] h-[214px] px-4"`}>
         <div className="bg-white rounded-3xl shadow-lg relative overflow-hidden">
           {/* Left decorative image */}
           <div className="absolute top-[-25px] left-[-12px] bottom-[-20px] w-40 h-40 overflow-hidden">
@@ -117,7 +115,7 @@ const Letsstarttoday = ({ dict }: { dict: Dictionary }) => {
 
 
             <div className="flex items-center justify-center gap-36 max-md:gap-8   max-md:flex-wrap">
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0 hidden md:flex items-center justify-center w-[500px] h-[350px]">
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 hidden md:flex items-center justify-center w-[500px] h-[350px]">
                 <div className="absolute w-[410px] h-full flex flex-col gap-3 justify-center items-center mt-19">
                   <div className="w-full z-0 h-1 bg-[#EBEBEB] rounded-full relative mb-3">
                     <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineLtoR" />
