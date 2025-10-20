@@ -15,7 +15,9 @@
       "heading":"Join the waitlist today!",
       "sendNow": "Send now",
       "emailHeading":"Your email address",
-      "getStarted":"GET STARTED"
+      "getStarted":"GET STARTED",
+      "commingSoon":"COMING SOON",
+      "waitingListMessage": "Please! join out waiting list"
     },
 
     "whyChooseJazzam": {
