@@ -4,6 +4,8 @@ import React from "react";
 import Image from "next/image";
 import { Dictionary } from "@/lib/i18n/getDictionary";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { openModal } from "@/redux/slices/uiSlice";
 
 
 const Letsstarttoday = ({ dict }: { dict: Dictionary }) => {
@@ -13,6 +15,9 @@ const Letsstarttoday = ({ dict }: { dict: Dictionary }) => {
   const items = dict.home.beforeJazzam.marquee;
 
   const duplicatedItems: string[] = [...items, ...items];
+
+  const dispatch = useDispatch();
+
 
   return (
     <section className=" Letsstarttoday  relative w-full bg-gradient-to-b from-[#fff] to-[#15803C66] pb-32 overflow-visible ">
@@ -42,12 +47,12 @@ const Letsstarttoday = ({ dict }: { dict: Dictionary }) => {
         {/* Button */}
         <div className="flex justify-center mt-6">
           {/* Button text */}
-          <button onClick={() => router.push('/login')} className="text-[#FFF]  bg-[#EEB600]  font-semibold px-8 py-4 rounded-lg uppercase text-sm tracking-wide">
+          <button onClick={() => dispatch(openModal())} className="text-[#FFF]  bg-[#EEB600]  font-semibold px-8 py-4 rounded-lg uppercase text-sm tracking-wide">
             {dict?.home?.letsstarttoday?.button}
           </button>
 
           {/* Arrow part */}
-          <div onClick={() => router.push('/login')} className="bg-[#EEB600] px-4 flex cursor-pointer items-center justify-center rounded-lg">
+          <div onClick={() => dispatch(openModal())} className="bg-[#EEB600] px-4 flex cursor-pointer items-center justify-center rounded-lg">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width={30}

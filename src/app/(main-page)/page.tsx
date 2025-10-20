@@ -10,6 +10,7 @@ import ProblemsJazzamSolves from "@/components/view/(main-page)/ProblemsJazzamSo
 import Letsstarttoday from "@/components/view/(main-page)/Letsstarttoday";
 import BeforeJazzam from "@/components/view/(main-page)/BeforeJazzam";
 import Chasing from "@/components/view/(main-page)/Chassing";
+import ComingSoonModal from "@/components/ui/models/CommingSoonModal";
 
 const LandingPage = async () => {
   const lang = await getCurrentLang();
@@ -46,6 +47,9 @@ const LandingPage = async () => {
 
       {/* ------------- Contact us ------------- */}
       <ContactUs dict={dict} />
+
+      {/* show comming soon modal */}
+      <ComingSoonModal dict={dict} />
     </div>
   );
 };

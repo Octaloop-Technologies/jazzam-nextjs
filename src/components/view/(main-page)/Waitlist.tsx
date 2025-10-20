@@ -26,6 +26,10 @@ const Waitlist = ({ dict, lang }: WaitlistProps) => {
     const { success, error: ErrorToast } = useToast()
 
     const callWaitlistApi = async () => {
+        if(waitlistEmail === ""){
+            ErrorToast("Please! enter your email");
+            return;
+        }
         try {
             setLoading(true);
             await emailjs.send(emailServiceId,emailTemplateId, {

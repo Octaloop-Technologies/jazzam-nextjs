@@ -12,6 +12,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useDispatch } from "react-redux";
+import { openModal } from "@/redux/slices/uiSlice";
 
 
 // ======================================================
@@ -30,6 +32,8 @@ const HomeNavbar = ({ dict, currentLang }: HomeNavbarProps) => {
   // ======================================================
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+
+  const dispatch = useDispatch();
 
   // ======================================================
   // Refs
@@ -369,7 +373,7 @@ const HomeNavbar = ({ dict, currentLang }: HomeNavbarProps) => {
           <PrimaryButton
             title={dict?.home?.hero?.getStarted}
             className="h-[52px] w-[138px] rounded-xl-2 navbar-item"
-            onClick={() => router.push('/login')}
+            onClick={() => dispatch(openModal())}
           />
         </div>
         <div className="md:hidden">

@@ -10,11 +10,13 @@ const getInitialTheme = (): "light" | "dark" | "auto" => {
 // UI state interface
 interface UIState {
   theme: "light" | "dark" | "auto";
+  isModalOpen: boolean; // 👈 new field for modal
 }
 
 // Initial state
 const initialState: UIState = {
   theme: getInitialTheme(),
+  isModalOpen: false, // 👈 modal initially closed
 };
 
 // Create the UI slice
@@ -22,22 +24,31 @@ const uiSlice = createSlice({
   name: "ui",
   initialState,
   reducers: {
+    // --- THEME HANDLING ---
     setTheme: (state, action: PayloadAction<"light" | "dark" | "auto">) => {
       state.theme = action.payload;
 
-      // Persist theme to localStorage
       if (typeof window !== "undefined") {
         localStorage.setItem("theme", action.payload);
       }
 
-      // Update data-theme attribute
       if (action.payload !== "auto") {
         document.documentElement.dataset.theme = action.payload;
       } else {
-        // For auto mode, check system preference
         const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
         document.documentElement.dataset.theme = prefersDark ? "dark" : "light";
       }
+    },
+
+    // --- MODAL HANDLING ---
+    openModal: (state) => {
+      state.isModalOpen = true;
+    },
+    closeModal: (state) => {
+      state.isModalOpen = false;
+    },
+    toggleModal: (state) => {
+      state.isModalOpen = !state.isModalOpen;
     },
   },
 });
@@ -49,11 +60,9 @@ export const initializeTheme = () => {
   if (theme !== "auto") {
     document.documentElement.dataset.theme = theme;
   } else {
-    // For auto mode, check system preference
     const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     document.documentElement.dataset.theme = prefersDark ? "dark" : "light";
 
-    // Add listener for system preference changes
     window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
       if (getInitialTheme() === "auto") {
         document.documentElement.dataset.theme = e.matches ? "dark" : "light";
@@ -63,9 +72,10 @@ export const initializeTheme = () => {
 };
 
 // Export actions
-export const { setTheme } = uiSlice.actions;
+export const { setTheme, openModal, closeModal, toggleModal } = uiSlice.actions;
 
 // Export selectors
-export const selectTheme = (state: RootState) => state?.ui?.theme;
+export const selectTheme = (state: RootState) => state.ui.theme;
+export const selectIsModalOpen = (state: RootState) => state.ui.isModalOpen; // 👈 selector
 
 export default uiSlice.reducer;

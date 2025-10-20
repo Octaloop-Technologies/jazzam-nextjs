@@ -28,6 +28,10 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
 
 
   const callWaitlistApi = async () => {
+    if(waitlistEmail === ""){
+      ErrorToast("Please! enter your email")
+      return;
+    }
 
     try {
       setLoading(true);
