@@ -76,82 +76,75 @@ const Letsstarttoday = ({ dict }: { dict: Dictionary }) => {
       </div>
 
       {/* Bottom Card - Positioned to overlap with next section */}
-      <div className={`${!isModalOpen ? 'z-[100]' : 'z-0' } absolute bottom-[-80px] left-1/2 transform -translate-x-1/2 w-full max-w-[900px] h-[214px] px-4"`}>
-        <div className="bg-white rounded-3xl shadow-lg relative overflow-hidden">
-          {/* Left decorative image */}
-          <div className="absolute top-[-25px] left-[-12px] bottom-[-20px] w-40 h-40 overflow-hidden">
-            <Image
-              src="/assets/icons/home/wavetop.png"
-              alt="decorative"
-              fill
-              className="object-contain"
-            />
-          </div>
+<div className={`${!isModalOpen ? 'z-[100]' : 'z-0'} absolute bottom-[-80px] left-1/2 transform -translate-x-1/2 w-[95%] max-w-[900px] h-[214px] px-4`}>
+  <div className="bg-white rounded-3xl shadow-lg relative overflow-hidden">
+    {/* Left decorative image */}
+    <div className="absolute top-[-25px] left-[-12px] bottom-[-20px] w-40 h-40 overflow-hidden">
+      <Image
+        src="/assets/icons/home/wavetop.png"
+        alt="decorative"
+        fill
+        className="object-contain"
+      />
+    </div>
 
+    {/* Right decorative image */}
+    <div className="bottomimage absolute right-0 bottom-0 w-32 overflow-hidden rounded-3xl">
+      <Image
+        src="/assets/icons/home/wavebottom.png"
+        alt="decorative"
+        width={233}
+        height={244}
+        className="h-full w-full object-cover"
+      />
+    </div>
 
-          {/* Right decorative image */}
-          <div className="bottomimage absolute right-0 bottom-0 w-32 overflow-hidden rounded-3xl">
-            <Image
-              src="/assets/icons/home/wavebottom.png"
-              alt="decorative"
-              width={233}
-              height={244}
-              className="h-full w-full object-cover"
-            />
-          </div>
+    {/* Card content */}
+    <div className="relative px-6 sm:px-12 md:px-20 lg:px-32 py-8 md:py-10 lg:py-12">
+      <div className="text-center mb-6">
+        <h3 className="text-[18px] sm:text-[20px] font-bold text-[#000] leading-[108%] tracking-[1px] mb-[6px]">
+          {dict?.home?.letsstarttoday?.cardtitle}
+        </h3>
+        <p className="text-[#333] font-normal text-[13px] sm:text-[14px] leading-[155%] tracking-[0.5%]">
+          {dict?.home?.letsstarttoday?.cardpara}
+        </p>
+      </div>
 
-
-          {/* Card content */}
-          <div className="relative  px-32 py-12 max-md:px-8">
-
-            <div className="text-center mb-6">
-              <h3 className="text-[20px] font-bold text-[#000] leading-[108%] tracking-[1px] mb-[6px]">
-                {dict?.home?.letsstarttoday?.cardtitle}
-              </h3>
-              <p className="text-[#333] font-normal text-[14px] leading-[155%] tracking-[0.5%]">
-                {dict?.home?.letsstarttoday?.cardpara}
-              </p>
+      <div className="flex items-center justify-center gap-8 sm:gap-16 md:gap-24 lg:gap-36 max-md:flex-wrap">
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 hidden md:flex items-center justify-center w-[300px] sm:w-[400px] md:w-[500px] h-[250px] sm:h-[300px] md:h-[350px]">
+          <div className="absolute w-[250px] sm:w-[350px] md:w-[410px] h-full flex flex-col gap-3 justify-center items-center mt-19">
+            <div className="w-full z-0 h-1 bg-[#EBEBEB] rounded-full relative mb-3">
+              <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineLtoR" />
+              <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineLtoR" />
             </div>
-
-
-            <div className="flex items-center justify-center gap-36 max-md:gap-8   max-md:flex-wrap">
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 hidden md:flex items-center justify-center w-[500px] h-[350px]">
-                <div className="absolute w-[410px] h-full flex flex-col gap-3 justify-center items-center mt-19">
-                  <div className="w-full z-0 h-1 bg-[#EBEBEB] rounded-full relative mb-3">
-                    <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineLtoR" />
-                    <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineLtoR" />
-
-                  </div>
-                  <div className="w-full h-1 bg-[#EBEBEB] rounded-full relative mt-3 ">
-                    <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineRtoL" />
-                    <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineRtoL" />
-
-                  </div>
-                </div>
-              </div>
-
-
-              {/* Active Users */}
-              <div className="text-center z-50 bg-white">
-                <div className="text-[44px]  font-normal text-[#000] leading-[113%] mb-2">500+</div>
-                <div className="text-[14px] leading-[100%] font-normal text-[#444]">{dict?.home?.letsstarttoday?.number1}</div>
-              </div>
-
-              {/* Satisfaction */}
-              <div className="text-center z-50 bg-white">
-                <div className="text-[44px] font-normal text-[#000] leading-[113%] mb-2">98%</div>
-                <div className="text-[14px] leading-[100%] font-normal text-[#444]">{dict?.home?.letsstarttoday?.number2}</div>
-              </div>
-
-              {/* Support */}
-              <div className="text-center z-50 bg-white">
-                <div className="text-[44px] font-normal text-[#000] leading-[113%] mb-2">24/7</div>
-                <div className="text-[14px] leading-[100%] font-normal text-[#444]">{dict?.home?.letsstarttoday?.number3}</div>
-              </div>
+            <div className="w-full h-1 bg-[#EBEBEB] rounded-full relative mt-3">
+              <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineRtoL" />
+              <div className="absolute top-0 h-1 w-5 bg-green-500 rounded-full animate-moveLineRtoL" />
             </div>
           </div>
         </div>
+
+        {/* Active Users */}
+        <div className="text-center z-50 bg-white px-2">
+          <div className="text-[36px] sm:text-[40px] md:text-[44px] font-normal text-[#000] leading-[113%] mb-2">500+</div>
+          <div className="text-[13px] sm:text-[14px] leading-[100%] font-normal text-[#444]">{dict?.home?.letsstarttoday?.number1}</div>
+        </div>
+
+        {/* Satisfaction */}
+        <div className="text-center z-50 bg-white px-2">
+          <div className="text-[36px] sm:text-[40px] md:text-[44px] font-normal text-[#000] leading-[113%] mb-2">98%</div>
+          <div className="text-[13px] sm:text-[14px] leading-[100%] font-normal text-[#444]">{dict?.home?.letsstarttoday?.number2}</div>
+        </div>
+
+        {/* Support */}
+        <div className="text-center z-50 bg-white px-2">
+          <div className="text-[36px] sm:text-[40px] md:text-[44px] font-normal text-[#000] leading-[113%] mb-2">24/7</div>
+          <div className="text-[13px] sm:text-[14px] leading-[100%] font-normal text-[#444]">{dict?.home?.letsstarttoday?.number3}</div>
+        </div>
       </div>
+    </div>
+  </div>
+</div>
 
 
       <style jsx>{`

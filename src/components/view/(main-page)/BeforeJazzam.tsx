@@ -28,14 +28,11 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
   const emailServiceId: string = process.env.NEXT_PUBLIC_EMAIL_SERVICE_ID ?? '';
   const emailTemplateId: string = process.env.NEXT_PUBLIC_EMAIL_TEMPLATE_ID ?? '';
 
-    const isModalOpen = useSelector(selectIsModalOpen);
-
-
-
+  const isModalOpen = useSelector(selectIsModalOpen);
 
 
   const callWaitlistApi = async () => {
-    if(waitlistEmail === ""){
+    if (waitlistEmail === "") {
       ErrorToast("Please! enter your email")
       return;
     }
@@ -195,32 +192,33 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
       </div>
 
       {/* Bottom Card */}
-      <div className={`${isModalOpen ? 'z-0' : 'z-[100]'} absolute  bottom-[-70px] sm:bottom-[-90px] left-1/2 transform -translate-x-1/2  w-full max-w-[940px] h-[215px]`}>
-        <div className=" z-0 bg-gradient-to-r from-[#1BA64E] to-[#51C77C] pb-9 rounded-2xl shadow-2xl relative overflow-hidden ">
-          <div className="absolute h-full z-0 top-0 -left-20 overflow-hidden ">
+      <div
+        className={`${isModalOpen ? 'z-0' : 'z-[100]'} absolute bottom-[-70px] sm:bottom-[-90px] left-1/2 transform -translate-x-1/2 w-[90%] max-w-[940px] h-[215px]`}>
+        <div className="z-0 bg-gradient-to-r from-[#1BA64E] to-[#51C77C] pb-9 rounded-2xl shadow-2xl relative overflow-hidden">
+          <div className="absolute h-full z-0 top-0 -left-20 overflow-hidden">
             <Image
               src={"/assets/images/home/circle.png"}
               alt="decorative left"
               width={599}
               height={600}
               unoptimized
-              className="h-full w-[299px] z-0 object-cover rounded-[30px] ml-5 "
+              className="h-full w-[299px] z-0 object-cover rounded-[30px] ml-5"
             />
           </div>
 
-          <div className="absolute right-[-90px]  -top-35  w-[250px] h-[244px] overflow-hidden ">
+          <div className="absolute right-[-90px] -top-35 w-[250px] h-[244px] overflow-hidden">
             <Image
               src={"/assets/images/home/circle.png"}
               alt="decorative right"
               width={150}
               height={244}
               unoptimized
-              className="h-full w-full  rounded-full"
+              className="h-full w-full rounded-full"
             />
           </div>
 
-          <div className="relative px-8 py-8 md:px-16 md:py-10">
-            <h3 className="text-[#FFF] text-[34px] md:text-[24px] font-normal leading-[29px] text-center mb-6">
+          <div className="relative px-4 sm:px-6 md:px-8 lg:px-16 py-6 sm:py-8 md:py-10">
+            <h3 className="text-[#FFF] text-[28px] sm:text-[34px] md:text-[24px] font-normal leading-[29px] text-center mb-6">
               {dict.home.beforeJazzam.waitlist.heading}
             </h3>
 
@@ -248,7 +246,7 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWaitlistEmail(e.target.value)}
                 />
               </div>
-              <button onClick={callWaitlistApi} className="w-full md:w-auto bg-[#EEB600]  font-semibold px-8 py-3 rounded-lg transition uppercase  tracking-wide whitespace-nowrap shadow-md text-[16px] tracking-normal text-[#FFF]">
+              <button onClick={callWaitlistApi} className="w-full md:w-auto bg-[#EEB600] font-semibold px-8 py-3 rounded-lg transition uppercase tracking-wide whitespace-nowrap shadow-md text-[16px] tracking-normal text-[#FFF]">
                 {loading ? 'Sending' : dict.home.beforeJazzam.waitlist.button}
               </button>
             </div>
