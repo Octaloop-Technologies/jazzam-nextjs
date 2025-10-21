@@ -107,7 +107,7 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
             {/* Contact Details */}
             <div className="flex-between gap-5 max-xl:justify-center max-xs:flex-col max-xs:items-start">
               {/* Phone */}
-              <div className="flex items-center gap-3.5">
+              <div className="flex justify-center items-center gap-3.5">
                 <div className="size-[60px] min-w-[60px] bg-pri rounded-full flex-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -282,7 +282,7 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
               missingField={missing.message}
               setMissingField={setMissing}
             />
-            <div className="flex justify-end">
+            <div className="flex justify-center xs:justify-end">
               <button onClick={(e: React.MouseEvent<HTMLButtonElement>) => sendContactMessage(e)} className="bg-[#EEB600] h-15 px-[50px] py-[12px] rounded-[14px] text-[#FFF] text-[16px] text-semibold leading-normal">
                 {dict?.home?.footer.button}
               </button>
