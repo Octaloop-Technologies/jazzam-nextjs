@@ -18,7 +18,7 @@ export const loginWithGoogle = async () => {
 // ==============================================================
 export const loginWithZoho = async () => {
   // Redirect to backend Zoho CRM OAuth endpoint
-  const zohoAuthUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/zoho`;
+  const zohoAuthUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/zoho?type=login`;
   redirect(zohoAuthUrl);
 };
 
