@@ -40,7 +40,7 @@ const Faqs = ({ dict }: { dict: Dictionary }) => {
   ];
 
   return (
-    <section className="home-padding bg-bg pt-[228px]">
+    <section className="home-padding bg-bg pt-[228px] overflow-x-hidden">
       <div className="home-wrapper">
         <div className="text-center mb-16" ref={containerRef}>
           <h1 className="home-heading" ref={titleRef}>

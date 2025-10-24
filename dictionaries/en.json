@@ -5,28 +5,26 @@
       "ar": "Arabic"
     }
   },
-
   "home": {
     "hero": {
       "title": "Jazzam ",
-      "titele2":"Miss a Lead",
+      "titele2": "Miss a Lead",
       "spanTitle": "Never",
       "para": "Every visit turns into a real opportunity. Jazzam collects your leads, analyzes them, and guides your next step.",
-      "heading":"Join the waitlist today!",
+      "heading": "Join the waitlist today!",
       "sendNow": "Send now",
-      "emailHeading":"Your email address",
-      "getStarted":"GET STARTED",
-      "commingSoon":"COMING SOON",
+      "emailHeading": "Your email address",
+      "getStarted": "GET STARTED",
+      "commingSoon": "COMING SOON",
       "waitingListMessage": "Please! join out waiting list"
     },
-
     "whyChooseJazzam": {
       "title": "Why Choose Jazzam?",
-      "numbers1":"Lead Quality Improvement",
-      "numbers2":"Time Saved Daily",
-      "numbers3":"Faster Conversions",
-      "numbers4":"Happy Customers",
-      "button":"REGISTER YOUR COMPANY",
+      "numbers1": "Lead Quality Improvement",
+      "numbers2": "Time Saved Daily",
+      "numbers3": "Faster Conversions",
+      "numbers4": "Happy Customers",
+      "button": "REGISTER YOUR COMPANY",
       "smartCustomerFollowUp": {
         "title": "Smart Customer Follow-up",
         "description": "Time to stop wasting valuable hours on leads that are not qualified."
@@ -43,7 +41,6 @@
         "title": "Register your company"
       }
     },
-
     "marquee": {
       "title": "Innovation",
       "description": "Development",
@@ -52,7 +49,6 @@
       "visualization": "Visualization",
       "customerSatisfaction": "Customer satisfaction"
     },
-
     "testimonials": {
       "title": "Testimonials",
       "description": "What they said about us",
@@ -64,98 +60,95 @@
         "rating": 5
       }
     },
-
     "jazzamWorks": {
       "title": "How Jazzam Works",
       "description": "Simple, powerful, and intelligent lead qualification",
-      "features":[
+      "features": [
         {
-          "title":"Collect Leads",
-          "desc":"Gathers leads from your website, LinkedIn, & Snapchat."
+          "title": "Collect Leads",
+          "desc": "Gathers leads from your website, LinkedIn, & Snapchat."
         },
-         {
-          "title":"Analyze Behavior",
-          "desc":"Studies visitor behavior to measure genuine interest and intent."
+        {
+          "title": "Analyze Behavior",
+          "desc": "Studies visitor behavior to measure genuine interest and intent."
         },
-         {
-          "title":"Classify Leads",
-          "desc":"Categorizes leads as Hot, Warm, or Cold based on engagement."
+        {
+          "title": "Classify Leads",
+          "desc": "Categorizes leads as Hot, Warm, or Cold based on engagement."
         },
-          {
-          "title":"Recommend Actions",
-          "desc":"Suggests next steps call immediately, follow-up, or archive."
+        {
+          "title": "Recommend Actions",
+          "desc": "Suggests next steps call immediately, follow-up, or archive."
         },
-          {
-          "title":"Learn & Improve",
-          "desc":"Continuously learns from your feedback for smarter results."
+        {
+          "title": "Learn & Improve",
+          "desc": "Continuously learns from your feedback for smarter results."
         }
       ]
     },
- "beforeJazzam": {
-    "marquee": [
-      "Innovation",
-      "Development",
-      "Integration",
-      "Scalability",
-      "Visualization",
-      "Intelligence",
-      "Transformation"
-    ],
-    "beforeTitle": "Before Jazzam",
-    "beforeItems": [
-      "Manual lead tracking and data entry",
-      "No effective way to prioritize leads",
-      "Missed opportunities due to delayed follow-ups",
-      "Wasted time with unqualified leads"
-    ],
-    "withTitle": "With Jazzam",
-    "withItems": [
-      "Automatic lead capture and analysis",
-      "Smart classification and prioritization of leads",
-      "Instant notifications for high-priority leads",
-      "Focus only on qualified prospects"
-    ],
-    "waitlist": {
-      "heading": "Join the waitlist today!",
-      "placeholder": "Your email",
-      "button": "Send Now"
-    }
-  },
-  "problemSolved":{
- "Title": "PROBLEMS JAZZAM SOLVES",
- "para":"Transform your lead management challenges into opportunities",
- "cardTitle1":" Focus only on prospects with genuine buying intent.",
- "cardpara1":"More Qualified Leads",
- "cardpara2":"Save Team Time",
-  "cardpara3":"Smarter Decisions",
-   "cardpara4":"Faster Sales",
-  "cardTitle2":" Reduce manual work and increase productivity.",
-   "cardTitle3":"  Data-driven insights for better conversion rates.",
-    "cardTitle4":"   Accelerate your sales cycle with prioritized leads."
-  },
-  "chasing":{
-    "title":"   PROBLEMS JAZZAM SOLVES",
-    "para":"Transform your lead management challenges into opportunities",
-    "cardTitle1":"Chasing Disappearing Leads",
-    "cardPara1":"No more lost opportunities from visitors who left without a trace.",
-       "cardTitle2":"Excessive Manual Data Entry",
-    "cardPara2":"Eliminate hours of tedious manual work and human errors.",
-       "cardTitle3":"Identifying Serious Buyers",
-    "cardPara3":" Know exactly which leads are worth your time and attention."
-
-  },
-
-"letsstarttoday":{
-  "title":"LET'S START TODAY",
-  "description":"Join hundreds of businesses already using Jazzam to qualify their leads",
-  "para":"No credit card required • 14-day free trial",
-  "cardtitle":"Join Industry Leaders",
-  "cardpara":"Trusted by companies across Saudi Arabia",
-  "number1":"Active Users",
-  "number2":"Satisfaction",
-  "number3":"Support",
-  "button":"REGISTER YOUR COMPANY"
-},
+    "beforeJazzam": {
+      "marquee": [
+        "Innovation",
+        "Development",
+        "Integration",
+        "Scalability",
+        "Visualization",
+        "Intelligence",
+        "Transformation"
+      ],
+      "beforeTitle": "Before Jazzam",
+      "beforeItems": [
+        "Manual lead tracking and data entry",
+        "No effective way to prioritize leads",
+        "Missed opportunities due to delayed follow-ups",
+        "Wasted time with unqualified leads"
+      ],
+      "withTitle": "With Jazzam",
+      "withItems": [
+        "Automatic lead capture and analysis",
+        "Smart classification and prioritization of leads",
+        "Instant notifications for high-priority leads",
+        "Focus only on qualified prospects"
+      ],
+      "waitlist": {
+        "heading": "Join the waitlist today!",
+        "placeholder": "Your email",
+        "button": "Send Now"
+      }
+    },
+    "problemSolved": {
+      "Title": "PROBLEMS JAZZAM SOLVES",
+      "para": "Transform your lead management challenges into opportunities",
+      "cardTitle1": " Focus only on prospects with genuine buying intent.",
+      "cardpara1": "More Qualified Leads",
+      "cardpara2": "Save Team Time",
+      "cardpara3": "Smarter Decisions",
+      "cardpara4": "Faster Sales",
+      "cardTitle2": " Reduce manual work and increase productivity.",
+      "cardTitle3": "  Data-driven insights for better conversion rates.",
+      "cardTitle4": "   Accelerate your sales cycle with prioritized leads."
+    },
+    "chasing": {
+      "title": "   PROBLEMS JAZZAM SOLVES",
+      "para": "Transform your lead management challenges into opportunities",
+      "cardTitle1": "Chasing Disappearing Leads",
+      "cardPara1": "No more lost opportunities from visitors who left without a trace.",
+      "cardTitle2": "Excessive Manual Data Entry",
+      "cardPara2": "Eliminate hours of tedious manual work and human errors.",
+      "cardTitle3": "Identifying Serious Buyers",
+      "cardPara3": " Know exactly which leads are worth your time and attention."
+    },
+    "letsstarttoday": {
+      "title": "LET'S START TODAY",
+      "description": "Join hundreds of businesses already using Jazzam to qualify their leads",
+      "para": "No credit card required • 14-day free trial",
+      "cardtitle": "Join Industry Leaders",
+      "cardpara": "Trusted by companies across Saudi Arabia",
+      "number1": "Active Users",
+      "number2": "Satisfaction",
+      "number3": "Support",
+      "button": "REGISTER YOUR COMPANY"
+    },
     "frequentlyAskedQuestions": {
       "title": "Frequently Asked Questions",
       "description": "Everything you need to know about Jazzam",
@@ -172,7 +165,6 @@
         "answer5": "Yes, it integrates with CRMs, marketing tools, and allows easy export to Excel or CSV."
       }
     },
-
     "contactUs": {
       "title": "CONTACT US",
       "description": "have questions or feedback? we're here to help. Send us a message, and we'll respond within 24 hours.",
@@ -203,11 +195,16 @@
         "submitButton": "SUBMIT"
       }
     },
-
     "footer": {
       "title": "Transform Your Sales Team into a Deal-Closing Machine with AI. Jazzam – Smart AI Sales Agent (SaaS) helps your team connect with the right customers and close deals 40% faster.",
       "copyright": "All rights reserved.",
-      "button":"SEND NOW"
+      "button": "SEND NOW"
+    },
+    "toastMsgs": {
+      "emailSent": "Successfully joined waitlist!",
+      "emailNotSent": "Please! enter your email",
+      "errorEmail": "Error submitting email",
+      "emailServerError": "Unable to add email due to server error"
     }
   }
 }
