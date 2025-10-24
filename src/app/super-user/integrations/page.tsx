@@ -82,6 +82,9 @@ export default function IntegrationsPage() {
         getCRMIntegration(),
       ]);
 
+      console.log("Providers Data:", providersData);
+      console.log("Integration Data:", integrationData);
+
       setProviders(providersData.data || []);
       setCrmIntegrations(integrationData.data || []);
     } catch (error) {
@@ -93,6 +96,7 @@ export default function IntegrationsPage() {
   };
 
   const handleCRMConnect = async (providerId: string) => {
+    console.log("providerId********", providerId)
     try {
       // Check if user can add more channels
       if (!canAddMoreChannels) {

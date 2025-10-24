@@ -26,13 +26,13 @@ const Waitlist = ({ dict, lang }: WaitlistProps) => {
     const { success, error: ErrorToast } = useToast()
 
     const callWaitlistApi = async () => {
-        if(waitlistEmail === ""){
-            ErrorToast("Please! enter your email");
+        if (waitlistEmail === "") {
+            ErrorToast(dict.home.toastMsgs.emailNotSent)
             return;
         }
         try {
             setLoading(true);
-            await emailjs.send(emailServiceId,emailTemplateId, {
+            await emailjs.send(emailServiceId, emailTemplateId, {
                 email: waitlistEmail.trim()
             })
             const response = await joinWaitlist(waitlistEmail.trim(), "", "website", {
@@ -41,17 +41,17 @@ const Waitlist = ({ dict, lang }: WaitlistProps) => {
                 referrer: document.referrer || "direct",
             });
             if (response.success) {
-                success("Successfully joined waitlist!");
+                success(dict?.home?.toastMsgs.emailSent);
                 setWaitlistEmail("")
             } else {
-                ErrorToast(response.error || "Error submitting email");
+                ErrorToast(dict?.home?.toastMsgs?.errorEmail);
             }
         } catch (error) {
             console.error("error*******:", error)
-            ErrorToast(`Unable to add email ${waitlistEmail} due to server error`)
+            ErrorToast(`${dict?.home?.toastMsgs?.errorEmail} ${waitlistEmail}`)
             setWaitlistEmail("")
             setLoading(false);
-        }finally{
+        } finally {
             setLoading(false)
         }
     }
@@ -121,7 +121,7 @@ const Waitlist = ({ dict, lang }: WaitlistProps) => {
                         height={400}
                         width={400}
                         alt="img"
-                        className="w-[250px] sm:w-[350px] md:w-[450px] lg:w-[600px] h-auto"
+                        className="w-[350px] sm:w-[350px] md:w-[450px] lg:w-[600px] h-auto"
                     />
                 </div>
             </div>

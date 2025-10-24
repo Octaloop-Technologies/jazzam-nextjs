@@ -33,7 +33,7 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
 
   const callWaitlistApi = async () => {
     if (waitlistEmail === "") {
-      ErrorToast("Please! enter your email")
+      ErrorToast(dict.home.toastMsgs.emailNotSent)
       return;
     }
 
@@ -48,14 +48,14 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
         referrer: document.referrer || "direct",
       });
       if (response.success) {
-        success("Successfully joined waitlist!");
+        success(dict?.home?.toastMsgs.emailSent);
         setWaitlistEmail("")
       } else {
-        ErrorToast(response.error || "Error submitting email");
+        ErrorToast(dict?.home?.toastMsgs?.errorEmail);
       }
     } catch (error) {
       console.error("error*******:", error)
-      ErrorToast(`Unable to add email ${waitlistEmail} due to server error`)
+      ErrorToast(`${dict?.home?.toastMsgs?.errorEmail} ${waitlistEmail}`)
       setWaitlistEmail("");
       setLoading(false);
     } finally {
