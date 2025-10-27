@@ -7,7 +7,7 @@ import OptimizedImage from "@/components/ui/image/OptimizedImage";
 
 interface LeadDetailModalProps {
   isOpen: boolean;
-  lead: Lead & { name: string };
+  lead: Lead;
   onClose: () => void;
   onConfirm: (leadId: string) => void;
   leadId: string;
