@@ -3,4 +3,4 @@ Disallow: /api/
 Disallow: /private/
 Allow: /
 
-Sitemap: https://jazzam.ai/sitemap.xml
+Sitemap: https://jazzam-frontend-git-test-faisal-octalooptechnologies-projects.vercel.app/sitemap.xml
