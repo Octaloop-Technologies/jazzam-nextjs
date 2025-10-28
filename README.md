@@ -1,4 +1,4 @@
-# Jazzam - Lead Generation Platform
+# Jazzam - Lead Generation Platform 
 
 A modern, multilingual lead generation platform built with Next.js 15, featuring a comprehensive dashboard for businesses to manage and analyze leads effectively.
 
