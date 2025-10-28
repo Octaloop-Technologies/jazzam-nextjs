@@ -1,3 +1,4 @@
+"use client";
 import { LeftArrowSvg, RightArrowSvg } from "@/components/svgs/ArrowSvgs";
 import { ClockSvg, DoubleCheckSvg, EmailSvg, WhatsappSvg } from "@/components/svgs/followUpSvgs";
 import OptimizedImage from "@/components/ui/image/OptimizedImage";
@@ -7,6 +8,7 @@ import TableCell from "@/components/ui/table/TableCell";
 import TableHeader from "@/components/ui/table/TableHeader";
 import TableRow from "@/components/ui/table/TableRow";
 import FollowUpMenu from "@/components/view/dashboard/follow-up/FollowUpMenu";
+import { useEffect, useState } from "react";
 
 // ======================================================
 // Leads data
@@ -35,6 +37,27 @@ const leadsData = [
 ];
 
 const FollowUpsPage = () => {
+  const [followupLeads, setFollowupLeads] = useState<Lead[]>([]);
+
+  useEffect(() => {
+    const fetchToken = async () => {
+      const cookieString = document.cookie;
+      const cookies = Object.fromEntries(
+        cookieString.split("; ").map(c => c.split("="))
+      );
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/follow-up-leads`, {
+          headers: {
+            Authorization: `Bearer ${cookies.accessToken}`
+          }
+        });
+        if(res.ok){
+          const data = await res.json();
+          setFollowupLeads(data?.data)
+        }
+    }
+    fetchToken();
+  }, []);
+
   return (
     <section>
       {/* ---------------------------- header ---------------------------- */}
@@ -80,7 +103,7 @@ const FollowUpsPage = () => {
               <TableCell>Date of submission</TableCell>
             </TableHeader>
             <div className="px-[30px]">
-              {leadsData.map((lead) => (
+              {followupLeads?.map((lead: Lead) => (
                 <TableRow key={lead._id} className="!grid-cols-4">
                   <TableCell>
                     <div className="flex items-center gap-3">
@@ -101,7 +124,7 @@ const FollowUpsPage = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1">
-                      {lead.channel.toLowerCase() === "email" ? <EmailSvg /> : <WhatsappSvg />}
+                      {lead?.channel && lead?.channel.toLowerCase() === "email" ? <EmailSvg /> : <WhatsappSvg />}
                       <h4 className="text-[14px] capitalize">{lead.channel}</h4>
                     </div>
                   </TableCell>
@@ -121,10 +144,10 @@ const FollowUpsPage = () => {
                     </div>
                   </TableCell>
                   <TableCell className="flex-between">
-                    <h3 className="text-[14px] text-gray-200">{lead.date}</h3>
+                    <h3 className="text-[14px] text-gray-200">{lead.date ? lead.date : "----"}</h3>
                     <FollowUpMenu
                       lead={lead as unknown as Lead & { name: string }}
-                      showSendNow={lead.status.toLowerCase() === "scheduled"}
+                      showSendNow={lead.status.toLowerCase() === "pending"}
                     />
                   </TableCell>
                 </TableRow>

@@ -7,13 +7,14 @@ import DeleteLeadModal from "@/components/ui/models/DeleteLeadModal";
 import { useState } from "react";
 import LeadDetailModal from "./LeadDetailModal";
 import ScadualeModal from "./ScadualeModal";
+import { useToast } from "@/lib/hooks/useToast";
 
 const FollowUpMenu = ({
   lead,
   customTrigger,
   showSendNow = false,
 }: {
-  lead: Lead & { name: string };
+  lead: Lead;
   customTrigger?: React.ReactNode;
   showSendNow?: boolean;
 }) => {
@@ -24,6 +25,8 @@ const FollowUpMenu = ({
   const [selectedLeadId, setSelectedLeadId] = useState<string>(lead._id);
   const [isLeadDetailModalOpen, setIsLeadDetailModalOpen] = useState(false);
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+
+  const { success, error: ToastError } = useToast()
 
   // ======================================================
   // Delete lead
@@ -66,6 +69,26 @@ const FollowUpMenu = ({
     // After scheduling, you might want to update the lead status or refresh the data
     handleCloseScheduleModal();
   };
+
+  const handleFollowUp = async (id: string | undefined) => {
+    const cookieString = document.cookie;
+    const cookies = Object.fromEntries(
+      cookieString.split("; ").map(c => c.split("="))
+    );
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/follow-up/${id}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${cookies?.accessToken}`
+        }
+      });
+      if (res.ok) {
+        success("follow up email sent.")
+      }
+    } catch (error) {
+      ToastError("unable to send follow up email")
+    }
+  }
 
   return (
     <>
@@ -124,7 +147,7 @@ const FollowUpMenu = ({
         </DropdownItem>
         {showSendNow && (
           <DropdownItem>
-            <button className="flex-between w-full hover:text-gray-200">
+            <button className="flex-between w-full hover:text-gray-200" onClick={() => handleFollowUp(lead?.leadId)}>
               <div className="flex gap-1">
                 <SendFollowUpSvg />
                 Send Now

@@ -6,6 +6,10 @@ interface Lead {
   profilePic?: string; // Profile picture URL
   linkedinProfileUrl?: string; // Deprecated: Use profileUrl instead (kept for backward compatibility)
   firstName?: string;
+  name?: string;
+  leadId?: string;
+  channel?: string;
+  date?: any
   lastName?: string;
   fullName?: string;
   headline?: string;

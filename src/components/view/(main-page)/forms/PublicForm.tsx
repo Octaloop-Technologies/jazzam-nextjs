@@ -89,7 +89,8 @@ const PublicForm = ({ accessToken }: PublicFormProps) => {
     }
 
     if (field.validation && value.trim()) {
-      const regex = new RegExp(field.validation.pattern);
+      // const regex = new RegExp(field.validation.pattern);
+      const regex = new RegExp("^https:\/\/(www\\.)?[a-zA-Z0-9_-]+\\.com(\\/[^\\s]*)?$")
       if (!regex.test(value)) {
         return field.validation.message;
       }
