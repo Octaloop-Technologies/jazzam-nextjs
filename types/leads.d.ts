@@ -8,6 +8,8 @@ interface Lead {
   firstName?: string;
   name?: string;
   leadId?: string;
+  channel?: string;
+  date?: any
   lastName?: string;
   fullName?: string;
   headline?: string;

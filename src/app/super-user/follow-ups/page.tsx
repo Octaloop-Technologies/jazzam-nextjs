@@ -37,7 +37,7 @@ const leadsData = [
 ];
 
 const FollowUpsPage = () => {
-  const [followupLeads, setFollowupLeads] = useState<any>();
+  const [followupLeads, setFollowupLeads] = useState<Lead[]>([]);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -103,7 +103,7 @@ const FollowUpsPage = () => {
               <TableCell>Date of submission</TableCell>
             </TableHeader>
             <div className="px-[30px]">
-              {followupLeads?.map((lead: any) => (
+              {followupLeads?.map((lead: Lead) => (
                 <TableRow key={lead._id} className="!grid-cols-4">
                   <TableCell>
                     <div className="flex items-center gap-3">
@@ -124,7 +124,7 @@ const FollowUpsPage = () => {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-1">
-                      {lead.channel.toLowerCase() === "email" ? <EmailSvg /> : <WhatsappSvg />}
+                      {lead?.channel && lead?.channel.toLowerCase() === "email" ? <EmailSvg /> : <WhatsappSvg />}
                       <h4 className="text-[14px] capitalize">{lead.channel}</h4>
                     </div>
                   </TableCell>
