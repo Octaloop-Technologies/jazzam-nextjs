@@ -8,7 +8,7 @@ import { useToast } from "@/lib/hooks/useToast";
 const LoginButtons = () => {
   const [isLoading, setIsLoading] = useState({ google: false, zoho: false });
   const toast = useToast();
-
+  console.log("Rendering LoginButtons component", process.env.NEXT_PUBLIC_BASE_URL);
   const handleGoogleLogin = async () => {
     setIsLoading((prev) => ({ ...prev, google: true }));
     toast.info("Redirecting to Google...");
