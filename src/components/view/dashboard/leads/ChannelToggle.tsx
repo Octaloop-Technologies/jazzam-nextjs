@@ -14,12 +14,12 @@ const ChannelToggle = () => {
       icon: <EmailIcon />,
       value: "email",
     },
-    {
-      id: "whatsapp",
-      label: "WhatsApp",
-      icon: <WhatsAppIcon />,
-      value: "whatsapp",
-    },
+    // {
+    //   id: "whatsapp",
+    //   label: "WhatsApp",
+    //   icon: <WhatsAppIcon />,
+    //   value: "whatsapp",
+    // },
   ];
 
   const handleChannelChange = (value: string) => {
@@ -30,7 +30,7 @@ const ChannelToggle = () => {
   return (
     <ToggleSelector
       options={channelOptions}
-      selectedValue={selectedChannel}
+      selectedValue={""}
       onSelectionChange={handleChannelChange}
     />
   );
