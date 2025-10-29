@@ -91,7 +91,7 @@ export function middleware(request: NextRequest) {
 
   // If trying to access auth routes (login) and IS authenticated
   if (authRoutes.some((route) => path.startsWith(route)) && isAuthenticated) {
-    return NextResponse.redirect(new URL("/super-user", request.url));
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   const response = NextResponse.next();

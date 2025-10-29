@@ -21,6 +21,7 @@ import { changeLang } from "../action";
 interface NavbarProps {
   currentLang: string;
   languages: LanguageProp[];
+  superUser: boolean
 }
 
 // ======================================================
@@ -28,7 +29,7 @@ interface NavbarProps {
 // ======================================================
 gsap.registerPlugin(ScrollTrigger);
 
-const Navbar = ({ currentLang, languages }: NavbarProps) => {
+const Navbar = ({ currentLang, languages, superUser }: NavbarProps) => {
   // ======================================================
   // Hooks
   // ======================================================
@@ -67,7 +68,7 @@ const Navbar = ({ currentLang, languages }: NavbarProps) => {
       <Logo />
 
       {/* ------------- nav items ------------- */}
-      <nav className="flex-center gap-2.5 text-[14px]">
+      {superUser === true && <nav className="flex-center gap-2.5 text-[14px]">
         {navItems.map((item) => (
           <Link href={item.href} prefetch={false} key={item.title}>
             <div
@@ -80,7 +81,7 @@ const Navbar = ({ currentLang, languages }: NavbarProps) => {
             </div>
           </Link>
         ))}
-      </nav>
+      </nav>}
 
       <div className="flex-center gap-4">
         {/* ------------- localization ------------- */}

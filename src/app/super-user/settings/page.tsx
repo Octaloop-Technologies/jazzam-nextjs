@@ -26,6 +26,7 @@ import Link from "next/link";
 import { useI18n } from "@/providers/I18nProvider";
 import { updateUserSettings } from "@/redux/slices/authSlice";
 import { clearAuthCookies } from "@/lib/utils/clearCookies";
+import { getCookies } from "@/lib/utils/cookies";
 
 const SubscriptionSettings = dynamic(
   () => import("@/components/view/dashboard/settings/SubscriptionSettings"),
@@ -49,6 +50,7 @@ const SettingsPage = () => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isRestartingTour, setIsRestartingTour] = useState(false);
   const { success: ToastSuccess, error: ToastError } = useToast();
+  const [email, setEmail] = useState<string>("")
 
   // ==============================================================
   // Hooks
@@ -76,6 +78,8 @@ const SettingsPage = () => {
       setNotificationSettings(newNotificationSettings);
     }
   }, [user]);
+
+  console.log("users***********", user)
 
   // ==============================================================
   // Update BANT Setting
@@ -165,6 +169,51 @@ const SettingsPage = () => {
     }
   };
 
+  const checkEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  }
+
+  const sendInvitation = async () => {
+    const senderCompanyId = user?._id;
+
+    if (!checkEmail(email)) {
+      ToastError("Email is not valid!")
+      return;
+    }
+
+    const cookies = getCookies();
+
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/invite/send`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${cookies?.accessToken}`
+        },
+        body: JSON.stringify({
+          senderCompanyId,
+          receiverEmail: email
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        ToastError(data.message || 'Failed to send invitation');
+      }
+
+      if(data?.data.success === true){
+        ToastSuccess("Invitation link sent successfully")
+      }
+
+
+      return data;
+    } catch (error) {
+      console.error('Error sending invitation:', error);
+      throw error;
+    }
+  }
+
   return (
     <div>
       <h1 className="mt-3.5 text-[32px] font-[500] capitalize">Settings</h1>
@@ -174,11 +223,10 @@ const SettingsPage = () => {
           <div className="flex flex-col gap-2">
             <button
               className={`px-2.5 h-[44px] flex-between gap-2 rounded-[110px] 
-                  ${
-                    activeTab === "profile"
-                      ? "bg-pri text-white"
-                      : "bg-transparent text-gray-200 hover:bg-gray"
-                  }`}
+                  ${activeTab === "profile"
+                  ? "bg-pri text-white"
+                  : "bg-transparent text-gray-200 hover:bg-gray"
+                }`}
               onClick={() => setActiveTab("profile")}
             >
               <div className="flex-center gap-2">
@@ -188,11 +236,10 @@ const SettingsPage = () => {
             </button>
             <button
               className={`px-2.5 h-[44px] flex-between gap-2 rounded-[110px] 
-                  ${
-                    activeTab === "general"
-                      ? "bg-pri text-white"
-                      : "bg-transparent text-gray-200 hover:bg-gray"
-                  }`}
+                  ${activeTab === "general"
+                  ? "bg-pri text-white"
+                  : "bg-transparent text-gray-200 hover:bg-gray"
+                }`}
               onClick={() => setActiveTab("general")}
             >
               <div className="flex-center gap-2">
@@ -202,11 +249,10 @@ const SettingsPage = () => {
             </button>
             <button
               className={`px-2.5 h-[44px] flex-between gap-2 rounded-[110px] 
-                  ${
-                    activeTab === "subscription"
-                      ? "bg-pri text-white"
-                      : "bg-transparent text-gray-200 hover:bg-gray"
-                  }`}
+                  ${activeTab === "subscription"
+                  ? "bg-pri text-white"
+                  : "bg-transparent text-gray-200 hover:bg-gray"
+                }`}
               onClick={() => setActiveTab("subscription")}
             >
               <div className="flex-center gap-2">
@@ -223,8 +269,8 @@ const SettingsPage = () => {
             {activeTab === "profile"
               ? "Profile settings"
               : activeTab === "general"
-              ? "General settings"
-              : "Subscription & Billing"}
+                ? "General settings"
+                : "Subscription & Billing"}
           </h1>
           {/* -- profile -- */}
           {activeTab === "profile" ? (
@@ -243,8 +289,8 @@ const SettingsPage = () => {
                         {user?.provider === "google"
                           ? "Google"
                           : user?.provider === "zohocrm"
-                          ? "Zoho CRM"
-                          : "Account"}
+                            ? "Zoho CRM"
+                            : "Account"}
                       </h3>
                       <h3 className="text-[14px] leading-none text-gray-200">
                         {user?.email || "user@example.com"}
@@ -255,9 +301,8 @@ const SettingsPage = () => {
                     <button
                       type="submit"
                       disabled={isLoggingOut}
-                      className={`w-fit flex gap-1 text-sm transition-colors duration-200 ${
-                        isLoggingOut ? "text-gray-400 cursor-not-allowed" : "text-danger gray-hover"
-                      }`}
+                      className={`w-fit flex gap-1 text-sm transition-colors duration-200 ${isLoggingOut ? "text-gray-400 cursor-not-allowed" : "text-danger gray-hover"
+                        }`}
                     >
                       <div>{logoutIcon()}</div>
                       <div>{isLoggingOut ? "Logging out..." : "Logout"}</div>
@@ -382,6 +427,22 @@ const SettingsPage = () => {
                 </div>
               </div>
 
+              <h1 className="text-[14px] text-gray-200 mt-4">Send Invites</h1>
+              <div className="p-[15px] border border-gray-b rounded-2xl">
+                <div className="flex-between">
+                  {/* <input className="text-xs text-gray-400">
+                    Connect your CRM to sync leads automatically
+                  </input> */}
+                  <input placeholder="Enter email for sending invitation" className="focus:outline-none w-auto md:w-72" value={email} onChange={(e: React.ChangeEvent<HTMLInputElement>) => {setEmail(e.target.value)}} />
+                  <button
+                    onClick={sendInvitation}
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-pri text-white hover:bg-pri/80`}
+                  >
+                    Send Invite
+                  </button>
+                </div>
+              </div>
+
               {/* Onboarding Tour */}
               <h1 className="text-[14px] text-gray-200 mt-4">Help & Support</h1>
               <div className="p-[15px] border border-gray-b rounded-2xl">
@@ -395,11 +456,10 @@ const SettingsPage = () => {
                   <button
                     onClick={handleRestartTour}
                     disabled={isRestartingTour}
-                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                      isRestartingTour
-                        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                        : "bg-pri text-white hover:bg-pri/80"
-                    }`}
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${isRestartingTour
+                      ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                      : "bg-pri text-white hover:bg-pri/80"
+                      }`}
                   >
                     {isRestartingTour ? "Restarting..." : "Restart Tour"}
                   </button>
