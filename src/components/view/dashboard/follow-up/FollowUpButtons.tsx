@@ -5,12 +5,14 @@ import React, { useState } from "react";
 import ScadualeModal from "./ScadualeModal";
 import CloseSvg from "@/components/svgs/CloseSvg";
 
-const FollowUpButtons = () => {
+interface FollowUpButtons{
+  handleSendNow: () => void,
+  handleScheduleConfirm: (date: Date) => void
+}
+
+const FollowUpButtons = ({handleSendNow, handleScheduleConfirm}: FollowUpButtons) => {
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
 
-  const handleScheduleConfirm = (date: Date) => {
-    console.log(date);
-  };
 
   return (
     <>
@@ -30,6 +32,7 @@ const FollowUpButtons = () => {
         title="Send now"
         className="w-[220px] h-[50px] rounded-xl-2"
         iconRight={<SendNowSvg />}
+        onClick={handleSendNow}
       />
 
       <ScadualeModal
