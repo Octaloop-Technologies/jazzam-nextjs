@@ -85,6 +85,8 @@ const FormsDashboard = () => {
     );
   }
 
+  const client_url = process.env.NEXT_PUBLIC_CLIENT_URL;
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -125,19 +127,19 @@ const FormsDashboard = () => {
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
-                    value={platform.formUrl || ""}
+                    value={`${client_url}/form/${platform?.formUrl?.split("form")[1]}` || ""}
                     readOnly
                     className="flex-1 px-2 py-1 text-xs border border-gray-b rounded bg-gray-50"
                   />
                   <button
-                    onClick={() => copyToClipboard(platform.formUrl || "", "Form URL")}
+                    onClick={() => copyToClipboard(`${client_url}/form/${platform?.formUrl?.split("form")[1]}` || "", "Form URL")}
                     className="p-1 hover:bg-gray-100 rounded transition-colors"
                     title="Copy Form URL"
                   >
                     <CopySvg />
                   </button>
                   <a
-                    href={platform.formUrl || ""}
+                    href={`${client_url}/form/${platform?.formUrl?.split("form")[1]}` || ""}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-1 hover:bg-gray-100 rounded transition-colors"

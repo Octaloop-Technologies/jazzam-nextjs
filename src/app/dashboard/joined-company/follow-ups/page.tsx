@@ -13,7 +13,8 @@ import { useEffect, useState } from "react";
 
 const FollowUpsPage = () => {
   const [followupLeads, setFollowupLeads] = useState<Lead[]>([]);
-  const user = useAppSelector((state) => state.auth.user);
+
+  const joinedCompany = JSON.parse(localStorage.getItem("joinedCompany") || '{}');
 
 
   useEffect(() => {
@@ -22,7 +23,7 @@ const FollowUpsPage = () => {
       const cookies = Object.fromEntries(
         cookieString.split("; ").map(c => c.split("="))
       );
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/follow-up-leads/${user?._id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/follow-up-leads/${joinedCompany?._id}`, {
           headers: {
             Authorization: `Bearer ${cookies.accessToken}`
           }
@@ -45,11 +46,11 @@ const FollowUpsPage = () => {
           <SearchBar />
 
           {/* tabs */}
-          <div className="flex gap-[15px] h-[61px] text-[14px] border border-gray-b p-2.5 rounded-4xl">
+          {/* <div className="flex gap-[15px] h-[61px] text-[14px] border border-gray-b p-2.5 rounded-4xl">
             <button className="h-full px-5 bg-[#0fb98121] text-pri rounded-4xl">All</button>
             <button className="h-full px-5 bg-white rounded-4xl">Submitted</button>
             <button className="h-full px-5 bg-white rounded-4xl">Scheduled</button>
-          </div>
+          </div> */}
         </div>
       </div>
 

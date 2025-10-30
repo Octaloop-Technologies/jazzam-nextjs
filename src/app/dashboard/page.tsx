@@ -65,6 +65,7 @@ const Pages = () => {
                     ownCompany: data?.data.ownCompany,
                     joinedCompanies: data?.data.joinedCompanies
                 });
+                localStorage.setItem("joinedCompany", JSON.stringify(data?.data.joinedCompanies));
             } catch (error) {
                 console.log("error*******", error);
             }
@@ -102,7 +103,7 @@ const Pages = () => {
 
 
                 </div>
-                <div className={divStyling}>
+                <div className={divStyling} onClick={() => router.push("/dashboard/joined-company/follow-ups")}>
                     <h1 className='text-gray-600 text-2xl mb-2 font-medium'>Joined Company</h1>
                     <Image
                         src={

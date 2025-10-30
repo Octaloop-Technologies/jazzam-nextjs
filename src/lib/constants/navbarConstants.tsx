@@ -14,11 +14,11 @@ const navItems = [
     icon: <FormsIcon />,
     title: "Forms",
   },
-  {
-    href: "/super-user/summary",
-    icon: <SummaryIcon />,
-    title: "Summary",
-  },
+  // {
+  //   href: "/super-user/summary",
+  //   icon: <SummaryIcon />,
+  //   title: "Summary",
+  // },
 
   {
     href: "/super-user/follow-ups",
