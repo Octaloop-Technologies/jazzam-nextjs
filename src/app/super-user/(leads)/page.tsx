@@ -48,6 +48,7 @@ interface DashboardPageProps {
     sortOrder?: string;
     payment?: string;
     session_id?: string;
+    companyId?: string;
   }>;
 }
 
@@ -55,6 +56,11 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
   const params = await searchParams;
   const currentPage = parseInt(params.page || "1");
   const statusFilter = params.status;
+
+  // 👇 Extract companyId from the query string
+  const companyId = params.companyId;
+
+  console.log("Company ID:", companyId); // should log "123"
 
   // ======================================================
   // Search query and filters

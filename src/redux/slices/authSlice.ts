@@ -39,6 +39,7 @@ export interface Company {
     url: string;
     public_id: string;
   };
+  joinedCompanies: string;
   isVerified: boolean;
   googleId?: string;
   zohoId?: string;
@@ -49,6 +50,7 @@ export interface Company {
     formsCreated: number;
     emailsSent: number;
   };
+  joinedCompanyStatus: boolean;
   isActive: boolean;
   lastLoginAt?: Date;
   onboarding?: {
