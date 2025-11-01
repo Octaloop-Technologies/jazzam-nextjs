@@ -70,9 +70,9 @@ export const createPlatformForm = async (formType: string) => {
 };
 
 // Get available platforms for form creation
-export const getAvailablePlatforms = async () => {
+export const getAvailablePlatforms = async (companyId: string | null | undefined) => {
   try {
-    const response = await makeApiRequest("/forms/platform/available");
+    const response = await makeApiRequest(`/forms/platform/available?companyId=${companyId}`);
     return {
       success: true,
       data: response.data,

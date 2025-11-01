@@ -8,36 +8,17 @@ import TableCell from "@/components/ui/table/TableCell";
 import TableHeader from "@/components/ui/table/TableHeader";
 import TableRow from "@/components/ui/table/TableRow";
 import FollowUpMenu from "@/components/view/dashboard/follow-up/FollowUpMenu";
+import { useAppSelector } from "@/redux/store";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-
-// ======================================================
-// Leads data
-// ======================================================
-const leadsData = [
-  {
-    _id: "1",
-    followUp: "follow-up-1",
-    name: "Wade Warren",
-    company: "TechCorp Inc",
-    email: "wade.12@gmail.com",
-    channel: "Email",
-    status: "submitted",
-    date: "01 Sep 2025, 12:00 PM",
-  },
-  {
-    _id: "2",
-    followUp: "follow-up-2",
-    name: "Wade Warren",
-    company: "TechCorp Inc",
-    email: "wade.12@gmail.com",
-    channel: "Whatsapp",
-    status: "scheduled",
-    date: "01 Sep 2025, 12:00 PM",
-  },
-];
 
 const FollowUpsPage = () => {
   const [followupLeads, setFollowupLeads] = useState<Lead[]>([]);
+  const user = useAppSelector((state) => state.auth.user);
+  const searchParams = useSearchParams();
+
+  const companyId = searchParams?.get("companyId"); 
+
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -45,7 +26,7 @@ const FollowUpsPage = () => {
       const cookies = Object.fromEntries(
         cookieString.split("; ").map(c => c.split("="))
       );
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/follow-up-leads`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/follow-up-leads?companyId=${companyId}`, {
           headers: {
             Authorization: `Bearer ${cookies.accessToken}`
           }
@@ -109,16 +90,16 @@ const FollowUpsPage = () => {
                     <div className="flex items-center gap-3">
                       <div className="size-[40px] rounded-full overflow-hidden">
                         <OptimizedImage
-                          src="/assets/images/leads/dummy-profile.png"
+                          src={lead?.leadId?.profilePic ? lead?.leadId?.profilePic : "/assets/images/leads/dummy-profile.png"}
                           alt="avatar"
                           fill
                           className="w-full h-full object-cover"
                         />
                       </div>
                       <div className="flex flex-col leading-none">
-                        <p className="text-[16px] font-[500]">{lead.name}</p>
-                        <p className="text-[12px] text-gray-200">{lead.company}</p>
-                        <p className="text-[12px] text-gray-200">{lead.email}</p>
+                        <p className="text-[16px] font-[500]">{lead?.leadId?.fullName}</p>
+                        <p className="text-[12px] text-gray-200">{lead.leadId?.company}</p>
+                        <p className="text-[12px] text-gray-200">{lead.leadId?.email}</p>
                       </div>
                     </div>
                   </TableCell>
@@ -144,11 +125,11 @@ const FollowUpsPage = () => {
                     </div>
                   </TableCell>
                   <TableCell className="flex-between">
-                    <h3 className="text-[14px] text-gray-200">{lead.date ? lead.date : "----"}</h3>
-                    <FollowUpMenu
+                    <h3 className="text-[14px] text-gray-200">{lead.dateOfSubmission ? new Date(lead.dateOfSubmission).toLocaleString() : "----"}</h3>
+                    {/* <FollowUpMenu
                       lead={lead as unknown as Lead & { name: string }}
                       showSendNow={lead.status.toLowerCase() === "pending"}
-                    />
+                    /> */}
                   </TableCell>
                 </TableRow>
               ))}

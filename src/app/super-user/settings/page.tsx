@@ -434,15 +434,12 @@ const SettingsPage = () => {
                       </div>
                     </div>
 
-                    <form action={handleLogout}>
                       <button
-                        type="submit"
-                        disabled={isLoggingOut}
+                      onClick={() => router.push(`/super-user/?companyId=${joinedCompany?._id}`)}
                         className="bg-yellow-400 text-white w-20 rounded text-lg"
                       >
                         Visit
                       </button>
-                    </form>
                   </div>}
               </div>
 

@@ -8,7 +8,7 @@ import {
   NotificationDropdownSvg,
   TimeSvg,
 } from "@/components/svgs/NavbarSvgs";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Dropdown, { DropdownItem } from "@/components/ui/dropdown/Dropdown";
 import { navItems } from "@/lib/constants/navbarConstants";
@@ -33,6 +33,9 @@ const Navbar = ({ currentLang, languages }: NavbarProps) => {
   // Hooks
   // ======================================================
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const companyId = searchParams?.get("companyId");
 
   // ======================================================
   // Make the Navbar sticky with smooth animation when scrolling
@@ -69,7 +72,7 @@ const Navbar = ({ currentLang, languages }: NavbarProps) => {
       {/* ------------- nav items ------------- */}
       <nav className="flex-center gap-2.5 text-[14px]">
         {navItems.map((item) => (
-          <Link href={item.href} prefetch={false} key={item.title}>
+          <Link href={companyId !== null || undefined ? item.href+`?companyId=${companyId}` :  item.href} prefetch={false} key={item.title}>
             <div
               className={`flex-center gap-1 px-5 py-2.5 rounded-4xl ${
                 pathname === item.href ? "text-white bg-pri" : "text-gray-200"

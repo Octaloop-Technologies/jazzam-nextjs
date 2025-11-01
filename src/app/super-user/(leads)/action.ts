@@ -14,6 +14,7 @@ interface GetLeadsParams {
   assignedTo?: string;
   sortBy?: string;
   sortOrder?: string;
+  companyId?: string
 }
 
 export const getAllLeads = async ({
@@ -25,6 +26,7 @@ export const getAllLeads = async ({
   assignedTo,
   sortBy = "createdAt",
   sortOrder = "desc",
+  companyId
 }: GetLeadsParams) => {
   try {
     const cookieStore = await cookies();
@@ -40,6 +42,7 @@ export const getAllLeads = async ({
     if (companyIndustry) params.append("companyIndustry", companyIndustry);
     if (companySize) params.append("companySize", companySize);
     if (assignedTo) params.append("assignedTo", assignedTo);
+    if(companyId) params.append("companyId", companyId);
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/leads/all?${params.toString()}`,
@@ -72,11 +75,11 @@ export const getAllLeads = async ({
 // ======================================================
 // Get lead stats
 // ======================================================
-export const getLeadStats = async () => {
+export const getLeadStats = async (companyId: string | undefined) => {
   const cookieStore = await cookies();
   const token = cookieStore.get("accessToken")?.value || "";
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/stats`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/stats?companyId=${companyId}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

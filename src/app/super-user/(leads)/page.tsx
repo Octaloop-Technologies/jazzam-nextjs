@@ -93,8 +93,9 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
           companySize: companySizeFilter,
           sortBy,
           sortOrder,
+          companyId
         }),
-    getLeadStats(),
+    getLeadStats(companyId),
     getCurrentUser(),
   ]);
 
