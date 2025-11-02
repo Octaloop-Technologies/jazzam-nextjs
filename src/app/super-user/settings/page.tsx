@@ -65,6 +65,8 @@ const SettingsPage = () => {
   const [joinedCompany, setJoinedCompnay] = useState<JoinedCompanyType | null>(null);
   const [editName, setEditName] = useState<Boolean>(false);
   const [newCompanyName, setNewCompany] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [sendInviteLoad, setSendInviteLoad] = useState<Boolean>(false)
 
   // ==============================================================
   // Hooks
@@ -218,6 +220,9 @@ const SettingsPage = () => {
     }
   };
 
+  // ==============================================================
+  // Deactivte Member
+  // ==============================================================
   const deactivateTeamMember = async (id: string) => {
     // router.push("/super-user?companyId=123")
     const cookieString = document.cookie;
@@ -242,6 +247,10 @@ const SettingsPage = () => {
       ToastError("User not found")
     }
   }
+
+  // ==============================================================
+  // Activate Member
+  // ==============================================================
 
   const activateTeamMember = async (id: string) => {
     // router.push("/super-user?companyId=123")
@@ -268,6 +277,9 @@ const SettingsPage = () => {
     }
   }
 
+  // ==============================================================
+  // Change company name
+  // ==============================================================
 
   const changeName = async () => {
     console.log("companyName*******", newCompanyName);
@@ -300,6 +312,63 @@ const SettingsPage = () => {
     } catch (error) {
       console.log("error****", error);
       ToastError("User not found")
+    }
+  }
+
+  // ==============================================================
+  // Send Invite handler
+  // ==============================================================
+
+  const checkEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  }
+
+  const handleSendInvite = async() => {
+    const senderCompanyId = user?._id;
+
+    if (!checkEmail(email)) {
+      ToastError("Email is not valid!")
+      return;
+    }
+
+    try {
+      setSendInviteLoad(true)
+      const cookieString = document.cookie;
+      const cookies = Object.fromEntries(
+        cookieString.split("; ").map(c => c.split("="))
+      );
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/invite/send`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${cookies?.accessToken}`
+        },
+        body: JSON.stringify({
+          senderCompanyId,
+          receiverEmail: email
+        }),
+      });
+
+      const data = await response.json();
+
+      console.log("data:****", data)
+
+      if (!response.ok) {
+        ToastError(data.message || 'Failed to send invitation');
+      }
+
+      if(data?.success === true){
+        ToastSuccess("Invitation link sent successfully")
+      }
+
+
+      return data;
+    } catch (error) {
+      setSendInviteLoad(false)
+      console.error('Error sending invitation:', error);
+      throw error;
+    }finally{
+      setSendInviteLoad(false);
     }
   }
 
@@ -599,6 +668,23 @@ const SettingsPage = () => {
                   </Link>
                 </div>
               </div>
+
+              <h1 className="text-[14px] text-gray-200 mt-4">Invite Users</h1>
+              <div className="p-[15px] border border-gray-b rounded-2xl">
+                <div className="flex-between">
+                  <input value={email} 
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)} 
+                  type="text" placeholder="Enter name to edit" 
+                  className="outline-none border-2 w-60 border-gray-100 rounded p-1" />
+                  <button
+                    onClick={handleSendInvite}
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-pri text-white hover:bg-pri/80`}
+                  >
+                    {sendInviteLoad ? 'Sending' : `Send Invite`}
+                  </button>
+                </div>
+              </div>
+
 
               {/* Onboarding Tour */}
               <h1 className="text-[14px] text-gray-200 mt-4">Help & Support</h1>

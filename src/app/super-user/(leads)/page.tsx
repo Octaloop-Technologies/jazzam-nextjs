@@ -211,6 +211,13 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
               Showing leads for {currentUser.companyName}
             </p>
           )}
+          {companyId && 
+              <button className="bg-pri p-3 rounded-2xl my-5 text-white text-md hover:bg-green-600">
+                <Link href="/super-user">
+              My dashboard
+          </Link>
+              </button>
+          }
         </div>
         <div className="flex items-center gap-2.5">
           {/* Advanced search bar with filters - supports text search, industry, source, company size filters */}
