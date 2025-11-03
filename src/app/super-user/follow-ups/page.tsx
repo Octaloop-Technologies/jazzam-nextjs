@@ -20,12 +20,17 @@ const FollowUpsPage = () => {
   const companyId = searchParams?.get("companyId"); 
 
 
+
+
   useEffect(() => {
     const fetchToken = async () => {
       const cookieString = document.cookie;
       const cookies = Object.fromEntries(
         cookieString.split("; ").map(c => c.split("="))
       );
+
+      console.log("companyId::::********", cookies);
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/follow-up-leads?companyId=${companyId}`, {
           headers: {
             Authorization: `Bearer ${cookies.accessToken}`
