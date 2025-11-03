@@ -8,15 +8,18 @@ import {
   NotificationDropdownSvg,
   TimeSvg,
 } from "@/components/svgs/NavbarSvgs";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Dropdown, { DropdownItem } from "@/components/ui/dropdown/Dropdown";
 import { navItems } from "@/lib/constants/navbarConstants";
 import gsap from "gsap";
-import { useLayoutEffect } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Language from "@/components/shared/language/Language";
 import { changeLang } from "../action";
+// import { io } from "socket.io-client";
+
+// const socket = io(`${process.env.NEXT_PUBLIC_BASE_URL}`);
 
 interface NavbarProps {
   currentLang: string;
@@ -33,6 +36,43 @@ const Navbar = ({ currentLang, languages }: NavbarProps) => {
   // Hooks
   // ======================================================
   const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [notifications, setNotifications] = useState([]);
+
+  const companyId = searchParams?.get("companyId");
+
+  // Fetch existing notifications on mount
+  useEffect(() => {
+    const cookieString = document.cookie;
+    const cookies = Object.fromEntries(
+      cookieString.split("; ").map((c) => c.split("="))
+    );
+    const fetchData = async () => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/notifications/get-notifications`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${cookies?.accessToken}`,
+          },
+        }
+      );
+      const data = await res.json();
+      setNotifications(data);
+    };
+    fetchData();
+  }, []);
+
+  // listen real time updates
+  // useEffect(() => {
+  //   socket.on("new_notification", (data) => {
+  //     setNotifications((prev) => [data, ...prev]);
+  //   });
+
+  //   return () => socket.off("new_notification");
+  // }, []);
+
+  console.log("data********", notifications);
 
   // ======================================================
   // Make the Navbar sticky with smooth animation when scrolling
@@ -54,7 +94,10 @@ const Navbar = ({ currentLang, languages }: NavbarProps) => {
         self.direction === -1 ? showAnim.play() : showAnim.reverse();
       },
       onEnter: () => {
-        gsap.to(".navbar", { boxShadow: "0 2px 4px rgba(0,0,0,0.1)", duration: 0.2 });
+        gsap.to(".navbar", {
+          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          duration: 0.2,
+        });
       },
       onLeaveBack: () => {
         gsap.to(".navbar", { boxShadow: "none", duration: 0.2 });
@@ -69,7 +112,15 @@ const Navbar = ({ currentLang, languages }: NavbarProps) => {
       {/* ------------- nav items ------------- */}
       <nav className="flex-center gap-2.5 text-[14px]">
         {navItems.map((item) => (
-          <Link href={item.href} prefetch={false} key={item.title}>
+          <Link
+            href={
+              companyId !== null || undefined
+                ? item.href + `?companyId=${companyId}`
+                : item.href
+            }
+            prefetch={false}
+            key={item.title}
+          >
             <div
               className={`flex-center gap-1 px-5 py-2.5 rounded-4xl ${
                 pathname === item.href ? "text-white bg-pri" : "text-gray-200"
@@ -84,7 +135,11 @@ const Navbar = ({ currentLang, languages }: NavbarProps) => {
 
       <div className="flex-center gap-4">
         {/* ------------- localization ------------- */}
-        <Language languages={languages} changeLang={changeLang} currentLang={currentLang} />
+        <Language
+          languages={languages}
+          changeLang={changeLang}
+          currentLang={currentLang}
+        />
 
         {/* ------------- settings ------------- */}
         <Link
@@ -134,7 +189,9 @@ const Navbar = ({ currentLang, languages }: NavbarProps) => {
                     <NotificationDropdownSvg />
                   </div>
                   <div className="flex flex-col gap-0.5 leading-[18px]">
-                    <h2 className="text-[16px] font-[500]">AI Insight Available</h2>
+                    <h2 className="text-[16px] font-[500]">
+                      AI Insight Available
+                    </h2>
                     <h3 className="text-[14px] text-gray-400">
                       New proposal recommendation ready for Acme Corp deal
                     </h3>

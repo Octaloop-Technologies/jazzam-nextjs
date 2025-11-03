@@ -7,7 +7,13 @@ interface Lead {
   linkedinProfileUrl?: string; // Deprecated: Use profileUrl instead (kept for backward compatibility)
   firstName?: string;
   name?: string;
-  leadId?: string;
+  leadId?: {
+    _id: string,
+    profilePic: string,
+    fullName: string,
+    company: string,
+    email: string
+  };
   channel?: string;
   date?: any
   lastName?: string;
@@ -51,6 +57,7 @@ interface Lead {
   leadScore?: number;
   createdAt: string;
   updatedAt: string;
+  dateOfSubmission?: string;
 }
 
 interface LeadScore {

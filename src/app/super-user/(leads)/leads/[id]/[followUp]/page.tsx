@@ -1,22 +1,22 @@
 "use client";
-import React, { useState, use } from "react";
 import Breadcrumb from "@/components/ui/breadcrumb/Breadcrumb";
 import FollowUpButtons from "@/components/view/dashboard/follow-up/FollowUpButtons";
 import ChannelToggle from "@/components/view/dashboard/leads/ChannelToggle";
 import LanguageToggle from "@/components/view/dashboard/leads/LanguageToggle";
 import Input from "@/components/ui/input/Input";
 import RichTextEditor from "@/components/ui/textarea/RichTextEditor";
+import React, { useState, use } from "react";
 import emailjs from "@emailjs/browser";
 import { useToast } from "@/lib/hooks/useToast";
 
 const emailJsKey: string = process.env.NEXT_PUBLIC_EMAIL_JS_PUBLIC_KEY ?? ''
-
 emailjs.init(emailJsKey);
 
 interface EmailData {
   subject: string;
   message: string;
 }
+
 
 interface FollowPageProps {
   params: Promise<{ id: string; followUp: string }>;
@@ -36,21 +36,78 @@ const FollowPage = ({ params }: FollowPageProps) => {
   });
   const [loading, setLoading] = useState(false);
 
-
   const emailServiceId: string = process.env.NEXT_PUBLIC_EMAIL_SERVICE_ID ?? '';
   const emailTemplateId: string = process.env.NEXT_PUBLIC_FOLLOWUP_EMAIL_TEMPLATE_ID ?? '';
-
 
   const handleEmailData = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setEmail((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSendFollowup = async () => {
-    // console.log("subject********", email.subject);
+  // ==========================================================
+  // Backcrumb Links and names
+  // ==========================================================
+  const segments = [
+    { label: "Leads", path: "/" },
+    { label: "Wade warren", path: `/leads/${id}` },
+    { label: "Follow up", path: `/leads/${id}/${followUp}` },
+  ];
+
+  const handleScheduleFollowup = async(scheduledDate: Date) => {
+    const cookieString = document.cookie;
+    const cookies = Object.fromEntries(
+      cookieString.split("; ").map(c => c.split("="))
+    );
+
+    if (!email.subject || !email.message) {
+      ErrorToast("Message or subject cannot be empty");
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/create-followup/${id}`, {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${cookies?.accessToken}`
+          },
+          body: JSON.stringify({ 
+            subject: email.subject, 
+            message: email.message,
+            status: "scheduled",
+            scheduled: true, 
+            scheduledDate 
+          })
+        });
+
+        if(res.ok){
+          const data = await res.json();
+          if(data?.success === true){
+            console.log("data****", data?.data)
+            success("Scheduled follow up created successfully");
+          }
+
+        }
+    } catch (error) {
+      console.error("Email send failed:", error);
+      ErrorToast("Failed to send email");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const handleSendFollowupNow = async() => {
+    //     console.log("subject********", email.subject);
     // console.log("message********", email.message);
 
     // return;
+
+    const cookieString = document.cookie;
+    const cookies = Object.fromEntries(
+      cookieString.split("; ").map(c => c.split("="))
+    );
 
     if (!email.subject || !email.message) {
       ErrorToast("Message or subject cannot be empty");
@@ -74,6 +131,27 @@ const FollowPage = ({ params }: FollowPageProps) => {
 
       if (result.status === 200) {
         success("Email sent successfully!");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/create-followup/${id}`, {
+          method: "POST",
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${cookies?.accessToken}`
+          },
+          body: JSON.stringify({ 
+            subject: email.subject, 
+            message: email.message,
+            status: "submitted",
+            scheduled: false, 
+          })
+        });
+
+        if(res.ok){
+          const data = await res.json();
+          if(data?.success === true){
+            console.log("data****", data?.data)
+          }
+
+        }
       }
     } catch (error) {
       console.error("Email send failed:", error);
@@ -82,48 +160,6 @@ const FollowPage = ({ params }: FollowPageProps) => {
       setLoading(false);
     }
   }
-
-  const handleScheduleConfirm = async (date: Date) => {
-    // alert("jejeje");
-    // return;
-    const { subject, message } = email
-    try {
-      const cookieString = document.cookie;
-      const cookies = Object.fromEntries(
-        cookieString.split("; ").map(c => c.split("="))
-      );
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/schedule-follow-up/${id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authotization: `Bearer ${cookies?.accessToken}`
-        },
-        body: JSON.stringify({
-          date,
-          subject,
-          message,
-        }),
-      });
-
-      const dataResponse = await response.json();
-
-      if (!response.ok) {
-        throw new Error(dataResponse.message || "Failed to schedule follow-up");
-      }
-
-      console.log("✅ Lead scheduled successfully:", dataResponse);
-      return dataResponse;
-    } catch (error) {
-      console.error("❌ Error scheduling follow-up:", error);
-      throw error;
-    }
-  }
-
-  const segments = [
-    { label: "Leads", path: "/" },
-    { label: "Wade warren", path: `/leads/${id}` },
-    { label: "Follow up", path: `/leads/${id}/${followUp}` },
-  ];
 
   return (
     <section>
@@ -140,8 +176,13 @@ const FollowPage = ({ params }: FollowPageProps) => {
                   <ChannelToggle />
                 </div>
 
+                {/* <div className="flex flex-col-2">
+                  <h3 className="text-sm font-[500]">Tone*</h3>
+                  <div></div>
+                </div> */}
+
                 {/* <div className="flex flex-col gap-2">
-                  <h3 className="text-sm font-[500]">Language*</h3>
+                  <h3 className="text-sm font-[500]">language*</h3>
                   <LanguageToggle />
                 </div> */}
               </div>
@@ -181,7 +222,7 @@ const FollowPage = ({ params }: FollowPageProps) => {
         </div>
 
         <div className="mt-[35px] flex justify-center gap-2.5">
-          <FollowUpButtons handleSendNow={handleSendFollowup} handleScheduleConfirm={handleScheduleConfirm} />
+          <FollowUpButtons handleScheduleFollowup={handleScheduleFollowup} handleSendFollowupNow={handleSendFollowupNow} />
         </div>
       </div>
     </section>

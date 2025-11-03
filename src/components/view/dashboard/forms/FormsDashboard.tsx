@@ -5,6 +5,7 @@ import { ExternalLinkSvg } from "@/components/svgs/LeadsAnalysisSvgs";
 import { CopySvg } from "@/components/svgs/NavbarSvgs";
 import { useToast } from "@/lib/hooks/useToast";
 import { getAvailablePlatforms } from "@/app/super-user/forms/action";
+import { useSearchParams } from "next/navigation";
 
 interface AvailablePlatform {
   platform: string;
@@ -26,6 +27,9 @@ const FormsDashboard = () => {
   const [availablePlatforms, setAvailablePlatforms] = useState<AvailablePlatform[]>([]);
   const [loading, setLoading] = useState(true);
   const { success, error } = useToast();
+  const searchParams = useSearchParams();
+
+  const companyId = searchParams?.get("companyId");
 
   // Fetch forms and available platforms
   useEffect(() => {
@@ -36,7 +40,7 @@ const FormsDashboard = () => {
     try {
       setLoading(true);
 
-      const [platformsResponse] = await Promise.all([getAvailablePlatforms()]);
+      const [platformsResponse] = await Promise.all([getAvailablePlatforms(companyId)]);
 
       if (platformsResponse.success) {
         setAvailablePlatforms(platformsResponse.data?.platforms || []);
