@@ -37,31 +37,31 @@ const Navbar = ({ currentLang, languages }: NavbarProps) => {
   // ======================================================
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [notifications, setNotifications] = useState([]);
+  // const [notifications, setNotifications] = useState([]);
 
   const companyId = searchParams?.get("companyId");
 
   // Fetch existing notifications on mount
-  useEffect(() => {
-    const cookieString = document.cookie;
-    const cookies = Object.fromEntries(
-      cookieString.split("; ").map((c) => c.split("="))
-    );
-    const fetchData = async () => {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/notifications/get-notifications`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${cookies?.accessToken}`,
-          },
-        }
-      );
-      const data = await res.json();
-      setNotifications(data);
-    };
-    fetchData();
-  }, []);
+  // useEffect(() => {
+  //   const cookieString = document.cookie;
+  //   const cookies = Object.fromEntries(
+  //     cookieString.split("; ").map((c) => c.split("="))
+  //   );
+  //   const fetchData = async () => {
+  //     const res = await fetch(
+  //       `${process.env.NEXT_PUBLIC_BASE_URL}/notifications/get-notifications`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           Authorization: `Bearer ${cookies?.accessToken}`,
+  //         },
+  //       }
+  //     );
+  //     const data = await res.json();
+  //     setNotifications(data);
+  //   };
+  //   fetchData();
+  // }, []);
 
   // listen real time updates
   // useEffect(() => {
@@ -72,7 +72,7 @@ const Navbar = ({ currentLang, languages }: NavbarProps) => {
   //   return () => socket.off("new_notification");
   // }, []);
 
-  console.log("data********", notifications);
+  // console.log("data********", notifications);
 
   // ======================================================
   // Make the Navbar sticky with smooth animation when scrolling
