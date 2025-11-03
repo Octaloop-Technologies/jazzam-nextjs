@@ -29,7 +29,7 @@ const FollowUpsPage = () => {
         cookieString.split("; ").map(c => c.split("="))
       );
 
-      console.log("companyId::::********", cookieString);
+      console.log("companyId::::********", document.cookie);
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/follow-up-leads?companyId=${companyId}`, {
           headers: {
