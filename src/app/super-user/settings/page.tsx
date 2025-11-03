@@ -36,6 +36,27 @@ import {
   ExternalLinkSvg,
 } from "@/components/svgs/LeadsAnalysisSvgs";
 
+interface TeamMembers{
+  company?: {
+    companyName?: string,
+    email?: string,
+    logo: {
+      url?: string
+    },
+    _id: string
+  },
+  joinedAt?: string,
+  role?: string,
+  _id?: string
+}
+
+type JoinedCompanyType = {
+  _id?: string;
+  companyName?: string;
+  email?: string;
+  logo?: string;
+};
+
 const SubscriptionSettings = dynamic(
   () => import("@/components/view/dashboard/settings/SubscriptionSettings"),
   { ssr: false }
@@ -60,22 +81,16 @@ const SettingsPage = () => {
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isRestartingTour, setIsRestartingTour] = useState(false);
   const { success: ToastSuccess, error: ToastError } = useToast();
-  const [teamMembers, setTeamMembers] = useState<any[]>([]);
-  type JoinedCompanyType = {
-    _id?: string;
-    companyName?: string;
-    email?: string;
-    logo?: string;
-  };
+  const [teamMembers, setTeamMembers] = useState<TeamMembers[]>([]);
   const [joinedCompany, setJoinedCompnay] = useState<JoinedCompanyType | null>(
     null
   );
-  const [editName, setEditName] = useState<Boolean>(false);
-  const [editProfilePicture, setEditProfilePicture] = useState<Boolean>(false);
+  const [editName, setEditName] = useState<boolean>(false);
+  const [editProfilePicture, setEditProfilePicture] = useState<boolean>(false);
   const [newCompanyName, setNewCompany] = useState<string>("");
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [email, setEmail] = useState<string>("");
-  const [sendInviteLoad, setSendInviteLoad] = useState<Boolean>(false);
+  const [sendInviteLoad, setSendInviteLoad] = useState<boolean>(false);
 
   // ==============================================================
   // Hooks
@@ -143,7 +158,7 @@ const SettingsPage = () => {
     fetchJoinedCompany();
   }, [user]);
 
-  console.log("usususu:****", user?.joinedCompanyStatus);
+  console.log("usususu:****", teamMembers);
 
   // ==============================================================
   // Update BANT Setting
@@ -240,7 +255,7 @@ const SettingsPage = () => {
   // ==============================================================
   // Deactivte Member
   // ==============================================================
-  const deactivateTeamMember = async (id: string) => {
+  const deactivateTeamMember = async (id: string | undefined) => {
     // router.push("/super-user?companyId=123")
     const cookieString = document.cookie;
     const cookies = Object.fromEntries(
@@ -272,7 +287,7 @@ const SettingsPage = () => {
   // Activate Member
   // ==============================================================
 
-  const activateTeamMember = async (id: string) => {
+  const activateTeamMember = async (id: string | undefined) => {
     // router.push("/super-user?companyId=123")
     const cookieString = document.cookie;
     const cookies = Object.fromEntries(
@@ -412,26 +427,48 @@ const SettingsPage = () => {
   };
 
   const uploadFile = async () => {
-    const cookieString = document.cookie;
-    const cookies = Object.fromEntries(
-      cookieString.split("; ").map((c) => c.split("="))
-    );
-    const formData = new FormData();
-    formData.append("logo", profilePicture); // must match 'upload.single("logo")'
+    // ensure a file is selected before trying to append it to FormData
+    if (!profilePicture) {
+      ToastError("No file selected");
+      throw new Error("No file selected");
+    }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/logo`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${cookies?.accessToken}`, // or however you store JWT
-        // ❌ Do NOT set "Content-Type" here — fetch will set it automatically for FormData
-      },
-      body: formData,
-    });
+    try {
+      const cookieString = document.cookie;
+      const cookies = Object.fromEntries(
+        cookieString.split("; ").map((c) => c.split("="))
+      );
+      const formData = new FormData();
+      formData.append("logo", profilePicture); // must match 'upload.single("logo")'
 
-    const data = await response.json();
-    console.log("data******", data);
-    if (!response.ok) throw new Error(data.message || "Upload failed");
-    return data;
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/logo`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${cookies?.accessToken}`, // or however you store JWT
+          // ❌ Do NOT set "Content-Type" here — fetch will set it automatically for FormData
+        },
+        body: formData,
+      });
+
+      const data = await response.json();
+      console.log("data******", data);
+      if (!response.ok) throw new Error(data.message || "Upload failed");
+      if (data?.success === true) {
+        dispatch(updateUserSettings({
+          logo: {
+            url: data?.data?.logo?.url,
+            public_id: data?.data?.logo?.public_id
+          }
+        }))
+        ToastSuccess("Profile picture uploaded")
+        setEditProfilePicture(false)
+        console.log("user******", user?.logo)
+      }
+      return data;
+    } catch (error) {
+      console.log("error******", error)
+      ToastError("Failed to uplaod file! please try again later");
+    }
   };
 
   return (
@@ -443,11 +480,10 @@ const SettingsPage = () => {
           <div className="flex flex-col gap-2">
             <button
               className={`px-2.5 h-[44px] flex-between gap-2 rounded-[110px] 
-                  ${
-                    activeTab === "profile"
-                      ? "bg-pri text-white"
-                      : "bg-transparent text-gray-200 hover:bg-gray"
-                  }`}
+                  ${activeTab === "profile"
+                  ? "bg-pri text-white"
+                  : "bg-transparent text-gray-200 hover:bg-gray"
+                }`}
               onClick={() => setActiveTab("profile")}
             >
               <div className="flex-center gap-2">
@@ -457,11 +493,10 @@ const SettingsPage = () => {
             </button>
             <button
               className={`px-2.5 h-[44px] flex-between gap-2 rounded-[110px] 
-                  ${
-                    activeTab === "general"
-                      ? "bg-pri text-white"
-                      : "bg-transparent text-gray-200 hover:bg-gray"
-                  }`}
+                  ${activeTab === "general"
+                  ? "bg-pri text-white"
+                  : "bg-transparent text-gray-200 hover:bg-gray"
+                }`}
               onClick={() => setActiveTab("general")}
             >
               <div className="flex-center gap-2">
@@ -471,11 +506,10 @@ const SettingsPage = () => {
             </button>
             <button
               className={`px-2.5 h-[44px] flex-between gap-2 rounded-[110px] 
-                  ${
-                    activeTab === "subscription"
-                      ? "bg-pri text-white"
-                      : "bg-transparent text-gray-200 hover:bg-gray"
-                  }`}
+                  ${activeTab === "subscription"
+                  ? "bg-pri text-white"
+                  : "bg-transparent text-gray-200 hover:bg-gray"
+                }`}
               onClick={() => setActiveTab("subscription")}
             >
               <div className="flex-center gap-2">
@@ -494,8 +528,8 @@ const SettingsPage = () => {
             {activeTab === "profile"
               ? "Profile settings"
               : activeTab === "general"
-              ? "General settings"
-              : "Subscription & Billing"}
+                ? "General settings"
+                : "Subscription & Billing"}
           </h1>
           {/* -- profile -- */}
           {activeTab === "profile" ? (
@@ -510,7 +544,7 @@ const SettingsPage = () => {
                       <Image
                         src={
                           typeof user?.logo === "string"
-                            ? user.logo
+                            ? user?.logo
                             : user?.logo?.url ?? "/assets/icons/favicon.ico"
                         }
                         width={100}
@@ -601,8 +635,8 @@ const SettingsPage = () => {
                         {user?.provider === "google"
                           ? "Google"
                           : user?.provider === "zohocrm"
-                          ? "Zoho CRM"
-                          : "Account"}
+                            ? "Zoho CRM"
+                            : "Account"}
                       </h3>
                       <h3 className="text-[14px] leading-none text-gray-200">
                         {user?.email || "user@example.com"}
@@ -614,11 +648,10 @@ const SettingsPage = () => {
                     <button
                       type="submit"
                       disabled={isLoggingOut}
-                      className={`w-fit flex gap-1 text-sm transition-colors duration-200 ${
-                        isLoggingOut
-                          ? "text-gray-400 cursor-not-allowed"
-                          : "text-danger gray-hover"
-                      }`}
+                      className={`w-fit flex gap-1 text-sm transition-colors duration-200 ${isLoggingOut
+                        ? "text-gray-400 cursor-not-allowed"
+                        : "text-danger gray-hover"
+                        }`}
                     >
                       <div>{logoutIcon()}</div>
                       <div>{isLoggingOut ? "Logging out..." : "Logout"}</div>
@@ -747,7 +780,7 @@ const SettingsPage = () => {
                       id={item.id}
                       checked={
                         notificationSettings[
-                          item.key as keyof typeof notificationSettings
+                        item.key as keyof typeof notificationSettings
                         ]
                       }
                       onChange={async (checked) => {
@@ -876,11 +909,10 @@ const SettingsPage = () => {
                   <button
                     onClick={handleRestartTour}
                     disabled={isRestartingTour}
-                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
-                      isRestartingTour
-                        ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-                        : "bg-pri text-white hover:bg-pri/80"
-                    }`}
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${isRestartingTour
+                      ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                      : "bg-pri text-white hover:bg-pri/80"
+                      }`}
                   >
                     {isRestartingTour ? "Restarting..." : "Restart Tour"}
                   </button>

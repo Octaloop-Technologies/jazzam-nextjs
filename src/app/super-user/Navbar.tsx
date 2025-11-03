@@ -17,9 +17,9 @@ import { useEffect, useLayoutEffect, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Language from "@/components/shared/language/Language";
 import { changeLang } from "../action";
-import { io } from "socket.io-client";
+// import { io } from "socket.io-client";
 
-const socket = io(`${process.env.NEXT_PUBLIC_BASE_URL}`);
+// const socket = io(`${process.env.NEXT_PUBLIC_BASE_URL}`);
 
 interface NavbarProps {
   currentLang: string;
@@ -64,13 +64,13 @@ const Navbar = ({ currentLang, languages }: NavbarProps) => {
   }, []);
 
   // listen real time updates
-  useEffect(() => {
-    socket.on("new_notification", (data) => {
-      setNotifications((prev) => [data, ...prev]);
-    });
+  // useEffect(() => {
+  //   socket.on("new_notification", (data) => {
+  //     setNotifications((prev) => [data, ...prev]);
+  //   });
 
-    return () => socket.off("new_notification");
-  }, []);
+  //   return () => socket.off("new_notification");
+  // }, []);
 
   console.log("data********", notifications);
 

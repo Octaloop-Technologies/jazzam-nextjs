@@ -147,7 +147,16 @@ const FollowUpMenu = ({
         </DropdownItem>
         {showSendNow && (
           <DropdownItem>
-            <button className="flex-between w-full hover:text-gray-200" onClick={() => handleFollowUp(lead?.leadId)}>
+            <button
+              className="flex-between w-full hover:text-gray-200"
+              onClick={() =>
+                handleFollowUp(
+                  typeof lead?.leadId === "string"
+                    ? (lead.leadId as string)
+                    : (lead.leadId as { _id?: string })?._id
+                )
+              }
+            >
               <div className="flex gap-1">
                 <SendFollowUpSvg />
                 Send Now

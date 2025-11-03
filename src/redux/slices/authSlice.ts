@@ -116,7 +116,7 @@ const authSlice = createSlice({
     },
     updateUserSettings: (state, action) => {
       if (state.user) {
-        state.user.settings = { ...state.user.settings, ...action.payload };
+        state.user = { ...state.user, ...action.payload };
       }
     },
     updateUserSubscription: (state, action) => {

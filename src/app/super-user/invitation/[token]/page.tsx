@@ -1,9 +1,10 @@
 "use client"
 import { useToast } from '@/lib/hooks/useToast';
-import React from 'react';
+import React, { use } from 'react';
 
-const Page = ({ params }: { params: { token: string } }) => {
-    const { token } = params;
+const Page = ({ params }: { params: Promise<{ token: string }> }) => {
+    // Use the use() hook to unwrap the promise
+    const { token } = use(params);
     
     const cleanToken = decodeURIComponent(token).replace(/%/g, '').split('token=')[1];
     console.log("cleanToken********", cleanToken);
