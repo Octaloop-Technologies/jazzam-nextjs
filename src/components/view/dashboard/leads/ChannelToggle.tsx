@@ -30,7 +30,7 @@ const ChannelToggle = () => {
   return (
     <ToggleSelector
       options={channelOptions}
-      selectedValue={selectedChannel}
+      selectedValue={""}
       onSelectionChange={handleChannelChange}
     />
   );
