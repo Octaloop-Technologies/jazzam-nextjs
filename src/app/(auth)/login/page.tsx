@@ -1,13 +1,21 @@
+"use client"
 import Logo from "@/components/shared/logo/Logo";
 import LoginButtons from "@/components/view/(auth)/login/LoginButtons";
-import { Metadata } from "next";
+import { useAuth } from "@/lib/hooks/useAuth";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
-export const metadata: Metadata = {
-  title: "Login",
-  description: "Login to your account",
-};
+const LoginPage = () => {
 
-const LoginPage = async () => {
+  const { isAuthenticated, isLoading } = useAuth();
+  const router = useRouter()
+
+  useEffect(() => {
+    if(isAuthenticated){
+      router.push("/super-user")
+    }
+  }, [isAuthenticated, isLoading, router]);
+
   return (
     <div className="flex-col-center text-center w-full">
       <Logo />

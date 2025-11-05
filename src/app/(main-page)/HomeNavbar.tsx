@@ -3,7 +3,6 @@
 import Logo from "@/components/shared/logo/Logo";
 import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
 import Language from "@/components/shared/language/Language";
-import { changeLang } from "../action";
 import { languages } from "@/lib/constants/languageConstants";
 import { Dictionary } from "@/lib/i18n/getDictionary";
 import { useState, useRef, useEffect, useCallback } from "react";
@@ -14,6 +13,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { openModal } from "@/redux/slices/uiSlice";
+import { useLocale } from "@/lib/hooks/useLocale";
+import { useI18n } from "@/providers/I18nProvider";
 
 
 // ======================================================
@@ -32,6 +33,18 @@ const HomeNavbar = ({ dict, currentLang }: HomeNavbarProps) => {
   // ======================================================
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+
+  const { setLocale: setLocalLocale } = useLocale();
+  const { setLocale: setI18nLocale } = useI18n();
+
+  const handleLangChange = async (code: string) => {
+    setLocalLocale(code);
+    await setI18nLocale(code);
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = code;
+      document.documentElement.dir = code === "ar" ? "rtl" : "ltr";
+    }
+  };
 
   const dispatch = useDispatch();
 
@@ -368,7 +381,7 @@ const HomeNavbar = ({ dict, currentLang }: HomeNavbarProps) => {
         </Link>
         <div className="hidden md:flex flex-center gap-5">
           <div className="rounded-xl-2 border border-gray-b h-[52px] w-[138px] flex-center navbar-item">
-            <Language languages={languages} changeLang={changeLang} currentLang={currentLang} />
+            <Language languages={languages} onChange={handleLangChange} currentLang={currentLang} />
           </div>
           <PrimaryButton
             title={dict?.home?.hero?.getStarted}
@@ -463,7 +476,7 @@ const HomeNavbar = ({ dict, currentLang }: HomeNavbarProps) => {
             ref={addToMenuItemsRef}
             className="mb-8 p-4 rounded-2xl bg-gradient-to-br from-white/80 to-blue-50/80 border border-blue-200/50 shadow-lg backdrop-blur-sm hover:shadow-xl transition-all duration-150 transform hover:scale-105"
           >
-            <Language languages={languages} changeLang={changeLang} currentLang={currentLang} />
+            <Language languages={languages} onChange={handleLangChange} currentLang={currentLang} />
           </div>
 
           {/* Enhanced CTA button */}

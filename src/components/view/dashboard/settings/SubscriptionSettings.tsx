@@ -50,7 +50,7 @@ const SubscriptionSettings = () => {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/subscription`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
+        // credentials: "include",
         body: JSON.stringify({
           subscriptionStatus: "cancelled",
           subscriptionPlan: "free",
@@ -91,7 +91,7 @@ const SubscriptionSettings = () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/billing/${user?._id}/billing-history`, {
           method: "GET",
-          credentials: "include",
+          // credentials: "include",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${cookies.accessToken}`,

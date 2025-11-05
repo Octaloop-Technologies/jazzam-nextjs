@@ -1,6 +1,6 @@
-"use server";
+"use client";
 
-import { cookies } from "next/headers";
+import { apiClient } from "@/lib/utils/apiClient";
 
 // ======================================================
 // Get all leads (automatically filtered by logged-in company via JWT)
@@ -14,7 +14,7 @@ interface GetLeadsParams {
   assignedTo?: string;
   sortBy?: string;
   sortOrder?: string;
-  companyId?: string
+  companyId?: string;
 }
 
 export const getAllLeads = async ({
@@ -26,49 +26,26 @@ export const getAllLeads = async ({
   assignedTo,
   sortBy = "createdAt",
   sortOrder = "desc",
-  companyId
+  companyId,
 }: GetLeadsParams) => {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("accessToken")?.value || "";
     const params = new URLSearchParams();
-
-    params.append("page", page.toString());
-    params.append("limit", limit.toString());
+    params.append("page", String(page));
+    params.append("limit", String(limit));
     params.append("sortBy", sortBy);
     params.append("sortOrder", sortOrder);
-
     if (status) params.append("status", status);
     if (companyIndustry) params.append("companyIndustry", companyIndustry);
     if (companySize) params.append("companySize", companySize);
     if (assignedTo) params.append("assignedTo", assignedTo);
-    if(companyId) params.append("companyId", companyId);
+    if (companyId) params.append("companyId", companyId);
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/leads/all?${params.toString()}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        cache: "no-store", // Ensure fresh data
-      }
+    const { data } = await apiClient.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/leads/all?${params.toString()}`
     );
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.message || `HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return { success: true, data: data };
-  } catch (error) {
-    console.error("Error fetching leads:", error);
-    return {
-      success: false,
-      data: null,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
+    return { success: true, data };
+  } catch (error: any) {
+    return { success: false, data: null, error: error?.message ?? "Unknown error" };
   }
 };
 
@@ -76,30 +53,13 @@ export const getAllLeads = async ({
 // Get lead stats
 // ======================================================
 export const getLeadStats = async (companyId: string | undefined) => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value || "";
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/stats?companyId=${companyId}`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      cache: "no-store", // Ensure fresh data
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return { success: true, data: data };
-  } catch (error) {
-    console.error("Error fetching lead stats:", error);
-    return {
-      success: false,
-      data: null,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
+    const { data } = await apiClient.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/leads/stats?companyId=${companyId ?? ""}`
+    );
+    return { success: true, data };
+  } catch (error: any) {
+    return { success: false, data: null, error: error?.message ?? "Unknown error" };
   }
 };
 
@@ -125,83 +85,38 @@ export const searchLeads = async ({
   sortBy = "createdAt",
   sortOrder = "desc",
 }: SearchLeadsParams) => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value || "";
   try {
-    if (!query || query.trim().length === 0) {
-      throw new Error("Search query is required");
-    }
-
+    if (!query?.trim()) throw new Error("Search query is required");
     const params = new URLSearchParams();
-
     params.append("query", query.trim());
-    params.append("page", page.toString());
-    params.append("limit", limit.toString());
+    params.append("page", String(page));
+    params.append("limit", String(limit));
     params.append("sortBy", sortBy);
     params.append("sortOrder", sortOrder);
-
-    // Add filters if provided
     if (status) params.append("status", status);
     if (companyIndustry) params.append("companyIndustry", companyIndustry);
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/leads/search?${params.toString()}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        cache: "no-store", // Ensure fresh data for searches
-      }
+    const { data } = await apiClient.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/leads/search?${params.toString()}`
     );
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.message || `HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return { success: true, data: data };
-  } catch (error) {
-    console.error("Error searching leads:", error);
-    return {
-      success: false,
-      data: null,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
+    return { success: true, data };
+  } catch (error: any) {
+    return { success: false, data: null, error: error?.message ?? "Unknown error" };
   }
 };
+
 
 // ======================================================
 // Get lead by id
 // ======================================================
 export const getLeadById = async ({ id }: { id: string }) => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value || "";
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      cache: "no-store", // Ensure fresh data on every request
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.message || `HTTP error! status: ${response.status}`);
-    }
-
-    const responseData = await response.json();
-    console.log(responseData);
-    return { success: true, data: responseData.data };
-  } catch (error) {
-    console.error("Error fetching lead by id:", error);
-    return {
-      success: false,
-      data: null,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
+    const { data } = await apiClient.get(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/leads/${id}`
+    );
+    return { success: true, data: (data as any)?.data };
+  } catch (error: any) {
+    return { success: false, data: null, error: error?.message ?? "Unknown error" };
   }
 };
 
@@ -209,33 +124,16 @@ export const getLeadById = async ({ id }: { id: string }) => {
 // Delete lead
 // ======================================================
 export const deleteLead = async ({ id }: { id: string }) => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value || "";
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      method: "DELETE",
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.message || `HTTP error! status: ${response.status}`);
-    }
-
-    const responseData = await response.json();
-    return { success: true, message: responseData.message };
-  } catch (error) {
-    console.error("Error deleting lead:", error);
-    return {
-      success: false,
-      message: null,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
+    const { data } = await apiClient.delete(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/leads/${id}`
+    );
+    return { success: true, message: (data as any)?.message };
+  } catch (error: any) {
+    return { success: false, message: null, error: error?.message ?? "Unknown error" };
   }
 };
+
 
 // ======================================================
 // Update onboarding status
@@ -247,74 +145,48 @@ export const updateOnboardingStatus = async (data: {
   skipped?: boolean;
 }) => {
   try {
-    const accessToken = (await cookies()).get("accessToken")?.value;
-
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/onboarding`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-      body: JSON.stringify(data),
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to update onboarding status");
-    }
-
-    const result = await response.json();
-    return { success: true, data: result.data };
-  } catch (error) {
-    console.error("Update onboarding error:", error);
+    const res = await apiClient.patch?.(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/onboarding`,
+      {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+        credentials: 'include',
+      }
+    ).then(res => res.data);
+    return { success: true, data: (res as any)?.data?.data };
+  } catch {
     return { success: false, error: "Failed to update onboarding status" };
   }
 };
 
-export const restartOnboarding = async () => {
-  return updateOnboardingStatus({
+
+export const restartOnboarding = () =>
+  updateOnboardingStatus({
     completed: false,
     currentStep: 0,
     completedSteps: [],
     skipped: false,
   });
-};
+
 
 // ======================================================
 // Re-qualify lead using BANT
 // ======================================================
 export const requalifyLeadBANT = async ({ id }: { id: string }) => {
-  const { revalidatePath } = await import("next/cache");
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value || "";
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${id}/bant`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => null);
-      throw new Error(errorData?.message || `HTTP error! status: ${response.status}`);
-    }
-
-    const responseData = await response.json();
-
-    // Revalidate the lead detail page and leads list to show updated data
-    revalidatePath(`/super-user/leads/${id}`);
-    revalidatePath("/super-user");
-
-    return { success: true, data: responseData.data, message: responseData.message };
-  } catch (error) {
-    console.error("Error re-qualifying lead with BANT:", error);
+    const { data } = await apiClient.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/leads/${id}/bant`,
+      {}
+    );
     return {
-      success: false,
-      data: null,
-      error: error instanceof Error ? error.message : "Unknown error",
+      success: true,
+      data: (data as any)?.data,
+      message: (data as any)?.message,
     };
+  } catch (error: any) {
+    return { success: false, data: null, error: error?.message ?? "Unknown error" };
   }
 };

@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
-import { changeLang } from "@/app/action";
 import { LanguageOption } from "@/components/ui/language";
+import { useLocale } from "@/lib/hooks/useLocale";
+import { useI18n } from "@/providers/I18nProvider";
 
 interface LanguageModalProps {
   isOpen: boolean;
@@ -18,6 +19,9 @@ const LanguageModal: React.FC<LanguageModalProps> = ({
   onConfirm,
   currentLanguage,
 }) => {
+  const { setLocale: setLocalLocale } = useLocale();
+  const { setLocale: setI18nLocale } = useI18n();
+
   const [selectedLanguage, setSelectedLanguage] = useState(currentLanguage || "en");
 
   if (!isOpen) return null;
@@ -28,22 +32,27 @@ const LanguageModal: React.FC<LanguageModalProps> = ({
     }
   };
 
-  const handleConfirm = () => {
+  const applyLanguage = async (code: string) => {
+    // Persist and update app-level locale
+    setLocalLocale(code);
+    await setI18nLocale(code);
+
+    // Update document attributes for direction and lang
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = code;
+      document.documentElement.dir = code === "ar" ? "rtl" : "ltr";
+    }
+  };
+
+  const handleConfirm = async () => {
+    await applyLanguage(selectedLanguage);
     onConfirm(selectedLanguage);
     onClose();
   };
 
   const languages = [
-    {
-      flag: "/assets/images/flags/uk-flag.svg",
-      name: "English (UK)",
-      value: "en",
-    },
-    {
-      flag: "/assets/images/flags/arabic.svg",
-      name: "Arabic",
-      value: "ar",
-    },
+    { flag: "/assets/images/flags/uk-flag.svg", name: "English (UK)", value: "en" },
+    { flag: "/assets/images/flags/arabic.svg", name: "Arabic", value: "ar" },
   ];
 
   return (
@@ -70,17 +79,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({
         </div>
 
         {/* buttons */}
-        <form action={changeLang} className="flex justify-around space-x-5">
-          <input type="hidden" name="lang" value={selectedLanguage} />
-          <input
-            type="hidden"
-            name="redirect"
-            value={
-              typeof window !== "undefined"
-                ? window.location.pathname + window.location.search
-                : "/"
-            }
-          />
+        <div className="flex justify-around space-x-5">
           <PrimaryButton
             onClick={onClose}
             bordered
@@ -92,12 +91,11 @@ const LanguageModal: React.FC<LanguageModalProps> = ({
 
           <PrimaryButton
             onClick={handleConfirm}
-            type="submit"
             className="w-full h-[50px] !gap-2.5 rounded-xl-2"
             title="Apply changes"
             titleClass="font-[500]"
           />
-        </form>
+        </div>
       </div>
     </div>
   );

@@ -8,6 +8,8 @@ import {
   selectIsLoading,
   fetchCurrentUser,
 } from "@/redux/slices/authSlice";
+import { usePathname } from "next/navigation";
+
 
 interface AuthInitializerProps {
   children: React.ReactNode;
@@ -19,9 +21,19 @@ const AuthInitializer: React.FC<AuthInitializerProps> = ({ children }) => {
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const isLoading = useAppSelector(selectIsLoading);
   const hasInitialized = useRef(false);
+  const pathname = usePathname();
+
+  const isAuthPage = pathname?.startsWith("/login") || 
+  pathname?.startsWith("/auth") || 
+  pathname?.startsWith("/register") ||
+  pathname === "/";
+
+
 
   useEffect(() => {
-    // Initialize auth state only once per app session
+    if (isAuthPage) {
+      return;
+    }
     if (!hasInitialized.current && !user && !isLoading && !isAuthenticated) {
       hasInitialized.current = true;
 
@@ -33,7 +45,7 @@ const AuthInitializer: React.FC<AuthInitializerProps> = ({ children }) => {
         }
       });
     }
-  }, [dispatch]);
+  }, [dispatch, user, isLoading, isAuthenticated, isAuthPage, pathname]);
 
   return <>{children}</>;
 };

@@ -85,8 +85,8 @@ export default function IntegrationsPage() {
       console.log("Providers Data:", providersData);
       console.log("Integration Data:", integrationData);
 
-      setProviders(providersData.data || []);
-      setCrmIntegrations(integrationData.data || []);
+      setProviders((providersData as any)?.data as any || []);
+      setCrmIntegrations((integrationData as any)?.data || []);
     } catch (error) {
       console.error("Error fetching CRM data:", error);
       toast.error("Failed to load CRM integration data");
@@ -110,12 +110,12 @@ export default function IntegrationsPage() {
 
       const data = await initCRMOAuth(providerId);
 
-      if (!data.success) {
-        throw new Error(data.message || "Failed to initiate connection");
+      if (!(data as any)?.success) {
+        throw new Error((data as any)?.message || "Failed to initiate connection");
       }
 
       // Redirect to OAuth URL
-      window.location.href = data.data.authUrl;
+      window.location.href = (data as any)?.data.authUrl;
     } catch (error: Error | unknown) {
       toast.error((error as Error).message || "Failed to initiate connection");
     }
@@ -129,8 +129,8 @@ export default function IntegrationsPage() {
     try {
       const data = await disconnectCRM(integrationId);
 
-      if (!data.success) {
-        throw new Error(data.message || "Failed to disconnect");
+      if (!(data as any)?.success) {
+        throw new Error((data as any)?.message || "Failed to disconnect");
       }
 
       toast.success("Integration disconnected successfully");
@@ -144,8 +144,8 @@ export default function IntegrationsPage() {
     try {
       const data = await testCRMConnection(integrationId);
 
-      if (!data.success) {
-        throw new Error(data.message || "Connection test failed");
+      if (!(data as any)?.success) {
+        throw new Error((data as any)?.message || "Connection test failed");
       }
 
       toast.success("Connection test successful!");

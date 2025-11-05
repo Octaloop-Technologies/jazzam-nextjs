@@ -28,7 +28,7 @@ export default function SubscriptionSelectionPage() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/subscription`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
+        // credentials: "include",
         body: JSON.stringify({
           subscriptionStatus: "trial",
           subscriptionPlan: plan,
@@ -70,7 +70,7 @@ export default function SubscriptionSelectionPage() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/subscription`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
+        // credentials: "include",
         body: JSON.stringify({
           subscriptionStatus: "active",
           subscriptionPlan: "free",
@@ -116,7 +116,7 @@ export default function SubscriptionSelectionPage() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/billing/checkout`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        credentials: "include",
+        // credentials: "include",
         body: JSON.stringify({ plan, provider }),
       });
 

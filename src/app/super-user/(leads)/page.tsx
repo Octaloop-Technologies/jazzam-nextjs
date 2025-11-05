@@ -1,3 +1,4 @@
+"use client";
 import { LeftArrowSvg, RightArrowSvg } from "@/components/svgs/ArrowSvgs";
 import {
   ColdLeadsSvg,
@@ -15,9 +16,8 @@ import TableCell from "@/components/ui/table/TableCell";
 import TableHeader from "@/components/ui/table/TableHeader";
 import TableRow from "@/components/ui/table/TableRow";
 import Link from "next/link";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import LeadsMenu from "@/components/view/dashboard/leads/LeadsMenu";
-import { Metadata } from "next";
 import { getAllLeads, getLeadStats, searchLeads } from "./action";
 import TabNavigation from "@/components/view/dashboard/leads/TabNavigation";
 import TabContentLoader from "@/components/view/dashboard/leads/TabContentLoader";
@@ -25,83 +25,113 @@ import RefreshButton from "@/components/view/dashboard/leads/RefreshButton";
 import { getCurrentUser } from "@/app/(auth)/action";
 import WelcomeBanner from "@/components/view/dashboard/leads/WelcomeBanner";
 import PaymentSuccessNotification from "@/components/view/dashboard/leads/PaymentSuccessNotification";
+import { useSearchParams } from "next/navigation";
 
-// ======================================================
-// Meta Data
-// ======================================================
-export const metadata: Metadata = {
-  title: "Leads",
-  description: "Leads page",
-};
 
-interface DashboardPageProps {
-  searchParams: Promise<{
-    error?: string;
-    logout?: string;
-    login?: string;
-    page?: string;
-    status?: string;
-    search?: string;
-    companyIndustry?: string;
-    companySize?: string;
-    sortBy?: string;
-    sortOrder?: string;
-    payment?: string;
-    session_id?: string;
-    companyId?: string;
-  }>;
+interface Lead {
+  _id: string;
+  fullName?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  company?: string;
+  jobTitle?: string;
+  status: string;
+  leadScore?: number;
+  profilePic?: string;
+  profileUrl?: string;
+  companySize?: string;
 }
 
-const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
-  const params = await searchParams;
-  const currentPage = parseInt(params.page || "1");
-  const statusFilter = params.status;
+const DashboardPage = async () => {
+  const searchParams = useSearchParams()
+  const currentPage = parseInt(searchParams?.get("page") || "1");
+  const statusFilter = searchParams?.get("status") || undefined;
+  const companyId = searchParams?.get("companyId") || undefined;
+  const searchQuery = searchParams?.get("search") || undefined;
+  const companyIndustryFilter = searchParams?.get("companyIndustry") || undefined;
+  const companySizeFilter = searchParams?.get("companySize") || undefined;
+  const sortBy = searchParams?.get("sortBy") || "createdAt";
+  const sortOrder = searchParams?.get("sortOrder") || "desc";
 
-  // 👇 Extract companyId from the query string
-  const companyId = params.companyId;
+  // const currentPage = parseInt(params.page || "1");
+  // const statusFilter = params.status;
 
-  console.log("Company ID:", companyId); // should log "123"
+  // // 👇 Extract companyId from the query string
+  // const companyId = params.companyId;
+
+  // console.log("Company ID:", companyId); // should log "123"
 
   // ======================================================
   // Search query and filters
   // ======================================================
-  const searchQuery = params.search;
-  const companyIndustryFilter = params.companyIndustry;
-  const companySizeFilter = params.companySize;
-  const sortBy = params.sortBy || "createdAt";
-  const sortOrder = params.sortOrder || "desc";
+  // const searchQuery = params.search;
+  // const companyIndustryFilter = params.companyIndustry;
+  // const companySizeFilter = params.companySize;
+  // const sortBy = params.sortBy || "createdAt";
+  // const sortOrder = params.sortOrder || "desc";
 
   // ======================================================
   // Fetch leads and stats (automatically filtered by logged-in company)
   // ======================================================
-  const [leadsResponse, statsResponse, currentUserResponse] = await Promise.all([
-    searchQuery
-      ? searchLeads({
-          query: searchQuery,
-          page: currentPage,
-          limit: 5,
-          status: statusFilter,
-          companyIndustry: companyIndustryFilter,
-          sortBy,
-          sortOrder,
-        })
-      : getAllLeads({
-          page: currentPage,
-          limit: 5,
-          status: statusFilter,
-          companyIndustry: companyIndustryFilter,
-          companySize: companySizeFilter,
-          sortBy,
-          sortOrder,
-          companyId
-        }),
-    getLeadStats(companyId),
-    getCurrentUser(),
-  ]);
 
-  const leadsData = leadsResponse.success ? leadsResponse.data?.data : null;
-  const statsData = statsResponse.success ? statsResponse.data?.data : null;
-  const currentUser = currentUserResponse.success ? currentUserResponse.user : null;
+  const [leadsData, setLeadsData] = useState<any>(null);
+  const [statsData, setStatsData] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [leadsResponse, setLeadsResponse] = useState<{ success: boolean; data?: any }>({ success: false });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const [leadsRes, statsRes, userRes] = await Promise.all([
+          searchQuery
+            ? searchLeads({
+              query: searchQuery,
+              page: currentPage,
+              limit: 5,
+              status: statusFilter,
+              companyIndustry: companyIndustryFilter,
+              sortBy,
+              sortOrder,
+            })
+            : getAllLeads({
+              page: currentPage,
+              limit: 5,
+              status: statusFilter,
+              companyIndustry: companyIndustryFilter,
+              companySize: companySizeFilter,
+              sortBy,
+              sortOrder,
+              companyId,
+            }),
+          getLeadStats(companyId),
+          getCurrentUser(),
+        ]);
+
+        setLeadsResponse(leadsRes);
+        setLeadsData(leadsRes.success ? (leadsRes.data as any).data : null);
+        setStatsData(statsRes.success ? (statsRes.data as any).data : null);
+        setCurrentUser(userRes.success ? userRes.user : null);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLeadsResponse({ success: false });
+        setLeadsData(null);
+        setStatsData(null);
+        setCurrentUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [currentPage, statusFilter, companyId, searchQuery, companyIndustryFilter, companySizeFilter, sortBy, sortOrder]);
+
+
+  // const leadsData = leadsResponse.success ? leadsResponse.data?.data : null;
+  // const statsData = statsResponse.success ? statsResponse.data?.data : null;
+  // const currentUser = currentUserResponse.success ? currentUserResponse.user : null;
 
   // ======================================================
   // Generate cards from stats data
@@ -194,6 +224,15 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
     );
   };
 
+  // ✅ Show loading state
+  if (isLoading) {
+    return (
+      <section>
+        <TabContentLoader />
+      </section>
+    );
+  }
+
   return (
     <section>
       {/* ---------------------------- Payment Success Notification ---------------------------- */}
@@ -211,12 +250,12 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
               Showing leads for {currentUser.companyName}
             </p>
           )}
-          {companyId && 
-              <button className="bg-pri p-3 rounded-2xl my-5 text-white text-md hover:bg-green-600">
-                <Link href="/super-user">
-              My dashboard
-          </Link>
-              </button>
+          {companyId &&
+            <button className="bg-pri p-3 rounded-2xl my-5 text-white text-md hover:bg-green-600">
+              <Link href="/super-user">
+                My dashboard
+              </Link>
+            </button>
           }
         </div>
         <div className="flex items-center gap-2.5">
@@ -295,11 +334,10 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                     <Link
                       href={createPaginationUrl(Math.max(1, currentPage - 1))}
                       prefetch={false}
-                      className={`size-[30px] rounded-full border border-gray-b flex-center transition-all duration-200 ${
-                        currentPage === 1
-                          ? "cursor-not-allowed opacity-50"
-                          : "bg-pri text-white hover:bg-pri/90"
-                      }`}
+                      className={`size-[30px] rounded-full border border-gray-b flex-center transition-all duration-200 ${currentPage === 1
+                        ? "cursor-not-allowed opacity-50"
+                        : "bg-pri text-white hover:bg-pri/90"
+                        }`}
                     >
                       <LeftArrowSvg />
                     </Link>
@@ -309,11 +347,10 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                     <Link
                       href={createPaginationUrl(currentPage + 1)}
                       prefetch={false}
-                      className={`size-[30px] rounded-full border border-gray-b flex-center transition-all duration-200 ${
-                        !leadsData?.hasNextPage
-                          ? "cursor-not-allowed opacity-50"
-                          : "bg-pri text-white hover:bg-pri/90"
-                      }`}
+                      className={`size-[30px] rounded-full border border-gray-b flex-center transition-all duration-200 ${!leadsData?.hasNextPage
+                        ? "cursor-not-allowed opacity-50"
+                        : "bg-pri text-white hover:bg-pri/90"
+                        }`}
                     >
                       <RightArrowSvg />
                     </Link>
@@ -353,10 +390,9 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                                 ? lead.fullName
                                 : (lead.firstName && lead.firstName.trim()) ||
                                   (lead.lastName && lead.lastName.trim())
-                                ? `${lead.firstName ? lead.firstName : ""}${
-                                    lead.lastName ? ` ${lead.lastName}` : ""
-                                  }`.trim() || "No Name"
-                                : "No Name"}
+                                  ? `${lead.firstName ? lead.firstName : ""}${lead.lastName ? ` ${lead.lastName}` : ""
+                                    }`.trim() || "No Name"
+                                  : "No Name"}
                             </p>
                             <p className="text-[12px] text-gray-200">{lead.company || "N/A"}</p>
                             <p className="text-[12px] text-gray-200">
@@ -374,8 +410,8 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                               lead.leadScore && lead.leadScore >= 80
                                 ? "var(--sec)"
                                 : lead.leadScore && lead.leadScore >= 60
-                                ? "var(--pipeline)"
-                                : "var(--cold)"
+                                  ? "var(--pipeline)"
+                                  : "var(--cold)"
                             }
                             size={18}
                             strokeWidth={3}
@@ -399,10 +435,18 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                           <span className="text-gray-400 text-sm">No Profile</span>
                         )}
                       </TableCell>
-                      <TableCell className="flex-between">
+                      {/* <TableCell className="flex-between">
                         <h3 className="font-medium">{lead.companySize || "N/A"}</h3>
                         <LeadsMenu lead={lead} />
-                      </TableCell>
+                      </TableCell> */}
+                      {(leadsData.leads as Lead[]).map((lead: Lead) => (
+                        <TableRow key={lead._id}>
+                          <TableCell className="flex-between">
+                            <h3 className="font-medium">{lead.companySize || "N/A"}</h3>
+                            <LeadsMenu lead={lead as any} />
+                          </TableCell>
+                        </TableRow>
+                      ))}
                     </TableRow>
                   ))}
                 </>

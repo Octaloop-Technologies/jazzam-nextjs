@@ -1,69 +1,39 @@
-"use server";
+"use client";
 
-import { cookies } from "next/headers";
-
+import { apiClient } from "@/lib/utils/apiClient";
 const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-async function getAuthToken() {
-  const cookieStore = await cookies();
-  return cookieStore.get("accessToken")?.value || "";
-}
+
+// async function getAuthToken() {
+//   const cookieStore = await cookies();
+//   return cookieStore.get("accessToken")?.value || "";
+// }
 
 export async function getCRMProviders() {
-  const token = await getAuthToken();
-  const response = await fetch(`${API_BASE_URL}/crm-integration/providers`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.json();
+  const { data } = await apiClient.get(`${API_BASE_URL}/crm-integration/providers`);
+  return data;
 }
 
+
 export async function getCRMIntegration() {
-  const token = await getAuthToken();
-  const response = await fetch(`${API_BASE_URL}/crm-integration`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.json();
+  const { data } = await apiClient.get(`${API_BASE_URL}/crm-integration`);
+  return data;
 }
 
 export async function initCRMOAuth(provider: string) {
-  const token = await getAuthToken();
-  const response = await fetch(`${API_BASE_URL}/crm-integration/oauth/init`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-    body: JSON.stringify({ provider }),
-  });
-  return response.json();
+  const { data } = await apiClient.post(`${API_BASE_URL}/crm-integration/oauth/init`, { provider });
+  return data;
 }
 
 export async function disconnectCRM(integrationId: string) {
-  const token = await getAuthToken();
-  const response = await fetch(`${API_BASE_URL}/crm-integration/${integrationId}`, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.json();
+  const { data } = await apiClient.delete(`${API_BASE_URL}/crm-integration/${integrationId}`);
+  return data;
 }
 
 export async function testCRMConnection(integrationId: string) {
-  const token = await getAuthToken();
-  const response = await fetch(`${API_BASE_URL}/crm-integration/${integrationId}/test-connection`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.json();
+  const { data } = await apiClient.post(
+    `${API_BASE_URL}/crm-integration/${integrationId}/test-connection`,
+    {}
+  );
+  return data;
 }

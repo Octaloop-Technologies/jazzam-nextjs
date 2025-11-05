@@ -1,13 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import "@/styles/css/globals.css";
 import { Providers } from "@/providers/index";
-import { getDictionary } from "@/lib/i18n/getDictionary";
 import { I18nProvider } from "@/providers/I18nProvider";
 import { ICONS, VIEWPORT } from "@/lib/constants/website";
 import { BASE_METADATA } from "@/lib/constants/website";
 import { Suspense } from "react";
 import NavigationIndicator from "@/components/ui/navigation/NavigationIndicator";
-import { cookies } from "next/headers";
 import { Roboto, Tajawal } from "next/font/google";
 
 const roboto = Roboto({
@@ -24,7 +22,6 @@ const tajawal = Tajawal({
   display: "swap",
 });
 
-// ----------------| METADATA |--------------------------
 export const metadata: Metadata = {
   manifest: ICONS.MANIFEST,
   title: {
@@ -36,14 +33,10 @@ export const metadata: Metadata = {
     icon: ICONS.FAVICON,
     shortcut: ICONS.FAVICON_32X32,
     apple: ICONS.APPLE_TOUCH_ICON,
-    other: {
-      rel: "icon",
-      url: ICONS.FAVICON,
-    },
+    other: { rel: "icon", url: ICONS.FAVICON },
   },
 };
 
-// ----------------| VIEWPORT |--------------------------
 export const viewport: Viewport = {
   themeColor: VIEWPORT.THEME_COLOR,
   width: "device-width",
@@ -54,33 +47,24 @@ export const viewport: Viewport = {
 
 export default async function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  const cookieStore = await cookies();
-  const lang = cookieStore.get("lang")?.value || "en";
-  const dict = await getDictionary(lang);
+}: Readonly<{ children: React.ReactNode }>) {
+  // Default server render; LocaleInitializer will hydrate from localStorage
+  const defaultLang = "en";
+  const defaultDict = (await import("../../dictionaries/en.json")).default;
 
   return (
-    <html lang={lang} dir={lang === "ar" ? "rtl" : "ltr"}>
+    <html lang={defaultLang} dir={defaultLang === "en" ? "ltr" : "rtl"}>
       <head>
-        {/* -- ICONS -- */}
         <link rel="icon" href={ICONS.FAVICON} sizes="any" />
         <link rel="icon" href={ICONS.FAVICON_32X32} type="image/png" sizes="32x32" />
         <link rel="icon" href={ICONS.FAVICON_16X16} type="image/png" sizes="16x16" />
-        <link
-          rel="apple-touch-icon"
-          href={ICONS.APPLE_TOUCH_ICON}
-          type="image/png"
-          sizes="180x180"
-        />
-        {/* -- MANIFEST -- */}
+        <link rel="apple-touch-icon" href={ICONS.APPLE_TOUCH_ICON} type="image/png" sizes="180x180" />
         <link rel="manifest" href={ICONS.MANIFEST} />
       </head>
       <body className={`${roboto.variable} ${tajawal.variable} antialiased`}>
         <NavigationIndicator />
         <Suspense fallback={null}>
-          <I18nProvider lang={lang} dict={dict}>
+          <I18nProvider lang={defaultLang} dict={defaultDict}>
             <Providers>{children}</Providers>
           </I18nProvider>
         </Suspense>

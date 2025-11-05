@@ -13,10 +13,11 @@ import Link from "next/link";
 import Dropdown, { DropdownItem } from "@/components/ui/dropdown/Dropdown";
 import { navItems } from "@/lib/constants/navbarConstants";
 import gsap from "gsap";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useLayoutEffect } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Language from "@/components/shared/language/Language";
-import { changeLang } from "../action";
+import { useLocale } from "@/lib/hooks/useLocale";
+import { useI18n } from "@/providers/I18nProvider";
 // import { io } from "socket.io-client";
 
 // const socket = io(`${process.env.NEXT_PUBLIC_BASE_URL}`);
@@ -37,9 +38,12 @@ const Navbar = ({ currentLang, languages }: NavbarProps) => {
   // ======================================================
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  // const [notifications, setNotifications] = useState([]);
+  const { setLocale: setLocalLocale } = useLocale();
+  const { setLocale: setI18nLocale } = useI18n();
 
   const companyId = searchParams?.get("companyId");
+  // const [notifications, setNotifications] = useState([]);
+
 
   // Fetch existing notifications on mount
   // useEffect(() => {
@@ -105,6 +109,15 @@ const Navbar = ({ currentLang, languages }: NavbarProps) => {
     });
   }, []);
 
+  const handleLangChange = async (code: string) => {
+    setLocalLocale(code); // persist to localStorage + state
+    await setI18nLocale(code); // load dictionary
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = code;
+      document.documentElement.dir = code === "ar" ? "rtl" : "ltr";
+    }
+  };
+
   return (
     <div className="flex-between gap-2 pt-[15px] pb-2.5 x-padding navbar sticky top-0 z-50 bg-bg">
       <Logo />
@@ -137,7 +150,7 @@ const Navbar = ({ currentLang, languages }: NavbarProps) => {
         {/* ------------- localization ------------- */}
         <Language
           languages={languages}
-          changeLang={changeLang}
+          onChange={handleLangChange}
           currentLang={currentLang}
         />
 

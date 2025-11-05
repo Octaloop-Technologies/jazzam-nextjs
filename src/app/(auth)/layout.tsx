@@ -1,5 +1,12 @@
 import { LoginBg } from "@/components/svgs/bgSvgs";
+import { Metadata } from "next";
 import React from "react";
+
+export const metadata: Metadata = {
+  title: "Login",
+  description: "Login to your account",
+};
+
 
 const layout = ({ children }: { children: React.ReactNode }) => {
   return (

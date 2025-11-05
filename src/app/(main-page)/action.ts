@@ -1,6 +1,6 @@
-"use server";
+"use client";
 
-import { cookies } from "next/headers";
+import { apiClient } from "@/lib/utils/apiClient";
 
 // =============================================================
 // Join Waitlist
@@ -11,30 +11,13 @@ export const joinWaitlist = async (
   source: string,
   metadata: Record<string, string>
 ) => {
-  const token = (await cookies()).get("accessToken")?.value;
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/waitlist/join`, {
-      method: "POST",
-      body: JSON.stringify({ email, name, source, metadata }),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const responseData = await response.json();
-
-    // Handle specific error for email already in waitlist (status 409)
-    if (!response.ok) {
-      return { success: false, error: responseData.message || "Failed to join waitlist" };
-    }
-
-    return { success: true, data: responseData.message || "Successfully joined waitlist" };
-  } catch (error) {
-    console.error("Error joining waitlist:", error);
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error joining waitlist",
-    };
+    const { data } = await apiClient.post(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/waitlist/join`,
+      { email, name, source, metadata }
+    );
+    return { success: true, data: (data as any)?.message || "Successfully joined waitlist" };
+  } catch (error: any) {
+    return { success: false, error: error?.message ?? "Failed to join waitlist" };
   }
 };

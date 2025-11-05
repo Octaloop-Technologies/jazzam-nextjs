@@ -4,16 +4,13 @@ import { CheckSvg, GlobeSvg } from "@/components/svgs/NavbarSvgs";
 
 interface LanguageProps {
   languages: { code: string; label: string; flag: string }[];
-  changeLang: (lang: FormData) => void;
+  onChange: (code: string) => void;
   currentLang: string;
 }
 
-const Language = ({ languages, changeLang, currentLang }: LanguageProps) => {
-  // Wrapper function to convert string to FormData
+const Language = ({ languages, onChange, currentLang }: LanguageProps) => {
   const handleLangChange = (lang: string) => {
-    const formData = new FormData();
-    formData.append("lang", lang);
-    changeLang(formData);
+    onChange(lang);
   };
 
   // Get the next language in the list
@@ -43,7 +40,6 @@ const Language = ({ languages, changeLang, currentLang }: LanguageProps) => {
         <span className="uppercase text-[14px] font-medium">
           {currentLanguageInfo.code}
         </span>
-        {/* Optional: Show small indicator that it's clickable */}
         <svg 
           width="12" 
           height="12" 

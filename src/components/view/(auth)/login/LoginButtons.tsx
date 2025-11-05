@@ -4,15 +4,28 @@ import { GoogleIcon, ZohoIcon } from "@/components/svgs/loginButtonSvgs";
 import React, { useState } from "react";
 import { loginWithGoogle, loginWithZoho } from "@/app/(auth)/action";
 import { useToast } from "@/lib/hooks/useToast";
+import { useRouter } from "next/navigation";
 
 const LoginButtons = () => {
   const [isLoading, setIsLoading] = useState({ google: false, zoho: false });
   const toast = useToast();
+  const router = useRouter()
 
   const handleGoogleLogin = async () => {
     setIsLoading((prev) => ({ ...prev, google: true }));
     toast.info("Redirecting to Google...");
-    await loginWithGoogle();
+    // Redirect to backend Google OAuth endpoint with callback URL
+    const callbackUrl = `${process.env.NEXT_PUBLIC_CLIENT_URL}/auth/callback`;
+    const googleAuthUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/google?callbackUrl=${encodeURIComponent(callbackUrl)}`;
+    // router.replace(googleAuthUrl)
+    console.log("windows*****", googleAuthUrl)
+    window.location.href = googleAuthUrl;
+
+    
+    // if (typeof window !== 'undefined') {
+    //   window.location.href = googleAuthUrl;
+    // }
+    // await loginWithGoogle();
   };
 
   const handleZohoLogin = async () => {
