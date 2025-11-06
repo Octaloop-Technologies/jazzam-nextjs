@@ -1,20 +1,18 @@
-"use server";
-
-import { cookies } from "next/headers";
-
+"use client";
+import TokenStorage from "@/lib/utils/tokenStorage";
 // ======================================================
 // Get all leads (automatically filtered by logged-in company via JWT)
 // ======================================================
 interface GetLeadsParams {
   page?: number;
   limit?: number;
-  status?: string;
-  companyIndustry?: string;
-  companySize?: string;
+  status?: string | null | undefined;
+  companyIndustry?: string | null | undefined;
+  companySize?: string | null | undefined;
   assignedTo?: string;
   sortBy?: string;
   sortOrder?: string;
-  companyId?: string
+  companyId?: string | null | undefined;
 }
 
 export const getAllLeads = async ({
@@ -29,8 +27,20 @@ export const getAllLeads = async ({
   companyId
 }: GetLeadsParams) => {
   try {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("accessToken")?.value || "";
+    // Get token from localStorage
+    const { accessToken } = TokenStorage?.getTokens();
+
+    console.log("accessToken:****", accessToken)
+
+    if (!accessToken) {
+      console.warn("No access token available in getAllLeads");
+      return {
+        success: false,
+        data: null,
+        error: "Authentication required",
+      };
+    }
+
     const params = new URLSearchParams();
 
     params.append("page", page.toString());
@@ -42,13 +52,13 @@ export const getAllLeads = async ({
     if (companyIndustry) params.append("companyIndustry", companyIndustry);
     if (companySize) params.append("companySize", companySize);
     if (assignedTo) params.append("assignedTo", assignedTo);
-    if(companyId) params.append("companyId", companyId);
+    if (companyId) params.append("companyId", companyId);
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/leads/all?${params.toString()}`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
         cache: "no-store", // Ensure fresh data
@@ -75,14 +85,26 @@ export const getAllLeads = async ({
 // ======================================================
 // Get lead stats
 // ======================================================
-export const getLeadStats = async (companyId: string | undefined) => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value || "";
+export const getLeadStats = async (companyId: string | null | undefined) => {
   try {
+    console.log("getLeadStats called with companyId:", companyId);
+    
+    const { accessToken } = TokenStorage.getTokens();
+    console.log("getLeadStats - accessToken available:", !!accessToken);
+
+    if (!accessToken) {
+      console.warn("No access token available in getLeadStats");
+      return {
+        success: false,
+        data: null,
+        error: "Authentication required",
+      };
+    }
+
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/stats?companyId=${companyId}`, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
       },
       cache: "no-store", // Ensure fresh data
     });
@@ -110,8 +132,8 @@ interface SearchLeadsParams {
   query: string;
   page?: number;
   limit?: number;
-  status?: string;
-  companyIndustry?: string;
+  status?: string | null | undefined;
+  companyIndustry?: string | null | undefined;
   sortBy?: string;
   sortOrder?: string;
 }
@@ -125,9 +147,18 @@ export const searchLeads = async ({
   sortBy = "createdAt",
   sortOrder = "desc",
 }: SearchLeadsParams) => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value || "";
   try {
+    const { accessToken } = TokenStorage.getTokens();
+
+    if (!accessToken) {
+      console.warn("No access token available in searchLeads");
+      return {
+        success: false,
+        data: null,
+        error: "Authentication required",
+      };
+    }
+
     if (!query || query.trim().length === 0) {
       throw new Error("Search query is required");
     }
@@ -148,7 +179,7 @@ export const searchLeads = async ({
       `${process.env.NEXT_PUBLIC_BASE_URL}/leads/search?${params.toString()}`,
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
           "Content-Type": "application/json",
         },
         cache: "no-store", // Ensure fresh data for searches
@@ -176,12 +207,21 @@ export const searchLeads = async ({
 // Get lead by id
 // ======================================================
 export const getLeadById = async ({ id }: { id: string }) => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value || "";
   try {
+    const { accessToken } = TokenStorage.getTokens();
+
+    if (!accessToken) {
+      console.warn("No access token available in getLeadById");
+      return {
+        success: false,
+        data: null,
+        error: "Authentication required",
+      };
+    }
+
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${id}`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
       cache: "no-store", // Ensure fresh data on every request
@@ -209,12 +249,21 @@ export const getLeadById = async ({ id }: { id: string }) => {
 // Delete lead
 // ======================================================
 export const deleteLead = async ({ id }: { id: string }) => {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value || "";
   try {
+    const { accessToken } = TokenStorage.getTokens();
+
+    if (!accessToken) {
+      console.warn("No access token available in deleteLead");
+      return {
+        success: false,
+        message: null,
+        error: "Authentication required",
+      };
+    }
+
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${id}`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
       method: "DELETE",
@@ -247,7 +296,12 @@ export const updateOnboardingStatus = async (data: {
   skipped?: boolean;
 }) => {
   try {
-    const accessToken = (await cookies()).get("accessToken")?.value;
+    const { accessToken } = TokenStorage.getTokens();
+
+    if (!accessToken) {
+      console.warn("No access token available in updateOnboardingStatus");
+      return { success: false, error: "Authentication required" };
+    }
 
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/onboarding`, {
       method: "PATCH",
@@ -284,14 +338,23 @@ export const restartOnboarding = async () => {
 // Re-qualify lead using BANT
 // ======================================================
 export const requalifyLeadBANT = async ({ id }: { id: string }) => {
-  const { revalidatePath } = await import("next/cache");
-  const cookieStore = await cookies();
-  const token = cookieStore.get("accessToken")?.value || "";
   try {
+    const { accessToken } = TokenStorage.getTokens();
+
+    if (!accessToken) {
+      console.warn("No access token available in requalifyLeadBANT");
+      return {
+        success: false,
+        data: null,
+        error: "Authentication required",
+      };
+    }
+
+    const { revalidatePath } = await import("next/cache");
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${id}/bant`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
       cache: "no-store",

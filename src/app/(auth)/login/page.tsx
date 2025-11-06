@@ -1,3 +1,4 @@
+import AuthGuard from "@/components/shared/auth/AuthGuard";
 import Logo from "@/components/shared/logo/Logo";
 import LoginButtons from "@/components/view/(auth)/login/LoginButtons";
 import { Metadata } from "next";
@@ -9,6 +10,7 @@ export const metadata: Metadata = {
 
 const LoginPage = async () => {
   return (
+    <AuthGuard requireAuth={false}>
     <div className="flex-col-center text-center w-full">
       <Logo />
       <div className="mt-8 p-5 bg-white rounded-3xl max-w-[400px] w-full">
@@ -24,6 +26,7 @@ const LoginPage = async () => {
         </p>
       </div>
     </div>
+    </AuthGuard>
   );
 };
 

@@ -8,6 +8,7 @@ import { useState } from "react";
 import LeadDetailModal from "./LeadDetailModal";
 import ScadualeModal from "./ScadualeModal";
 import { useToast } from "@/lib/hooks/useToast";
+import tokenStorage from "@/lib/utils/tokenStorage";
 
 const FollowUpMenu = ({
   lead,
@@ -26,7 +27,9 @@ const FollowUpMenu = ({
   const [isLeadDetailModalOpen, setIsLeadDetailModalOpen] = useState(false);
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
 
-  const { success, error: ToastError } = useToast()
+  const { success, error: ToastError } = useToast();
+
+  const { accessToken } = tokenStorage?.getTokens();
 
   // ======================================================
   // Delete lead
@@ -71,15 +74,11 @@ const FollowUpMenu = ({
   };
 
   const handleFollowUp = async (id: string | undefined) => {
-    const cookieString = document.cookie;
-    const cookies = Object.fromEntries(
-      cookieString.split("; ").map(c => c.split("="))
-    );
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/follow-up/${id}`, {
         method: "POST",
         headers: {
-          Authorization: `Bearer ${cookies?.accessToken}`
+          Authorization: `Bearer ${accessToken}`
         }
       });
       if (res.ok) {

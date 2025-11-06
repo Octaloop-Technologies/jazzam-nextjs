@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "@/redux/store";
-import { getCurrentUser } from "@/app/(auth)/action";
+import { getCurrentUser } from "@/lib/api/auth";
+import TokenStorage from "@/lib/utils/tokenStorage";
 
 // Company interface matching the backend
 export interface Company {
@@ -113,6 +114,8 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
       state.isLoading = false;
       state.error = null;
+      // Clear tokens from localStorage
+      TokenStorage.clearTokens();
     },
     updateUserSettings: (state, action) => {
       if (state.user) {
@@ -139,31 +142,57 @@ const authSlice = createSlice({
         }
       }
     },
+    setTokens: (state, action) => {
+      const { accessToken, refreshToken } = action.payload;
+      console.log("Setting tokens in Redux:", { hasAccessToken: !!accessToken, hasRefreshToken: !!refreshToken });
+    },
   },
 
   extraReducers: (builder) => {
     builder
       .addCase(fetchCurrentUser.pending, (state) => {
-        state.isLoading = true;
-        state.error = null;
+        if (!state.isLoading) {
+          console.log("Fetching current user...");
+          state.isLoading = true;
+          state.error = null;
+        }
       })
       .addCase(fetchCurrentUser.fulfilled, (state, action) => {
+        console.log("Current user fetched successfully:", action.payload);
         state.isLoading = false;
         state.user = action.payload;
         state.isAuthenticated = true;
         state.error = null;
       })
       .addCase(fetchCurrentUser.rejected, (state, action) => {
+        console.log("Failed to fetch current user:", action.payload);
         state.isLoading = false;
         state.user = null;
         state.isAuthenticated = false;
         state.error = action.payload as string;
+        
+        // Only clear tokens on definitive auth errors, not network errors
+        const errorMessage = action.payload as string;
+        const isAuthError = errorMessage && (
+          errorMessage.includes('401') || 
+          errorMessage.includes('403') || 
+          errorMessage.includes('Invalid') || 
+          errorMessage.includes('expired') ||
+          errorMessage.includes('unauthorized')
+        );
+        
+        if (isAuthError) {
+          console.log("Clearing invalid tokens due to auth error");
+          // TokenStorage.clearTokens();
+        } else {
+          console.log("Network error, keeping tokens for retry");
+        }
       });
   },
 });
 
 // Export actions
-export const { logout, updateUserSettings, updateUserSubscription } = authSlice.actions;
+export const { logout, updateUserSettings, updateUserSubscription, setTokens } = authSlice.actions;
 
 // Export selectors
 export const selectUser = (state: RootState) => state.auth.user;

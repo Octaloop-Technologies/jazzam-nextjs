@@ -3,7 +3,7 @@ import Image from 'next/image';
 import React, { useState } from 'react';
 import { Dictionary } from "@/lib/i18n/getDictionary";
 import { useToast } from '@/lib/hooks/useToast';
-import { joinWaitlist } from '@/app/(main-page)/action';
+import { joinWaitlist } from '@/lib/api/main-page';
 import emailjs from "@emailjs/browser";
 
 interface WaitlistProps {

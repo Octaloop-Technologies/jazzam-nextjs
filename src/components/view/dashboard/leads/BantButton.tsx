@@ -2,7 +2,7 @@
 
 import { QualifySvg } from "@/components/svgs/LeadsAnalysisSvgs";
 import { useToast } from "@/lib/hooks/useToast";
-import { requalifyLeadBANT } from "@/app/super-user/(leads)/action";
+import { requalifyLeadBANT } from "@/lib/api/leads";
 import { useState, useTransition, useEffect } from "react";
 import { useRouter } from "next/navigation";
 

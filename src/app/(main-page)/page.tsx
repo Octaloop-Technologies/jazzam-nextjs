@@ -1,6 +1,6 @@
 import React from "react";
 import { getDictionary } from "@/lib/i18n/getDictionary";
-import { getCurrentLang } from "../action";
+import { getCurrentLang } from "@/lib/api/main-page";
 import Hero from "@/components/view/(main-page)/Hero";
 import ChooseJazzam from "@/components/view/(main-page)/ChooseJazzam";
 import HowJazzamWork from "@/components/view/(main-page)/HowJazzamWork";

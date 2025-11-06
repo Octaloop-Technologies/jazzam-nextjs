@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
-import { changeLang } from "@/app/action";
+import { changeLang } from "@/lib/api/main-page";
 import { LanguageOption } from "@/components/ui/language";
 
 interface LanguageModalProps {
@@ -70,7 +70,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({
         </div>
 
         {/* buttons */}
-        <form action={changeLang} className="flex justify-around space-x-5">
+        <form action={changeLang as any} className="flex justify-around space-x-5">
           <input type="hidden" name="lang" value={selectedLanguage} />
           <input
             type="hidden"

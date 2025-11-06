@@ -13,7 +13,7 @@ import OptimizedImage from "@/components/ui/image/OptimizedImage";
 import ProgressBar from "@/components/ui/progress/ProgressBar";
 import LeadsMenu from "@/components/view/dashboard/leads/LeadsMenu";
 import Link from "next/link";
-import { getLeadById } from "../../action";
+import { getLeadById } from "@/lib/api/leads";
 import { notFound } from "next/navigation";
 import BantButton from "@/components/view/dashboard/leads/BantButton";
 

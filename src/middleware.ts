@@ -1,17 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 // ==============================================================
-// Define protected routes that require authentication
-// ==============================================================
-const protectedRoutes = ["/super-user", "/profile"];
-
-// ==============================================================
-// Define auth routes that should not be accessible when logged in (will redirect to dashboard)
-// ==============================================================
-const authRoutes = ["/login"];
-
-// ==============================================================
-// Locale configuration
+// Define locale configuration only (remove auth logic)
 // ==============================================================
 const supportedLocales = ["en", "ar"];
 const defaultLocale = "en";
@@ -41,58 +31,11 @@ function getLocaleFromHeader(acceptLanguage: string | null): string {
   return defaultLocale;
 }
 
-// Helper function to check if JWT token is expired
-function isTokenExpired(token: string): boolean {
-  try {
-    // Decode JWT token payload (without verification)
-    const payload = JSON.parse(atob(token.split(".")[1]));
-    const currentTime = Date.now() / 1000;
-
-    // Check if token has expired
-    return payload.exp ? payload.exp < currentTime : false;
-  } catch (error) {
-    console.log("error***", error)
-    // If token can't be decoded, consider it invalid/expired
-    return true;
-  }
-}
-
 // ==============================================================
-// Middleware function
+// Middleware function (locale only)
 // ==============================================================
 export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
-
-  // Get tokens from cookies
-  const accessToken = request.cookies.get("accessToken")?.value;
-  const refreshToken = request.cookies.get("refreshToken")?.value;
-
-  console.log("Access Token:", accessToken);
-  console.log("Refresh Token:", refreshToken);
-
-  // Check if user is authenticated (has valid tokens)
-  // Only consider authenticated if both tokens exist, are not empty, and are not expired
-  const isAuthenticated = !!(
-    accessToken &&
-    refreshToken &&
-    accessToken.trim() !== "" &&
-    refreshToken.trim() !== "" &&
-    !isTokenExpired(accessToken) &&
-    !isTokenExpired(refreshToken)
-  );
-
-  // ==============================================================
-  // Handle authentication redirects
-  // ==============================================================
-  // If trying to access protected routes and NOT authenticated
-  if (protectedRoutes.some((route) => path.startsWith(route)) && !isAuthenticated) {
-    return NextResponse.redirect(new URL("/login", request.url));
-  }
-
-  // If trying to access auth routes (login) and IS authenticated
-  if (authRoutes.some((route) => path.startsWith(route)) && isAuthenticated) {
-    return NextResponse.redirect(new URL("/super-user", request.url));
-  }
 
   const response = NextResponse.next();
 
@@ -101,7 +44,7 @@ export function middleware(request: NextRequest) {
   // ==============================================================
   const langCookie = request.cookies.get("lang")?.value;
 
-  // If we don't have a valid language cookie and it's not a logout scenario, detect and set locale
+  // If we don't have a valid language cookie, detect and set locale
   if ((!langCookie || !supportedLocales.includes(langCookie))) {
     const acceptLang = request.headers.get("accept-language");
     const detectedLocale = getLocaleFromHeader(acceptLang);
@@ -120,7 +63,7 @@ export function middleware(request: NextRequest) {
 }
 
 // ==============================================================
-// Configure the middleware to run on specific paths
+// Configure the middleware to run on all paths except static files
 // ==============================================================
 export const config = {
   matcher: [

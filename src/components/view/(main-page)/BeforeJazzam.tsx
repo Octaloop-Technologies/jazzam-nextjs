@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { Dictionary } from "@/lib/i18n/getDictionary";
-import { joinWaitlist } from "@/app/(main-page)/action";
+import { joinWaitlist } from "@/lib/api/main-page";
 import { useToast } from "@/lib/hooks/useToast";
 import emailjs from "@emailjs/browser"
 import { useSelector } from "react-redux";

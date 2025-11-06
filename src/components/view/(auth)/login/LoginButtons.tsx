@@ -2,7 +2,7 @@
 
 import { GoogleIcon, ZohoIcon } from "@/components/svgs/loginButtonSvgs";
 import React, { useState } from "react";
-import { loginWithGoogle, loginWithZoho } from "@/app/(auth)/action";
+import { loginWithGoogle, loginWithZoho } from "@/lib/api/auth";
 import { useToast } from "@/lib/hooks/useToast";
 
 const LoginButtons = () => {

@@ -8,6 +8,7 @@ import RichTextEditor from "@/components/ui/textarea/RichTextEditor";
 import React, { useState, use } from "react";
 import emailjs from "@emailjs/browser";
 import { useToast } from "@/lib/hooks/useToast";
+import tokenStorage from "@/lib/utils/tokenStorage";
 
 const emailJsKey: string = process.env.NEXT_PUBLIC_EMAIL_JS_PUBLIC_KEY ?? ''
 emailjs.init(emailJsKey);
@@ -27,7 +28,9 @@ const FollowPage = ({ params }: FollowPageProps) => {
 
   const decodedFollowUpEmail = decodeURIComponent(followUp);
 
-  const { success, error: ErrorToast } = useToast()
+  const { success, error: ErrorToast } = useToast();
+
+  const { accessToken } = tokenStorage?.getTokens()
 
 
   const [email, setEmail] = useState<EmailData>({
@@ -54,11 +57,6 @@ const FollowPage = ({ params }: FollowPageProps) => {
   ];
 
   const handleScheduleFollowup = async(scheduledDate: Date) => {
-    const cookieString = document.cookie;
-    const cookies = Object.fromEntries(
-      cookieString.split("; ").map(c => c.split("="))
-    );
-
     if (!email.subject || !email.message) {
       ErrorToast("Message or subject cannot be empty");
       return;
@@ -71,7 +69,7 @@ const FollowPage = ({ params }: FollowPageProps) => {
           method: "POST",
           headers: {
             "Content-type": "application/json",
-            Authorization: `Bearer ${cookies?.accessToken}`
+            Authorization: `Bearer ${accessToken}`
           },
           body: JSON.stringify({ 
             subject: email.subject, 
@@ -104,11 +102,6 @@ const FollowPage = ({ params }: FollowPageProps) => {
 
     // return;
 
-    const cookieString = document.cookie;
-    const cookies = Object.fromEntries(
-      cookieString.split("; ").map(c => c.split("="))
-    );
-
     if (!email.subject || !email.message) {
       ErrorToast("Message or subject cannot be empty");
       return;
@@ -135,7 +128,7 @@ const FollowPage = ({ params }: FollowPageProps) => {
           method: "POST",
           headers: {
             "Content-type": "application/json",
-            Authorization: `Bearer ${cookies?.accessToken}`
+            Authorization: `Bearer ${accessToken}`
           },
           body: JSON.stringify({ 
             subject: email.subject, 

@@ -1,5 +1,5 @@
 import { getDictionary } from "@/lib/i18n/getDictionary";
-import { getCurrentLang } from "../action";
+import { getCurrentLang } from "@/lib/api/main-page";
 import HomeNavbar from "./HomeNavbar";
 import HomeFooter from "./HomeFooter";
 

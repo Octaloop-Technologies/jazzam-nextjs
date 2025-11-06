@@ -1,5 +1,6 @@
 "use client"
 import { useToast } from '@/lib/hooks/useToast';
+import tokenStorage from '@/lib/utils/tokenStorage';
 import React, { use } from 'react';
 
 const Page = ({ params }: { params: Promise<{ token: string }> }) => {
@@ -9,19 +10,17 @@ const Page = ({ params }: { params: Promise<{ token: string }> }) => {
     const cleanToken = decodeURIComponent(token).replace(/%/g, '').split('token=')[1];
     console.log("cleanToken********", cleanToken);
 
+    const { accessToken } = tokenStorage?.getTokens();
+
     const { success, error: ToastError } = useToast()
 
     const acceptInvitation = async (token: string) => {
-        const cookieString = document.cookie;
-        const cookies = Object.fromEntries(
-            cookieString.split("; ").map(c => c.split("="))
-        );
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/invite/accept`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: `Bearer ${cookies.accessToken}`
+                    Authorization: `Bearer ${accessToken}`
                 },
                 body: JSON.stringify({
                     token: cleanToken
