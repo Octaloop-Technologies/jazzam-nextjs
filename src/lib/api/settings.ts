@@ -42,7 +42,11 @@ export const logoutUserAction = async () => {
   }
 };
 
-export const updateCompanySettings = async (settings: any) => {
+interface CompanySettings {
+  [key: string]: boolean | string | null | undefined;
+}
+
+export const updateCompanySettings = async (settings: CompanySettings) => {
   try {
     const { accessToken } = TokenStorage.getTokens();
 

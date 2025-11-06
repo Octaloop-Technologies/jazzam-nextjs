@@ -1,5 +1,6 @@
 "use client";
 import TokenStorage from "@/lib/utils/tokenStorage";
+import { Company } from "@/redux/slices/authSlice";
 // ==============================================================
 // Login With Google
 // ==============================================================
@@ -24,9 +25,9 @@ export const loginWithZoho = async () => {
 };
 
 // Cache to prevent duplicate concurrent requests
-let currentUserPromise: Promise<{ success: boolean; user: any }> | null = null;
+let currentUserPromise: Promise<{ success: boolean; user: Company | null; authError?: boolean }> | null = null;
 
-export const getCurrentUser = async (): Promise<{ success: boolean; user: any }> => {
+export const getCurrentUser = async (): Promise<{ success: boolean; user: Company | null; authError?: boolean }> => {
   // If there's already a request in progress, return it
   if (currentUserPromise) {
     console.log("getCurrentUser: Returning cached promise");

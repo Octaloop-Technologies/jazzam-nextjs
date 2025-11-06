@@ -13,7 +13,7 @@ import {
   initCRMOAuth,
   disconnectCRM,
   testCRMConnection,
-} from "./action";
+} from "@/lib/api/integrations";
 
 interface CRMProvider {
   id: string;
@@ -111,13 +111,13 @@ export default function IntegrationsPage() {
       const data = await initCRMOAuth(providerId);
 
       if (!data.success) {
-        throw new Error(data.message || "Failed to initiate connection");
+        throw new Error("Failed to initiate connection");
       }
 
       // Redirect to OAuth URL
       window.location.href = data.data.authUrl;
     } catch (error: Error | unknown) {
-      toast.error((error as Error).message || "Failed to initiate connection");
+      toast.error("Failed to initiate connection");
     }
   };
 
@@ -130,7 +130,7 @@ export default function IntegrationsPage() {
       const data = await disconnectCRM(integrationId);
 
       if (!data.success) {
-        throw new Error(data.message || "Failed to disconnect");
+        throw new Error( "Failed to disconnect");
       }
 
       toast.success("Integration disconnected successfully");
@@ -145,12 +145,12 @@ export default function IntegrationsPage() {
       const data = await testCRMConnection(integrationId);
 
       if (!data.success) {
-        throw new Error(data.message || "Connection test failed");
+        throw new Error("Connection test failed");
       }
 
       toast.success("Connection test successful!");
     } catch (error: Error | unknown) {
-      toast.error((error as Error).message || "Connection test failed");
+      toast.error("Connection test failed");
     }
   };
 

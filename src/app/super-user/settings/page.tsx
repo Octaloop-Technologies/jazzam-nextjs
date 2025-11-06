@@ -181,7 +181,7 @@ const SettingsPage = () => {
           : "Auto BANT qualification disabled"
       );
     } else {
-      ToastError((result as any)?.message || "Failed to update setting");
+      ToastError("Failed to update setting");
       // Revert on error
       setLeadSettings((prev) => ({
         ...prev,
