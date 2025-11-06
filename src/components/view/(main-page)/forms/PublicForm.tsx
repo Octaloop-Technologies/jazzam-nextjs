@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { getFormByAccessToken } from "@/app/super-user/forms/action";
+import { getFormByAccessToken } from "@/lib/api/forms";
 import { useToast } from "@/lib/hooks/useToast";
-import { submitFormData } from "@/app/(main-page)/form/[accessToken]/action";
+import { submitFormData } from "@/lib/api/main-page";
 import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
 import { LinkedInSvg } from "@/components/svgs/leadsDetailSvgs";
 import Input from "@/components/ui/input";
@@ -72,7 +72,7 @@ const PublicForm = ({ accessToken }: PublicFormProps) => {
         });
         setFormData(initialData);
       } else {
-        error(response.message || "Form not found");
+        error("Form not found");
       }
     } catch (err) {
       console.error("Error fetching form:", err);

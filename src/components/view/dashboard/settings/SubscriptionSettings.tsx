@@ -10,6 +10,7 @@ import {
   PlanKey,
   getTrialDaysRemaining,
 } from "@/lib/constants/subscriptionPlans";
+import tokenStorage from "@/lib/utils/tokenStorage";
 
 interface Bill {
   month: string;
@@ -38,6 +39,8 @@ const SubscriptionSettings = () => {
     return getTrialDaysRemaining(trialEndDate);
   }, [isOnTrial, trialEndDate]);
 
+  const { accessToken } = tokenStorage?.getTokens();
+
   const handleChangePlan = () => {
     setIsChanging(true);
     router.push("/super-user/subscription");
@@ -49,8 +52,7 @@ const SubscriptionSettings = () => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/subscription`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
         body: JSON.stringify({
           subscriptionStatus: "cancelled",
           subscriptionPlan: "free",
@@ -82,11 +84,6 @@ const SubscriptionSettings = () => {
   const plan = SUBSCRIPTION_PLANS[currentPlan];
 
   useEffect(() => {
-    const cookieString = document.cookie;
-    const cookies = Object.fromEntries(
-      cookieString.split("; ").map(c => c.split("="))
-    );
-    console.log("cookies:*******", cookies.accessToken)
     const fetchBillingHistory = async() => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/billing/${user?._id}/billing-history`, {
@@ -94,7 +91,7 @@ const SubscriptionSettings = () => {
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${cookies.accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           }
         });
         if(response.ok){

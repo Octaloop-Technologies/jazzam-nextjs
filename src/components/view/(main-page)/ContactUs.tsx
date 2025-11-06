@@ -8,6 +8,7 @@ import { useRef, useState } from "react";
 import { useButtonAnimation } from "@/styles/animations/useButtonAnimation";
 import Image from "next/image";
 import { useToast } from "@/lib/hooks/useToast";
+import tokenStorage from "@/lib/utils/tokenStorage";
 
 type MissingFields = {
   name: boolean;
@@ -23,6 +24,8 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
     paragraphText: dict?.home?.contactUs?.description || "",
   });
   const [loading, setLoading] = useState(false);
+
+  const { accessToken } = tokenStorage?.getTokens();
 
   const [data, setData] = useState({
     name: "",
@@ -66,7 +69,8 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/contact/contact-us`, {
         method: "POST",
         headers: {
-          "Content-type": "application/json"
+          "Content-type": "application/json",
+          Authorization: `Bearer ${accessToken}`
         },
         body: JSON.stringify({ data })
       });

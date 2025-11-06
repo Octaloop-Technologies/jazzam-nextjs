@@ -5,11 +5,11 @@ import { useState, useTransition } from "react";
 import { useEffect } from "react";
 
 interface TabNavigationProps {
-  searchQuery?: string;
-  companyIndustryFilter?: string;
+  searchQuery?: string | null | undefined;
+  companyIndustryFilter?: string | null | undefined;
   sortBy: string;
   sortOrder: string;
-  statusFilter?: string;
+  statusFilter?: string | null | undefined;
 }
 
 const TabNavigation = ({

@@ -2,7 +2,7 @@
 
 import React, { useState, useRef, useEffect, SVGProps } from "react";
 import { gsap } from "gsap";
-import { joinWaitlist } from "../../../app/(main-page)/action";
+import { joinWaitlist } from "@/lib/api/main-page";
 import { useToast } from "@/lib/hooks/useToast";
 
 const WaitlistButton = () => {

@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/lib/hooks/useToast";
-import { deleteLead } from "@/app/super-user/(leads)/action";
+import { deleteLead } from "@/lib/api/leads";
 
 const LeadsMenu = ({
   lead,

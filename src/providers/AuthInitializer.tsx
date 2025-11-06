@@ -8,6 +8,7 @@ import {
   selectIsLoading,
   fetchCurrentUser,
 } from "@/redux/slices/authSlice";
+import TokenStorage from "@/lib/utils/tokenStorage";
 
 interface AuthInitializerProps {
   children: React.ReactNode;
@@ -21,21 +22,25 @@ const AuthInitializer: React.FC<AuthInitializerProps> = ({ children }) => {
   const hasInitialized = useRef(false);
 
   useEffect(() => {
-    // Initialize auth state only once per app session
-    if (!hasInitialized.current && !user && !isLoading && !isAuthenticated) {
+    // Only initialize once when app loads
+    if (!hasInitialized.current) {
       hasInitialized.current = true;
 
-      // Attempt to fetch user
-      dispatch(fetchCurrentUser()).catch(() => {
-        // Silent failure - don't log auth failures in production for security
-        if (process.env.NODE_ENV !== "production") {
-          console.log("AuthInitializer: User not authenticated or session expired");
-        }
-      });
+      // Only check for existing tokens, don't handle OAuth tokens (AuthGuard does that)
+      const hasTokens = TokenStorage.isAuthenticated();
+      console.log("AuthInitializer: Has existing tokens:", hasTokens);
+      
+      if (hasTokens && !isAuthenticated && !isLoading) {
+        console.log("AuthInitializer: Fetching user with existing tokens");
+        dispatch(fetchCurrentUser()).catch((error) => {
+          console.log("AuthInitializer: Failed to fetch user with existing tokens:", error);
+        });
+      }
     }
-  }, [dispatch]);
+  }, []);
 
-  return <>{children}</>;
+  return <>{children}</>
 };
+
 
 export default AuthInitializer;

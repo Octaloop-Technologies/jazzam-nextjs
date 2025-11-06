@@ -10,6 +10,7 @@ import {
   getTrialEndDate,
   isPaidPlan,
 } from "@/lib/constants/subscriptionPlans";
+import tokenStorage from "@/lib/utils/tokenStorage";
 
 export default function SubscriptionSelectionPage() {
   const user = useAppSelector(selectUser);
@@ -22,13 +23,14 @@ export default function SubscriptionSelectionPage() {
     return new Date(user.trialEndDate);
   }, [user?.trialEndDate]);
 
+  const { accessToken } = tokenStorage?.getTokens();
+
   const startTrial = async (plan: Exclude<PlanKey, "free">) => {
     try {
       setLoading(plan);
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/subscription`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
         body: JSON.stringify({
           subscriptionStatus: "trial",
           subscriptionPlan: plan,
@@ -69,7 +71,7 @@ export default function SubscriptionSelectionPage() {
       setLoading("free");
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/subscription`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
         credentials: "include",
         body: JSON.stringify({
           subscriptionStatus: "active",
@@ -115,7 +117,7 @@ export default function SubscriptionSelectionPage() {
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/billing/checkout`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
         credentials: "include",
         body: JSON.stringify({ plan, provider }),
       });

@@ -6,7 +6,7 @@ import ReduxToastContainer from "@/components/ui/toast/ReduxToastContainer";
 import AuthInitializer from "./AuthInitializer";
 
 // Initialize global API interceptor
-import "@/providers/apiInterceptor";
+// import "@/providers/apiInterceptor";
 
 interface ProvidersProps {
   children: React.ReactNode;

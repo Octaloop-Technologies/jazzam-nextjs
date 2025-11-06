@@ -1,3 +1,5 @@
+"use client";
+
 import { LeftArrowSvg, RightArrowSvg } from "@/components/svgs/ArrowSvgs";
 import {
   ColdLeadsSvg,
@@ -15,93 +17,102 @@ import TableCell from "@/components/ui/table/TableCell";
 import TableHeader from "@/components/ui/table/TableHeader";
 import TableRow from "@/components/ui/table/TableRow";
 import Link from "next/link";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import LeadsMenu from "@/components/view/dashboard/leads/LeadsMenu";
-import { Metadata } from "next";
-import { getAllLeads, getLeadStats, searchLeads } from "./action";
+import { getAllLeads, getLeadStats, searchLeads } from "@/lib/api/leads";
 import TabNavigation from "@/components/view/dashboard/leads/TabNavigation";
 import TabContentLoader from "@/components/view/dashboard/leads/TabContentLoader";
 import RefreshButton from "@/components/view/dashboard/leads/RefreshButton";
-import { getCurrentUser } from "@/app/(auth)/action";
+import { getCurrentUser } from "@/lib/api/auth";
 import WelcomeBanner from "@/components/view/dashboard/leads/WelcomeBanner";
 import PaymentSuccessNotification from "@/components/view/dashboard/leads/PaymentSuccessNotification";
+import { useSearchParams } from "next/navigation";
 
-// ======================================================
-// Meta Data
-// ======================================================
-export const metadata: Metadata = {
-  title: "Leads",
-  description: "Leads page",
-};
+interface DashboardPageProps {}
 
-interface DashboardPageProps {
-  searchParams: Promise<{
-    error?: string;
-    logout?: string;
-    login?: string;
-    page?: string;
-    status?: string;
-    search?: string;
-    companyIndustry?: string;
-    companySize?: string;
-    sortBy?: string;
-    sortOrder?: string;
-    payment?: string;
-    session_id?: string;
-    companyId?: string;
-  }>;
+interface LeadsData {
+  leads: Lead[];
+  totalResults: number;
+  page: number;
+  totalPages: number;
+  hasNextPage: boolean;
 }
 
-const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
-  const params = await searchParams;
-  const currentPage = parseInt(params.page || "1");
-  const statusFilter = params.status;
+interface StatsData {
+  overview: {
+    newLeads: number;
+    hotLeads: number;
+    warmLeads: number;
+    coldLeads: number;
+    qualifiedLeads: number;
+  };
+}
 
-  // 👇 Extract companyId from the query string
-  const companyId = params.companyId;
+const DashboardPage = ({}: DashboardPageProps) => {
+  const searchParams = useSearchParams();
+  
+  // State for data
+  const [leadsData, setLeadsData] = useState<LeadsData | null>(null);
+  const [statsData, setStatsData] = useState<StatsData | null>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  console.log("Company ID:", companyId); // should log "123"
+  // Extract params from URL
+  const currentPage = parseInt(searchParams?.get("page") || "1");
+  const statusFilter = searchParams?.get("status");
+  const companyId = searchParams?.get("companyId");
+  const searchQuery = searchParams?.get("search");
+  const companyIndustryFilter = searchParams?.get("companyIndustry");
+  const companySizeFilter = searchParams?.get("companySize");
+  const sortBy = searchParams?.get("sortBy") || "createdAt";
+  const sortOrder = searchParams?.get("sortOrder") || "desc";
 
-  // ======================================================
-  // Search query and filters
-  // ======================================================
-  const searchQuery = params.search;
-  const companyIndustryFilter = params.companyIndustry;
-  const companySizeFilter = params.companySize;
-  const sortBy = params.sortBy || "createdAt";
-  const sortOrder = params.sortOrder || "desc";
+  // Fetch data on mount and when params change
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      setError(null);
+      
+      try {
+        const [leadsResponse, statsResponse, currentUserResponse] = await Promise.all([
+          searchQuery
+            ? searchLeads({
+                query: searchQuery,
+                page: currentPage,
+                limit: 5,
+                status: statusFilter,
+                companyIndustry: companyIndustryFilter,
+                sortBy,
+                sortOrder,
+              })
+            : getAllLeads({
+                page: currentPage,
+                limit: 5,
+                status: statusFilter,
+                companyIndustry: companyIndustryFilter,
+                companySize: companySizeFilter,
+                sortBy,
+                sortOrder,
+                companyId
+              }),
+          getLeadStats(companyId),
+          getCurrentUser(),
+        ]);
 
-  // ======================================================
-  // Fetch leads and stats (automatically filtered by logged-in company)
-  // ======================================================
-  const [leadsResponse, statsResponse, currentUserResponse] = await Promise.all([
-    searchQuery
-      ? searchLeads({
-          query: searchQuery,
-          page: currentPage,
-          limit: 5,
-          status: statusFilter,
-          companyIndustry: companyIndustryFilter,
-          sortBy,
-          sortOrder,
-        })
-      : getAllLeads({
-          page: currentPage,
-          limit: 5,
-          status: statusFilter,
-          companyIndustry: companyIndustryFilter,
-          companySize: companySizeFilter,
-          sortBy,
-          sortOrder,
-          companyId
-        }),
-    getLeadStats(companyId),
-    getCurrentUser(),
-  ]);
+        setLeadsData(leadsResponse.success ? leadsResponse.data?.data : null);
+        setStatsData(statsResponse.success ? statsResponse.data?.data : null);
+        setCurrentUser(currentUserResponse.success ? currentUserResponse.user : null);
+      } catch (err) {
+        setError("Failed to load data");
+        console.error("Error fetching dashboard data:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-  const leadsData = leadsResponse.success ? leadsResponse.data?.data : null;
-  const statsData = statsResponse.success ? statsResponse.data?.data : null;
-  const currentUser = currentUserResponse.success ? currentUserResponse.user : null;
+    fetchData();
+  }, [currentPage, statusFilter, companyId, searchQuery, companyIndustryFilter, companySizeFilter, sortBy, sortOrder]);
 
   // ======================================================
   // Generate cards from stats data
@@ -193,6 +204,23 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
       </div>
     );
   };
+
+  if (isLoading) {
+    return <TabContentLoader />;
+  }
+
+  if (error) {
+    return (
+      <section>
+        <div className="flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <h2 className="text-xl font-semibold text-red-600 mb-2">Error Loading Data</h2>
+            <p className="text-gray-600">{error}</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section>
@@ -333,9 +361,9 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                 <TableCell>Profile Link</TableCell>
                 <TableCell>Company Size</TableCell>
               </TableHeader>
-              {leadsData?.leads?.length > 0 ? (
+              {(leadsData?.leads as any)?.length > 0 ? (
                 <>
-                  {leadsData.leads.map((lead: Lead) => (
+                  {leadsData?.leads.map((lead: Lead) => (
                     <TableRow key={lead._id}>
                       <TableCell>
                         <div className="flex items-center gap-3">
@@ -408,11 +436,11 @@ const DashboardPage = async ({ searchParams }: DashboardPageProps) => {
                 </>
               ) : (
                 <div className="py-8 px-[30px] text-center text-gray-500">
-                  {leadsResponse.success
-                    ? searchQuery
-                      ? `No leads found matching "${searchQuery}". Try adjusting your search or filters.`
-                      : "No leads found"
-                    : "Error loading leads"}
+                  {error
+                    ? "Error loading leads"
+                    : searchQuery
+                    ? `No leads found matching "${searchQuery}". Try adjusting your search or filters.`
+                    : "No leads found"}
                 </div>
               )}
             </Table>

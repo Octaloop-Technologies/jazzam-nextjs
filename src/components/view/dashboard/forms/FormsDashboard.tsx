@@ -4,7 +4,7 @@ import { useState, useEffect, SVGProps } from "react";
 import { ExternalLinkSvg } from "@/components/svgs/LeadsAnalysisSvgs";
 import { CopySvg } from "@/components/svgs/NavbarSvgs";
 import { useToast } from "@/lib/hooks/useToast";
-import { getAvailablePlatforms } from "@/app/super-user/forms/action";
+import { getAvailablePlatforms } from "@/lib/api/forms";
 import { useSearchParams } from "next/navigation";
 
 interface AvailablePlatform {
@@ -43,10 +43,11 @@ const FormsDashboard = () => {
       const [platformsResponse] = await Promise.all([getAvailablePlatforms(companyId)]);
 
       if (platformsResponse.success) {
+        console.log("platforms*****", platformsResponse?.data)
         setAvailablePlatforms(platformsResponse.data?.platforms || []);
       } else {
-        console.error("Platforms fetch failed:", platformsResponse.message);
-        error(`Failed to load platforms: ${platformsResponse.message}`);
+        console.error("Platforms fetch failed");
+        error(`Failed to load platforms`);
       }
     } catch (err) {
       console.error("Error fetching forms data:", err);

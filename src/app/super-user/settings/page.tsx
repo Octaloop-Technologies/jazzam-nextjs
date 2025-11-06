@@ -18,9 +18,9 @@ import { logout } from "@/redux/slices/authSlice";
 import { useAppDispatch } from "@/redux/store";
 import { ZohoIcon } from "@/components/svgs/loginButtonSvgs";
 import { useToast } from "@/lib/hooks/useToast";
-import { logoutUserAction, updateCompanySettings } from "./action";
+import { logoutUserAction, updateCompanySettings } from "@/lib/api/settings";
 import { useRouter } from "next/navigation";
-import { restartOnboarding } from "../(leads)/action";
+import { restartOnboarding } from "@/lib/api/leads";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useI18n } from "@/providers/I18nProvider";
@@ -35,6 +35,7 @@ import {
   DeleteSvg,
   ExternalLinkSvg,
 } from "@/components/svgs/LeadsAnalysisSvgs";
+import tokenStorage from "@/lib/utils/tokenStorage";
 
 interface TeamMembers{
   company?: {
@@ -99,6 +100,7 @@ const SettingsPage = () => {
   const user = useAppSelector(selectUser);
   const router = useRouter();
   const { setLocale: i18nSetLocale } = useI18n();
+  const { accessToken } = tokenStorage.getTokens();
 
   // ==============================================================
   // Load user settings on component mount
@@ -120,17 +122,13 @@ const SettingsPage = () => {
   }, [user]);
 
   useEffect(() => {
-    const cookieString = document.cookie;
-    const cookies = Object.fromEntries(
-      cookieString.split("; ").map((c) => c.split("="))
-    );
     const fetchTeamMembers = async () => {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/team-members/${user?._id}`,
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${cookies.accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
@@ -144,7 +142,7 @@ const SettingsPage = () => {
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${cookies?.accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
@@ -183,7 +181,7 @@ const SettingsPage = () => {
           : "Auto BANT qualification disabled"
       );
     } else {
-      ToastError(result.message || "Failed to update setting");
+      ToastError("Failed to update setting");
       // Revert on error
       setLeadSettings((prev) => ({
         ...prev,
@@ -208,7 +206,7 @@ const SettingsPage = () => {
     if (typeof window === "undefined" || isLoggingOut) return;
     setIsLoggingOut(true);
     try {
-      const { success, message } = await logoutUserAction();
+      const { success } = await logoutUserAction();
 
       if (success) {
         ToastSuccess("Logged out successfully");
@@ -217,7 +215,7 @@ const SettingsPage = () => {
         router.push("/login");
       } else {
         setIsLoggingOut(false);
-        ToastError(message || "Something went wrong while logging out");
+        ToastError("Something went wrong while logging out");
       }
     } catch (error) {
       if (process.env.NODE_ENV === "development") {
@@ -257,17 +255,13 @@ const SettingsPage = () => {
   // ==============================================================
   const deactivateTeamMember = async (id: string | undefined) => {
     // router.push("/super-user?companyId=123")
-    const cookieString = document.cookie;
-    const cookies = Object.fromEntries(
-      cookieString.split("; ").map((c) => c.split("="))
-    );
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/deactivate-member/${id}`,
         {
           method: "PUT",
           headers: {
-            Authorization: `Bearer ${cookies?.accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
@@ -289,17 +283,13 @@ const SettingsPage = () => {
 
   const activateTeamMember = async (id: string | undefined) => {
     // router.push("/super-user?companyId=123")
-    const cookieString = document.cookie;
-    const cookies = Object.fromEntries(
-      cookieString.split("; ").map((c) => c.split("="))
-    );
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/activate-member/${id}`,
         {
           method: "PUT",
           headers: {
-            Authorization: `Bearer ${cookies?.accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       );
@@ -322,10 +312,6 @@ const SettingsPage = () => {
   const changeName = async () => {
     console.log("companyName*******", newCompanyName);
     // return;
-    const cookieString = document.cookie;
-    const cookies = Object.fromEntries(
-      cookieString.split("; ").map((c) => c.split("="))
-    );
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/change-name/${user?._id}`,
@@ -333,7 +319,7 @@ const SettingsPage = () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json", // <-- this line is essential
-            Authorization: `Bearer ${cookies?.accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({ companyName: newCompanyName }),
         }
@@ -434,17 +420,13 @@ const SettingsPage = () => {
     }
 
     try {
-      const cookieString = document.cookie;
-      const cookies = Object.fromEntries(
-        cookieString.split("; ").map((c) => c.split("="))
-      );
       const formData = new FormData();
       formData.append("logo", profilePicture); // must match 'upload.single("logo")'
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/logo`, {
         method: "PATCH",
         headers: {
-          Authorization: `Bearer ${cookies?.accessToken}`, // or however you store JWT
+          Authorization: `Bearer ${accessToken}`, // or however you store JWT
           // ❌ Do NOT set "Content-Type" here — fetch will set it automatically for FormData
         },
         body: formData,
@@ -807,7 +789,7 @@ const SettingsPage = () => {
                             );
                           } else {
                             ToastError(
-                              res.message || "Failed to update setting"
+                               "Failed to update setting"
                             );
                             // Revert on error
                             setNotificationSettings((prev) => ({
@@ -944,7 +926,7 @@ const SettingsPage = () => {
               // no-op
             }
           } else {
-            ToastError(res.message || "Failed to update language");
+            ToastError("Failed to update language");
           }
         }}
       />

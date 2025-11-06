@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAppSelector } from "@/redux/store";
 import { useRouter, usePathname } from "next/navigation";
-import { updateOnboardingStatus as updateOnboardingAction } from "@/app/super-user/(leads)/action";
+import { updateOnboardingStatus as updateOnboardingAction } from "@/lib/api/leads";
 
 interface OnboardingStep {
   id: number;
