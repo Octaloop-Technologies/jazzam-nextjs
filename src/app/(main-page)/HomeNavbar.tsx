@@ -3,7 +3,7 @@
 import Logo from "@/components/shared/logo/Logo";
 import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
 import Language from "@/components/shared/language/Language";
-import { changeLang } from "@/lib/api/main-page";
+import { changeLangNoReload } from "@/lib/api/main-page";
 import { languages } from "@/lib/constants/languageConstants";
 import { Dictionary } from "@/lib/i18n/getDictionary";
 import { useState, useRef, useEffect, useCallback } from "react";
@@ -23,10 +23,10 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 
 interface HomeNavbarProps {
   dict: Dictionary;
-  currentLang: string;
+  // currentLang: string;
 }
 
-const HomeNavbar = ({ dict, currentLang }: HomeNavbarProps) => {
+const HomeNavbar = ({ dict }: HomeNavbarProps) => {
   // ======================================================
   // States
   // ======================================================
@@ -368,7 +368,7 @@ const HomeNavbar = ({ dict, currentLang }: HomeNavbarProps) => {
         </Link>
         <div className="hidden md:flex flex-center gap-5">
           <div className="rounded-xl-2 border border-gray-b h-[52px] w-[138px] flex-center navbar-item">
-            <Language languages={languages} changeLang={changeLang as any} currentLang={currentLang} />
+            <Language languages={languages} />
           </div>
           <PrimaryButton
             title={dict?.home?.hero?.getStarted}
@@ -463,7 +463,7 @@ const HomeNavbar = ({ dict, currentLang }: HomeNavbarProps) => {
             ref={addToMenuItemsRef}
             className="mb-8 p-4 rounded-2xl bg-gradient-to-br from-white/80 to-blue-50/80 border border-blue-200/50 shadow-lg backdrop-blur-sm hover:shadow-xl transition-all duration-150 transform hover:scale-105"
           >
-            <Language languages={languages} changeLang={changeLang as any} currentLang={currentLang} />
+            <Language languages={languages} />
           </div>
 
           {/* Enhanced CTA button */}

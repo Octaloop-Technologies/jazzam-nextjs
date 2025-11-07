@@ -211,7 +211,7 @@ const SettingsPage = () => {
       if (success) {
         ToastSuccess("Logged out successfully");
         // Clear Redux state for immediate UI feedback
-        // dispatch(logout());
+        dispatch(logout());
         router.push("/login");
       } else {
         setIsLoggingOut(false);
@@ -913,18 +913,18 @@ const SettingsPage = () => {
         onClose={() => setIsOpen(false)}
         currentLanguage={leadSettings.language}
         onConfirm={async (languageCode) => {
-          // persist
+          // Update backend settings
           const res = await updateCompanySettings({ language: languageCode });
           if (res.success) {
+            // Update local state
             setLeadSettings((prev) => ({ ...prev, language: languageCode }));
+            
+            // Save to storage and update i18n context
+            const { changeLangNoReload } = await import("@/lib/api/main-page");
+            await changeLangNoReload(languageCode);
+            await i18nSetLocale(languageCode);
+            
             ToastSuccess("Language updated successfully");
-            persistLangCookie(languageCode);
-            // Update client-side i18n without full refresh
-            try {
-              await i18nSetLocale(languageCode);
-            } catch (e) {
-              // no-op
-            }
           } else {
             ToastError("Failed to update language");
           }

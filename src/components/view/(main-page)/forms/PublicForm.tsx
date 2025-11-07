@@ -229,7 +229,7 @@ const PublicForm = ({ accessToken }: PublicFormProps) => {
                       required={field.required}
                       leftIcon={getFieldIcon(field.type)}
                       inputSize="lg"
-                      className="text-center"
+                      className=""
                     />
                   </div>
                 ))}

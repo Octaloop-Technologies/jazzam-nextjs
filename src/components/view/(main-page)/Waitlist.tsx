@@ -89,7 +89,7 @@ const Waitlist = ({ dict, lang }: WaitlistProps) => {
                         <input
                             type="email"
                             placeholder={dict?.home?.hero?.emailHeading}
-                            className="bg-transparent outline-none text-sm text-[#999999] w-full"
+                            className="bg-transparent outline-none text-sm text-black w-full"
                             value={waitlistEmail}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWaitlistEmail(e.target.value)}
                         />

@@ -192,7 +192,8 @@
         "companyPlaceholder": "ما هي شركتك أو موقعك الإلكتروني؟",
         "message": "الرسالة",
         "messagePlaceholder": "اكتب رسالتك هنا....",
-        "submitButton": "إرسال"
+        "submitButton": "إرسال",
+        "successMessage": "شكرًا لتواصلك معنا. تم إرسال رسالتك بنجاح."
       }
     },
     "footer": {

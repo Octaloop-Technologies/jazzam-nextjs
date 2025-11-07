@@ -66,16 +66,42 @@ export const submitFormData = async (formData: Record<string, string>, accessTok
   }
 };
 
-export const getCurrentLang = async () => {
-  // This is a client-side function that could return from localStorage or a simple value
-  // Since it's just getting language, it doesn't need server call
-  return "en"; // or get from localStorage
+export const getCurrentLang = () => {
+  // Read from localStorage first, fallback to cookie, then default to 'en'
+  if (typeof window !== "undefined") {
+    try {
+      const localLang = localStorage.getItem("lang");
+      if (localLang && ["en", "ar"].includes(localLang)) {
+        return localLang;
+      }
+    } catch {}
+  }
+  
+  // Fallback to cookie (for SSR)
+  if (typeof document !== "undefined") {
+    const cookieMatch = document.cookie.match(/lang=([^;]+)/);
+    if (cookieMatch && ["en", "ar"].includes(cookieMatch[1])) {
+      return cookieMatch[1];
+    }
+  }
+  
+  return "en";
 };
 
-export const changeLang = async (lang: string) => {
-  // Store in localStorage
-  if (typeof window !== 'undefined') {
-    localStorage.setItem('lang', lang);
+export const changeLangNoReload = async (lang: string) => {
+  if (typeof window !== "undefined") {
+    try {
+      // Save to localStorage
+      localStorage.setItem("lang", lang);
+      
+      // Also save to cookie for SSR consistency
+      const expires = new Date();
+      expires.setFullYear(expires.getFullYear() + 1);
+      document.cookie = `lang=${lang}; Path=/; SameSite=Lax; Expires=${expires.toUTCString()}`;
+      
+      // Note: I18n context update is handled by the component using useI18n hook
+    } catch (error) {
+      console.error("Error changing language:", error);
+    }
   }
-  return { success: true };
 };

@@ -2,6 +2,11 @@
 
 import React, { createContext, useContext, useMemo, useState } from "react";
 
+
+// Static imports of dictionaries
+import enDict from "@/dictionaries/en.json";
+import arDict from "@/dictionaries/ar.json";
+
 // Define the dictionary structure based on the actual JSON files
 type DictValue = string | number | Dict | DictArray;
 type DictArray = Array<string | number | { [key: string]: string | number }>;
@@ -44,14 +49,23 @@ export function I18nProvider({
       return typeof node === "string" ? node : fallback;
     };
 
-    const loaders: Record<string, () => Promise<Dict>> = {
-      en: () => import("../../dictionaries/en.json").then((m) => m.default),
-      ar: () => import("../../dictionaries/ar.json").then((m) => m.default),
-    };
+    // const loaders: Record<string, () => Promise<Dict>> = {
+    //   en: () => import("../../dictionaries/en.json").then((m) => m.default),
+    //   ar: () => import("../../dictionaries/ar.json").then((m) => m.default),
+    // };
+    // const loaders: Record<string, () => Promise<Dict>> = {
+    //   en: () => import("../../../dictionaries/en.json").then((m) => m.default),
+    //   ar: () => import("../../../dictionaries/ar.json").then((m) => m.default),
+    // };
 
     const setLocale = async (code: string) => {
-      const loader = loaders[code] || loaders.en;
-      const newDict = await loader();
+      // Use pre-imported dictionaries instead of dynamic imports
+      const dictMap: Record<string, Dict> = {
+        en: enDict,
+        ar: arDict,
+      };
+      
+      const newDict = dictMap[code] || dictMap.en;
       setCurrentLang(code);
       setCurrentDict(newDict);
     };
