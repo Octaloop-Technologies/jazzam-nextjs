@@ -16,13 +16,13 @@ import gsap from "gsap";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Language from "@/components/shared/language/Language";
-import { changeLang } from "@/lib/api/main-page";
+import { changeLangNoReload } from "@/lib/api/main-page";
 // import { io } from "socket.io-client";
 
 // const socket = io(`${process.env.NEXT_PUBLIC_BASE_URL}`);
 
 interface NavbarProps {
-  currentLang: string;
+  // currentLang: string;
   languages: LanguageProp[];
 }
 
@@ -31,7 +31,7 @@ interface NavbarProps {
 // ======================================================
 gsap.registerPlugin(ScrollTrigger);
 
-const Navbar = ({ currentLang, languages }: NavbarProps) => {
+const Navbar = ({ languages }: NavbarProps) => {
   // ======================================================
   // Hooks
   // ======================================================
@@ -137,8 +137,7 @@ const Navbar = ({ currentLang, languages }: NavbarProps) => {
         {/* ------------- localization ------------- */}
         <Language
           languages={languages}
-          changeLang={changeLang as any}
-          currentLang={currentLang}
+          changeLang={changeLangNoReload as any}
         />
 
         {/* ------------- settings ------------- */}

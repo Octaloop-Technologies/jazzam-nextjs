@@ -1,20 +1,18 @@
 "use client";
 
 import { CheckSvg, GlobeSvg } from "@/components/svgs/NavbarSvgs";
+import { useI18n } from "@/providers/I18nProvider";
+import { changeLangNoReload } from "@/lib/api/main-page";
 
 interface LanguageProps {
   languages: { code: string; label: string; flag: string }[];
-  changeLang: (lang: FormData) => void;
-  currentLang: string;
+  changeLang?: (lang: FormData) => void; 
+  currentLang?: string;
 }
 
-const Language = ({ languages, changeLang, currentLang }: LanguageProps) => {
-  // Wrapper function to convert string to FormData
-  const handleLangChange = (lang: string) => {
-    const formData = new FormData();
-    formData.append("lang", lang);
-    changeLang(formData);
-  };
+const Language = ({ languages }: LanguageProps) => {
+  const { lang: currentLang, setLocale } = useI18n();
+
 
   // Get the next language in the list
   const getNextLanguage = () => {
@@ -24,9 +22,17 @@ const Language = ({ languages, changeLang, currentLang }: LanguageProps) => {
   };
 
   // Handle direct click to switch to next language
-  const handleLanguageSwitch = () => {
-    const nextLanguage = getNextLanguage();
-    handleLangChange(nextLanguage.code);
+  // Handle direct click to switch to next language
+  const handleLanguageSwitch = async () => {
+    const currentIndex = languages.findIndex(lang => lang.code === currentLang);
+    const nextIndex = (currentIndex + 1) % languages.length;
+    const nextLanguage = languages[nextIndex];
+    
+    // Save language to storage
+    await changeLangNoReload(nextLanguage.code);
+    
+    // Reload page to apply language change immediately
+    window.location.reload();
   };
 
   // Get current language display info
@@ -57,6 +63,7 @@ const Language = ({ languages, changeLang, currentLang }: LanguageProps) => {
       </div>
     </button>
   );
+
 };
 
 export default Language;

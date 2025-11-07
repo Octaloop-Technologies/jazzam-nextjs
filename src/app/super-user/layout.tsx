@@ -5,12 +5,14 @@ import OnboardingTour from "@/components/view/dashboard/leads/OnboardingTour";
 import AuthGuard from "@/components/shared/auth/AuthGuard";
 
 const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
-  const lang = await getCurrentLang();
+  const { cookies } = await import("next/headers");
+  const cookieStore = await cookies();
+  const lang = cookieStore.get("lang")?.value || "en";
 
   return (
     <AuthGuard requireAuth={true}>
     <div className="min-h-dvh flex flex-col gap-6">
-      <Navbar currentLang={lang} languages={languages} />
+      <Navbar languages={languages} />
       <main className="x-padding flex-1">{children}</main>
       <OnboardingTour />
     </div>

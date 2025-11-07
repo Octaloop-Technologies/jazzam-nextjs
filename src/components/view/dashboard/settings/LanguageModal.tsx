@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
-import { changeLang } from "@/lib/api/main-page";
 import { LanguageOption } from "@/components/ui/language";
+import { useI18n } from "@/providers/I18nProvider";
 
 interface LanguageModalProps {
   isOpen: boolean;
@@ -19,6 +19,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({
   currentLanguage,
 }) => {
   const [selectedLanguage, setSelectedLanguage] = useState(currentLanguage || "en");
+  const { lang: currentLang } = useI18n();
 
   if (!isOpen) return null;
 
@@ -28,7 +29,14 @@ const LanguageModal: React.FC<LanguageModalProps> = ({
     }
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
+    // Save to storage
+    const { changeLangNoReload } = await import("@/lib/api/main-page");
+    await changeLangNoReload(selectedLanguage);
+    
+    // Update i18n context
+    // await setLocale(selectedLanguage);
+    
     onConfirm(selectedLanguage);
     onClose();
   };
@@ -70,17 +78,8 @@ const LanguageModal: React.FC<LanguageModalProps> = ({
         </div>
 
         {/* buttons */}
-        <form action={changeLang as any} className="flex justify-around space-x-5">
-          <input type="hidden" name="lang" value={selectedLanguage} />
-          <input
-            type="hidden"
-            name="redirect"
-            value={
-              typeof window !== "undefined"
-                ? window.location.pathname + window.location.search
-                : "/"
-            }
-          />
+                {/* buttons */}
+                <div className="flex justify-around space-x-5">
           <PrimaryButton
             onClick={onClose}
             bordered
@@ -92,12 +91,11 @@ const LanguageModal: React.FC<LanguageModalProps> = ({
 
           <PrimaryButton
             onClick={handleConfirm}
-            type="submit"
             className="w-full h-[50px] !gap-2.5 rounded-xl-2"
             title="Apply changes"
             titleClass="font-[500]"
           />
-        </form>
+        </div>
       </div>
     </div>
   );

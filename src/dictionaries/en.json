@@ -192,7 +192,8 @@
         "companyPlaceholder": "Your company or website?",
         "message": "Message",
         "messagePlaceholder": "Write your message here....",
-        "submitButton": "SUBMIT"
+        "submitButton": "SUBMIT",
+        "successMessage": "Thank you for contacting us. Your message has been successfully sent"
       }
     },
     "footer": {
