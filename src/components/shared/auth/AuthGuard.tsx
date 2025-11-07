@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAppSelector, useAppDispatch } from "@/redux/store";
 import {
@@ -27,93 +27,101 @@ const AuthGuard: React.FC<AuthGuardProps> = ({
   const user = useAppSelector(selectUser);
   const isAuthenticated = useAppSelector(selectIsAuthenticated);
   const isLoading = useAppSelector(selectIsLoading);
+  
   const hasCheckedOAuth = useRef(false);
   const fetchAttempts = useRef(0);
-  const maxFetchAttempts = 3; // Prevent infinite loops
+  const maxFetchAttempts = 3;
+  const [isProcessingOAuth, setIsProcessingOAuth] = useState(false);
 
   useEffect(() => {
-    // Only check for OAuth tokens once per component lifecycle
+    console.log("AuthGuard: useEffect triggered", {
+      user: !!user,
+      isAuthenticated,
+      isLoading,
+      requireAuth,
+      hasCheckedOAuth: hasCheckedOAuth.current,
+      isProcessingOAuth
+    });
 
-    console.log("AuthGuard: useEffect triggered");
-          // Check for OAuth tokens in URL first
+    const processOAuthTokens = async () => {
+      // Check for OAuth tokens in URL
       const urlParams = new URLSearchParams(window.location.search);
       const accessToken = urlParams.get('accessToken');
       const refreshToken = urlParams.get('refreshToken');
 
-      console.log("AuthGuard: OAuth tokens from URL - Access:", accessToken, "Refresh:", refreshToken);
-    if (!hasCheckedOAuth.current) {
-      console.log("AuthGuard: Checking for OAuth tokens in URL");
-      hasCheckedOAuth.current = true;
-      
-      // Check for OAuth tokens in URL first
-      const urlParams = new URLSearchParams(window.location.search);
-      const accessToken = urlParams.get('accessToken');
-      const refreshToken = urlParams.get('refreshToken');
+      console.log("AuthGuard: OAuth tokens from URL - Access:", !!accessToken, "Refresh:", !!refreshToken);
 
-      console.log("AuthGuard: OAuth tokens from URL - Access:", accessToken, "Refresh:", refreshToken);
-      
-      if (accessToken && refreshToken) {
-        console.log("AuthGuard: Found OAuth tokens in URL, storing and fetching user...");
-        console.log("AuthGuard: Access token length:", accessToken.length, "Refresh token length:", refreshToken.length);
-        
-        // Store tokens and fetch user - don't redirect yet
-        TokenStorage.setTokens(accessToken, refreshToken);
-        
-        // Verify tokens are stored
-        const storedTokens = TokenStorage?.getTokens();
-        console.log("AuthGuard: Tokens stored successfully:", { 
-          hasAccess: !!storedTokens.accessToken, 
-          hasRefresh: !!storedTokens.refreshToken 
-        });
-        
-        // Clean up URL
-        const newUrl = new URL(window.location.href);
-        newUrl.searchParams.delete('accessToken');
-        newUrl.searchParams.delete('refreshToken');
-        window.history.replaceState({}, '', newUrl.toString());
+      if (accessToken && refreshToken && !hasCheckedOAuth.current) {
+        console.log("AuthGuard: Found OAuth tokens, processing...");
+        hasCheckedOAuth.current = true;
+        setIsProcessingOAuth(true);
 
-        // Fetch user data with rate limiting
-        if (fetchAttempts.current < maxFetchAttempts) {
-          fetchAttempts.current++;
-          dispatch(fetchCurrentUser()).then(() => {
-            console.log("AuthGuard: User data fetched successfully");
-            fetchAttempts.current = 0; // Reset on success
-          }).catch((error) => {
-            console.log("AuthGuard: Failed to fetch user data:", error);
-            // Don't clear tokens or redirect - just log the error
-            if (fetchAttempts.current >= maxFetchAttempts) {
-              console.log("AuthGuard: Max fetch attempts reached, but not clearing tokens");
-            }
+        try {
+          // Store tokens
+          TokenStorage.setTokens(accessToken, refreshToken);
+          
+          // Verify tokens are stored
+          const storedTokens = TokenStorage.getTokens();
+          console.log("AuthGuard: Tokens stored successfully:", { 
+            hasAccess: !!storedTokens?.accessToken, 
+            hasRefresh: !!storedTokens?.refreshToken 
           });
+
+          // Clean up URL - use a more reliable method
+          if (window.history && window.history.replaceState) {
+            const newUrl = window.location.origin + window.location.pathname;
+            window.history.replaceState({}, document.title, newUrl);
+            console.log("AuthGuard: URL cleaned to:", newUrl);
+          }
+
+          // Fetch user data
+          if (fetchAttempts.current < maxFetchAttempts) {
+            fetchAttempts.current++;
+            await dispatch(fetchCurrentUser());
+            console.log("AuthGuard: User data fetched successfully after OAuth");
+            fetchAttempts.current = 0;
+          }
+        } catch (error) {
+          console.error("AuthGuard: Error during OAuth processing:", error);
+          if (fetchAttempts.current >= maxFetchAttempts) {
+            console.error("AuthGuard: Max fetch attempts reached during OAuth");
+          }
+        } finally {
+          setIsProcessingOAuth(false);
         }
+        
+        return true; // OAuth was processed
+      }
+      
+      return false; // No OAuth tokens found
+    };
+
+    const checkRegularAuth = () => {
+      // Only run regular auth check if we're not processing OAuth
+      if (isProcessingOAuth) {
+        console.log("AuthGuard: Skipping regular auth check - processing OAuth");
         return;
       }
-    }
 
-    // Rest of the auth logic - only run if we didn't handle OAuth tokens above
-    if (hasCheckedOAuth.current) {
-      // Check if user has tokens in localStorage
       const hasTokens = TokenStorage.isAuthenticated();
-      console.log("AuthGuard: Checking localStorage tokens:", hasTokens);
+      console.log("AuthGuard: Regular auth check - hasTokens:", hasTokens);
 
       if (requireAuth) {
         // If authentication is required
         if (!hasTokens) {
-          // No tokens, but don't redirect automatically
-          console.log("AuthGuard: No tokens found, but not redirecting automatically");
+          console.log("AuthGuard: No tokens found, user needs to authenticate");
           return;
         }
 
+        // Has tokens but no user data, fetch it
         if (!user && !isLoading && hasTokens) {
-          // Has tokens but no user data, fetch it
           console.log("AuthGuard: Has tokens but no user data, fetching...");
           if (fetchAttempts.current < maxFetchAttempts) {
             fetchAttempts.current++;
             dispatch(fetchCurrentUser()).catch((error) => {
-              console.log("AuthGuard: Failed to fetch user data:", error);
-              // Don't clear tokens or redirect - just log the error
+              console.error("AuthGuard: Failed to fetch user data:", error);
               if (fetchAttempts.current >= maxFetchAttempts) {
-                console.log("AuthGuard: Max attempts reached, but not clearing tokens");
+                console.error("AuthGuard: Max attempts reached in regular auth");
               }
             });
           }
@@ -121,17 +129,28 @@ const AuthGuard: React.FC<AuthGuardProps> = ({
       } else {
         // If authentication should NOT be required (login page)
         if (hasTokens && isAuthenticated) {
-          // User is authenticated, redirect to dashboard
+          console.log("AuthGuard: User authenticated on non-auth page, redirecting...");
           router.push("/super-user");
           return;
         }
       }
-    }
-  }, [user, isAuthenticated, isLoading, requireAuth, redirectTo, router, dispatch]);
+    };
 
-  // Show loading spinner while checking authentication
-  if (isLoading) {
-    console.log("AuthGuard: Showing loading spinner");
+    const initializeAuth = async () => {
+      const oauthProcessed = await processOAuthTokens();
+      
+      // If OAuth was processed, wait for it to complete before regular auth check
+      if (!oauthProcessed) {
+        checkRegularAuth();
+      }
+    };
+
+    initializeAuth();
+  }, [user, isAuthenticated, isLoading, requireAuth, router, dispatch, isProcessingOAuth]);
+
+  // Show loading spinner while processing OAuth or initial loading
+  if (isLoading || isProcessingOAuth) {
+    console.log("AuthGuard: Showing loading spinner", { isLoading, isProcessingOAuth });
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -152,7 +171,7 @@ const AuthGuard: React.FC<AuthGuardProps> = ({
   }
 
   console.log("AuthGuard: Rendering children");
-  return <>{children}</>
+  return <>{children}</>;
 };
 
 export default AuthGuard;
