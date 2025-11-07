@@ -82,11 +82,11 @@ export default function IntegrationsPage() {
         getCRMIntegration(),
       ]);
 
-      console.log("Providers Data:", providersData);
-      console.log("Integration Data:", integrationData);
+      console.log("Providers Data:", providersData?.data?.data);
+      console.log("Integration Data:", integrationData?.data?.data);
 
-      setProviders(providersData.data || []);
-      setCrmIntegrations(integrationData.data || []);
+      setProviders(providersData?.data?.data || []);
+      setCrmIntegrations(integrationData?.data?.data || []);
     } catch (error) {
       console.error("Error fetching CRM data:", error);
       toast.error("Failed to load CRM integration data");
@@ -200,7 +200,7 @@ export default function IntegrationsPage() {
           </div>
 
           <div className="grid gap-4">
-            {providers.map((provider) => {
+            {providers?.map((provider) => {
               const connectedIntegration = crmIntegrations.find(
                 (integration) => integration.provider === provider.id
               );

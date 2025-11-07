@@ -25,7 +25,7 @@ export const getCRMProviders = async () => {
       throw new Error(data.message || "Failed to fetch CRM providers");
     }
 
-    return { success: true, data };
+    return { success: true, data: data };
   } catch (error) {
     console.error("Error fetching CRM providers:", error);
     return {

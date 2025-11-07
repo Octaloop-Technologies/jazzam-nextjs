@@ -360,17 +360,13 @@ const SettingsPage = () => {
 
     try {
       setSendInviteLoad(true);
-      const cookieString = document.cookie;
-      const cookies = Object.fromEntries(
-        cookieString.split("; ").map((c) => c.split("="))
-      );
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/invite/send`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${cookies?.accessToken}`,
+            Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({
             senderCompanyId,
