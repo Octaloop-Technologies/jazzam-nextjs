@@ -33,13 +33,18 @@ const AuthGuard: React.FC<AuthGuardProps> = ({
 
   useEffect(() => {
     // Only check for OAuth tokens once per component lifecycle
+
+    console.log("AuthGuard: useEffect triggered");
     if (!hasCheckedOAuth.current) {
+      console.log("AuthGuard: Checking for OAuth tokens in URL");
       hasCheckedOAuth.current = true;
       
       // Check for OAuth tokens in URL first
       const urlParams = new URLSearchParams(window.location.search);
       const accessToken = urlParams.get('accessToken');
       const refreshToken = urlParams.get('refreshToken');
+
+      console.log("AuthGuard: OAuth tokens from URL - Access:", accessToken, "Refresh:", refreshToken);
       
       if (accessToken && refreshToken) {
         console.log("AuthGuard: Found OAuth tokens in URL, storing and fetching user...");
