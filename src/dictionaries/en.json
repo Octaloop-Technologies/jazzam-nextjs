@@ -207,5 +207,82 @@
       "errorEmail": "Error submitting email",
       "emailServerError": "Unable to add email due to server error"
     }
+  },
+  "superUser": {
+    "navbar": {
+      "notifications": {
+        "notification": "Notifications",
+        "markAllRead": "Mark all as read",
+        "clearAll": "Clear all"
+      }, 
+      "navlinks": {
+        "leads": "Leads",
+        "forms": "Forms",
+        "summary": "Summary",
+        "followUps": "Follow Ups"
+      },
+      "leads":{
+        "showingLeads": "Showing leads for",
+        "allLeads":"All Leads",
+        "completeSalesList": "Complete list of your sales prospects and their current status",
+        "myDashboard": "My dashboard",
+        "newLeads": "New Leads",
+        "hotLeads": "Hot Leads",
+        "warmLeads": "Warm leads",
+        "coldLeads": "Cold leads",
+        "qualifiedLeads": "Qualified Leads",
+        "loadingError": "Error Loading Data",
+        "headingLeadAnalysis": "Your lead analysis",
+        "refreshButtonTitle": "Refresh",
+        "tableHeadersTitle": {
+          "lead": "Lead",
+          "status": "Status",
+          "score": "Score",
+          "profileLink": "Profile Link",
+          "companySize": "Company Size"
+        },
+        "tabNavigationText": {
+          "all": "All",
+          "new": "New",
+          "hot": "Hot",
+          "warm": "Warm",
+          "cold": "Cold"
+        },
+        "searchFields": {
+          "searchFilterTitle": "Search leads by name, company, email...",
+          "advanceFilters": "Advanced Filters",
+          "clearAll":"Clear all",
+          "companyIndustry": "Company Industry",
+          "companySize": "Company Size",
+          "allIndustries": "All Industries",
+          "allSizes": "All Sizes",
+          "employees": "employees",
+          "sortBy": "Sort By",
+          "close": "Close",
+          "applyFilters": "Apply Filters",
+          "noFiltersApplied": "No filters applied"
+        }
+      },
+      "forms": {
+        "leadGeneration": "Lead Generation Forms",
+        "uniqueEndpoints": "Your unique form endpoints for automatic lead generation",
+        "leadGenerationEndpoint": "Your Lead Generation Form Endpoints",
+        "formDescription": "Your unique form endpoints for collecting leads from different platforms. Share these URLs with prospects to automatically generate leads.",
+        "readyToUse": "Ready to Use"
+      },
+      "followUps": {
+        "followUpHeading": "Follow-ups",
+        "all":"All",
+        "submitted": "Submitted",
+        "scheduled": "Scheduled",
+        "allFollowups": "All Follow-ups",
+        "listMessage": "Complete list follow-up messages",
+        "lead": "Lead",
+        "channel": "Channel",
+        "status": "Status",
+        "dateOfSubmission": "Date of submission",
+        "placeholderText": "Search"
+      }
+    }
   }
 }

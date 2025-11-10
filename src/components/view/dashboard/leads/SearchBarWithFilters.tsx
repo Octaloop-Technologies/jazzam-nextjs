@@ -9,6 +9,23 @@ import {
   sortOrderOptions,
 } from "@/lib/constants/leadConstants";
 
+interface SearchFields{
+  searchFields: {
+    searchFilterTitle: string,
+    advanceFilters: string,
+    clearAll: string,
+    companyIndustry: string,
+    companySize: string,
+    allIndustries: string,
+    allSizes: string,
+    employees: string,
+    sortBy: string,
+    close: string,
+    applyFilters: string,
+    noFiltersApplied: string
+  }
+}
+
 interface SearchFilters {
   query: string;
   companyIndustry: string;
@@ -17,7 +34,7 @@ interface SearchFilters {
   sortOrder: string;
 }
 
-const SearchBarWithFilters = () => {
+const SearchBarWithFilters = ({ searchFields }: SearchFields) => {
   // ======================================================
   // Hooks
   // ======================================================
@@ -37,6 +54,12 @@ const SearchBarWithFilters = () => {
     sortBy: "createdAt",
     sortOrder: "desc",
   });
+
+  const { searchFilterTitle, 
+    advanceFilters, applyFilters, 
+    clearAll, close, companyIndustry, 
+    companySize, employees, sortBy, 
+    allIndustries, allSizes, noFiltersApplied } = searchFields
 
   // ======================================================
   // Refs
@@ -195,7 +218,7 @@ const SearchBarWithFilters = () => {
         <input
           ref={searchInputRef}
           type="text"
-          placeholder="Search leads by name, company, email..."
+          placeholder={searchFilterTitle}
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           onKeyPress={handleKeyPress}
@@ -236,13 +259,13 @@ const SearchBarWithFilters = () => {
       {isFiltersOpen && (
         <div className="absolute top-full left-0 mt-2 w-full max-w-[600px] bg-white border border-gray-b rounded-2xl shadow-lg z-50 p-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">Advanced Filters</h3>
+            <h3 className="text-lg font-semibold text-gray-900">{advanceFilters}</h3>
             {hasActiveFilters && (
               <button
                 onClick={clearAllFilters}
                 className="text-sm text-danger gray-hover font-medium"
               >
-                Clear All
+                {clearAll}
               </button>
             )}
           </div>
@@ -251,14 +274,14 @@ const SearchBarWithFilters = () => {
             {/* ---------------------------- Company Industry Filter ---------------------------- */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Company Industry
+                {companyIndustry}
               </label>
               <select
                 value={filters.companyIndustry}
                 onChange={(e) => handleFilterChange("companyIndustry", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pri focus:border-pri outline-none"
               >
-                <option value="">All Industries</option>
+                <option value="">{allIndustries}</option>
                 {companyIndustryOptionsWithLabels.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
@@ -269,16 +292,16 @@ const SearchBarWithFilters = () => {
 
             {/* ---------------------------- Company Size Filter ---------------------------- */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Company Size</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{companySize}</label>
               <select
                 value={filters.companySize}
                 onChange={(e) => handleFilterChange("companySize", e.target.value)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pri focus:border-pri outline-none"
               >
-                <option value="">All Sizes</option>
+                <option value="">{allSizes}</option>
                 {companySizeOptions.map((size) => (
                   <option key={size} value={size}>
-                    {size} employees
+                    {size} {employees}
                   </option>
                 ))}
               </select>
@@ -286,7 +309,7 @@ const SearchBarWithFilters = () => {
 
             {/* ---------------------------- Sort Options ---------------------------- */}
             <div className="col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Sort By</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">{sortBy}</label>
               <div className="flex gap-2">
                 <select
                   value={filters.sortBy}
@@ -317,20 +340,20 @@ const SearchBarWithFilters = () => {
           {/* ---------------------------- Quick Actions ---------------------------- */}
           <div className="flex items-center justify-between pt-4 border-t border-gray-n/30">
             <div className="text-sm text-gray-500">
-              {hasActiveFilters ? `${activeFilterCount} filter(s) active` : "No filters applied"}
+              {hasActiveFilters ? `${activeFilterCount} filter(s) active` : noFiltersApplied}
             </div>
             <div className="flex gap-2">
               <button
                 onClick={() => setIsFiltersOpen(false)}
                 className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-150 transition-colors"
               >
-                Close
+                {close}
               </button>
               <button
                 onClick={handleSearch}
                 className="px-4 py-2 text-sm font-medium text-white bg-pri rounded-lg hover:bg-pri/90 transition-colors"
               >
-                Apply Filters
+                {applyFilters}
               </button>
             </div>
           </div>

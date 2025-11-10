@@ -6,6 +6,8 @@ import { CopySvg } from "@/components/svgs/NavbarSvgs";
 import { useToast } from "@/lib/hooks/useToast";
 import { getAvailablePlatforms } from "@/lib/api/forms";
 import { useSearchParams } from "next/navigation";
+import { getCurrentLang } from "@/lib/api/main-page";
+import { getDictionary } from "@/lib/i18n/getDictionary";
 
 interface AvailablePlatform {
   platform: string;
@@ -28,6 +30,8 @@ const FormsDashboard = () => {
   const [loading, setLoading] = useState(true);
   const { success, error } = useToast();
   const searchParams = useSearchParams();
+  const [language, setLanguage] = useState<any>();
+  const lang = getCurrentLang();
 
   const companyId = searchParams?.get("companyId");
 
@@ -37,6 +41,8 @@ const FormsDashboard = () => {
   }, []);
 
   const fetchData = async () => {
+    const dict = (await getDictionary(lang))?.superUser?.navbar;
+    setLanguage(dict)
     try {
       setLoading(true);
 
@@ -95,20 +101,17 @@ const FormsDashboard = () => {
       {/* Header */}
       <div className="flex-between gap-1.5">
         <div>
-          <h1 className="text-[32px] font-[500] capitalize">Lead Generation Forms</h1>
+          <h1 className="text-[32px] font-[500] capitalize">{language?.forms?.leadGeneration}</h1>
           <p className="text-gray-200 text-sm mt-1">
-            Your unique form endpoints for automatic lead generation
+            {language?.forms?.uniqueEndpoints}
           </p>
         </div>
       </div>
 
       {/* Platform Form Endpoints */}
       <div className="bg-white border border-gray-b rounded-3xl p-6">
-        <h2 className="text-[18px] font-[600] mb-4">Your Lead Generation Form Endpoints</h2>
-        <p className="text-gray-200 text-sm mb-6">
-          Your unique form endpoints for collecting leads from different platforms. Share these URLs
-          with prospects to automatically generate leads.
-        </p>
+        <h2 className="text-[18px] font-[600] mb-4">{language?.forms?.leadGenerationEndpoint}</h2>
+        <p className="text-gray-200 text-sm mb-6">{language?.forms?.formDescription}</p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {availablePlatforms.map((platform) => (
             <div
@@ -125,7 +128,7 @@ const FormsDashboard = () => {
               <div className="space-y-2">
                 <div className="flex items-center gap-2 text-sm text-green-600">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  Ready to Use
+                  {language?.forms?.readyToUse}
                 </div>
                 <div className="flex items-center gap-2">
                   <input

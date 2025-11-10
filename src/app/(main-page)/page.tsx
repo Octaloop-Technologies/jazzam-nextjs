@@ -13,7 +13,7 @@ import Chasing from "@/components/view/(main-page)/Chassing";
 import ComingSoonModal from "@/components/ui/models/CommingSoonModal";
 
 const LandingPage = async () => {
-  const lang = await getCurrentLang();
+  const lang = getCurrentLang();
   const dict = await getDictionary(lang);
 
   return (

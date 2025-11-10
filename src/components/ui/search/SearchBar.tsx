@@ -1,4 +1,4 @@
-const SearchBar = () => {
+const SearchBar = ({ placeholderText }: { placeholderText: string }) => {
   return (
     <div className="w-[329px] p-2.5 border border-gray-b rounded-4xl bg-white flex items-center gap-[6px]">
       {/* ---------------------------- search icon ---------------------------- */}
@@ -23,7 +23,7 @@ const SearchBar = () => {
       {/* ---------------------------- search input ---------------------------- */}
       <input
         type="text"
-        placeholder="Search"
+        placeholder={placeholderText}
         className="w-full h-full min-h-[40px] text-[17px] outline-none leading-normal 
                    placeholder:text-gray-200 placeholder:text-[14px]"
       />

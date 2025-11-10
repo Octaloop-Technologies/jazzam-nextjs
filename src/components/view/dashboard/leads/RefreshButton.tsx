@@ -5,7 +5,7 @@ import { useState, useTransition } from "react";
 import { RefreshSvg } from "@/components/svgs/refreshSvg";
 import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
 
-const RefreshButton = () => {
+const RefreshButton = ({ title }: { title: string }) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +24,7 @@ const RefreshButton = () => {
 
   return (
     <PrimaryButton
-      title="Refresh"
+      title={title}
       iconRight={showLoading ? <RefreshSvg className="animate-spin" /> : <RefreshSvg />}
       className={`w-[116px] h-[60px] transition-all duration-200 ${
         showLoading ? "opacity-75 cursor-not-allowed" : ""
