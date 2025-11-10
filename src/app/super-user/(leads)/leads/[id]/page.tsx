@@ -1,3 +1,7 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 import { HotLeadsSvg, ColdLeadsSvg, NewLeadsSvg } from "@/components/svgs/LeadsAnalysisSvgs";
 import {
   CompanySvg,
@@ -14,20 +18,87 @@ import ProgressBar from "@/components/ui/progress/ProgressBar";
 import LeadsMenu from "@/components/view/dashboard/leads/LeadsMenu";
 import Link from "next/link";
 import { getLeadById } from "@/lib/api/leads";
-import { notFound } from "next/navigation";
 import BantButton from "@/components/view/dashboard/leads/BantButton";
 
-const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
-  const { id } = await params;
+// Loading component
+const LoadingSkeleton = () => (
+  <section>
+    <div className="mt-4 flex flex-col gap-2.5 wrapper">
+      <div className="animate-pulse">
+        <div className="flex-between gap-2.5 w-full items-stretch">
+          <div className="p-[30px] w-full border border-gray-b rounded-3xl bg-white max-w-[55%]">
+            <div className="flex-between gap-2.5">
+              <div>
+                <div className="flex items-center gap-3">
+                  <div className="size-[60px] min-w-[60px] rounded-full bg-gray-200"></div>
+                  <div className="flex flex-col gap-0.5 leading-none">
+                    <div className="h-5 bg-gray-200 rounded w-32"></div>
+                    <div className="h-3 bg-gray-200 rounded w-24"></div>
+                    <div className="h-3 bg-gray-200 rounded w-40"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="p-[30px] w-full border border-gray-b rounded-3xl bg-white max-w-[40%]">
+            <div className="h-4 bg-gray-200 rounded w-24 mb-4"></div>
+            <div className="h-2 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+);
 
-  // Fetch lead data from API
-  const leadResponse = await getLeadById({ id });
+const LeadsPage = () => {
+  const params = useParams();
+  const id = params?.id as string;
+  
+  const [lead, setLead] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  if (!leadResponse.success || !leadResponse.data) {
-    notFound();
+  useEffect(() => {
+    const fetchLead = async () => {
+      if (!id) return;
+      
+      try {
+        setLoading(true);
+        setError(null);
+        const leadResponse = await getLeadById({ id });
+        
+        if (!leadResponse.success || !leadResponse.data) {
+          setError("Lead not found");
+          return;
+        }
+        
+        setLead(leadResponse.data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to fetch lead");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchLead();
+  }, [id]);
+
+  if (loading) {
+    return <LoadingSkeleton />;
   }
 
-  const lead = leadResponse.data;
+  if (error || !lead) {
+    return (
+      <section>
+        <div className="mt-4 flex flex-col gap-2.5 wrapper">
+          <div className="p-[30px] border border-red-200 rounded-3xl bg-red-50">
+            <h2 className="text-red-600 font-medium">Error</h2>
+            <p className="text-red-500 mt-2">{error || "Lead not found"}</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   // ==========================================================
   // Backcrumb Links and names
@@ -50,7 +121,6 @@ const LeadsPage = async ({ params }: { params: Promise<{ id: string }> }) => {
   // ==========================================================
   // Lead Score Calculation
   // ==========================================================
-
   const leadScore: LeadScore = {
     score: lead.leadScore,
     color: lead.leadScore >= 80 ? "bg-sec" : lead.leadScore >= 60 ? "bg-pipeline" : "bg-cold",
