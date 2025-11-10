@@ -32,7 +32,7 @@ const HowJazzamWork = ({ dict }: { dict: Dictionary }) => {
         </div>
 
         {/* Circles */}
-        {[1, 2, 3, 4, 5].map((num) => (
+        {[1, 2, 3, 4, 5]?.map((num) => (
           <div
             key={num}
             className="relative size-[60px] rounded-full bg-[#FFF] border-[6px] border-[#FFC300] p-[10px]"
@@ -50,7 +50,7 @@ const HowJazzamWork = ({ dict }: { dict: Dictionary }) => {
         style={{ backgroundImage: "url('/assets/images/home/bg-wave.svg')" }}
       >
         <div className="flex lg:flex-nowrap flex-wrap justify-center gap-5 pt-10 z-20 max-w-[1536px] mx-auto px-4">
-          {features.map((item, idx) => (
+          {features?.map((item, idx) => (
             <div
               key={idx}
               className="relative w-full sm:w-[45%] lg:w-auto rounded-[40px] bg-white/80 pt-[59px] pb-[75px] px-[33px] text-center"

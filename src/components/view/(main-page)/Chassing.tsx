@@ -107,22 +107,22 @@ const Chasing = ({ dict }: { dict: Dictionary }) => {
   const stepsData = [
     {
       image: "/assets/images/home/habib2.png",
-      title: dict.home.chasing.cardTitle1,
-      description: dict.home.chasing.cardPara1,
+      title: dict?.home.chasing.cardTitle1,
+      description: dict?.home.chasing.cardPara1,
     },
     {
       image: "/assets/images/home/secondImg.svg",
-      title: dict.home.chasing.cardTitle2,
-      description: dict.home.chasing.cardPara2,
+      title: dict?.home.chasing.cardTitle2,
+      description: dict?.home.chasing.cardPara2,
     },
     {
       image: "/assets/images/home/identify.svg",
-      title: dict.home.chasing.cardTitle3,
-      description: dict.home.chasing.cardPara3,
+      title: dict?.home.chasing.cardTitle3,
+      description: dict?.home.chasing.cardPara3,
     },
   ];
 
-  const steps = stepsData.map((step, index) => (
+  const steps = stepsData?.map((step, index) => (
     <div className="w-[90%] mx-auto md:w-full flex flex-col items-center" key={`step${index + 1}`}>
       <div className="w-full sm:w-80 md:w-96 bg-white p-6 rounded-2xl transition-all duration-300 transform hover:scale-[1.02]">
         <h3 className="text-[22px]! md:text-xl font-semibold text-center text-black mb-4">
@@ -152,10 +152,10 @@ const Chasing = ({ dict }: { dict: Dictionary }) => {
                   } mb-10 lg:mb-0`}
                 >
                   <h2 className="text-[36px] md:text-[52px] font-bold text-white leading-[110%] mb-4">
-                    {dict.home.chasing.title}
+                    {dict?.home.chasing.title}
                   </h2>
                   <p className="text-[16px] md:text-[18px] text-normal leading-normal text-white">
-                    {dict.home.chasing.para}
+                    {dict?.home.chasing.para}
                   </p>
                 </div>
               </div>
@@ -163,7 +163,7 @@ const Chasing = ({ dict }: { dict: Dictionary }) => {
           </div>
 
           <div id="right-content" className="col-span-1 space-y-[50px] py-[100px]">
-            {steps.map((step, index) => (
+            {steps?.map((step, index) => (
               <React.Fragment key={index}>{step}</React.Fragment>
             ))}
           </div>

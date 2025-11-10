@@ -22,17 +22,23 @@ const Language = ({ languages }: LanguageProps) => {
   };
 
   // Handle direct click to switch to next language
-  // Handle direct click to switch to next language
   const handleLanguageSwitch = async () => {
     const currentIndex = languages.findIndex(lang => lang.code === currentLang);
     const nextIndex = (currentIndex + 1) % languages.length;
     const nextLanguage = languages[nextIndex];
     
-    // Save language to storage
-    await changeLangNoReload(nextLanguage.code);
-    
-    // Reload page to apply language change immediately
-    window.location.reload();
+    try {
+      // Update I18nProvider context first
+      await setLocale(nextLanguage.code);
+      
+      // Save language to storage
+      await changeLangNoReload(nextLanguage.code);
+      
+      // Reload page to apply language change
+      window.location.reload();
+    } catch (error) {
+      console.error("Error switching language:", error);
+    }
   };
 
   // Get current language display info

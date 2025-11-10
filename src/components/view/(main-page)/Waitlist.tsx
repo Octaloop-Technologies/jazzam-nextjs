@@ -8,7 +8,6 @@ import emailjs from "@emailjs/browser";
 
 interface WaitlistProps {
     dict: Dictionary,
-    lang: string
 }
 
 const emailJsKey: string = process.env.NEXT_PUBLIC_EMAIL_JS_PUBLIC_KEY ?? ''
@@ -16,7 +15,7 @@ const emailJsKey: string = process.env.NEXT_PUBLIC_EMAIL_JS_PUBLIC_KEY ?? ''
 emailjs.init(emailJsKey);
 
 
-const Waitlist = ({ dict, lang }: WaitlistProps) => {
+const Waitlist = ({ dict }: WaitlistProps) => {
 
     const [waitlistEmail, setWaitlistEmail] = useState("");
     const [loading, setLoading] = useState(false);
@@ -55,12 +54,12 @@ const Waitlist = ({ dict, lang }: WaitlistProps) => {
             setLoading(false)
         }
     }
+
     return (
         <section className="px-4 sm:px-8 md:px-[60px] lg:px-[100px] pb-[50px] md:pb-[100px] pt-[30px] md:pt-[130px] lg:pt-[154px] max-w-[1536px] mx-auto flex flex-col lg:flex-row gap-10 lg:gap-11.5 items-start">
             {/* Left Side Content */}
             <div
-                className={`flex-1 text-center ${lang === "ar" ? "lg:text-right" : "lg:text-left"
-                    }`}
+                className={`flex-1 text-center`}
             >
                 <p className="text-[28px] sm:text-[48px] md:text-[60px] lg:text-[72px] pb-5 md:pb-8.5 text-black font-bold leading-[1.2] uppercase pt-10 lg:pt-25">
                     <span>{dict?.home?.hero?.title}</span>
