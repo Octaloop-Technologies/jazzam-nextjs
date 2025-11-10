@@ -1,4 +1,5 @@
-import React from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { getCurrentLang } from "@/lib/api/main-page";
 import Hero from "@/components/view/(main-page)/Hero";
@@ -12,44 +13,52 @@ import BeforeJazzam from "@/components/view/(main-page)/BeforeJazzam";
 import Chasing from "@/components/view/(main-page)/Chassing";
 import ComingSoonModal from "@/components/ui/models/CommingSoonModal";
 
-const LandingPage = async () => {
+const LandingPage = () => {
   const lang = getCurrentLang();
-  const dict = await getDictionary(lang);
+  const [language, setLanguage] = useState<any>();
+
+  useEffect(() => {
+    const handleLangauge = async() => {
+      const dict = await getDictionary(lang);
+      setLanguage(dict)
+    };
+    handleLangauge();
+  }, [])
 
   return (
     <div>
       {/* ------------- hero ------------- */}
-      <Hero dict={dict} />
+      <Hero dict={language} />
 
       {/* ------------- See How Jazzam Works ------------- */}
-      <HowJazzamWork dict={dict} />
+      <HowJazzamWork dict={language} />
 
       {/* -------------  BeforeJazzam  ------------- */}
-      <Chasing dict={dict} />
+      <Chasing dict={language} />
 
       {/* -------------  BeforeJazzam  ------------- */}
-      <BeforeJazzam dict={dict} />
+      <BeforeJazzam dict={language} />
 
       {/* ------------- Choose Jazzam ------------- */}
-      <ChooseJazzam dict={dict} />
+      <ChooseJazzam dict={language} />
 
       {/* ------------- Testimonials ------------- */}
-      {/* <TestimonialsMarquee dict={dict} /> */}
+      {/* <TestimonialsMarquee dict={language} /> */}
 
       {/* ------------- ProblemsJazzamSolves ------------- */}
-      <ProblemsJazzamSolves dict={dict} />
+      <ProblemsJazzamSolves dict={language} />
 
       {/* ------------- Letsstarttoday ------------- */}
-      <Letsstarttoday dict={dict} />
+      <Letsstarttoday dict={language} />
 
       {/* ------------- FAQs ------------- */}
-      <Faqs dict={dict} />
+      <Faqs dict={language} />
 
       {/* ------------- Contact us ------------- */}
-      <ContactUs dict={dict} />
+      <ContactUs dict={language} />
 
       {/* show comming soon modal */}
-      <ComingSoonModal dict={dict} />
+      <ComingSoonModal dict={language} />
     </div>
   );
 };

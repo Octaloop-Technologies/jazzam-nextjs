@@ -16,11 +16,11 @@ emailjs.init(emailJsKey);
 
 
 const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
-  const items = dict.home.beforeJazzam.marquee;
+  const items = dict?.home?.beforeJazzam?.marquee;
 
-  const duplicatedItems: string[] = [...items, ...items];
-  const beforeItems = dict.home.beforeJazzam.beforeItems;
-  const withItems = dict.home.beforeJazzam.withItems;
+  const duplicatedItems: string[] = items !== undefined ? [...items, ...items] : [];
+  const beforeItems = dict?.home?.beforeJazzam?.beforeItems;
+  const withItems = dict?.home?.beforeJazzam?.withItems;
   const { success, error: ErrorToast } = useToast()
 
   const [waitlistEmail, setWaitlistEmail] = useState("");
@@ -33,7 +33,7 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
 
   const callWaitlistApi = async () => {
     if (waitlistEmail === "") {
-      ErrorToast(dict.home.toastMsgs.emailNotSent)
+      ErrorToast(dict?.home?.toastMsgs.emailNotSent)
       return;
     }
 
@@ -80,7 +80,7 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
       {/* Top Slider (Marquee) */}
       <div className="w-full flex overflow-hidden relative py-8 mt-5">
         <div className="flex animate-marquee-reverse whitespace-nowrap">
-          {duplicatedItems.map((item, index) => (
+          {duplicatedItems?.map((item, index) => (
             <div key={index} className="flex items-center mx-4">
               <span className="bg-green-600 text-white font-normal px-8 py-4 rounded-full text-[14px] leading-[100%] tracking-[2px] uppercase">
                 {item}
@@ -90,9 +90,9 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
           ))}
         </div>
         <div className="flex animate-marquee-reverse whitespace-nowrap">
-          {duplicatedItems.map((item, index) => (
+          {duplicatedItems?.map((item, index) => (
             <div
-              key={index + duplicatedItems.length}
+              key={index + duplicatedItems?.length}
               className="flex items-center mx-4"
             >
               <span className="bg-green-600 text-white font-normal px-8 py-4 rounded-full text-[14px] leading-[100%] tracking-[2px] uppercase">
@@ -122,11 +122,11 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
           {/* Before Jazzam Card */}
           <div className="bg-white w-full max-w-[532px] rounded-2xl shadow-xl p-8 order-1 z-10">
             <h3 className="text-[26px] sm:text-[34px] font-semibold text-black leading-[21px] tracking-[2px] mb-3 sm:mb-6">
-              {dict.home.beforeJazzam.beforeTitle}
+              {dict?.home?.beforeJazzam?.beforeTitle}
             </h3>
 
             <div className="space-y-6">
-              {beforeItems.map((text, index) => (
+              {beforeItems?.map((text, index) => (
                 <div key={index} className="flex items-start gap-4">
                   <div className="mt-1 flex-shrink-0">
                     <svg
@@ -157,12 +157,12 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
           {/* With Jazzam Card */}
           <div className="bg-white w-full max-w-[532px] rounded-2xl shadow-xl p-8 order-3 z-10">
             <h3 className="text-[26px] sm:text-[34px] font-semibold text-black leading-[21px] tracking-[2px] mb-3 sm:mb-6">
-              {dict.home.beforeJazzam.withTitle}
+              {dict?.home?.beforeJazzam?.withTitle}
 
             </h3>
 
             <div className="space-y-6">
-              {withItems.map((text, index) => (
+              {withItems?.map((text, index) => (
                 <div key={index} className="flex items-start gap-4">
                   <div className="mt-1 flex-shrink-0">
                     <svg
@@ -219,7 +219,7 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
 
           <div className="relative px-4 sm:px-6 md:px-8 lg:px-16 py-6 sm:py-8 md:py-10">
             <h3 className="text-[#FFF] text-[28px] sm:text-[34px] md:text-[24px] font-normal leading-[29px] text-center mb-6">
-              {dict.home.beforeJazzam.waitlist.heading}
+              {dict?.home?.beforeJazzam?.waitlist.heading}
             </h3>
 
             <div className="flex flex-col md:flex-row items-center gap-3 z-50 max-w-[600px] mx-auto">
@@ -240,14 +240,14 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
                 </div>
                 <input
                   type="email"
-                  placeholder={dict.home.beforeJazzam.waitlist.placeholder}
+                  placeholder={dict?.home?.beforeJazzam?.waitlist.placeholder}
                   className="w-full pl-12 pr-4 py-3 rounded-lg text-[14px] leading-normal text-[#999] focus:outline-none focus:ring-2 focus:ring-yellow-400 bg-[#FFF]"
                   value={waitlistEmail}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWaitlistEmail(e.target.value)}
                 />
               </div>
               <button onClick={callWaitlistApi} className="w-full md:w-auto bg-[#EEB600] font-semibold px-8 py-3 rounded-lg transition uppercase tracking-wide whitespace-nowrap shadow-md text-[16px] tracking-normal text-[#FFF]">
-                {loading ? 'Sending' : dict.home.beforeJazzam.waitlist.button}
+                {loading ? 'Sending' : dict?.home?.beforeJazzam?.waitlist.button}
               </button>
             </div>
           </div>

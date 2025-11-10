@@ -9,9 +9,9 @@ import { openModal, selectIsModalOpen } from "@/redux/slices/uiSlice";
 
 const Letsstarttoday = ({ dict }: { dict: Dictionary }) => {
 
-  const items = dict.home.beforeJazzam.marquee;
+  const items = dict?.home?.beforeJazzam?.marquee;
 
-  const duplicatedItems: string[] = [...items, ...items];
+  const duplicatedItems: string[] = items !== undefined ? [...items, ...items] : [];
 
   const dispatch = useDispatch();
   const isModalOpen = useSelector(selectIsModalOpen);
