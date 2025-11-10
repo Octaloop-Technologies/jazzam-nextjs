@@ -44,7 +44,8 @@ interface TeamMembers{
     logo: {
       url?: string
     },
-    _id: string
+    _id: string,
+    joinedCompanyStatus?: boolean
   },
   joinedAt?: string,
   role?: string,
@@ -670,37 +671,29 @@ const SettingsPage = () => {
                   <div>Delete Account</div>
                 </button>
               </div>
-              {teamMembers?.length > 0 && (
                 <div className="min-w-full">
                   <Table>
                     <TableHeader>
                       <TableCell>Sr#</TableCell>
                       <TableCell>User Name</TableCell>
                       <TableCell>Email</TableCell>
-                      {/* <TableCell>logo</TableCell> */}
+                      <TableCell>status</TableCell>
                       <TableCell>Actions</TableCell>
                     </TableHeader>
-                    {teamMembers?.map((teams, i) => (
+                    { teamMembers?.length <= 0 ? 
+                    <div className="flex justify-center text-lg font-semibold">
+                      No user found
+                    </div>  : teamMembers?.map((teams, i) => (
                       <TableRow className="gap-4" key={i}>
                         <TableCell>{i + 1}</TableCell>
                         <TableCell>{teams?.company?.companyName}</TableCell>
                         <TableCell className="mr-10">
                           {teams?.company?.email}
                         </TableCell>
-                        {/* <TableCell className="ml-5">
-                        <Image
-                          src={typeof teams?.company?.logo.url === "string" ? teams?.company?.logo.url : teams?.company?.logo.url ?? "/assets/icons/favicon.ico"}
-                          width={30}
-                          height={30}
-                          alt="company logo"
-                          className="my-5 rounded-5xl"
-                          onError={(e) => {
-                            const target = e.currentTarget as HTMLImageElement;
-                            target.src = "/assets/icons/favicon.ico";
-                          }}
-                        />
-                      </TableCell> */}
-                        <TableCell className="ml-28 flex">
+                      <TableCell className="ml-20">
+                        {teams?.company?.joinedCompanyStatus === true ? "true" : "false"}
+                      </TableCell>
+                        <TableCell className="flex">
                           <button
                             className="w-fit flex gap-1 text-sm text-danger gray-hover transition-colors duration-200"
                             onClick={() =>
@@ -724,7 +717,6 @@ const SettingsPage = () => {
                     ))}
                   </Table>
                 </div>
-              )}
             </>
           ) : activeTab === "general" ? (
             // -- general --

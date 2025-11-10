@@ -27,8 +27,10 @@ import { getCurrentUser } from "@/lib/api/auth";
 import WelcomeBanner from "@/components/view/dashboard/leads/WelcomeBanner";
 import PaymentSuccessNotification from "@/components/view/dashboard/leads/PaymentSuccessNotification";
 import { useSearchParams } from "next/navigation";
+import { getCurrentLang } from "@/lib/api/main-page";
+import { getDictionary } from "@/lib/i18n/getDictionary";
 
-interface DashboardPageProps {}
+interface DashboardPageProps { }
 
 interface LeadsData {
   leads: Lead[];
@@ -48,9 +50,9 @@ interface StatsData {
   };
 }
 
-const DashboardPage = ({}: DashboardPageProps) => {
+const DashboardPage = ({ }: DashboardPageProps) => {
   const searchParams = useSearchParams();
-  
+
   // State for data
   const [leadsData, setLeadsData] = useState<LeadsData | null>(null);
   const [statsData, setStatsData] = useState<StatsData | null>(null);
@@ -67,35 +69,38 @@ const DashboardPage = ({}: DashboardPageProps) => {
   const companySizeFilter = searchParams?.get("companySize");
   const sortBy = searchParams?.get("sortBy") || "createdAt";
   const sortOrder = searchParams?.get("sortOrder") || "desc";
-
+  const [language, setLanguage] = useState<any>();
+  const lang = getCurrentLang();
   // Fetch data on mount and when params change
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       setError(null);
-      
+      const dict = (await getDictionary(lang))?.superUser;
+      setLanguage(dict);
+
       try {
         const [leadsResponse, statsResponse, currentUserResponse] = await Promise.all([
           searchQuery
             ? searchLeads({
-                query: searchQuery,
-                page: currentPage,
-                limit: 5,
-                status: statusFilter,
-                companyIndustry: companyIndustryFilter,
-                sortBy,
-                sortOrder,
-              })
+              query: searchQuery,
+              page: currentPage,
+              limit: 5,
+              status: statusFilter,
+              companyIndustry: companyIndustryFilter,
+              sortBy,
+              sortOrder,
+            })
             : getAllLeads({
-                page: currentPage,
-                limit: 5,
-                status: statusFilter,
-                companyIndustry: companyIndustryFilter,
-                companySize: companySizeFilter,
-                sortBy,
-                sortOrder,
-                companyId
-              }),
+              page: currentPage,
+              limit: 5,
+              status: statusFilter,
+              companyIndustry: companyIndustryFilter,
+              companySize: companySizeFilter,
+              sortBy,
+              sortOrder,
+              companyId
+            }),
           getLeadStats(companyId),
           getCurrentUser(),
         ]);
@@ -119,35 +124,35 @@ const DashboardPage = ({}: DashboardPageProps) => {
   // ======================================================
   const cards = [
     {
-      title: "New Leads",
+      title: language?.navbar?.leads?.newLeads,
       value: statsData?.overview?.newLeads || 0,
       icon: <NewLeadsSvg />,
       color: "text-pri",
       bgColor: "bg-pri-light",
     },
     {
-      title: "Hot Leads",
+      title: language?.navbar?.leads?.hotLeads,
       value: statsData?.overview?.hotLeads || 0,
       icon: <HotLeadsSvg />,
       color: "text-hot",
       bgColor: "bg-hot-light",
     },
     {
-      title: "Warm leads",
+      title: language?.navbar?.leads?.warmLeads,
       value: statsData?.overview?.warmLeads || 0,
       icon: <WarmLeadsSvg />,
       color: "text-warm",
       bgColor: "bg-warm-light",
     },
     {
-      title: "Cold leads",
+      title: language?.navbar?.leads?.coldLeads,
       value: statsData?.overview?.coldLeads || 0,
       icon: <ColdLeadsSvg />,
       color: "text-cold",
       bgColor: "bg-cold-light",
     },
     {
-      title: "Qualified Leads",
+      title: language?.navbar?.leads?.qualifiedLeads,
       value: statsData?.overview?.qualifiedLeads || 0,
       icon: <PipelineValueSvg />,
       color: "text-pipeline",
@@ -214,7 +219,7 @@ const DashboardPage = ({}: DashboardPageProps) => {
       <section>
         <div className="flex items-center justify-center min-h-[400px]">
           <div className="text-center">
-            <h2 className="text-xl font-semibold text-red-600 mb-2">Error Loading Data</h2>
+            <h2 className="text-xl font-semibold text-red-600 mb-2">{language?.navbar?.leads?.loadingError}</h2>
             <p className="text-gray-600">{error}</p>
           </div>
         </div>
@@ -233,26 +238,27 @@ const DashboardPage = ({}: DashboardPageProps) => {
       {/* ---------------------------- header ---------------------------- */}
       <div className="flex-between gap-1.5">
         <div>
-          <h1 className="text-[32px] font-[500] capitalize">Your lead analysis</h1>
+          <h1 className="text-[32px] font-[500] capitalize">{language?.navbar?.leads?.headingLeadAnalysis}</h1>
           {currentUser && (
             <p className="text-sm text-gray-500 mt-1">
-              Showing leads for {currentUser.companyName}
+              {language?.navbar?.leads?.showingLeads} {currentUser.companyName}
             </p>
           )}
-          {companyId && 
-              <button className="bg-pri p-3 rounded-2xl my-5 text-white text-md hover:bg-green-600">
-                <Link href="/super-user">
-              My dashboard
-          </Link>
-              </button>
+          {companyId &&
+            <button className="bg-pri p-3 rounded-2xl my-5 text-white text-md hover:bg-green-600">
+              <Link href="/super-user">
+                {language?.navbar?.leads?.myDashboard}
+              </Link>
+            </button>
           }
         </div>
         <div className="flex items-center gap-2.5">
           {/* Advanced search bar with filters - supports text search, industry, source, company size filters */}
-          <SearchBarWithFilters />
+          <SearchBarWithFilters searchFields={language?.navbar?.leads?.searchFields} />
 
           {/* tabs */}
           <TabNavigation
+            tabNavigationText={language?.navbar?.leads?.tabNavigationText}
             searchQuery={searchQuery}
             companyIndustryFilter={companyIndustryFilter}
             sortBy={sortBy}
@@ -264,7 +270,7 @@ const DashboardPage = ({}: DashboardPageProps) => {
           <div className="h-[51.5px] w-[1px] bg-gray-b" />
 
           {/* refresh button */}
-          <RefreshButton />
+          <RefreshButton title={language?.navbar?.leads?.refreshButtonTitle} />
         </div>
       </div>
 
@@ -292,12 +298,12 @@ const DashboardPage = ({}: DashboardPageProps) => {
           <div className="flex items-center justify-between mb-4 px-[30px]">
             <div className="leading-none">
               <h1 className="text-[18px] font-[600] capitalize">
-                {searchQuery ? `Search Results for "${searchQuery}"` : "All Leads"}
+                {searchQuery ? `Search Results for "${searchQuery}"` : language?.navbar?.leads?.allLeads}
               </h1>
               <p className="text-gray-200 text-sm">
                 {searchQuery
                   ? `Found ${leadsData?.totalResults || 0} leads matching your search criteria`
-                  : "Complete list of your sales prospects and their current status"}
+                  : language?.navbar?.leads?.completeSalesList}
               </p>
             </div>
 
@@ -323,11 +329,10 @@ const DashboardPage = ({}: DashboardPageProps) => {
                     <Link
                       href={createPaginationUrl(Math.max(1, currentPage - 1))}
                       prefetch={false}
-                      className={`size-[30px] rounded-full border border-gray-b flex-center transition-all duration-200 ${
-                        currentPage === 1
+                      className={`size-[30px] rounded-full border border-gray-b flex-center transition-all duration-200 ${currentPage === 1
                           ? "cursor-not-allowed opacity-50"
                           : "bg-pri text-white hover:bg-pri/90"
-                      }`}
+                        }`}
                     >
                       <LeftArrowSvg />
                     </Link>
@@ -337,11 +342,10 @@ const DashboardPage = ({}: DashboardPageProps) => {
                     <Link
                       href={createPaginationUrl(currentPage + 1)}
                       prefetch={false}
-                      className={`size-[30px] rounded-full border border-gray-b flex-center transition-all duration-200 ${
-                        !leadsData?.hasNextPage
+                      className={`size-[30px] rounded-full border border-gray-b flex-center transition-all duration-200 ${!leadsData?.hasNextPage
                           ? "cursor-not-allowed opacity-50"
                           : "bg-pri text-white hover:bg-pri/90"
-                      }`}
+                        }`}
                     >
                       <RightArrowSvg />
                     </Link>
@@ -355,11 +359,11 @@ const DashboardPage = ({}: DashboardPageProps) => {
           <div className="min-w-full relative">
             <Table>
               <TableHeader>
-                <TableCell>Lead</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Score</TableCell>
-                <TableCell>Profile Link</TableCell>
-                <TableCell>Company Size</TableCell>
+                <TableCell>{language?.navbar?.leads?.tableHeadersTitle?.lead}</TableCell>
+                <TableCell>{language?.navbar?.leads?.tableHeadersTitle?.status}</TableCell>
+                <TableCell>{language?.navbar?.leads?.tableHeadersTitle?.score}</TableCell>
+                <TableCell>{language?.navbar?.leads?.tableHeadersTitle?.profileLink}</TableCell>
+                <TableCell>{language?.navbar?.leads?.tableHeadersTitle?.companySize}</TableCell>
               </TableHeader>
               {(leadsData?.leads as any)?.length > 0 ? (
                 <>
@@ -381,10 +385,9 @@ const DashboardPage = ({}: DashboardPageProps) => {
                                 ? lead.fullName
                                 : (lead.firstName && lead.firstName.trim()) ||
                                   (lead.lastName && lead.lastName.trim())
-                                ? `${lead.firstName ? lead.firstName : ""}${
-                                    lead.lastName ? ` ${lead.lastName}` : ""
-                                  }`.trim() || "No Name"
-                                : "No Name"}
+                                  ? `${lead.firstName ? lead.firstName : ""}${lead.lastName ? ` ${lead.lastName}` : ""
+                                    }`.trim() || "No Name"
+                                  : "No Name"}
                             </p>
                             <p className="text-[12px] text-gray-200">{lead.company || "N/A"}</p>
                             <p className="text-[12px] text-gray-200">
@@ -402,8 +405,8 @@ const DashboardPage = ({}: DashboardPageProps) => {
                               lead.leadScore && lead.leadScore >= 80
                                 ? "var(--sec)"
                                 : lead.leadScore && lead.leadScore >= 60
-                                ? "var(--pipeline)"
-                                : "var(--cold)"
+                                  ? "var(--pipeline)"
+                                  : "var(--cold)"
                             }
                             size={18}
                             strokeWidth={3}
@@ -439,8 +442,8 @@ const DashboardPage = ({}: DashboardPageProps) => {
                   {error
                     ? "Error loading leads"
                     : searchQuery
-                    ? `No leads found matching "${searchQuery}". Try adjusting your search or filters.`
-                    : "No leads found"}
+                      ? `No leads found matching "${searchQuery}". Try adjusting your search or filters.`
+                      : "No leads found"}
                 </div>
               )}
             </Table>

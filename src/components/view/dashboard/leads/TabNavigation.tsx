@@ -10,6 +10,13 @@ interface TabNavigationProps {
   sortBy: string;
   sortOrder: string;
   statusFilter?: string | null | undefined;
+  tabNavigationText?: {
+    all?: string | undefined,
+    new?: string | undefined,
+    hot?: string | undefined,
+    warm?: string | undefined,
+    cold?: string | undefined
+  }
 }
 
 const TabNavigation = ({
@@ -18,6 +25,7 @@ const TabNavigation = ({
   sortBy,
   sortOrder,
   statusFilter,
+  tabNavigationText
 }: TabNavigationProps) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -67,7 +75,7 @@ const TabNavigation = ({
     isActive,
   }: {
     status?: string;
-    label: string;
+    label: string | undefined;
     isActive: boolean;
   }) => {
     const tabName = status || "all";
@@ -98,11 +106,11 @@ const TabNavigation = ({
 
   return (
     <div className="flex gap-[15px] h-[61px] text-[14px] border border-gray-b p-2.5 rounded-4xl">
-      <TabButton label="All" isActive={!statusFilter} />
-      <TabButton status="new" label="New" isActive={statusFilter === "new"} />
-      <TabButton status="hot" label="Hot" isActive={statusFilter === "hot"} />
-      <TabButton status="warm" label="Warm" isActive={statusFilter === "warm"} />
-      <TabButton status="cold" label="Cold" isActive={statusFilter === "cold"} />
+      <TabButton label={tabNavigationText?.all} isActive={!statusFilter} />
+      <TabButton status="new" label={tabNavigationText?.new} isActive={statusFilter === "new"} />
+      <TabButton status="hot" label={tabNavigationText?.hot} isActive={statusFilter === "hot"} />
+      <TabButton status="warm" label={tabNavigationText?.warm} isActive={statusFilter === "warm"} />
+      <TabButton status="cold" label={tabNavigationText?.cold} isActive={statusFilter === "cold"} />
     </div>
   );
 };

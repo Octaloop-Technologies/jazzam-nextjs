@@ -7,16 +7,21 @@ import {
   MarkAllAsReadSvg,
   NotificationDropdownSvg,
   TimeSvg,
+  LeadsIcon,
+  FormsIcon,
+  SummaryIcon,
+  FollowUpsIcon,
 } from "@/components/svgs/NavbarSvgs";
 import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Dropdown, { DropdownItem } from "@/components/ui/dropdown/Dropdown";
-import { navItems } from "@/lib/constants/navbarConstants";
+// import { navItems } from "@/lib/constants/navbarConstants";
 import gsap from "gsap";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Language from "@/components/shared/language/Language";
-import { changeLangNoReload } from "@/lib/api/main-page";
+import { changeLangNoReload, getCurrentLang } from "@/lib/api/main-page";
+import { getDictionary } from "@/lib/i18n/getDictionary";
 // import { io } from "socket.io-client";
 
 // const socket = io(`${process.env.NEXT_PUBLIC_BASE_URL}`);
@@ -37,9 +42,45 @@ const Navbar = ({ languages }: NavbarProps) => {
   // ======================================================
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [language, setLanguage] = useState<any>();
   // const [notifications, setNotifications] = useState([]);
 
   const companyId = searchParams?.get("companyId");
+  const lang = getCurrentLang();
+
+  useEffect(() => {
+    const handleLanguage = async() => {
+    const dict: any = (await getDictionary(lang)).superUser;
+    setLanguage(dict);
+    }
+    handleLanguage()
+  }, []);
+
+  const navItems = [
+  {
+    href: "/super-user",
+    icon: <LeadsIcon />,
+    title: language?.navbar?.navlinks?.leads,
+  },
+  {
+    href: "/super-user/forms",
+    icon: <FormsIcon />,
+    title: language?.navbar?.navlinks?.forms,
+  },
+  {
+    href: "/super-user/summary",
+    icon: <SummaryIcon />,
+    title: language?.navbar?.navlinks?.summary,
+  },
+
+  {
+    href: "/super-user/follow-ups",
+    icon: <FollowUpsIcon />,
+    title: language?.navbar?.navlinks?.followUps,
+  },
+];
+
+  
 
   // Fetch existing notifications on mount
   // useEffect(() => {
@@ -164,15 +205,15 @@ const Navbar = ({ languages }: NavbarProps) => {
           <DropdownItem>
             <div className="w-full flex flex-col gap-[10px]">
               <h2 className="text-[20px] font-[500] leading-none pb-2.5 border-b border-gray-b">
-                Notifications
+                {language?.navbar?.notifications?.notification}
               </h2>
               <div className="flex-between gap-2.5 text-[14px] font-[500]">
                 <button className="flex-center gap-1 gray-hover">
-                  Mark all as read
+                {language?.navbar?.notifications?.markAllRead}
                   <MarkAllAsReadSvg />
                 </button>
                 <button className="text-danger gap-1 hover:text-gray-200 transition-all duration-200 ease-in-out underline-auto-from-front">
-                  Clear all
+                {language?.navbar?.notifications?.clearAll}
                 </button>
               </div>
             </div>

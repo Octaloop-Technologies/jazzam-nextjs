@@ -207,5 +207,82 @@
       "errorEmail": "خطأ في إرسال البريد الإلكتروني",
       "emailServerError": "غير قادر على إضافة البريد الإلكتروني بسبب خطأ في الخادم"
     }
+  },
+  "superUser": {
+    "navbar": {
+      "notifications": {
+        "notification": "إشعارات",
+        "markAllRead": "وضع علامة على الكل كمقروءة",
+        "clearAll": "مسح الكل"
+      },
+      "navlinks": {
+        "leads": "يؤدي",
+        "forms": "النماذج",
+        "summary": "ملخص",
+        "followUps": "المتابعة"
+      },
+      "leads": {
+        "showingLeads": "عرض الخيوط ل",
+        "allLeads": "جميع الخيوط",
+        "completeSalesList": "قائمة كاملة بآفاق المبيعات لديك وحالتها الحالية",
+        "myDashboard":"لوحة القيادة الخاصة بي",
+        "language?.navbar?.leads?.": "خيوط جديدة",
+        "hotLeads": "العروض الساخنة",
+        "warmLeads": "خيوط دافئة",
+        "coldLeads": "يؤدي الباردة",
+        "qualifiedLeads": "العملاء المؤهلين",
+        "loadingError": "خطأ في تحميل البيانات",
+        "headingLeadAnalysis": "تحليل الرصاص الخاص بك",
+        "refreshButtonTitle": "ينعش",        
+        "tableHeadersTitle": {
+          "lead": "يقود",
+          "status": "حالة",
+          "score": "نتيجة",
+          "profileLink": "رابط الملف الشخصي",
+          "companySize": "حجم الشركة"
+        },
+        "tabNavigationText": {
+          "all": "الجميع",
+          "new": "جديد",
+          "hot": "حار",
+          "warm": "دافيء",
+          "cold": "بارد"
+        },
+        "searchFields": {
+          "searchFilterTitle": "البحث عن العملاء المحتملين حسب الاسم والشركة والبريد الإلكتروني...",
+          "advanceFilters": "مرشحات متقدمة",
+          "clearAll":"مسح الكل",
+          "companyIndustry": "صناعة الشركة",
+          "companySize": "حجم الشركة",
+          "allIndustries": "جميع الصناعات",
+          "allSizes": "جميع المقاسات",
+          "employees": "موظفين",
+          "sortBy": "فرز حسب",
+          "close": "يغلق",
+          "applyFilters": "تطبيق المرشحات",
+          "noFiltersApplied": "لم يتم تطبيق أي مرشحات"
+        }
+      },
+      "forms": {
+        "leadGeneration": "نماذج توليد الرصاص",
+        "uniqueEndpoints": "نقاط نهاية النموذج الفريدة الخاصة بك لتوليد العملاء المحتملين تلقائيًا",
+        "leadGenerationEndpoint": "نقاط نهاية نموذج توليد العملاء المحتملين الخاص بك",
+        "formDescription": "نماذجك الفريدة هي نقاط النهاية لجمع العملاء المحتملين من منصات مختلفة. شارك هذه الروابط مع العملاء المحتملين لتوليد عملاء محتملين تلقائيًا.",
+        "readyToUse": "جاهز للاستخدام"
+      },
+      "followUps": {
+        "followUpHeading": "المتابعات",
+        "all":"الجميع",
+        "submitted": "مُقَدَّم",
+        "scheduled": "المقرر",
+        "allFollowups": "كافة المتابعات",
+        "listMessage": "قائمة كاملة برسائل المتابعة",
+        "lead": "يقود",
+        "channel": "قناة",
+        "status": "حالة",
+        "dateOfSubmission": "تاريخ التقديم",
+        "placeholderText": "يبحث"
+      }
+    }
   }
 }
