@@ -52,6 +52,8 @@ export interface Company {
     emailsSent: number;
   };
   joinedCompanyStatus: boolean;
+  userFirstLogin: boolean;
+  userType: string;
   isActive: boolean;
   lastLoginAt?: Date;
   onboarding?: {

@@ -450,6 +450,27 @@ const SettingsPage = () => {
     }
   };
 
+  const handleDeleteAccount = async() => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/delete-account`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+      if(res.ok){
+        const data = await res.json();
+        if(data.success === true){
+          ToastSuccess("Company Deleted successfully")
+          dispatch(logout());
+          router.push("/login");
+        }
+      }
+    } catch (error) {
+      ToastError("Unable to delete company please try again")
+    }
+  }
+
   return (
     <div>
       <h1 className="mt-3.5 text-[32px] font-[500] capitalize">Settings</h1>
@@ -666,7 +687,7 @@ const SettingsPage = () => {
 
               {/* delete account */}
               <div className="flex flex-col gap-2">
-                <button className="w-fit flex gap-1 text-sm text-danger gray-hover transition-colors duration-200">
+                <button className="w-fit flex gap-1 text-sm text-danger gray-hover transition-colors duration-200" onClick={handleDeleteAccount}>
                   <div>{trashIcon()}</div>
                   <div>Delete Account</div>
                 </button>
