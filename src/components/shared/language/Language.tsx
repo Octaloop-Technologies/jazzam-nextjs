@@ -42,7 +42,7 @@ const Language = ({ languages }: LanguageProps) => {
   };
 
   // Get current language display info
-  const currentLanguageInfo = languages.find(lang => lang.code === currentLang) || languages[0];
+  // const currentLanguageInfo = languages.find(lang => lang.code === currentLang) || languages[0];
 
   return (
     <button 
@@ -53,7 +53,8 @@ const Language = ({ languages }: LanguageProps) => {
       <GlobeSvg />
       <div className="flex items-center gap-1">
         <span className="uppercase text-[14px] font-medium">
-          {currentLanguageInfo.code}
+          {/* {currentLanguageInfo.code} */}
+          {currentLang === 'en' ? "AR" : "EN"}
         </span>
         {/* Optional: Show small indicator that it's clickable */}
         <svg 

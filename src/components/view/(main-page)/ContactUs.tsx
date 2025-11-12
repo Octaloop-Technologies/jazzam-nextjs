@@ -5,10 +5,11 @@ import { CustomTextarea } from "@/components/ui/textarea";
 import { Dictionary } from "@/lib/i18n/getDictionary";
 import { useSimpleTextAnimation } from "@/styles/animations/useSimpleTextAnimation";
 import { useRef, useState } from "react";
-import { useButtonAnimation } from "@/styles/animations/useButtonAnimation";
+// import { useButtonAnimation } from "@/styles/animations/useButtonAnimation";
 import Image from "next/image";
 import { useToast } from "@/lib/hooks/useToast";
 import tokenStorage from "@/lib/utils/tokenStorage";
+import { getCurrentLang } from "@/lib/api/main-page";
 
 type MissingFields = {
   name: boolean;
@@ -26,6 +27,7 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
   const [loading, setLoading] = useState(false);
 
   const { accessToken } = tokenStorage?.getTokens();
+  const lang = getCurrentLang();
 
   const [data, setData] = useState({
     name: "",
@@ -142,7 +144,7 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
                   <p className="text-[16px] font-[600] text-[#333333]">
                     {dict?.home?.contactUs?.phone?.title}
                   </p>
-                  <p className="text-[14px] font-[400] text-[#666666]">
+                  <p dir="ltr" className="text-[14px] font-[400] text-[#666666]">
                     {dict?.home?.contactUs?.phone?.description}
                   </p>
                 </div>
@@ -188,9 +190,9 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
                 <div className="flex flex-col -space-y-8">
                   <div className="flex items-center -space-x-2">
 
-                    <div className="size-[83.065px] z-30 rounded-full  border-2 border-white flex items-center justify-center text-white font-bold">
+                    <div className="size-[83.065px] z-30 rounded-full border-2 border-white flex items-center justify-center text-white font-bold">
                       <Image
-                        src="/assets/icons/home/contact1.png"
+                        src={lang === "en" ? "/assets/icons/home/contact1.png" : "/assets/icons/home/contact_arabic2.png"}
                         alt="Profile"
                         width={83}
                         height={83}
@@ -199,7 +201,7 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
                     </div>
                     <div className="size-[70.365px] z-20 rounded-full  border-2 border-white flex items-center justify-center text-white font-bold">
                       <Image
-                        src="/assets/icons/home/contact2.png"
+                        src={lang === "en" ? "/assets/icons/home/contact2.png" : "/assets/icons/home/contact_arabic1.png"}
                         alt="Profile"
                         width={83}
                         height={83}
@@ -210,7 +212,7 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
                   <div className="flex items-center -space-x-2">
                     <div className="size-[70.365px] z-40 rounded-full  border-2 border-white flex items-center justify-center text-white font-bold">
                       <Image
-                        src="/assets/icons/home/contact3.png"
+                        src={lang === "en" ? "/assets/icons/home/contact3.png" : "/assets/icons/home/contact_arabic4.png"}
                         alt="Profile"
                         width={83}
                         height={83}
@@ -219,7 +221,7 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
                     </div>
                     <div className="size-[83.065px] z-50 rounded-full  border-2 border-white flex items-center justify-center text-white font-bold">
                       <Image
-                        src="/assets/icons/home/contact4.png"
+                        src={lang === "en" ? "/assets/icons/home/contact4.png" : "/assets/icons/home/contact_arabic3.png"}
                         alt="Profile"
                         width={83}
                         height={83}
@@ -314,45 +316,45 @@ const StarIcon = () => {
 };
 
 // ------------- Submit Button -------------
-const SubmitButton = ({ title }: { title: string }) => {
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
-  const svgRef = useRef<SVGSVGElement | null>(null);
+// const SubmitButton = ({ title }: { title: string }) => {
+//   const buttonRef = useRef<HTMLButtonElement | null>(null);
+//   const svgRef = useRef<SVGSVGElement | null>(null);
 
-  // Use the reusable button animation hook
-  useButtonAnimation({
-    buttonRef,
-    svgRef,
-    enableScrollTrigger: true,
-    enablePulsing: true,
-    enableRipple: true,
-    enableBackgroundFill: true,
-    delay: 0.8, // Start after cards animation
-    gradientColors: ["#0fb981", "#0fb98166", "#15803c"],
-  });
+//   // Use the reusable button animation hook
+//   useButtonAnimation({
+//     buttonRef,
+//     svgRef,
+//     enableScrollTrigger: true,
+//     enablePulsing: true,
+//     enableRipple: true,
+//     enableBackgroundFill: true,
+//     delay: 0.8, // Start after cards animation
+//     gradientColors: ["#0fb981", "#0fb98166", "#15803c"],
+//   });
 
-  return (
-    <button
-      ref={buttonRef}
-      type="submit"
-      className="w-full ml-auto max-w-[184px] relative h-[54px] bg-pri text-white text-[16px] font-[600] rounded-4xl hover:bg-pri/80 transition-colors duration-200 flex-center gap-2"
-    >
-      {title}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="28"
-        height="27"
-        viewBox="0 0 28 27"
-        fill="none"
-        className="absolute right-2 top-[40%] -translate-y-1/2"
-        ref={svgRef}
-      >
-        <path
-          fillRule="evenodd"
-          clipRule="evenodd"
-          d="M10.4254 17.6855C10.2719 17.8392 10.0636 17.9256 9.84642 17.9257C9.62921 17.9259 9.42084 17.8398 9.26714 17.6863C9.11344 17.5328 9.02701 17.3245 9.02686 17.1073C9.0267 16.8901 9.11284 16.6818 9.26632 16.5281L15.9734 9.82262H11.442C11.2249 9.82262 11.0167 9.73638 10.8632 9.58287C10.7097 9.42937 10.6235 9.22117 10.6235 9.00408C10.6235 8.78699 10.7097 8.5788 10.8632 8.42529C11.0167 8.27179 11.2249 8.18555 11.442 8.18555H17.9493C18.1664 8.18555 18.3746 8.27179 18.5281 8.42529C18.6816 8.5788 18.7679 8.78699 18.7679 9.00408V15.5114C18.7679 15.7285 18.6816 15.9367 18.5281 16.0902C18.3746 16.2437 18.1664 16.33 17.9493 16.33C17.7323 16.33 17.5241 16.2437 17.3706 16.0902C17.217 15.9367 17.1308 15.7285 17.1308 15.5114V10.98L10.4254 17.6855Z"
-          fill="white"
-        />
-      </svg>
-    </button>
-  );
-};
+//   return (
+//     <button
+//       ref={buttonRef}
+//       type="submit"
+//       className="w-full ml-auto max-w-[184px] relative h-[54px] bg-pri text-white text-[16px] font-[600] rounded-4xl hover:bg-pri/80 transition-colors duration-200 flex-center gap-2"
+//     >
+//       {title}
+//       <svg
+//         xmlns="http://www.w3.org/2000/svg"
+//         width="28"
+//         height="27"
+//         viewBox="0 0 28 27"
+//         fill="none"
+//         className="absolute right-2 top-[40%] -translate-y-1/2"
+//         ref={svgRef}
+//       >
+//         <path
+//           fillRule="evenodd"
+//           clipRule="evenodd"
+//           d="M10.4254 17.6855C10.2719 17.8392 10.0636 17.9256 9.84642 17.9257C9.62921 17.9259 9.42084 17.8398 9.26714 17.6863C9.11344 17.5328 9.02701 17.3245 9.02686 17.1073C9.0267 16.8901 9.11284 16.6818 9.26632 16.5281L15.9734 9.82262H11.442C11.2249 9.82262 11.0167 9.73638 10.8632 9.58287C10.7097 9.42937 10.6235 9.22117 10.6235 9.00408C10.6235 8.78699 10.7097 8.5788 10.8632 8.42529C11.0167 8.27179 11.2249 8.18555 11.442 8.18555H17.9493C18.1664 8.18555 18.3746 8.27179 18.5281 8.42529C18.6816 8.5788 18.7679 8.78699 18.7679 9.00408V15.5114C18.7679 15.7285 18.6816 15.9367 18.5281 16.0902C18.3746 16.2437 18.1664 16.33 17.9493 16.33C17.7323 16.33 17.5241 16.2437 17.3706 16.0902C17.217 15.9367 17.1308 15.7285 17.1308 15.5114V10.98L10.4254 17.6855Z"
+//           fill="white"
+//         />
+//       </svg>
+//     </button>
+//   );
+// };
