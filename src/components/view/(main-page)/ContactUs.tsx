@@ -192,7 +192,7 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
 
                     <div className="size-[83.065px] z-30 rounded-full border-2 border-white flex items-center justify-center text-white font-bold">
                       <Image
-                        src={lang === "en" ? "/assets/icons/home/contact1.png" : "/assets/icons/home/contact_arabic2.png"}
+                        src={"/assets/icons/home/contact_arabic2.png"}
                         alt="Profile"
                         width={83}
                         height={83}
@@ -201,7 +201,7 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
                     </div>
                     <div className="size-[70.365px] z-20 rounded-full  border-2 border-white flex items-center justify-center text-white font-bold">
                       <Image
-                        src={lang === "en" ? "/assets/icons/home/contact2.png" : "/assets/icons/home/contact_arabic1.png"}
+                        src={"/assets/icons/home/contact_arabic1.png"}
                         alt="Profile"
                         width={83}
                         height={83}
@@ -212,7 +212,7 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
                   <div className="flex items-center -space-x-2">
                     <div className="size-[70.365px] z-40 rounded-full  border-2 border-white flex items-center justify-center text-white font-bold">
                       <Image
-                        src={lang === "en" ? "/assets/icons/home/contact3.png" : "/assets/icons/home/contact_arabic4.png"}
+                        src={"/assets/icons/home/contact_arabic4.png"}
                         alt="Profile"
                         width={83}
                         height={83}
@@ -221,7 +221,7 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
                     </div>
                     <div className="size-[83.065px] z-50 rounded-full  border-2 border-white flex items-center justify-center text-white font-bold">
                       <Image
-                        src={lang === "en" ? "/assets/icons/home/contact4.png" : "/assets/icons/home/contact_arabic3.png"}
+                        src={"/assets/icons/home/contact_arabic3.png"}
                         alt="Profile"
                         width={83}
                         height={83}
