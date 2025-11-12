@@ -23,6 +23,8 @@ import Language from "@/components/shared/language/Language";
 import { changeLangNoReload, getCurrentLang } from "@/lib/api/main-page";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { useAppSelector } from "@/redux/store";
+import tokenStorage from "@/lib/utils/tokenStorage";
+import { useSocket } from "@/providers/socketProvider";
 // import { io } from "socket.io-client";
 
 // const socket = io(`${process.env.NEXT_PUBLIC_BASE_URL}`);
@@ -45,77 +47,101 @@ const Navbar = ({ languages }: NavbarProps) => {
   const searchParams = useSearchParams();
   const [language, setLanguage] = useState<any>();
   const { user } = useAppSelector((state) => state.auth);
-  // const [notifications, setNotifications] = useState([]);
+  const [notifications, setNotifications] = useState<any>([]);
+  const { accessToken } = tokenStorage?.getTokens()
+  const { socket, isConnected } = useSocket()
 
   const companyId = user?.joinedCompanyStatus === true ? searchParams?.get("companyId") || user?.joinedCompanies : '';
   const lang = getCurrentLang();
 
   useEffect(() => {
-    const handleLanguage = async() => {
-    const dict: any = (await getDictionary(lang)).superUser;
-    setLanguage(dict);
+    const handleLanguage = async () => {
+      const dict: any = (await getDictionary(lang)).superUser;
+      setLanguage(dict);
     }
     handleLanguage()
   }, []);
 
   const navItems = [
-  {
-    href: "/super-user",
-    icon: <LeadsIcon />,
-    title: language?.navbar?.navlinks?.leads,
-  },
-  {
-    href: "/super-user/forms",
-    icon: <FormsIcon />,
-    title: language?.navbar?.navlinks?.forms,
-  },
-  {
-    href: "/super-user/summary",
-    icon: <SummaryIcon />,
-    title: language?.navbar?.navlinks?.summary,
-  },
+    {
+      href: "/super-user",
+      icon: <LeadsIcon />,
+      title: language?.navbar?.navlinks?.leads,
+    },
+    {
+      href: "/super-user/forms",
+      icon: <FormsIcon />,
+      title: language?.navbar?.navlinks?.forms,
+    },
+    {
+      href: "/super-user/summary",
+      icon: <SummaryIcon />,
+      title: language?.navbar?.navlinks?.summary,
+    },
 
-  {
-    href: "/super-user/follow-ups",
-    icon: <FollowUpsIcon />,
-    title: language?.navbar?.navlinks?.followUps,
-  },
-];
+    {
+      href: "/super-user/follow-ups",
+      icon: <FollowUpsIcon />,
+      title: language?.navbar?.navlinks?.followUps,
+    },
+  ];
 
-  
+
 
   // Fetch existing notifications on mount
-  // useEffect(() => {
-  //   const cookieString = document.cookie;
-  //   const cookies = Object.fromEntries(
-  //     cookieString.split("; ").map((c) => c.split("="))
-  //   );
-  //   const fetchData = async () => {
-  //     const res = await fetch(
-  //       `${process.env.NEXT_PUBLIC_BASE_URL}/notifications/get-notifications`,
-  //       {
-  //         method: "GET",
-  //         headers: {
-  //           Authorization: `Bearer ${cookies?.accessToken}`,
-  //         },
-  //       }
-  //     );
-  //     const data = await res.json();
-  //     setNotifications(data);
-  //   };
-  //   fetchData();
-  // }, []);
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/notifications/get-notifications/${user?._id}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const data = await res.json();
+      if (data.success === true) {
+        setNotifications(data?.data);
+      }
+    };
+    fetchData();
+  }, []);
 
   // listen real time updates
-  // useEffect(() => {
-  //   socket.on("new_notification", (data) => {
-  //     setNotifications((prev) => [data, ...prev]);
-  //   });
+  useEffect(() => {
+    if (socket) {
+      const eventName = `notification-${user?._id}`;
 
-  //   return () => socket.off("new_notification");
-  // }, []);
+      const handleNewNotification = (data: any) => {
+        console.log('New notification received:', data);
+        setNotifications((prev: any) => [data, ...prev]);
 
-  // console.log("data********", notifications);
+        // Optional: Show browser notification
+        if (Notification.permission === 'granted') {
+          new Notification(data.title, {
+            body: data.message,
+            icon: '/favicon.ico'
+          });
+        }
+      };
+
+      socket.on(eventName, handleNewNotification);
+
+      return () => {
+        socket.off(eventName, handleNewNotification)
+      }
+    }
+  }, [socket, user?._id]);
+
+  console.log("data********", notifications);
+
+  // Request notification permission on mount
+  useEffect(() => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  }, []);
 
   // ======================================================
   // Make the Navbar sticky with smooth animation when scrolling
@@ -153,27 +179,26 @@ const Navbar = ({ languages }: NavbarProps) => {
       <Logo />
 
       {/* ------------- nav items ------------- */}
-      {user?.userType === "user" && user?.joinedCompanyStatus === false ? "" : 
-      <nav className="flex-center gap-2.5 text-[14px]">
-        {navItems.map((item) => (
-          <Link
-            href={
-              (companyId !== null || undefined) && user?.userType === "user" ? item.href + `?companyId=${companyId}`: item.href
-            }
-            prefetch={false}
-            key={item.title}
-          >
-            <div
-              className={`flex-center gap-1 px-5 py-2.5 rounded-4xl ${
-                pathname === item.href ? "text-white bg-pri" : "text-gray-200"
-              }`}
+      {user?.userType === "user" && user?.joinedCompanyStatus === false ? "" :
+        <nav className="flex-center gap-2.5 text-[14px]">
+          {navItems.map((item) => (
+            <Link
+              href={
+                (companyId !== null || undefined) && user?.userType === "user" ? item.href + `?companyId=${companyId}` : item.href
+              }
+              prefetch={false}
+              key={item.title}
             >
-              <span>{item.icon}</span>
-              <h2>{item.title}</h2>
-            </div>
-          </Link>
-        ))}
-      </nav>
+              <div
+                className={`flex-center gap-1 px-5 py-2.5 rounded-4xl ${pathname === item.href ? "text-white bg-pri" : "text-gray-200"
+                  }`}
+              >
+                <span>{item.icon}</span>
+                <h2>{item.title}</h2>
+              </div>
+            </Link>
+          ))}
+        </nav>
       }
 
       <div className="flex-center gap-4">
@@ -196,7 +221,11 @@ const Navbar = ({ languages }: NavbarProps) => {
         <Dropdown
           trigger={
             <button className="bg-white p-2.5 rounded-full border border-gray-b relative gray-hover">
-              <div className="absolute top-0 right-0 w-2 h-2 bg-danger rounded-full"></div>
+              {notifications?.length > 0 && (
+              <div className="absolute -top-1 -right-1 w-5 h-5 bg-danger rounded-full flex-center text-white text-xs font-bold">
+                {notifications.length > 99 ? '99+' : notifications.length}
+              </div>
+              )}
               <NotificationSvg />
             </button>
           }
@@ -211,16 +240,16 @@ const Navbar = ({ languages }: NavbarProps) => {
               </h2>
               <div className="flex-between gap-2.5 text-[14px] font-[500]">
                 <button className="flex-center gap-1 gray-hover">
-                {language?.navbar?.notifications?.markAllRead}
+                  {language?.navbar?.notifications?.markAllRead}
                   <MarkAllAsReadSvg />
                 </button>
                 <button className="text-danger gap-1 hover:text-gray-200 transition-all duration-200 ease-in-out underline-auto-from-front">
-                {language?.navbar?.notifications?.clearAll}
+                  {language?.navbar?.notifications?.clearAll}
                 </button>
               </div>
             </div>
           </DropdownItem>
-          <div className="bg-gray rounded-2xl py-4 px-3 flex flex-col gap-2.5">
+          {/* <div className="bg-gray rounded-2xl py-4 px-3 flex flex-col gap-2.5">
             {Array.from({ length: 3 }).map((_, index) => (
               <DropdownItem
                 key={index}
@@ -244,6 +273,37 @@ const Navbar = ({ languages }: NavbarProps) => {
                 </h4>
               </DropdownItem>
             ))}
+          </div> */}
+          <div className="bg-gray rounded-2xl py-4 px-3 flex flex-col gap-2.5 max-h-96 overflow-y-auto">
+            {notifications.length > 0 ? (
+              notifications.map((notification: any, index: number) => (
+                <DropdownItem
+                  key={notification._id || index}
+                  className="flex flex-col items-end-safe gap-2 bg-white border-l-[3px] border-l-pri rounded-2xl p-4 pb-2 gray-hover cursor-pointer"
+                >
+                  <div className="flex-between-start gap-2.5">
+                    <div className="bg-pri rounded-full size-[30px] flex-center">
+                      <NotificationDropdownSvg />
+                    </div>
+                    <div className="flex flex-col gap-0.5 leading-[18px]">
+                      <h2 className="text-[16px] font-[500]">
+                        {notification.title}
+                      </h2>
+                      <h3 className="text-[14px] text-gray-400">
+                        {notification.message}
+                      </h3>
+                      <span className="text-[12px] text-gray-500">
+                        {new Date(notification.createdAt).toLocaleString()}
+                      </span>
+                    </div>
+                  </div>
+                </DropdownItem>
+              ))
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                No notifications yet
+              </div>
+            )}
           </div>
         </Dropdown>
       </div>
