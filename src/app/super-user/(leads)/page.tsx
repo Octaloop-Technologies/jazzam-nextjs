@@ -29,6 +29,8 @@ import PaymentSuccessNotification from "@/components/view/dashboard/leads/Paymen
 import { useSearchParams } from "next/navigation";
 import { getCurrentLang } from "@/lib/api/main-page";
 import { getDictionary } from "@/lib/i18n/getDictionary";
+import { useAppSelector } from "@/redux/store";
+import { useRouter } from "next/navigation"
 
 interface DashboardPageProps { }
 
@@ -59,6 +61,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   // Extract params from URL
   const currentPage = parseInt(searchParams?.get("page") || "1");
@@ -70,6 +73,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
   const sortBy = searchParams?.get("sortBy") || "createdAt";
   const sortOrder = searchParams?.get("sortOrder") || "desc";
   const [language, setLanguage] = useState<any>();
+  const { user } = useAppSelector((state) => state.auth);
   const lang = getCurrentLang();
   // Fetch data on mount and when params change
   useEffect(() => {
@@ -115,8 +119,14 @@ const DashboardPage = ({ }: DashboardPageProps) => {
         setIsLoading(false);
       }
     };
+    if(user?.userType !== "user"){
+      fetchData();
+    }else if(user?.userType === "user" && !companyId){
+      router.push("/dashboard")
+    }else{
+      fetchData()
+    }
 
-    fetchData();
   }, [currentPage, statusFilter, companyId, searchQuery, companyIndustryFilter, companySizeFilter, sortBy, sortOrder]);
 
   // ======================================================
@@ -214,6 +224,10 @@ const DashboardPage = ({ }: DashboardPageProps) => {
     return <TabContentLoader />;
   }
 
+  if(user?.userType === "user" && !companyId){
+    return;
+  }
+
   if (error) {
     return (
       <section>
@@ -246,7 +260,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
           )}
           {companyId &&
             <button className="bg-pri p-3 rounded-2xl my-5 text-white text-md hover:bg-green-600">
-              <Link href="/super-user">
+              <Link href="/dashboard">
                 {language?.navbar?.leads?.myDashboard}
               </Link>
             </button>

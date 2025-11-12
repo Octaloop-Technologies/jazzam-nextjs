@@ -22,6 +22,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Language from "@/components/shared/language/Language";
 import { changeLangNoReload, getCurrentLang } from "@/lib/api/main-page";
 import { getDictionary } from "@/lib/i18n/getDictionary";
+import { useAppSelector } from "@/redux/store";
 // import { io } from "socket.io-client";
 
 // const socket = io(`${process.env.NEXT_PUBLIC_BASE_URL}`);
@@ -43,6 +44,7 @@ const Navbar = ({ languages }: NavbarProps) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [language, setLanguage] = useState<any>();
+  const { user } = useAppSelector((state) => state.auth);
   // const [notifications, setNotifications] = useState([]);
 
   const companyId = searchParams?.get("companyId");
@@ -151,7 +153,7 @@ const Navbar = ({ languages }: NavbarProps) => {
       <Logo />
 
       {/* ------------- nav items ------------- */}
-      <nav className="flex-center gap-2.5 text-[14px]">
+      {user?.userType === 'user' && !companyId ? '' :  <nav className="flex-center gap-2.5 text-[14px]">
         {navItems.map((item) => (
           <Link
             href={
@@ -172,7 +174,7 @@ const Navbar = ({ languages }: NavbarProps) => {
             </div>
           </Link>
         ))}
-      </nav>
+      </nav>}
 
       <div className="flex-center gap-4">
         {/* ------------- localization ------------- */}
