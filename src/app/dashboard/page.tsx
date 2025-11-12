@@ -39,7 +39,7 @@ function page() {
 
     if(user?.userType === "company"){
         window.location.href = "/super-user"
-    }else if(user?.userFirstLogin === true && user?.userType === "user"){
+    }else if(user?.userFirstLogin === true && user?.userType === "user" && user?.joinedCompanyStatus === false){
           return (
             <>
                 <div className='flex justify-center items-center gap-5'>
@@ -49,7 +49,7 @@ function page() {
                     </div>
                     <div className='bg-gray-100 flex p-10 gap-1'>
                         <input type="checkbox" value={userType} onChange={() => setUserType("company")} />
-                        <p className='font-semibold'>Continue as tenant</p>
+                        <p className='font-semibold'>Continue as company</p>
                     </div>
                 </div>
                 <div className='flex justify-center mt-3'>
@@ -57,8 +57,10 @@ function page() {
                 </div>
             </>
           )
-    }else if(user?.userFirstLogin === false && user?.userType === "user"){
-        return "you are loggedin as user.."
+    }else if(user?.userFirstLogin === false && user?.userType === "user" && user?.joinedCompanyStatus === true){
+        window.location.href = `/super-user?companyId=${user?.joinedCompanies}`
+    }else if(user?.userFirstLogin === false && user?.userType === "user" && user?.joinedCompanyStatus === false){
+        window.location.href = `/super-user/settings`
     }
 }
 

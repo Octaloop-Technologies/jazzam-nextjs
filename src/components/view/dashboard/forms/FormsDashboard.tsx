@@ -8,6 +8,7 @@ import { getAvailablePlatforms } from "@/lib/api/forms";
 import { useSearchParams } from "next/navigation";
 import { getCurrentLang } from "@/lib/api/main-page";
 import { getDictionary } from "@/lib/i18n/getDictionary";
+import { useAppSelector } from "@/redux/store";
 
 interface AvailablePlatform {
   platform: string;
@@ -32,13 +33,18 @@ const FormsDashboard = () => {
   const searchParams = useSearchParams();
   const [language, setLanguage] = useState<any>();
   const lang = getCurrentLang();
+ 
+  const { user } = useAppSelector(state => state.auth)
 
   const companyId = searchParams?.get("companyId");
-
+  
   // Fetch forms and available platforms
   useEffect(() => {
+    if(user?.joinedCompanyStatus === true && user?.userType === "user" && !companyId ){
+      window.location.href = `/super-user/forms?companyId=${user?.joinedCompanies}`
+    }
     fetchData();
-  }, []);
+  }, [])
 
   const fetchData = async () => {
     const dict = (await getDictionary(lang))?.superUser?.navbar;

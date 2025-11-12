@@ -491,6 +491,8 @@ const SettingsPage = () => {
                 <h3 className="text-[14px] capitalize">Profile settings</h3>
               </div>
             </button>
+            {user?.userType === "company" ? 
+            <>
             <button
               className={`px-2.5 h-[44px] flex-between gap-2 rounded-[110px] 
                   ${activeTab === "general"
@@ -518,7 +520,9 @@ const SettingsPage = () => {
                   Subscription & Billing
                 </h3>
               </div>
-            </button>
+            </button> 
+            </>
+            : ''}
           </div>
         </div>
 
@@ -660,7 +664,7 @@ const SettingsPage = () => {
                 </div>
                 {user?.joinedCompanyStatus === true && (
                   <div className="mt-[14px] flex-between">
-                    <div className="flex items-center gap-2.5">
+                    {/* <div className="flex items-center gap-2.5">
                       <div className="flex flex-col gap-0.5">
                         <h2 className="text-2xl font-medium text-[#15803c]">
                           Member Company
@@ -669,9 +673,9 @@ const SettingsPage = () => {
                           {joinedCompany?.companyName || "user@example.com"}
                         </h3>
                       </div>
-                    </div>
+                    </div> */}
 
-                    <button
+                    {/* <button
                       onClick={() =>
                         router.push(
                           `/super-user/?companyId=${joinedCompany?._id}`
@@ -680,7 +684,7 @@ const SettingsPage = () => {
                       className="bg-yellow-400 text-white w-20 rounded text-lg"
                     >
                       Visit
-                    </button>
+                    </button> */}
                   </div>
                 )}
               </div>

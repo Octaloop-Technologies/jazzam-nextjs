@@ -47,7 +47,7 @@ const Navbar = ({ languages }: NavbarProps) => {
   const { user } = useAppSelector((state) => state.auth);
   // const [notifications, setNotifications] = useState([]);
 
-  const companyId = searchParams?.get("companyId");
+  const companyId = user?.joinedCompanyStatus === true ? searchParams?.get("companyId") || user?.joinedCompanies : '';
   const lang = getCurrentLang();
 
   useEffect(() => {
@@ -153,13 +153,12 @@ const Navbar = ({ languages }: NavbarProps) => {
       <Logo />
 
       {/* ------------- nav items ------------- */}
-      {user?.userType === 'user' && !companyId ? '' :  <nav className="flex-center gap-2.5 text-[14px]">
+      {user?.userType === "user" && user?.joinedCompanyStatus === false ? "" : 
+      <nav className="flex-center gap-2.5 text-[14px]">
         {navItems.map((item) => (
           <Link
             href={
-              companyId !== null || undefined
-                ? item.href + `?companyId=${companyId}`
-                : item.href
+              (companyId !== null || undefined) && user?.userType === "user" ? item.href + `?companyId=${companyId}`: item.href
             }
             prefetch={false}
             key={item.title}
@@ -174,7 +173,8 @@ const Navbar = ({ languages }: NavbarProps) => {
             </div>
           </Link>
         ))}
-      </nav>}
+      </nav>
+      }
 
       <div className="flex-center gap-4">
         {/* ------------- localization ------------- */}

@@ -121,9 +121,15 @@ const DashboardPage = ({ }: DashboardPageProps) => {
     };
     if(user?.userType !== "user"){
       fetchData();
-    }else if(user?.userType === "user" && !companyId){
+    }else if(user?.userType === "user" && !companyId && user?.joinedCompanyStatus === false && user?.userFirstLogin === false){
+      router.push("/super-user/settings")
+    }else if(user?.userType === "user" && !companyId && user?.joinedCompanyStatus === false && user?.userFirstLogin === true){
       router.push("/dashboard")
-    }else{
+    }
+    else if(user?.userType === "user" && !companyId && user?.joinedCompanyStatus === true){
+      router.push(`/super-user?companyId=${user?.joinedCompanies}`)
+    }
+    else{
       fetchData()
     }
 
@@ -224,7 +230,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
     return <TabContentLoader />;
   }
 
-  if(user?.userType === "user" && !companyId){
+  if(user?.userType === "user" && !companyId && user?.joinedCompanyStatus === false){
     return;
   }
 
@@ -258,13 +264,13 @@ const DashboardPage = ({ }: DashboardPageProps) => {
               {language?.navbar?.leads?.showingLeads} {currentUser.companyName}
             </p>
           )}
-          {companyId &&
+          {/* {companyId &&
             <button className="bg-pri p-3 rounded-2xl my-5 text-white text-md hover:bg-green-600">
               <Link href="/dashboard">
                 {language?.navbar?.leads?.myDashboard}
               </Link>
             </button>
-          }
+          } */}
         </div>
         <div className="flex items-center gap-2.5">
           {/* Advanced search bar with filters - supports text search, industry, source, company size filters */}

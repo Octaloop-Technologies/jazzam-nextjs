@@ -1,6 +1,7 @@
 // ======================================================
 // Meta Data
 
+import OnboardingTour from "@/components/view/dashboard/leads/OnboardingTour";
 import { Metadata } from "next";
 
 // ======================================================
@@ -11,7 +12,10 @@ export const metadata: Metadata = {
 
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  return <>{children}</>;
+  return <>
+  {children}
+  <OnboardingTour />
+  </>;
 };
 
 export default Layout;
