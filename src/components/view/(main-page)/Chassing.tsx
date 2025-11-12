@@ -106,7 +106,7 @@ const Chasing = ({ dict }: { dict: Dictionary }) => {
 
   const stepsData = [
     {
-      image: "/assets/images/home/habib2.png",
+      image: lang === 'en' ? "/assets/images/home/faisal_english.png" : "/assets/images/home/faisal_arabic.png",
       title: dict?.home.chasing.cardTitle1,
       description: dict?.home.chasing.cardPara1,
     },

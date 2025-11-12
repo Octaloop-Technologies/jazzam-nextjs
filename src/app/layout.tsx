@@ -62,7 +62,7 @@ export default async function RootLayout({
   const dict = await getDictionary(lang);
 
   return (
-    <html lang={lang}>
+    <html lang={lang} dir={lang === 'en' ? 'ltr' : 'rtl'}>
       <head>
         {/* -- ICONS -- */}
         <link rel="icon" href={ICONS.FAVICON} sizes="any" />
