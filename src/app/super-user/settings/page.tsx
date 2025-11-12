@@ -692,7 +692,7 @@ const SettingsPage = () => {
                   <div>Delete Account</div>
                 </button>
               </div>
-                <div className="min-w-full">
+                {user?.userType !== "user" && <div className="min-w-full">
                   <Table>
                     <TableHeader>
                       <TableCell>Sr#</TableCell>
@@ -737,7 +737,7 @@ const SettingsPage = () => {
                       </TableRow>
                     ))}
                   </Table>
-                </div>
+                </div>}
             </>
           ) : activeTab === "general" ? (
             // -- general --
