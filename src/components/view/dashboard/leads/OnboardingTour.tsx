@@ -95,7 +95,7 @@ export default function OnboardingTour() {
     if (isMounted && user && !hasInteracted) {
       const isOnSubscriptionPage = pathname?.includes("/subscription");
       const shouldShow =
-        !user.onboarding?.completed && !user.onboarding?.skipped && !isOnSubscriptionPage;
+        user.onboarding?.completed === false && user.onboarding?.skipped === false && user?.userType === "company";
 
       if (shouldShow) {
         setIsVisible(true);

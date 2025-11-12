@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ModernBarChart } from "@/components/shared/charts";
 import {
   ColdLeadsSvg,
@@ -10,6 +10,8 @@ import {
   WarmLeadsSvg,
 } from "@/components/svgs/LeadsAnalysisSvgs";
 import OptimizedImage from "@/components/ui/image/OptimizedImage";
+import { useAppSelector } from "@/redux/store";
+import { useSearchParams } from "next/navigation";
 
 // =====================================================================
 // =============================== Cards ===============================
@@ -123,6 +125,12 @@ const SummaryPage = () => {
     { category: "Qualified", value: 677 },
   ]);
 
+  const searchParams = useSearchParams();
+
+
+  const { user } = useAppSelector(state => state.auth);
+  const companyId = searchParams?.get("companyId")
+
   const [customization, setCustomization] = useState({
     barColor: "#15803c",
     textColor: "#ffffff",
@@ -131,6 +139,12 @@ const SummaryPage = () => {
     animate: true,
     height: 400,
   });
+
+  useEffect(() => {
+    if(user?.joinedCompanyStatus === true && user?.userType === "user" && !companyId ){
+      window.location.href = `/super-user/summary?companyId=${user?.joinedCompanies}`
+    }
+  }, [])
 
   return (
     <section>

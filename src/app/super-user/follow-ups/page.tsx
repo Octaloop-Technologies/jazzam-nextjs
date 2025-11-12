@@ -26,6 +26,12 @@ const FollowUpsPage = () => {
 
   const { accessToken } = tokenStorage?.getTokens();
 
+  useEffect(() => {
+    if(user?.joinedCompanyStatus === true && user?.userType === "user" && !companyId ){
+      window.location.href = `/super-user/forms?companyId=${user?.joinedCompanies}`
+    }
+  }, [])
+
 
 
 
