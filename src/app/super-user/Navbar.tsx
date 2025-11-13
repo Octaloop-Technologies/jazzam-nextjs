@@ -111,37 +111,18 @@ const Navbar = ({ languages }: NavbarProps) => {
   // listen real time updates
   useEffect(() => {
     if (socket) {
-      const eventName = `notification-${user?._id}`;
 
       const handleNewNotification = (data: any) => {
-        console.log('New notification received:', data);
         setNotifications((prev: any) => [data, ...prev]);
-
-        // Optional: Show browser notification
-        if (Notification.permission === 'granted') {
-          new Notification(data.title, {
-            body: data.message,
-            icon: '/favicon.ico'
-          });
-        }
       };
 
-      socket.on(eventName, handleNewNotification);
+      socket.on(`notifications`, handleNewNotification);
 
       return () => {
-        socket.off(eventName, handleNewNotification)
+        socket.off('notifications', handleNewNotification);
       }
     }
   }, [socket, user?._id]);
-
-  console.log("data********", notifications);
-
-  // Request notification permission on mount
-  useEffect(() => {
-    if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission();
-    }
-  }, []);
 
   // ======================================================
   // Make the Navbar sticky with smooth animation when scrolling

@@ -270,6 +270,42 @@
         "formDescription": "نماذجك الفريدة هي نقاط النهاية لجمع العملاء المحتملين من منصات مختلفة. شارك هذه الروابط مع العملاء المحتملين لتوليد عملاء محتملين تلقائيًا.",
         "readyToUse": "جاهز للاستخدام"
       },
+      "summary": {
+        "executiveHeading": "الملخص الأسبوعي التنفيذي",
+        "cards": {
+          "totalLeads": "إجمالي العملاء المتوقعين",
+          "qualifiedLeads": "العملاء المؤهلين",
+          "followupsSent": "المتابعات المرسلة",
+          "closeRate": "معدل الإغلاق المقدر"
+        },
+        "leadPipeline":{
+          "leadPipeline": "خط أنابيب الرصاص",
+          "leadPipelineHeading": "تتبع العملاء المحتملين عبر مسار المبيعات الخاص بك باستخدام رؤى مدعومة بالذكاء الاصطناعي",
+          "all": "الجميع",
+          "hot": "حار",
+          "warm": "دافيء",
+          "cold": "بارد"
+        },
+        "quickActions": {
+          "quickAction": "إجراءات سريعة",
+          "quickActionHeading": "تتبع العملاء المحتملين عبر مسار المبيعات الخاص بك باستخدام رؤى مدعومة بالذكاء الاصطناعي",
+          "hotLeadDownload": "تنزيل العروض الساخنة",
+          "warmLeadDownload": "تنزيل الخيوط الدافئة",
+          "coldLeadDownload": "تنزيل الخيوط الباردة",
+          "contactInfo": "معلومات الاتصال",
+          "exportData": "تصدير البيانات",
+          "hotLeadDownloadDescription": "تنزيل بيانات العملاء المحتملين الساخنة اليوم",
+          "warmLeadDownloadDescription": "تنزيل بيانات العملاء المحتملين اليوم",
+          "coldLeadDownloadDescription": "تنزيل بيانات العملاء المحتملين اليوم",
+          "contactInfoDescription": "تنزيل بيانات الاتصال الخاصة بأفضل العملاء المحتملين اليوم",
+          "exportDataDescription": "تحميل على كافة البيانات"
+        },
+        "teamPerformance":{
+          "teamPerformance": "أداء الفريق",
+          "leadsQualified": "يؤدي المؤهلين",
+          "teamPerformanceHeading": "تتبع أداء الفريق والإنجازات الفردية"
+        }
+      },
       "followUps": {
         "followUpHeading": "المتابعات",
         "all":"الجميع",

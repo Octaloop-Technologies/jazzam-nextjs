@@ -30,8 +30,8 @@ export const SocketProvider = ({ children }: SocketProviderProps) => {
     const [isConnected, setIsConnected] = useState<boolean>(false);
 
     useEffect(() => {
-        const socketInstance = io(process.env.NEXT_PUBLIC_BASE_URL, {
-            transports: ["websocket", "pooling"],
+        const socketInstance = io(process.env.NEXT_PUBLIC_WS_URL, {
+            transports: ["websocket", "polling"],
             upgrade: true
         });
 

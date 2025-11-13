@@ -26,6 +26,8 @@ interface FollowPageProps {
 const FollowPage = ({ params }: FollowPageProps) => {
   const { id, followUp } = use(params);
 
+  const leadName = followUp?.split("%20")
+
   const decodedFollowUpEmail = decodeURIComponent(followUp);
 
   const { success, error: ErrorToast } = useToast();
@@ -52,8 +54,8 @@ const FollowPage = ({ params }: FollowPageProps) => {
   // ==========================================================
   const segments = [
     { label: "Leads", path: "/" },
-    { label: "Wade warren", path: `/leads/${id}` },
-    { label: "Follow up", path: `/leads/${id}/${followUp}` },
+    { label: `${leadName[0]}  ${leadName[1]}`, path: `/super-user/leads/${id}` },
+    { label: "Follow up", path: `/super-user/leads/${id}/${followUp}` },
   ];
 
   const handleScheduleFollowup = async(scheduledDate: Date) => {
