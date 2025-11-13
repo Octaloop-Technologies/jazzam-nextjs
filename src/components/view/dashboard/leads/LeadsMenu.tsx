@@ -113,7 +113,7 @@ const LeadsMenu = ({
         )}
         <DropdownItem>
           <Link
-            href={`/super-user/leads/${lead._id}/${lead.email}`}
+            href={`/super-user/leads/${lead._id}/${lead?.fullName}`}
             className="flex-between w-full hover:text-gray-200"
             prefetch={false}
           >

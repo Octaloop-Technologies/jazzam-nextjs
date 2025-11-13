@@ -12,68 +12,9 @@ import {
 import OptimizedImage from "@/components/ui/image/OptimizedImage";
 import { useAppSelector } from "@/redux/store";
 import { useSearchParams } from "next/navigation";
+import { getDictionary } from "@/lib/i18n/getDictionary";
+import { getCurrentLang } from "@/lib/api/main-page";
 
-// =====================================================================
-// =============================== Cards ===============================
-// =====================================================================
-const cards = [
-  {
-    title: "Total leads",
-    value: "2,847",
-    icon: "/assets/images/summary/total-leads.svg",
-  },
-  {
-    title: "Qualified Leads",
-    value: "2,847",
-    icon: "/assets/images/summary/qualified-leads.svg",
-  },
-  {
-    title: "Follow-ups Sent",
-    value: "247",
-    icon: "/assets/images/summary/follow-ups.svg",
-  },
-  {
-    title: "Est. Close Rate",
-    value: "23%",
-    icon: "/assets/images/summary/close-rate.svg",
-  },
-];
-
-// =====================================================================
-// =========================== Quick Actions ===========================
-// =====================================================================
-const quickActions = [
-  {
-    title: "Hot leads download",
-    description: "Download today's hot leads data",
-    icon: <HotLeadsSvg className="size-[24px]" />,
-    bgColor: "bg-hot-light",
-  },
-  {
-    title: "Warm leads download",
-    description: "Download today’s Warm leads data",
-    icon: <WarmLeadsSvg className="size-[24px]" />,
-    bgColor: "bg-warm-light",
-  },
-  {
-    title: "Cold leads download",
-    description: "Download today’s cold leads data",
-    icon: <ColdLeadsSvg className="size-[24px]" />,
-    bgColor: "bg-cold-light",
-  },
-  {
-    title: "Contact info",
-    description: "Download today’s top leads contact data",
-    icon: <ContactInfoSvg className="size-[24px]" />,
-    bgColor: "bg-pipeline-light",
-  },
-  {
-    title: "Export data",
-    description: "Download over all data",
-    icon: <ExportDataSvg className="size-[24px]" />,
-    bgColor: "bg-[#DEFFF4]",
-  },
-];
 
 // =====================================================================
 // =========================== Team Performance ===========================
@@ -129,7 +70,9 @@ const SummaryPage = () => {
 
 
   const { user } = useAppSelector(state => state.auth);
-  const companyId = searchParams?.get("companyId")
+  const companyId = searchParams?.get("companyId");
+  const lang = getCurrentLang();
+  const [language, setLanguage] = useState<any>();
 
   const [customization, setCustomization] = useState({
     barColor: "#15803c",
@@ -144,13 +87,80 @@ const SummaryPage = () => {
     if(user?.joinedCompanyStatus === true && user?.userType === "user" && !companyId ){
       window.location.href = `/super-user/summary?companyId=${user?.joinedCompanies}`
     }
-  }, [])
+    const fetchLangauge = async() => {
+      const dict = (await getDictionary(lang))?.superUser?.navbar;
+      setLanguage(dict);
+    }
+    fetchLangauge()
+  }, []);
+
+  // =====================================================================
+  // =============================== Cards ===============================
+  // =====================================================================
+  const cards = [
+    {
+      title: language?.summary?.cards?.totalLeads,
+      value: "2,847",
+      icon: "/assets/images/summary/total-leads.svg",
+    },
+    {
+      title: language?.summary?.cards?.qualifiedLeads,
+      value: "2,847",
+      icon: "/assets/images/summary/qualified-leads.svg",
+    },
+    {
+      title: language?.summary?.cards?.followupsSent,
+      value: "247",
+      icon: "/assets/images/summary/follow-ups.svg",
+    },
+    {
+      title: language?.summary?.cards?.closeRate,
+      value: "23%",
+      icon: "/assets/images/summary/close-rate.svg",
+    },
+  ];
+
+  // =====================================================================
+  // =========================== Quick Actions ===========================
+  // =====================================================================
+  const quickActions = [
+    {
+      title: language?.summary?.quickActions.hotLeadDownload,
+      description: language?.summary?.quickActions?.hotLeadDownloadDescription,
+      icon: <HotLeadsSvg className="size-[24px]" />,
+      bgColor: "bg-hot-light",
+    },
+    {
+      title: language?.summary?.quickActions?.warmLeadDownload,
+      description: language?.summary?.quickActions?.warmLeadDownloadDescription,
+      icon: <WarmLeadsSvg className="size-[24px]" />,
+      bgColor: "bg-warm-light",
+    },
+    {
+      title: language?.summary?.quickActions?.coldLeadDownload,
+      description: language?.summary?.quickActions?.coldLeadDownloadDescription,
+      icon: <ColdLeadsSvg className="size-[24px]" />,
+      bgColor: "bg-cold-light",
+    },
+    {
+      title: language?.summary?.quickActions?.contactInfo,
+      description: language?.summary?.quickActions?.contactInfoDescription,
+      icon: <ContactInfoSvg className="size-[24px]" />,
+      bgColor: "bg-pipeline-light",
+    },
+    {
+      title: language?.summary?.quickActions?.exportData,
+      description: language?.summary?.quickActions?.exportDataDescription,
+      icon: <ExportDataSvg className="size-[24px]" />,
+      bgColor: "bg-[#DEFFF4]",
+    },
+  ];
 
   return (
     <section>
       {/* ---------------------------- header ---------------------------- */}
       <div className="flex-between gap-1.5">
-        <h1 className="text-[32px] font-[500] capitalize">Executive Weekly Summary</h1>
+        <h1 className="text-[32px] font-[500] capitalize">{language?.summary?.executiveHeading}</h1>
       </div>
 
       {/* ---------------------------- Cards ---------------------------- */}
@@ -178,27 +188,27 @@ const SummaryPage = () => {
       <div className="mt-2.5 flex gap-2.5">
         {/* ---------------------------- Lead Pipeline ---------------------------- */}
         <div className="w-full max-w-[57%] bg-white p-[30px] border border-gray-b rounded-3xl">
-          <h2 className="text-[18px] font-[600] leading-none">Lead Pipeline</h2>
+          <h2 className="text-[18px] font-[600] leading-none">{language?.summary?.leadPipeline.leadPipeline}</h2>
           <h3 className="text-[14px] text-gray-200 leading-none mt-1">
-            Track leads through your sales funnel with AI-powered insights
+            {language?.summary?.leadPipeline?.leadPipelineHeading}
           </h3>
 
           <div className="mt-5 bg-bg flex gap-[15px] p-2.5 rounded-4xl w-fit">
             <button className="bg-pri-light-2 rounded-4xl flex-center h-[40px] px-5 gap-2">
               <span className="bg-pri size-2.5 rounded-full" />
-              <h4 className="text-sm text-pri">All</h4>
+              <h4 className="text-sm text-pri">{language?.summary?.leadPipeline?.all}</h4>
             </button>
             <button className="bg-white rounded-4xl flex-center h-[40px] px-5 gap-2">
               <span className="bg-hot size-2.5 rounded-full" />
-              <h4 className="text-sm">Hot</h4>
+              <h4 className="text-sm">{language?.summary?.leadPipeline?.hot}</h4>
             </button>
             <button className="bg-white rounded-4xl flex-center h-[40px] px-5 gap-2">
               <span className="bg-warm size-2.5 rounded-full" />
-              <h4 className="text-sm">Warm</h4>
+              <h4 className="text-sm">{language?.summary?.leadPipeline?.warm}</h4>
             </button>
             <button className="bg-white rounded-4xl flex-center h-[40px] px-5 gap-2">
               <span className="bg-cold size-2.5 rounded-full" />
-              <h4 className="text-sm">Cold</h4>
+              <h4 className="text-sm">{language?.summary?.leadPipeline?.cold}</h4>
             </button>
           </div>
 
@@ -215,9 +225,9 @@ const SummaryPage = () => {
 
         {/* ---------------------------- Quick Actions ---------------------------- */}
         <div className="w-full max-w-[43%] bg-white p-[30px] border border-gray-b rounded-3xl">
-          <h2 className="text-[18px] font-[600] leading-none">Quick Actions</h2>
+          <h2 className="text-[18px] font-[600] leading-none">{language?.summary?.quickActions?.quickAction}</h2>
           <h3 className="text-[14px] text-gray-200 leading-none mt-1">
-            Track leads through your sales funnel with AI-powered insights
+            {language?.summary?.quickActions?.quickActionHeading}
           </h3>
           <div className="mt-5 flex flex-col gap-2.5">
             {quickActions.map((action) => (
@@ -248,10 +258,10 @@ const SummaryPage = () => {
       {/* ---------------------------- Team Performance ---------------------------- */}
       <div className="mt-2.5 p-[30px] pr-[50px] bg-white border border-gray-b rounded-3xl">
         <h2 className="text-[18px] font-[600] leading-none capitalize">
-          Team Performance <span className="text-[16px] font-[500]">(leads qualified)</span>
+          {language?.summary?.teamPerformance?.teamPerformance} <span className="text-[16px] font-[500]">({language?.summary?.teamPerformance?.leadsQualified})</span>
         </h2>
         <h3 className="text-[14px] text-gray-200 leading-none mt-1">
-          Track team performance and individual achievements
+            {language?.summary?.teamPerformance?.teamPerformanceHeading}
         </h3>
 
         <div className="mt-5 flex flex-col gap-2.5">

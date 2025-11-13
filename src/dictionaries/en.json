@@ -270,6 +270,42 @@
         "formDescription": "Your unique form endpoints for collecting leads from different platforms. Share these URLs with prospects to automatically generate leads.",
         "readyToUse": "Ready to Use"
       },
+      "summary": {
+        "executiveHeading": "Executive Weekly Summary",
+        "cards": {
+          "totalLeads": "Total leads",
+          "qualifiedLeads": "Qualified Leads",
+          "followupsSent": "Follow-ups Sent",
+          "closeRate": "Est. Close Rate"
+        },
+        "leadPipeline":{
+          "leadPipeline": "Lead Pipeline",
+          "leadPipelineHeading": "Track leads through your sales funnel with AI-powered insights",
+          "all": "All",
+          "hot": "Hot",
+          "warm": "Warm",
+          "cold": "Cold"
+        },
+        "quickActions": {
+          "quickAction": "Quick Actions",
+          "quickActionHeading": "Track leads through your sales funnel with AI-powered insights",
+          "hotLeadDownload": "Hot leads download",
+          "warmLeadDownload": "Warm leads download",
+          "coldLeadDownload": "Cold leads download",
+          "contactInfo": "Contact info",
+          "exportData": "Export data",
+          "hotLeadDownloadDescription": "Download today's hot leads data",
+          "warmLeadDownloadDescription": "Download today’s Warm leads data",
+          "coldLeadDownloadDescription": "Download today’s cold leads data",
+          "contactInfoDescription": "Download today’s top leads contact data",
+          "exportDataDescription": "Download over all data"
+        },
+        "teamPerformance":{
+          "teamPerformance": "Team Performance",
+          "leadsQualified": "leads qualified",
+          "teamPerformanceHeading": "Track team performance and individual achievements"
+        }
+      },
       "followUps": {
         "followUpHeading": "Follow-ups",
         "all":"All",
