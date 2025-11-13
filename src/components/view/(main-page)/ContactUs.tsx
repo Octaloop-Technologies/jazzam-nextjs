@@ -79,7 +79,7 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
       if (response.ok) {
         const data = await response.json();
         console.log("data", data);
-        success('Contact Us mail is sent')
+        success(dict?.home?.contactUs?.contactUsSuccessMessage)
       }
       setData({
         name: "",

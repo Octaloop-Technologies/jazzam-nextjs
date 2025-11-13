@@ -168,6 +168,7 @@
     "contactUs": {
       "title": "CONTACT US",
       "description": "have questions or feedback? we're here to help. Send us a message, and we'll respond within 24 hours.",
+      "contactUsSuccessMessage": "Thank you for contacting us. Your message has been successfully sent",
       "registeredUsers": {
         "title": "16K +",
         "description": "Registered users"

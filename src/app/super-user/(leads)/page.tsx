@@ -360,7 +360,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
                       Page {leadsData?.page || 1}/{leadsData?.totalPages || 1}
                     </span>
                     <Link
-                      href={createPaginationUrl(currentPage + 1)}
+                      href={!leadsData?.hasNextPage ? '' : createPaginationUrl(currentPage + 1)}
                       prefetch={false}
                       className={`size-[30px] rounded-full border border-gray-b flex-center transition-all duration-200 ${!leadsData?.hasNextPage
                           ? "cursor-not-allowed opacity-50"

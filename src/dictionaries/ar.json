@@ -168,6 +168,7 @@
     "contactUs": {
       "title": "تواصل معنا",
       "description": "هل لديك أسئلة أو ملاحظات؟ نحن هنا لمساعدتك. أرسل لنا رسالة وسنرد خلال 24 ساعة.",
+      "contactUsSuccessMessage": "شكرًا لتواصلك معنا. تم إرسال رسالتك بنجاح.",
       "registeredUsers": {
         "title": "16K +",
         "description": "مستخدمون مسجلون"
