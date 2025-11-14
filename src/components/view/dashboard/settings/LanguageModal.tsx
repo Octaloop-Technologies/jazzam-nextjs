@@ -10,6 +10,7 @@ interface LanguageModalProps {
   onClose: () => void;
   onConfirm: (languageCode: string) => void;
   currentLanguage?: string;
+  lang: any
 }
 
 const LanguageModal: React.FC<LanguageModalProps> = ({
@@ -17,9 +18,9 @@ const LanguageModal: React.FC<LanguageModalProps> = ({
   onClose,
   onConfirm,
   currentLanguage,
+  lang
 }) => {
   const [selectedLanguage, setSelectedLanguage] = useState(currentLanguage || "en");
-  const { lang: currentLang } = useI18n();
 
   if (!isOpen) return null;
 
@@ -84,7 +85,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({
             onClick={onClose}
             bordered
             className="w-full h-[50px] !gap-2.5 rounded-xl-2"
-            title="Cancel"
+            title={lang?.cancel}
             titleClass="font-[500]"
             iconRight={<CloseSvg />}
           />
@@ -92,7 +93,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({
           <PrimaryButton
             onClick={handleConfirm}
             className="w-full h-[50px] !gap-2.5 rounded-xl-2"
-            title="Apply changes"
+            title={lang?.applyChanges}
             titleClass="font-[500]"
           />
         </div>

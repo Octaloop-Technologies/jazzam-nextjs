@@ -36,6 +36,10 @@ import {
   ExternalLinkSvg,
 } from "@/components/svgs/LeadsAnalysisSvgs";
 import tokenStorage from "@/lib/utils/tokenStorage";
+import DeleteUserModal from "@/components/ui/models/DeleteUserModal";
+import { BlobOptions } from "buffer";
+import { getCurrentLang } from "@/lib/api/main-page";
+import { getDictionary } from "@/lib/i18n/getDictionary";
 
 interface TeamMembers{
   company?: {
@@ -93,6 +97,9 @@ const SettingsPage = () => {
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
   const [email, setEmail] = useState<string>("");
   const [sendInviteLoad, setSendInviteLoad] = useState<boolean>(false);
+  const [deleteUserIsOpen, setDeleteUserIsOpen] = useState<boolean>(false);
+  const [deleteUserLoading, setDeleteUserLoading] = useState<boolean>(false);
+  const [language, setLanguage] = useState<any>()
 
   // ==============================================================
   // Hooks
@@ -102,11 +109,16 @@ const SettingsPage = () => {
   const router = useRouter();
   const { setLocale: i18nSetLocale } = useI18n();
   const { accessToken } = tokenStorage.getTokens();
+  const lang = getCurrentLang();
 
   // ==============================================================
   // Load user settings on component mount
   // ==============================================================
   useEffect(() => {
+    const fetchLanguage = async() => {
+      const dict = (await getDictionary(lang))?.superUser?.navbar.settings;
+      setLanguage(dict);
+    }
     if (user?.settings) {
       const newLeadSettings = {
         autoBANTQualification: user.settings.autoBANTQualification ?? false,
@@ -120,6 +132,7 @@ const SettingsPage = () => {
       setLeadSettings(newLeadSettings);
       setNotificationSettings(newNotificationSettings);
     }
+    fetchLanguage()
   }, [user]);
 
   useEffect(() => {
@@ -157,8 +170,6 @@ const SettingsPage = () => {
     fetchJoinedCompany();
   }, [user]);
 
-  console.log("usususu:****", teamMembers);
-
   // ==============================================================
   // Update BANT Setting
   // ==============================================================
@@ -178,8 +189,8 @@ const SettingsPage = () => {
 
       ToastSuccess(
         checked
-          ? "Auto BANT qualification enabled"
-          : "Auto BANT qualification disabled"
+          ? language?.autoBantEnable
+          : language?.autoBantDisable
       );
     } else {
       ToastError("Failed to update setting");
@@ -188,15 +199,6 @@ const SettingsPage = () => {
         ...prev,
         autoBANTQualification: !checked,
       }));
-    }
-  };
-
-  // Persist language choice into lang cookie for middleware to pick up on future requests
-  const persistLangCookie = (code: string) => {
-    if (typeof document !== "undefined") {
-      const expires = new Date();
-      expires.setFullYear(expires.getFullYear() + 1);
-      document.cookie = `lang=${code}; path=/; SameSite=Lax; Expires=${expires.toUTCString()}`;
     }
   };
 
@@ -210,13 +212,13 @@ const SettingsPage = () => {
       const { success } = await logoutUserAction();
 
       if (success) {
-        ToastSuccess("Logged out successfully");
+        ToastSuccess(language?.logoutMessage);
         // Clear Redux state for immediate UI feedback
         dispatch(logout());
         router.push("/login");
       } else {
         setIsLoggingOut(false);
-        ToastError("Something went wrong while logging out");
+        ToastError(language?.somethingLogoutError);
       }
     } catch (error) {
       if (process.env.NODE_ENV === "development") {
@@ -234,16 +236,16 @@ const SettingsPage = () => {
     try {
       const result = await restartOnboarding();
       if (result.success) {
-        ToastSuccess("Onboarding tour restarted! Redirecting...");
+        ToastSuccess(language?.onboardingSuccess);
         setTimeout(() => {
           window.location.href = "/super-user";
         }, 1000);
       } else {
-        ToastError("Failed to restart tour. Please try again.");
+        ToastError(language?.failedOnboarding);
         setIsRestartingTour(false);
       }
     } catch (error) {
-      ToastError("Failed to restart tour. Please try again.");
+      ToastError(language?.failedOnboarding);
       setIsRestartingTour(false);
       if (process.env.NODE_ENV === "development") {
         console.error("Restart tour error:", error);
@@ -269,7 +271,7 @@ const SettingsPage = () => {
       if (res.ok) {
         const data = await res.json();
         if (data?.success === true) {
-          ToastSuccess("Member deactivated successfully");
+          ToastSuccess(language?.memberDeactivated);
         }
       }
     } catch (error) {
@@ -297,12 +299,12 @@ const SettingsPage = () => {
       if (res.ok) {
         const data = await res.json();
         if (data?.success === true) {
-          ToastSuccess("Member activated successfully");
+          ToastSuccess(language?.memberActivated);
         }
       }
     } catch (error) {
       console.log("error****", error);
-      ToastError("User not found");
+      ToastError(language?.userNotfound);
     }
   };
 
@@ -330,7 +332,7 @@ const SettingsPage = () => {
         const data = await res.json();
         console.log("data****", data);
         if (data?.success === true) {
-          ToastSuccess("Member name successfully changed");
+          ToastSuccess(language?.memberNameChanged);
 
           dispatch(updateUserSettings({ companyName: newCompanyName }));
           await dispatch(fetchCurrentUser());
@@ -381,17 +383,17 @@ const SettingsPage = () => {
       console.log("data:****", data);
 
       if (!response.ok) {
-        ToastError(data.message || "Failed to send invitation");
+        ToastError(language?.errorSendingInvitation || data.message);
       }
 
       if (data?.success === true) {
-        ToastSuccess("Invitation link sent successfully");
+        ToastSuccess(language?.invitationLinkSent);
       }
 
       return data;
     } catch (error) {
       setSendInviteLoad(false);
-      console.error("Error sending invitation:", error);
+      console.error(language?.errorSendingInvitation, error);
       throw error;
     } finally {
       setSendInviteLoad(false);
@@ -412,7 +414,7 @@ const SettingsPage = () => {
   const uploadFile = async () => {
     // ensure a file is selected before trying to append it to FormData
     if (!profilePicture) {
-      ToastError("No file selected");
+      ToastError(language?.noFileSelected);
       throw new Error("No file selected");
     }
 
@@ -439,19 +441,20 @@ const SettingsPage = () => {
             public_id: data?.data?.logo?.public_id
           }
         }))
-        ToastSuccess("Profile picture uploaded")
+        ToastSuccess(language?.profileUpdated)
         setEditProfilePicture(false)
         console.log("user******", user?.logo)
       }
       return data;
     } catch (error) {
       console.log("error******", error)
-      ToastError("Failed to uplaod file! please try again later");
+      ToastError(language?.errorUploadFile);
     }
   };
 
   const handleDeleteAccount = async() => {
     try {
+      setDeleteUserLoading(true)
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/delete-account`, {
         method: "DELETE",
         headers: {
@@ -461,19 +464,22 @@ const SettingsPage = () => {
       if(res.ok){
         const data = await res.json();
         if(data.success === true){
-          ToastSuccess("Company Deleted successfully")
+          ToastSuccess(`${user?.userType === "user" ? "user" : "company"} ${language?.userDeleted}`)
           dispatch(logout());
           router.push("/login");
         }
       }
     } catch (error) {
-      ToastError("Unable to delete company please try again")
+      ToastError(language?.errorDeleted)
+    }
+    finally{
+      setDeleteUserLoading(false)
     }
   }
 
   return (
     <div>
-      <h1 className="mt-3.5 text-[32px] font-[500] capitalize">Settings</h1>
+      <h1 className="mt-3.5 text-[32px] font-[500] capitalize">{language?.settingsHeading}</h1>
       <div className="mt-8 wrapper flex items-start gap-2.5">
         {/* ---------------------------- left ---------------------------- */}
         <div className="w-full max-w-[25%] p-[30px] border border-gray-b rounded-3xl bg-white">
@@ -488,7 +494,7 @@ const SettingsPage = () => {
             >
               <div className="flex-center gap-2">
                 <ProfileSettingsIcon />
-                <h3 className="text-[14px] capitalize">Profile settings</h3>
+                <h3 className="text-[14px] capitalize">{language?.profileSettings}</h3>
               </div>
             </button>
             {user?.userType === "company" ? 
@@ -503,7 +509,7 @@ const SettingsPage = () => {
             >
               <div className="flex-center gap-2">
                 <GeneralSettingsIcon />
-                <h3 className="text-[14px] capitalize">General settings</h3>
+                <h3 className="text-[14px] capitalize">{language?.generalSettings}</h3>
               </div>
             </button>
             <button
@@ -517,7 +523,7 @@ const SettingsPage = () => {
               <div className="flex-center gap-2">
                 <SubscriptionIcon />
                 <h3 className="text-[14px] capitalize">
-                  Subscription & Billing
+                  {language?.subscriptionBilling}
                 </h3>
               </div>
             </button> 
@@ -530,17 +536,17 @@ const SettingsPage = () => {
         <div className="w-full max-w-[75%] p-[30px] border border-gray-b rounded-3xl bg-white flex flex-col gap-[18px]">
           <h1 className="text-[16px] font-[500] capitalize border-b border-gray-n/30 pb-1">
             {activeTab === "profile"
-              ? "Profile settings"
+              ? language?.profileSettings
               : activeTab === "general"
-                ? "General settings"
-                : "Subscription & Billing"}
+                ? language?.generalSettings
+                : language?.subscriptionBilling}
           </h1>
           {/* -- profile -- */}
           {activeTab === "profile" ? (
             <>
               <div className="p-[17px] border border-gray-b rounded-3xl">
                 <h2 className="text-[16px] leading-none text-[#15803c] font-[500]">
-                  Profile picture
+                  {language?.profilePicture}
                 </h2>
                 <div className="flex gap-3">
                   {!editProfilePicture && (
@@ -580,13 +586,13 @@ const SettingsPage = () => {
                         className="bg-yellow-400 text-white w-20 rounded text-md"
                         onClick={() => setEditProfilePicture(false)}
                       >
-                        cancel
+                        {language?.cancel}
                       </button>
                       <button
                         className="bg-[#15803c] text-white w-20 rounded text-md"
                         onClick={uploadFile}
                       >
-                        save
+                        {language?.save}
                       </button>
                     </div>
                   )}
@@ -617,13 +623,13 @@ const SettingsPage = () => {
                       className="bg-yellow-400 text-white w-20 rounded text-md"
                       onClick={() => setEditName(false)}
                     >
-                      cancel
+                      {language?.cancel}
                     </button>
                     <button
                       className="bg-[#15803c] text-white w-20 rounded text-md"
                       onClick={changeName}
                     >
-                      save
+                      {language?.save}
                     </button>
                   </div>
                 )}
@@ -658,7 +664,7 @@ const SettingsPage = () => {
                         }`}
                     >
                       <div>{logoutIcon()}</div>
-                      <div>{isLoggingOut ? "Logging out..." : "Logout"}</div>
+                      <div>{isLoggingOut ? language?.loggingOut : language?.logout}</div>
                     </button>
                   </form>
                 </div>
@@ -691,23 +697,23 @@ const SettingsPage = () => {
 
               {/* delete account */}
               <div className="flex flex-col gap-2">
-                <button className="w-fit flex gap-1 text-sm text-danger gray-hover transition-colors duration-200" onClick={handleDeleteAccount}>
+                <button className="w-fit flex gap-1 text-sm text-danger gray-hover transition-colors duration-200" onClick={() => setDeleteUserIsOpen(true)}>
                   <div>{trashIcon()}</div>
-                  <div>Delete Account</div>
+                  <div>{language?.deleteAccount}</div>
                 </button>
               </div>
                 {user?.userType !== "user" && <div className="min-w-full">
                   <Table>
                     <TableHeader>
-                      <TableCell>Sr#</TableCell>
-                      <TableCell>User Name</TableCell>
-                      <TableCell>Email</TableCell>
-                      <TableCell>status</TableCell>
-                      <TableCell>Actions</TableCell>
+                      <TableCell>{language?.sr}</TableCell>
+                      <TableCell>{language?.userName}</TableCell>
+                      <TableCell>{language?.email}</TableCell>
+                      <TableCell>{language?.status}</TableCell>
+                      <TableCell>{language?.actions}</TableCell>
                     </TableHeader>
                     { teamMembers?.length <= 0 ? 
                     <div className="flex justify-center text-lg font-semibold">
-                      No user found
+                      {language?.noUserFound}
                     </div>  : teamMembers?.map((teams, i) => (
                       <TableRow className="gap-4" key={i}>
                         <TableCell>{i + 1}</TableCell>
@@ -726,7 +732,7 @@ const SettingsPage = () => {
                             }
                           >
                             {/* <div>{trashIcon()}</div> */}
-                            <div>Activate Member</div>
+                            <div>{language?.activateMember}</div>
                           </button>
                           <button
                             className="w-fit flex gap-1 text-sm text-danger gray-hover transition-colors duration-200"
@@ -735,7 +741,7 @@ const SettingsPage = () => {
                             }
                           >
                             {/* <div>{trashIcon()}</div> */}
-                            <div>Deactivate Member</div>
+                            <div>{language?.deactivateMember}</div>
                           </button>
                         </TableCell>
                       </TableRow>
@@ -746,7 +752,7 @@ const SettingsPage = () => {
           ) : activeTab === "general" ? (
             // -- general --
             <div className="flex flex-col gap-[14px]">
-              <h1 className="text-[14px] text-gray-200">Language</h1>
+              <h1 className="text-[14px] text-gray-200">{language?.language}</h1>
               <div className="p-[15px] border border-gray-b rounded-2xl flex-between">
                 <h2 className="text-[14px] leading-[16px]">
                   {leadSettings?.language === "ar" ? "Arabic" : "English (UK)"}
@@ -755,11 +761,11 @@ const SettingsPage = () => {
                   onClick={() => setIsOpen(true)}
                   className="text-sec flex items-center gap-2.5 gray-hover"
                 >
-                  Change language <RightArrowSvg />
+                  {language?.changeLangauge}<RightArrowSvg />
                 </button>
               </div>
               <h1 className="text-[14px] text-gray-200">
-                Notification preferences
+                {language?.notificationPreference}
               </h1>
               <div className="flex flex-col gap-[15px] p-[15px] border border-gray-b rounded-2xl">
                 {[
@@ -797,12 +803,12 @@ const SettingsPage = () => {
 
                             ToastSuccess(
                               checked
-                                ? "New lead notifications enabled"
-                                : "New lead notifications disabled"
+                                ? language?.newLeadEnable
+                                : language?.newLeadDisable
                             );
                           } else {
                             ToastError(
-                               "Failed to update setting"
+                               language?.failedSettings
                             );
                             // Revert on error
                             setNotificationSettings((prev) => ({
@@ -811,7 +817,7 @@ const SettingsPage = () => {
                             }));
                           }
                         } catch (e) {
-                          ToastError("Failed to update setting");
+                          ToastError(language?.failedSettings);
                           // Revert on error
                           setNotificationSettings((prev) => ({
                             ...prev,
@@ -826,17 +832,16 @@ const SettingsPage = () => {
               </div>
 
               <h1 className="text-[14px] text-gray-200 mt-4">
-                Lead Management
+                {language?.leadManagement}
               </h1>
               <div className="p-[15px] border border-gray-b rounded-2xl">
                 <div className="flex-between">
                   <div>
                     <h2 className="text-[14px] leading-[16px] font-medium">
-                      Auto BANT Qualification
+                      {language?.autoBantQualification}
                     </h2>
                     <p className="text-xs text-gray-400 mt-1">
-                      Automatically qualify leads using AI (Budget, Authority,
-                      Need, Timeline)
+                      {language?.bantDescription1} ({language?.bantDescription2})
                     </p>
                   </div>
                   <ToggleSwitch
@@ -849,12 +854,12 @@ const SettingsPage = () => {
               </div>
 
               <h1 className="text-[14px] text-gray-200 mt-4">
-                CRM Integration
+                {language?.crmIntegration}
               </h1>
               <div className="p-[15px] border border-gray-b rounded-2xl">
                 <div className="flex-between">
                   <p className="text-xs text-gray-400">
-                    Connect your CRM to sync leads automatically
+                    {language?.crmDescription}
                   </p>
 
                   <Link
@@ -862,13 +867,13 @@ const SettingsPage = () => {
                     prefetch={false}
                     className="flex-center gap-2 text-sec gray-hover"
                   >
-                    <p>Manage CRM</p>
+                    <p>{language?.manageCrm}</p>
                     <RightArrowSvg />
                   </Link>
                 </div>
               </div>
 
-              <h1 className="text-[14px] text-gray-200 mt-4">Invite Users</h1>
+              <h1 className="text-[14px] text-gray-200 mt-4">{language?.inviteUsers}</h1>
               <div className="p-[15px] border border-gray-b rounded-2xl">
                 <div className="flex-between">
                   <input
@@ -890,15 +895,15 @@ const SettingsPage = () => {
               </div>
 
               {/* Onboarding Tour */}
-              <h1 className="text-[14px] text-gray-200 mt-4">Help & Support</h1>
+              <h1 className="text-[14px] text-gray-200 mt-4">{language?.helpsupport}</h1>
               <div className="p-[15px] border border-gray-b rounded-2xl">
                 <div className="flex-between">
                   <div>
                     <h2 className="text-[14px] leading-[16px] font-medium">
-                      Dashboard Tour
+                      {language?.dashboardTour}
                     </h2>
                     <p className="text-xs text-gray-400 mt-1">
-                      Take a guided tour through the dashboard features
+                      {language?.dashboardTourDescription}
                     </p>
                   </div>
                   <button
@@ -925,6 +930,7 @@ const SettingsPage = () => {
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         currentLanguage={leadSettings.language}
+        lang={language}
         onConfirm={async (languageCode) => {
           // Update backend settings
           const res = await updateCompanySettings({ language: languageCode });
@@ -937,11 +943,18 @@ const SettingsPage = () => {
             await changeLangNoReload(languageCode);
             await i18nSetLocale(languageCode);
             
-            ToastSuccess("Language updated successfully");
+            ToastSuccess(language?.languageUpdate);
           } else {
-            ToastError("Failed to update language");
+            ToastError(language?.failedLangUpdate);
           }
         }}
+      />
+
+      <DeleteUserModal 
+      isOpen={deleteUserIsOpen}
+      onConfirm={handleDeleteAccount}
+      onClose={() => setDeleteUserIsOpen(false)}
+      isLoading={deleteUserLoading}
       />
     </div>
   );
