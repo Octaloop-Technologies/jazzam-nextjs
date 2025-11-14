@@ -383,7 +383,7 @@ const SettingsPage = () => {
       console.log("data:****", data);
 
       if (!response.ok) {
-        ToastError(language?.errorSendingInvitation || data.message);
+        ToastError(data?.message === "User not found" ? language?.errorSendingInvitation : data.message);
       }
 
       if (data?.success === true) {
@@ -393,6 +393,7 @@ const SettingsPage = () => {
       return data;
     } catch (error) {
       setSendInviteLoad(false);
+
       console.error(language?.errorSendingInvitation, error);
       throw error;
     } finally {
@@ -752,7 +753,7 @@ const SettingsPage = () => {
           ) : activeTab === "general" ? (
             // -- general --
             <div className="flex flex-col gap-[14px]">
-              <h1 className="text-[14px] text-gray-200">{language?.language}</h1>
+              {/* <h1 className="text-[14px] text-gray-200">{language?.language}</h1>
               <div className="p-[15px] border border-gray-b rounded-2xl flex-between">
                 <h2 className="text-[14px] leading-[16px]">
                   {leadSettings?.language === "ar" ? "Arabic" : "English (UK)"}
@@ -763,7 +764,7 @@ const SettingsPage = () => {
                 >
                   {language?.changeLangauge}<RightArrowSvg />
                 </button>
-              </div>
+              </div> */}
               <h1 className="text-[14px] text-gray-200">
                 {language?.notificationPreference}
               </h1>
