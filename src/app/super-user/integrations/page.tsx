@@ -97,6 +97,7 @@ export default function IntegrationsPage() {
 
   const handleCRMConnect = async (providerId: string) => {
     console.log("providerId********", providerId)
+
     try {
       // Check if user can add more channels
       if (!canAddMoreChannels) {
@@ -114,8 +115,10 @@ export default function IntegrationsPage() {
         throw new Error("Failed to initiate connection");
       }
 
+      console.log("data*****connect****", data.data.data?.authUrl);
+
       // Redirect to OAuth URL
-      window.location.href = data.data.authUrl;
+      window.location.href = data?.data?.data?.authUrl;
     } catch (error: Error | unknown) {
       toast.error("Failed to initiate connection");
     }
