@@ -9,6 +9,7 @@ import React, { useState, use } from "react";
 import emailjs from "@emailjs/browser";
 import { useToast } from "@/lib/hooks/useToast";
 import tokenStorage from "@/lib/utils/tokenStorage";
+import { useSearchParams } from "next/navigation";
 
 const emailJsKey: string = process.env.NEXT_PUBLIC_EMAIL_JS_PUBLIC_KEY ?? ''
 emailjs.init(emailJsKey);
@@ -25,6 +26,7 @@ interface FollowPageProps {
 
 const FollowPage = ({ params }: FollowPageProps) => {
   const { id, followUp } = use(params);
+    const userEmail = useSearchParams()?.get("userEmail");
 
   const leadName = followUp?.split("%20")
 
@@ -102,8 +104,6 @@ const FollowPage = ({ params }: FollowPageProps) => {
     //     console.log("subject********", email.subject);
     // console.log("message********", email.message);
 
-    // return;
-
     if (!email.subject || !email.message) {
       ErrorToast("Message or subject cannot be empty");
       return;
@@ -119,7 +119,7 @@ const FollowPage = ({ params }: FollowPageProps) => {
         {
           subject: email.subject,
           message: email.message,
-          email: decodedFollowUpEmail,
+          email: userEmail,
           name: "Lead Generation Team",
         },
       );
