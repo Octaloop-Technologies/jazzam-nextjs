@@ -58,7 +58,7 @@ function page() {
         window.location.href = "/super-user"
     } else if (user?.userFirstLogin === true && user?.userType === "user" && user?.joinedCompanyStatus === false) {
         return (
-            <>
+            <div className='flex flex-col justify-center items-center h-[80vh]'>
                 <div className='flex flex-col justify-center items-center'>
                     <h1 className='text-2xl font-semibold mb-3'>{language?.selectTypeHeading}</h1>
                     <p className='mb-5'>{language?.selectTypeDescription}</p>
@@ -100,7 +100,7 @@ function page() {
                 <div className='flex justify-center mt-3'>
                     <button className='bg-green-600 border rounded-full text-white py-2 px-10' onClick={handleUser}>{loading ? "loading..." : 'Save'}</button>
                 </div>
-            </>
+            </div>
         )
     } else if (user?.userFirstLogin === false && user?.userType === "user" && user?.joinedCompanyStatus === true) {
         window.location.href = `/super-user?companyId=${user?.joinedCompanies}`
