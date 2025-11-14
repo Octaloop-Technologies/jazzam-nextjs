@@ -23,37 +23,37 @@ const teamPerformance = [
   {
     id: 1,
     name: "John Doe",
-    value: "$89,500",
+    value: "$0",
     icon: "/assets/images/summary/team-performance.svg",
-    leads: "156 leads",
+    leads: "0 leads",
   },
   {
     id: 2,
     name: "John Doe",
-    value: "$89,500",
+    value: "$0",
     icon: "/assets/images/summary/team-performance.svg",
-    leads: "156 leads",
+    leads: "0 leads",
   },
   {
     id: 3,
     name: "Sarah Mitchell",
-    value: "$89,500",
+    value: "$0",
     icon: "/assets/images/summary/team-performance.svg",
-    leads: "156 leads",
+    leads: "0 leads",
   },
   {
     id: 4,
     name: "John Doe",
-    value: "$89,500",
+    value: "$0",
     icon: "/assets/images/summary/team-performance.svg",
-    leads: "156 leads",
+    leads: "0 leads",
   },
   {
     id: 5,
     name: "Sarah Mitchell",
-    value: "$89,500",
+    value: "$0",
     icon: "/assets/images/summary/team-performance.svg",
-    leads: "156 leads",
+    leads: "0 leads",
   },
 ];
 
@@ -100,22 +100,22 @@ const SummaryPage = () => {
   const cards = [
     {
       title: language?.summary?.cards?.totalLeads,
-      value: "2,847",
+      value: "0",
       icon: "/assets/images/summary/total-leads.svg",
     },
     {
       title: language?.summary?.cards?.qualifiedLeads,
-      value: "2,847",
+      value: "0",
       icon: "/assets/images/summary/qualified-leads.svg",
     },
     {
       title: language?.summary?.cards?.followupsSent,
-      value: "247",
+      value: "0",
       icon: "/assets/images/summary/follow-ups.svg",
     },
     {
       title: language?.summary?.cards?.closeRate,
-      value: "23%",
+      value: "0%",
       icon: "/assets/images/summary/close-rate.svg",
     },
   ];
@@ -256,7 +256,7 @@ const SummaryPage = () => {
       </div>
 
       {/* ---------------------------- Team Performance ---------------------------- */}
-      <div className="mt-2.5 p-[30px] pr-[50px] bg-white border border-gray-b rounded-3xl">
+      {/* <div className="mt-2.5 p-[30px] pr-[50px] bg-white border border-gray-b rounded-3xl">
         <h2 className="text-[18px] font-[600] leading-none capitalize">
           {language?.summary?.teamPerformance?.teamPerformance} <span className="text-[16px] font-[500]">({language?.summary?.teamPerformance?.leadsQualified})</span>
         </h2>
@@ -291,7 +291,7 @@ const SummaryPage = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </section>
   );
 };
