@@ -354,7 +354,7 @@
         "userNotfound": "لم يتم العثور على المستخدم",
         "memberNameChanged": "تم تغيير اسم العضو بنجاح",
         "invitationLinkSent": "تم إرسال رابط الدعوة بنجاح",
-        "errorSendingInvitation": "خطأ في إرسال الدعوة:",
+        "errorSendingInvitation": "لم يتم العثور على المستخدم",
         "noFileSelected": "لم يتم تحديد أي ملف",
         "profileUpdated": "تم تحميل الصورة الشخصية",
         "errorUploadFile": "فشل تحميل الملف! يُرجى المحاولة لاحقًا.",

@@ -354,7 +354,7 @@
         "userNotfound": "User not found",
         "memberNameChanged": "Member name successfully changed",
         "invitationLinkSent": "Invitation link sent successfully",
-        "errorSendingInvitation": "Error sending invitation:",
+        "errorSendingInvitation": "User not Found",
         "noFileSelected": "No file selected",
         "profileUpdated": "Profile picture uploaded",
         "errorUploadFile": "Failed to upload file! please try again later",
