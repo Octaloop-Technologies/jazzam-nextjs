@@ -42,7 +42,7 @@ function page() {
             if (res.ok) {
                 const data = await res.json();
                 if (data?.success === true) {
-                    success(user?.userType === "user" ? "user" : "company" + language?.dashboardSuccessMessage);
+                    success((user?.userType === "user" ? "user " : "company ") + language?.dashboardSuccessMessage);
                     dispatch(fetchCurrentUser());
                 }
             }
@@ -64,7 +64,7 @@ function page() {
                     <p className='mb-5'>{language?.selectTypeDescription}</p>
                 </div>
                 <div className='flex flex-col sm:flex-row justify-center items-center gap-5'>
-                    <div className={`${selectedUser ? 'bg-gray-150' : 'bg-gray-100'} hover:bg-gray-150 hover:cursor-pointer flex flex-col p-10 gap-1`} onClick={() => {
+                    <div className={`${selectedUser ? 'bg-gray-150' : 'bg-gray-100'} min-w-[20rem] hover:bg-gray-150 hover:cursor-pointer flex flex-col rounded-2xl shadow-2xl p-10 gap-1`} onClick={() => {
                         setUserType("user");
                         setSelectedCompany(false);
                         setSelectedUser(true);
@@ -78,9 +78,9 @@ function page() {
                                 className=""
                             />
                         </div>
-                        <p className=''>{language?.continueUser}</p>
+                        <p className='text-center'>{language?.continueUser}</p>
                     </div>
-                    <div className={`${selectedCompany ? 'bg-gray-150' : 'bg-gray-100'} hover:bg-gray-150 hover:cursor-pointer flex flex-col p-10 gap-1`} onClick={() => {
+                    <div className={`${selectedCompany ? 'bg-gray-150' : 'bg-gray-100'} min-w-[20rem] hover:bg-gray-150 hover:cursor-pointer flex flex-col rounded-2xl shadow-2xl p-10 gap-1`} onClick={() => {
                         setUserType("company");
                         setSelectedCompany(true);
                         setSelectedUser(false);
@@ -94,11 +94,11 @@ function page() {
                                 className=""
                             />
                         </div>
-                        <p className=''>{language?.continueCompany}</p>
+                        <p className='text-center'>{language?.continueCompany}</p>
                     </div>
                 </div>
-                <div className='flex justify-center mt-3'>
-                    <button className='bg-green-600 border rounded-full text-white py-2 px-10' onClick={handleUser}>{loading ? "loading..." : 'Save'}</button>
+                <div className='flex justify-center mt-8'>
+                    <button className='bg-green-600 hover:bg-green-700 border rounded-full text-white py-2 px-10' onClick={handleUser}>{loading ? "loading..." : 'Save'}</button>
                 </div>
             </div>
         )
