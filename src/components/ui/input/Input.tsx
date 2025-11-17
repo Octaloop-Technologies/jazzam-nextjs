@@ -81,7 +81,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     duration-200
     font-[400]
     placeholder:text-placeholder
-    placeholder:capitalize
     disabled:bg-gray-100
     disabled:cursor-not-allowed
     disabled:text-gray-400
