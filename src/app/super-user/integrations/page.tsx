@@ -14,6 +14,8 @@ import {
   disconnectCRM,
   testCRMConnection,
 } from "@/lib/api/integrations";
+import { getCurrentLang } from "@/lib/api/main-page";
+import { getDictionary } from "@/lib/i18n/getDictionary";
 
 interface CRMProvider {
   id: string;
@@ -43,10 +45,13 @@ export default function IntegrationsPage() {
   const toast = useToast();
   const user = useAppSelector(selectUser);
   const [loading, setLoading] = useState(true);
+  const lang = getCurrentLang();
+
 
   // CRM State
   const [providers, setProviders] = useState<CRMProvider[]>([]);
   const [crmIntegrations, setCrmIntegrations] = useState<CRMIntegration[]>([]);
+  const [language, setLanguage] = useState<any>()
 
   // Get channel limits
   const channelLimit = getChannelLimit((user?.subscriptionPlan as PlanKey) || "free");
@@ -56,17 +61,25 @@ export default function IntegrationsPage() {
   );
 
   useEffect(() => {
+    const fetchLang = async() => {
+      const dict = (await getDictionary(lang))?.superUser?.navbar?.settings;
+      setLanguage(dict);
+    }
+    fetchLang();
+  }, [])
+
+  useEffect(() => {
     // Check for OAuth callback
     const integration = searchParams?.get("integration");
     const provider = searchParams?.get("provider");
     const error = searchParams?.get("error");
 
     if (integration === "success" && provider) {
-      toast.success(`Successfully connected to ${provider}!`);
+      toast.success(`${language?.connectionFailed} ${provider}!`);
       // Clear URL params
       router.replace("/super-user/integrations");
     } else if (integration === "failed") {
-      toast.error(`Integration failed: ${error || "Unknown error"}`);
+      toast.error(`${language?.connectionFailed}`);
       router.replace("/super-user/integrations");
     }
 
@@ -89,7 +102,7 @@ export default function IntegrationsPage() {
       setCrmIntegrations(integrationData?.data?.data || []);
     } catch (error) {
       console.error("Error fetching CRM data:", error);
-      toast.error("Failed to load CRM integration data");
+      toast.error(language?.integrationFailedLoad);
     } finally {
       setLoading(false);
     }
@@ -102,9 +115,9 @@ export default function IntegrationsPage() {
       // Check if user can add more channels
       if (!canAddMoreChannels) {
         toast.error(
-          `You've reached your channel limit. Your ${user?.subscriptionPlan} plan allows ${
+          `${language?.limitReachedOne} ${language?.limitReachedTwo} ${user?.subscriptionPlan} ${language?.limitReachedThree} ${
             channelLimit === "unlimited" ? "unlimited" : channelLimit
-          } channel${channelLimit === 1 ? "" : "s"}. Please upgrade your plan to add more channels.`
+          } channel${channelLimit === 1 ? "" : "s"}. ${language?.limitReachedFour}`
         );
         return;
       }
@@ -112,7 +125,7 @@ export default function IntegrationsPage() {
       const data = await initCRMOAuth(providerId);
 
       if (!data.success) {
-        throw new Error("Failed to initiate connection");
+        throw new Error(language?.integrationInitiateFailed);
       }
 
       console.log("data*****connect****", data.data.data?.authUrl);
@@ -120,12 +133,12 @@ export default function IntegrationsPage() {
       // Redirect to OAuth URL
       window.location.href = data?.data?.data?.authUrl;
     } catch (error: Error | unknown) {
-      toast.error("Failed to initiate connection");
+      toast.error(language?.integrationInitiateFailed);
     }
   };
 
   const handleCRMDisconnect = async (integrationId: string) => {
-    if (!confirm("Are you sure you want to disconnect this integration?")) {
+    if (!confirm(language?.integrationAlert)) {
       return;
     }
 
@@ -136,10 +149,10 @@ export default function IntegrationsPage() {
         throw new Error( "Failed to disconnect");
       }
 
-      toast.success("Integration disconnected successfully");
+      toast.success(language?.integrationSucessMessage);
       fetchCRMData();
     } catch (error: Error | unknown) {
-      toast.error((error as Error).message || "Failed to disconnect");
+      toast.error(language?.connectionFailedDisconnect);
     }
   };
 
@@ -148,39 +161,39 @@ export default function IntegrationsPage() {
       const data = await testCRMConnection(integrationId);
 
       if (!data.success) {
-        throw new Error("Connection test failed");
+        throw new Error(language?.connectionTestFailed);
       }
 
-      toast.success("Connection test successful!");
+      toast.success(language?.connectionTestSuccessfull);
     } catch (error: Error | unknown) {
-      toast.error("Connection test failed");
+      toast.error(language?.connectionTestFailed);
     }
   };
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">CRM Integration</h1>
-        <p className="text-gray-600 mt-2">Connect your CRM to automatically sync leads</p>
+        <h1 className="text-3xl font-bold">{language?.crmIntegrationHeading}</h1>
+        <p className="text-gray-600 mt-2">{language?.crmIntegrationMessage}</p>
 
         {/* Channel Limits Info */}
         <div className="mt-4 p-4 bg-blue-50 rounded-lg">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-semibold text-blue-900">Channel Usage</h3>
+              <h3 className="font-semibold text-blue-900">{language?.channelUsage}</h3>
               <p className="text-sm text-blue-700">
                 {crmIntegrations.length} of {channelLimit === "unlimited" ? "∞" : channelLimit}{" "}
-                channels used
+                {language?.channelUsed}
               </p>
             </div>
             {!canAddMoreChannels && (
               <div className="text-right">
-                <p className="text-sm text-red-600 font-medium">Channel limit reached</p>
+                <p className="text-sm text-red-600 font-medium">{language?.channelLimitReached}</p>
                 <button
                   onClick={() => router.push("/super-user/subscription")}
                   className="text-sm text-blue-600 hover:text-blue-800 underline"
                 >
-                  Upgrade plan
+                  {language?.upgradePlan}
                 </button>
               </div>
             )}
@@ -196,9 +209,9 @@ export default function IntegrationsPage() {
       ) : (
         <div>
           <div className="mb-6">
-            <h2 className="text-xl font-semibold mb-2">Available CRM Providers</h2>
+            <h2 className="text-xl font-semibold mb-2">{language?.availableCrms}</h2>
             <p className="text-gray-600">
-              Connect your CRM to automatically sync leads and contacts
+              {language?.availableCrmsMsg}
             </p>
           </div>
 
@@ -226,8 +239,8 @@ export default function IntegrationsPage() {
 
           {!providers.length && (
             <div className="text-center py-12 text-gray-500">
-              <p>No CRM providers configured</p>
-              <p className="text-sm mt-2">Contact your administrator to configure CRM providers</p>
+              <p>{language?.noCrmConfigured}</p>
+              <p className="text-sm mt-2">{language?.noCrmContactMsg}</p>
             </div>
           )}
         </div>

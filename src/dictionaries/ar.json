@@ -388,7 +388,30 @@
         "logout": "تسجيل الخروج",
         "selectTypeHeading": "اختر النوع",
         "selectTypeDescription": "حدد خيارًا واحدًا من الخيارات أدناه مثل ما إذا كنت تريد الاستمرار كشركة أو مستخدم؟",
-        "loading": "تحميل..."
+        "loading": "تحميل...",
+        "integrationAlert": "هل أنت متأكد أنك تريد قطع اتصال هذا التكامل؟",
+        "connectionTestSuccessful": "تم اختبار الاتصال بنجاح!",
+        "connectSuccessfull": "تم الاتصال بنجاح",
+        "connectionFailed": "فشل في الاتصال",
+        "connectionFailedDisconnect": "فشل في قطع الاتصال",
+        "connectionTestFailed": "فشل اختبار الاتصال",
+        "integrationInitiateFailed": "فشل في بدء الاتصال",
+        "integrationSuccessMessage": "تم فصل التكامل بنجاح",
+        "integrationFailedLoad": "فشل تحميل بيانات تكامل CRM",
+        "limitReachedOne": "لقد وصلت إلى الحد الأقصى لقناتك.",
+        "limitReachedTwo": "لك",
+        "limitReachedThree": "تسمح الخطة",
+        "limitReachedFour": "يرجى ترقية خطتك لإضافة المزيد من القنوات.",
+        "crmIntegrationHeading": "تكامل إدارة علاقات العملاء",
+        "crmIntegrationMessage": "قم بتوصيل نظام إدارة علاقات العملاء (CRM) الخاص بك لمزامنة العملاء المحتملين تلقائيًا",
+        "channelUsage": "استخدام القناة",
+        "channelUsed": "القنوات المستخدمة",
+        "channelLimitReached": "تم الوصول إلى حد القناة",
+        "upgradePlan": "خطة الترقية",
+        "availableCrms": "مقدمي خدمات إدارة علاقات العملاء المتاحين",
+        "availableCrmsMsg": "قم بتوصيل نظام إدارة علاقات العملاء (CRM) الخاص بك لمزامنة العملاء المحتملين وجهات الاتصال تلقائيًا",
+        "noCrmConfigured": "لم يتم تكوين أي موفري CRM",
+        "noCrmContactMsg": "اتصل بالمسؤول لديك لتكوين موفري CRM"
       }
     }
   }

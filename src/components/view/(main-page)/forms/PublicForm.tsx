@@ -7,6 +7,8 @@ import { submitFormData } from "@/lib/api/main-page";
 import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
 import { LinkedInSvg } from "@/components/svgs/leadsDetailSvgs";
 import Input from "@/components/ui/input";
+import { Instagramicon, LinkedInicon, Metaicon, Twittericon } from "../../dashboard/forms/FormsDashboard";
+import { platform } from "os";
 
 interface FormField {
   id: string;
@@ -183,6 +185,36 @@ const PublicForm = ({ accessToken }: PublicFormProps) => {
     );
   }
 
+  const getPlatformIcon = (platform: string) => {
+    switch (platform) {
+      case "linkedin":
+        return <LinkedInicon />;
+      case "meta":
+        return <Metaicon />;
+      case "twitter":
+        return <Twittericon />;
+      case "instagram":
+        return <Instagramicon />;
+      default:
+        return <></>;
+    }
+  };
+
+  const getPlatformPlaceholder = (platform: string) => {
+    switch (platform) {
+      case "linkedin":
+        return "https://www.linkedin.com/in/your-profile";
+      case "meta":
+        return "https://www.facebook.com/username";
+      case "twitter":
+        return "https://x.com/username";
+      case "instagram":
+        return "https://www.instagram.com/username";
+      default:
+        return "";
+    }
+  }
+
   return (
     <div className="min-h-screen bg-bg">
       {/* Hero Section */}
@@ -206,7 +238,8 @@ const PublicForm = ({ accessToken }: PublicFormProps) => {
               {/* Header */}
               <div className="text-center mb-10">
                 <div className="w-20 h-20 mx-auto mb-6 bg-pri-light rounded-full flex-center">
-                  <LinkedInSvg />
+                  {/* <LinkedInSvg /> */}
+                  {getPlatformIcon(form?.formType)}
                 </div>
                 <h2 className="text-[32px] font-[600] text-text mb-4 max-sm:text-[24px]">
                   {form.name}
@@ -222,12 +255,13 @@ const PublicForm = ({ accessToken }: PublicFormProps) => {
                       label={field.label}
                       name={field.name}
                       type={field.type}
-                      placeholder={field.placeholder}
+                      placeholder={getPlatformPlaceholder(form?.formType)}
                       value={formData[field.name] || ""}
                       onChange={(e) => handleInputChange(field.name, e.target.value)}
                       error={errors[field.name]}
                       required={field.required}
-                      leftIcon={getFieldIcon(field.type)}
+                      // leftIcon={getFieldIcon(field.type)}
+                      leftIcon={getPlatformIcon(form?.formType)}
                       inputSize="lg"
                       className=""
                     />

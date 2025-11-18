@@ -388,7 +388,30 @@
         "logout": "Logout",
         "selectTypeHeading": "Select Type",
         "selectTypeDescription": "Select one option from below like weather you want to continue as a company or user?",
-        "loading": "Loading..."
+        "loading": "Loading...",
+        "integrationAlert": "Are you sure you want to disconnect this integration?",
+        "connectionTestSuccessfull": "Connection test successfull!",
+        "connectSuccessfull": "Successfully connected to",
+        "connectionFailed": "Failed to connect",
+        "connectionFailedDisconnect": "Failed to disconnect",
+        "connectionTestFailed": "Connection test failed",
+        "integrationInitiateFailed": "Failed to initiate connection",
+        "integrationSuccessMessage": "Integration disconnected successfully",
+        "integrationFailedLoad": "Failed to load CRM integration data",
+        "limitReachedOne": "You've reached your channel limit.",
+        "limitReachedTwo": "Your",
+        "limitReachedThree": "plan allows",
+        "limitReachedFour": "Please upgrade your plan to add more channels.",
+        "crmIntegrationHeading": "CRM Integration",
+        "crmIntegrationMessage": "Connect your CRM to automatically sync leads",
+        "channelUsage": "Channel Usage",
+        "channelUsed": "channels used",
+        "channelLimitReached": "Channel limit reached",
+        "upgradePlan": "Upgrade plan",
+        "availableCrms": "Available CRM Providers",
+        "availableCrmsMsg": "Connect your CRM to automatically sync leads and contacts",
+        "noCrmConfigured": "No CRM providers configured",
+        "noCrmContactMsg": "Contact your administrator to configure CRM providers"
       }
     }
   }
