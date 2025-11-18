@@ -350,7 +350,6 @@ export const requalifyLeadBANT = async ({ id }: { id: string }) => {
       };
     }
 
-    const { revalidatePath } = await import("next/cache");
     const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${id}/bant`, {
       method: "POST",
       headers: {
@@ -366,10 +365,6 @@ export const requalifyLeadBANT = async ({ id }: { id: string }) => {
     }
 
     const responseData = await response.json();
-
-    // Revalidate the lead detail page and leads list to show updated data
-    revalidatePath(`/super-user/leads/${id}`);
-    revalidatePath("/super-user");
 
     return { success: true, data: responseData.data, message: responseData.message };
   } catch (error) {

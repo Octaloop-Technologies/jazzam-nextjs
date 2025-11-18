@@ -64,7 +64,7 @@ export const updateCompanySettings = async (settings: CompanySettings) => {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(settings),
+      body: JSON.stringify({settings}),
     });
 
     if (!response.ok) {

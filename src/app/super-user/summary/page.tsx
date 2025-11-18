@@ -14,6 +14,7 @@ import { useAppSelector } from "@/redux/store";
 import { useSearchParams } from "next/navigation";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { getCurrentLang } from "@/lib/api/main-page";
+import tokenStorage from "@/lib/utils/tokenStorage";
 
 
 // =====================================================================
@@ -57,6 +58,15 @@ const teamPerformance = [
   },
 ];
 
+// Types
+interface DashboardStats {
+  totalLeads: number;
+  qualifiedLeads: number;
+  followUpsSent: number;
+  estimatedCloseRate: string; // string to preserve formatting like "12.34"
+  convertedLeads?: number;
+}
+
 const SummaryPage = () => {
   // =====================================================================
   // =============================== States =============================
@@ -74,6 +84,15 @@ const SummaryPage = () => {
   const lang = getCurrentLang();
   const [language, setLanguage] = useState<any>();
 
+  const { accessToken } = tokenStorage?.getTokens()
+
+  const [stats, setStats] = useState<DashboardStats>({
+    totalLeads: 0,
+    qualifiedLeads: 0,
+    followUpsSent: 0,
+    estimatedCloseRate: "0.00",
+  });
+
   const [customization, setCustomization] = useState({
     barColor: "#15803c",
     textColor: "#ffffff",
@@ -84,15 +103,53 @@ const SummaryPage = () => {
   });
 
   useEffect(() => {
-    if(user?.joinedCompanyStatus === true && user?.userType === "user" && !companyId ){
+    if (user?.joinedCompanyStatus === true && user?.userType === "user" && !companyId) {
       window.location.href = `/super-user/summary?companyId=${user?.joinedCompanies}`
     }
-    const fetchLangauge = async() => {
+    const fetchLangauge = async () => {
       const dict = (await getDictionary(lang))?.superUser?.navbar;
       setLanguage(dict);
     }
     fetchLangauge()
   }, []);
+
+
+    useEffect(() => {
+    const id = user?._id || user?.joinedCompanies || companyId;
+    if (!id) return;
+
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/companies/${id}`;
+
+    const fetchDashboard = async () => {
+      try {
+        const res = await fetch(url, {
+          headers: {
+            "Content-Type": "application/json",
+            ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+          },
+        });
+
+        const payload = await res.json();
+        if (!res.ok) {
+          console.error("Failed to load dashboard:", payload);
+          return;
+        }
+
+        // adapt to backend shape: payload.data.stats
+        const s = payload?.data?.stats ?? payload?.data ?? {};
+        setStats({
+          totalLeads: Number(s.totalLeads || 0),
+          qualifiedLeads: Number(s.qualifiedLeads || 0),
+          followUpsSent: Number(s.followUpsSent || 0),
+          estimatedCloseRate: String(s.estimatedCloseRate ?? s.closeRate ?? "0.00"),
+        });
+      } catch (err) {
+        console.error("Error fetching dashboard:", err);
+      }
+    };
+
+    fetchDashboard();
+  }, [companyId, user]);
 
   // =====================================================================
   // =============================== Cards ===============================
@@ -100,22 +157,22 @@ const SummaryPage = () => {
   const cards = [
     {
       title: language?.summary?.cards?.totalLeads,
-      value: "0",
+      value: String(stats.totalLeads || 0),
       icon: "/assets/images/summary/total-leads.svg",
     },
     {
       title: language?.summary?.cards?.qualifiedLeads,
-      value: "0",
+      value: String(stats.qualifiedLeads || 0),
       icon: "/assets/images/summary/qualified-leads.svg",
     },
     {
       title: language?.summary?.cards?.followupsSent,
-      value: "0",
+      value: String(stats.followUpsSent || 0),
       icon: "/assets/images/summary/follow-ups.svg",
     },
     {
       title: language?.summary?.cards?.closeRate,
-      value: "0%",
+      value: `${stats.estimatedCloseRate ?? "0.00"}%`,
       icon: "/assets/images/summary/close-rate.svg",
     },
   ];

@@ -167,7 +167,7 @@ const SettingsPage = () => {
       }
     };
     fetchTeamMembers();
-    fetchJoinedCompany();
+    if(user?.joinedCompanies !== undefined || null) fetchJoinedCompany();
   }, [user]);
 
   // ==============================================================
@@ -185,7 +185,7 @@ const SettingsPage = () => {
 
     if (result.success) {
       // Update Redux store
-      dispatch(updateUserSettings({ autoBANTQualification: checked }));
+      // dispatch(updateUserSettings({ autoBANTQualification: checked }));
 
       ToastSuccess(
         checked
@@ -798,9 +798,9 @@ const SettingsPage = () => {
 
                           if (res.success) {
                             // Update Redux store
-                            dispatch(
-                              updateUserSettings({ leadNotifications: checked })
-                            );
+                            // dispatch(
+                            //   updateUserSettings({ leadNotifications: checked })
+                            // );
 
                             ToastSuccess(
                               checked
