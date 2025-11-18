@@ -230,7 +230,7 @@ export default function IntegrationsPage() {
                   accountInfo={connectedIntegration?.accountInfo}
                   onConnect={() => handleCRMConnect(provider.id)}
                   onDisconnect={() => handleCRMDisconnect(connectedIntegration?._id || "")}
-                  onTest={() => handleCRMTest(connectedIntegration?._id || "")}
+                  // onTest={() => handleCRMTest(connectedIntegration?._id || "")}
                   disabled={!canAddMoreChannels && !isConnected}
                 />
               );
