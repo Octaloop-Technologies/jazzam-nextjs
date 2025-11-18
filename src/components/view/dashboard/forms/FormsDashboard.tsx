@@ -172,7 +172,7 @@ const FormsDashboard = () => {
 export default FormsDashboard;
 
 // Icons
-const Metaicon = (props: SVGProps<SVGSVGElement>) => {
+export const Metaicon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" className="size-6" {...props}>
       <rect
@@ -192,7 +192,7 @@ const Metaicon = (props: SVGProps<SVGSVGElement>) => {
   );
 };
 
-const LinkedInicon = (props: SVGProps<SVGSVGElement>) => {
+export const LinkedInicon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" className="size-6" {...props}>
       <path
@@ -207,7 +207,7 @@ const LinkedInicon = (props: SVGProps<SVGSVGElement>) => {
   );
 };
 
-const Twittericon = (props: SVGProps<SVGSVGElement>) => {
+export const Twittericon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="size-6" {...props}>
       <path
@@ -218,7 +218,7 @@ const Twittericon = (props: SVGProps<SVGSVGElement>) => {
   );
 };
 
-const Instagramicon = (props: SVGProps<SVGSVGElement>) => {
+export const Instagramicon = (props: SVGProps<SVGSVGElement>) => {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" className="size-6" {...props}>
       <g fill="none">
