@@ -61,6 +61,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isRefresh, setIsRefresh] = useState<boolean>(false);
   const router = useRouter();
 
   // Extract params from URL
@@ -117,6 +118,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
         console.error("Error fetching dashboard data:", err);
       } finally {
         setIsLoading(false);
+        setIsRefresh(false);
       }
     };
     if(user?.userType !== "user"){
@@ -133,7 +135,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
       fetchData()
     }
 
-  }, [currentPage, statusFilter, companyId, searchQuery, companyIndustryFilter, companySizeFilter, sortBy, sortOrder]);
+  }, [currentPage, statusFilter, companyId, searchQuery, companyIndustryFilter, companySizeFilter, sortBy, sortOrder, isRefresh]);
 
   // ======================================================
   // Generate cards from stats data
@@ -290,7 +292,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
           <div className="h-[51.5px] w-[1px] bg-gray-b" />
 
           {/* refresh button */}
-          <RefreshButton title={language?.navbar?.leads?.refreshButtonTitle} />
+          <RefreshButton title={language?.navbar?.leads?.refreshButtonTitle} setIsRefresh={setIsRefresh} />
         </div>
       </div>
 
@@ -452,7 +454,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
                       </TableCell>
                       <TableCell className="flex-between">
                         <h3 className="font-medium">{lead.companySize || "N/A"}</h3>
-                        <LeadsMenu lead={lead} />
+                        <LeadsMenu lead={lead} setIsDeleted={setIsRefresh} />
                       </TableCell>
                     </TableRow>
                   ))}

@@ -19,6 +19,8 @@ import LeadsMenu from "@/components/view/dashboard/leads/LeadsMenu";
 import Link from "next/link";
 import { getLeadById } from "@/lib/api/leads";
 import BantButton from "@/components/view/dashboard/leads/BantButton";
+import { getDictionary } from "@/lib/i18n/getDictionary";
+import { getCurrentLang } from "@/lib/api/main-page";
 
 // Loading component
 const LoadingSkeleton = () => (
@@ -53,10 +55,12 @@ const LoadingSkeleton = () => (
 const LeadsPage = () => {
   const params = useParams();
   const id = params?.id as string;
+  const lang = getCurrentLang()
   
   const [lead, setLead] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [language, setLanguage] = useState<any>()
 
   useEffect(() => {
     const fetchLead = async () => {
@@ -79,8 +83,12 @@ const LeadsPage = () => {
         setLoading(false);
       }
     };
-
+    const fetchLanguage = async() => {
+      const dict = (await getDictionary(lang))?.superUser?.navbar?.leads;
+      setLanguage(dict);
+    }
     fetchLead();
+    fetchLanguage();
   }, [id]);
 
   if (loading) {
@@ -230,7 +238,7 @@ const LeadsPage = () => {
           {/* ------------------------- Lead Score ------------------------- */}
           <div className="p-[30px] w-full border border-gray-b rounded-3xl bg-white max-w-[40%]">
             <h2 className="text-[16px] leading-none font-[500] capitalize pb-2 border-b border-gray-n/30">
-              Lead score
+              {language?.leadScore}
             </h2>
             <ProgressBar progress={leadScore.score} color={leadScore.color} />
           </div>
@@ -261,7 +269,7 @@ const LeadsPage = () => {
           {/* ------------------------- Contact Information ------------------------- */}
           <div className="p-[30px] w-full border border-gray-b rounded-3xl bg-white max-w-[55%]">
             <h2 className="text-[16px] leading-none font-[500] capitalize pb-2 border-b border-gray-n/30">
-              Contact information
+              {language?.contactInformation}
             </h2>
             <div className="mt-4 flex flex-col gap-[26px]">
               {contactInfo.map((item, index) => (
@@ -318,7 +326,7 @@ const LeadsPage = () => {
           {/* ------------------------- Company Information ------------------------- */}
           <div className="p-[30px] w-full border border-gray-b rounded-3xl bg-white max-w-[40%]">
             <h2 className="text-[16px] leading-none font-[500] capitalize pb-2 border-b border-gray-n/30">
-              Company Information
+              {language?.companyInformation}
             </h2>
             <div className="mt-4 flex flex-col gap-4">
               <div className="flex flex-col gap-1">
@@ -392,7 +400,7 @@ const LeadsPage = () => {
           <div className="p-[30px] w-full border border-gray-b rounded-3xl bg-white max-w-[55%]">
             <div className="flex-between-start gap-2.5">
               <h2 className="text-[16px] font-[500] capitalize pb-2 border-b border-gray-n/30">
-                Lead Qualification (BANT)
+                {language?.leadQualificationBant}
               </h2>
               <BantButton leadId={id} />
             </div>
@@ -469,7 +477,7 @@ const LeadsPage = () => {
         <div className="flex-between gap-2.5 w-full items-stretch pb-5">
           <div className="p-[30px] w-full border border-gray-b rounded-3xl bg-white max-w-[55%]">
             <h2 className="text-[16px] leading-none font-[500] capitalize pb-2 border-b border-gray-n/30">
-              Skills & Interests
+              {language?.skillsInterest}
             </h2>
             <div className="mt-4 flex flex-col gap-4">
               {/* Skills Section */}

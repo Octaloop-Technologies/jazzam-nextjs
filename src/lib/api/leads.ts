@@ -376,3 +376,59 @@ export const requalifyLeadBANT = async ({ id }: { id: string }) => {
     };
   }
 };
+
+interface UpdateLeadInterface{
+  id?: string
+  status?: string, 
+  notes?: string, 
+  tags?: string, 
+  leadScore?: string, 
+  qualificationScore?: string, 
+  bant?: string
+  companyId?: string
+}
+
+// 
+// ======================================================
+// Update lead status
+// ======================================================
+export const updateLead = async (settings: UpdateLeadInterface) => {
+  try {
+    const { accessToken } = TokenStorage.getTokens();
+
+    if (!accessToken) {
+      console.warn("No access token available");
+      return {
+        success: false,
+        data: null,
+        error: "Authentication required",
+      };
+    }
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${settings?.id}`, {
+      method: "PATCH",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(settings),
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => null);
+      throw new Error(errorData?.message || `HTTP error! status: ${response.status}`);
+    }
+
+    const responseData = await response.json();
+
+    return { success: true, data: responseData.data, message: responseData.message };
+  } catch (error) {
+    console.error("Error marking lead as qualified:", error);
+    return {
+      success: false,
+      data: null,
+      error: error instanceof Error ? error.message : "Unknown error",
+    };
+  }
+}
