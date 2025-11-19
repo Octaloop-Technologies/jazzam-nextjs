@@ -118,7 +118,6 @@ const DashboardPage = ({ }: DashboardPageProps) => {
         console.error("Error fetching dashboard data:", err);
       } finally {
         setIsLoading(false);
-        setIsRefresh(false);
       }
     };
     if(user?.userType !== "user"){
@@ -292,7 +291,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
           <div className="h-[51.5px] w-[1px] bg-gray-b" />
 
           {/* refresh button */}
-          <RefreshButton title={language?.navbar?.leads?.refreshButtonTitle} setIsRefresh={setIsRefresh} />
+          <RefreshButton title={language?.navbar?.leads?.refreshButtonTitle} setIsRefresh={setIsRefresh} isRefresh={isRefresh} />
         </div>
       </div>
 
@@ -454,7 +453,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
                       </TableCell>
                       <TableCell className="flex-between">
                         <h3 className="font-medium">{lead.companySize || "N/A"}</h3>
-                        <LeadsMenu lead={lead} setIsDeleted={setIsRefresh} />
+                        <LeadsMenu lead={lead} setIsDeleted={setIsRefresh} isDeleted={isRefresh} showQualifiedButton={false} />
                       </TableCell>
                     </TableRow>
                   ))}

@@ -18,13 +18,17 @@ const LeadsMenu = ({
   showViewDetails = true,
   customTrigger,
   navigate = "/super-user",
-  setIsDeleted
+  isDeleted,
+  setIsDeleted,
+  showQualifiedButton
 }: {
   lead: Lead;
   showViewDetails?: boolean;
   customTrigger?: React.ReactNode;
   navigate?: string;
-  setIsDeleted?: (value: boolean) => void
+  isDeleted?: boolean
+  setIsDeleted?: (value: boolean) => void,
+  showQualifiedButton: boolean
 }) => {
   // ======================================================
   // State
@@ -68,7 +72,7 @@ const LeadsMenu = ({
       const result = await deleteLead({ id: lead._id });
       if (result.success) {
         ToastSuccess(language?.deleteSuccessMsg);
-        setIsDeleted?.(true);
+        setIsDeleted?.(!isDeleted);
         // Refresh the page to update the leads list
         if (navigate) {
           router.push(navigate);
@@ -164,7 +168,7 @@ const LeadsMenu = ({
           </Link>
         </DropdownItem>
 
-        <DropdownItem>
+        {showQualifiedButton && <DropdownItem>
           <button
             className="w-full text-purple-400 flex gap-1 hover:text-gray-200"
             onClick={handleLeadQualified}
@@ -172,7 +176,7 @@ const LeadsMenu = ({
             <QualifiedSvg className="hover:text-gray-200" />
             {language?.markAsQualified}
           </button>
-        </DropdownItem>
+        </DropdownItem>}
 
         <DropdownItem>
           <button
