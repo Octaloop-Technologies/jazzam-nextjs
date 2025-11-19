@@ -206,17 +206,17 @@ const Navbar = ({ languages }: NavbarProps) => {
           {navItems.map((item) => (
             <Link
               href={
-                (companyId !== null || undefined) && user?.userType === "user" ? item.href + `?companyId=${companyId}` : item.href
+                (companyId !== null || undefined) && user?.userType === "user" ? item?.href + `?companyId=${companyId}` : item?.href
               }
               prefetch={false}
-              key={item.title}
+              key={item?.title}
             >
               <div
-                className={`flex-center gap-1 px-5 py-2.5 rounded-4xl ${pathname === item.href ? "text-white bg-pri" : "text-gray-200"
+                className={`flex-center gap-1 px-5 py-2.5 rounded-4xl ${pathname === item?.href ? "text-white bg-pri" : "text-gray-200"
                   }`}
               >
-                <span>{item.icon}</span>
-                <h2>{item.title}</h2>
+                <span>{item?.icon}</span>
+                <h2>{item?.title}</h2>
               </div>
             </Link>
           ))}
@@ -245,7 +245,7 @@ const Navbar = ({ languages }: NavbarProps) => {
             <button className="bg-white p-2.5 rounded-full border border-gray-b relative gray-hover">
               {notifications?.length > 0 && (
               <div className="absolute -top-1 -right-1 w-5 h-5 bg-danger rounded-full flex-center text-white text-xs font-bold">
-                {notifications.length > 99 ? '99+' : notifications.length}
+                {notifications?.length > 99 ? '99+' : notifications?.length}
               </div>
               )}
               <NotificationSvg />
@@ -300,7 +300,7 @@ const Navbar = ({ languages }: NavbarProps) => {
             {notifications.length > 0 ? (
               notifications.map((notification: any, index: number) => (
                 <DropdownItem
-                  key={notification._id || index}
+                  key={notification?._id || index}
                   className={`${notification?.isRead ? "bg-gray-100" : "bg-white" } flex flex-col gap-2 border-l-[3px] border-l-pri rounded-2xl p-4 pb-2 gray-hover cursor-pointer`}
                 >
                   <div className="flex-between-start gap-2.5">
@@ -309,13 +309,13 @@ const Navbar = ({ languages }: NavbarProps) => {
                     </div>
                     <div className="flex flex-col gap-0.5 leading-[18px]">
                       <h2 className="text-[16px] font-[500]">
-                        {notification.title}
+                        {notification?.title}
                       </h2>
                       <h3 className="text-[14px] text-gray-400">
-                        {notification.message}
+                        {notification?.message}
                       </h3>
                       <span className="text-[12px] text-gray-500">
-                        {new Date(notification.createdAt).toLocaleString()}
+                        {new Date(notification?.createdAt).toLocaleString()}
                       </span>
                     </div>
                   </div>
