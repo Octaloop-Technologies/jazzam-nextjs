@@ -25,9 +25,7 @@ import { getDictionary } from "@/lib/i18n/getDictionary";
 import { useAppSelector } from "@/redux/store";
 import tokenStorage from "@/lib/utils/tokenStorage";
 import { useSocket } from "@/providers/socketProvider";
-// import { io } from "socket.io-client";
 
-// const socket = io(`${process.env.NEXT_PUBLIC_BASE_URL}`);
 
 interface NavbarProps {
   // currentLang: string;
@@ -48,7 +46,7 @@ const Navbar = ({ languages }: NavbarProps) => {
   const [language, setLanguage] = useState<any>();
   const { user } = useAppSelector((state) => state.auth);
   const [notifications, setNotifications] = useState<any>([]);
-  const { accessToken } = tokenStorage?.getTokens()
+  const { accessToken } = tokenStorage?.getTokens();
   const { socket, isConnected } = useSocket()
 
   const companyId = user?.joinedCompanyStatus === true ? searchParams?.get("companyId") || user?.joinedCompanies : '';
@@ -113,7 +111,8 @@ const Navbar = ({ languages }: NavbarProps) => {
     if (socket) {
 
       const handleNewNotification = (data: any) => {
-        setNotifications((prev: any) => [data, ...prev]);
+        if(data?.action === "newNotification") setNotifications((prev: any) => [data?.newNotification, ...prev]);
+        if(data?.action === "markAllRead" || data?.action === "clearAll" ) setNotifications(data?.notifications);
       };
 
       socket.on(`notifications`, handleNewNotification);
@@ -154,6 +153,48 @@ const Navbar = ({ languages }: NavbarProps) => {
       },
     });
   }, []);
+
+
+  // function to mark all notifications as read
+  const handleMarkAllRead = async() => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/notifications/mark-all-read/${user?._id}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        }
+      });
+      if(res.ok){
+        const data = await res.json();
+        if(data?.success === true){
+          console.log("All notifications marked as read.");
+        }
+      }
+    } catch (error) {
+      console.log("Unable to mark all as read. Please try again later")
+    }
+  }
+
+    // function to mark all notifications as read
+  const handleClearAll = async() => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/notifications/clear-all/${user?._id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        }
+      });
+      if(res.ok){
+        const data = await res.json();
+        if(data?.success === true){
+          console.log("cleared all notifications.");
+        }
+      }
+    } catch (error) {
+      console.log("Unable to mark all as read. Please try again later")
+    }
+  }
+
 
   return (
     <div className="flex-between gap-2 pt-[15px] pb-2.5 x-padding navbar sticky top-0 z-50 bg-bg">
@@ -220,11 +261,11 @@ const Navbar = ({ languages }: NavbarProps) => {
                 {language?.navbar?.notifications?.notification}
               </h2>
               <div className="flex-between gap-2.5 text-[14px] font-[500]">
-                <button className="flex-center gap-1 gray-hover">
+                <button className="flex-center gap-1 gray-hover" onClick={handleMarkAllRead}>
                   {language?.navbar?.notifications?.markAllRead}
                   <MarkAllAsReadSvg />
                 </button>
-                <button className="text-danger gap-1 hover:text-gray-200 transition-all duration-200 ease-in-out underline-auto-from-front">
+                <button className="text-danger gap-1 hover:text-gray-200 transition-all duration-200 ease-in-out underline-auto-from-front" onClick={handleClearAll}>
                   {language?.navbar?.notifications?.clearAll}
                 </button>
               </div>
@@ -260,7 +301,7 @@ const Navbar = ({ languages }: NavbarProps) => {
               notifications.map((notification: any, index: number) => (
                 <DropdownItem
                   key={notification._id || index}
-                  className="flex flex-col items-end-safe gap-2 bg-white border-l-[3px] border-l-pri rounded-2xl p-4 pb-2 gray-hover cursor-pointer"
+                  className={`${notification?.isRead ? "bg-gray-100" : "bg-white" } flex flex-col gap-2 border-l-[3px] border-l-pri rounded-2xl p-4 pb-2 gray-hover cursor-pointer`}
                 >
                   <div className="flex-between-start gap-2.5">
                     <div className="bg-pri rounded-full size-[30px] flex-center">

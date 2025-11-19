@@ -215,16 +215,16 @@
         "notification": "Notifications",
         "markAllRead": "Mark all as read",
         "clearAll": "Clear all"
-      }, 
+      },
       "navlinks": {
         "leads": "Leads",
         "forms": "Forms",
         "summary": "Summary",
         "followUps": "Follow Ups"
       },
-      "leads":{
+      "leads": {
         "showingLeads": "Showing leads for",
-        "allLeads":"All Leads",
+        "allLeads": "All Leads",
         "completeSalesList": "Complete list of your sales prospects and their current status",
         "myDashboard": "My dashboard",
         "newLeads": "New Leads",
@@ -235,6 +235,21 @@
         "loadingError": "Error Loading Data",
         "headingLeadAnalysis": "Your lead analysis",
         "refreshButtonTitle": "Refresh",
+        "contactInformation": "Contact information",
+        "leadScore": "Lead score",
+        "companyInformation": "Company Information",
+        "leadQualificationBant": "Lead Qualification (BANT)",
+        "skillsInterest": "Skills & Interests",
+        "viewDetails": "View details",
+        "sendFollowUp": "Send follow-up",
+        "markAsQualified": "Mark as Qualified",
+        "deleteLead": "Delete lead",
+        "deleteLeadHeading": "Delete this lead!",
+        "deleteLeadDesc": "Are you sure you want to delete this lead permanently",
+        "qualifiedLeadMessage": "Lead is marked qualified",
+        "failedLeadUpdate": "Failed to update lead",
+        "deleteSuccessMsg": "Lead deleted successfully",
+        "failedDeleteLead": "Failed to delete lead",
         "tableHeadersTitle": {
           "lead": "Lead",
           "status": "Status",
@@ -252,7 +267,7 @@
         "searchFields": {
           "searchFilterTitle": "Search leads by name, company, email...",
           "advanceFilters": "Advanced Filters",
-          "clearAll":"Clear all",
+          "clearAll": "Clear all",
           "companyIndustry": "Company Industry",
           "companySize": "Company Size",
           "allIndustries": "All Industries",
@@ -279,7 +294,7 @@
           "followupsSent": "Follow-ups Sent",
           "closeRate": "Est. Close Rate"
         },
-        "leadPipeline":{
+        "leadPipeline": {
           "leadPipeline": "Lead Pipeline",
           "leadPipelineHeading": "Track leads through your sales funnel with AI-powered insights",
           "all": "All",
@@ -301,7 +316,7 @@
           "contactInfoDescription": "Download today’s top leads contact data",
           "exportDataDescription": "Download over all data"
         },
-        "teamPerformance":{
+        "teamPerformance": {
           "teamPerformance": "Team Performance",
           "leadsQualified": "leads qualified",
           "teamPerformanceHeading": "Track team performance and individual achievements"
@@ -309,7 +324,7 @@
       },
       "followUps": {
         "followUpHeading": "Follow-ups",
-        "all":"All",
+        "all": "All",
         "submitted": "Submitted",
         "scheduled": "Scheduled",
         "allFollowups": "All Follow-ups",
@@ -324,7 +339,7 @@
         "settingsHeading": "Settings",
         "profileSettings": "Profile settings",
         "generalSettings": "General settings",
-        "subscriptionBilling":"Subscription & Billing",
+        "subscriptionBilling": "Subscription & Billing",
         "profilePicture": "Profile picture",
         "cancel": "cancel",
         "save": "save",
@@ -343,7 +358,7 @@
         "helpsupport": "Help & Support",
         "dashboardTour": "Dashboard Tour",
         "dashboardTourDescription": "Take a guided tour through the dashboard features",
-        "autoBantEnable":"Auto BANT qualification enabled",
+        "autoBantEnable": "Auto BANT qualification enabled",
         "autoBantDisable": "Auto BANT qualification disabled",
         "logoutMessage": "Logged out successfully",
         "somethingLogoutError": "Something went wrong while logging out",

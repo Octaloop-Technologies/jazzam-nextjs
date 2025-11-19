@@ -9,6 +9,7 @@ interface DeleteLeadModalProps {
   onClose: () => void;
   onConfirm: () => void;
   isLoading?: boolean;
+  language: any
 }
 
 const DeleteLeadModal: React.FC<DeleteLeadModalProps> = ({
@@ -16,6 +17,7 @@ const DeleteLeadModal: React.FC<DeleteLeadModalProps> = ({
   onClose,
   onConfirm,
   isLoading = false,
+  language
 }) => {
   if (!isOpen) return null;
 
@@ -40,9 +42,9 @@ const DeleteLeadModal: React.FC<DeleteLeadModalProps> = ({
         <div className="flex justify-center mb-4">
           <TrashSvg />
         </div>
-        <h2 className="text-[18px] font-[500] leading-none mb-1">Delete this lead!</h2>
+        <h2 className="text-[18px] font-[500] leading-none mb-1">{language?.deleteLeadHeading}</h2>
         <p className="text-gray-200 mb-8 leading-none">
-          Are you sure you want to delete this lead permanently
+          {language?.deleteLeadDesc}
         </p>
         <div className="flex justify-around space-x-5">
           <PrimaryButton
