@@ -299,15 +299,15 @@ const DashboardPage = ({ }: DashboardPageProps) => {
       <div className="mt-[18px] flex gap-2.5">
         {cards.map((card) => (
           <div
-            key={card.title}
+            key={card?.title}
             className="w-full py-[30px] pl-[40px] bg-white border border-gray-b rounded-3xl flex items-center gap-2.5"
           >
-            <div className={`rounded-xl-2 size-[40px] ${card.bgColor} flex-center`}>
-              {card.icon}
+            <div className={`rounded-xl-2 size-[40px] ${card?.bgColor} flex-center`}>
+              {card?.icon}
             </div>
             <div className="flex flex-col gap-0.5 leading-none">
-              <h3 className="text-[16px] font-[500]">{card.title}</h3>
-              <h2 className={`text-[28px] ${card.color} font-[600]`}>{card.value}</h2>
+              <h3 className="text-[16px] font-[500]">{card?.title}</h3>
+              <h2 className={`text-[28px] ${card?.color} font-[600]`}>{card?.value}</h2>
             </div>
           </div>
         ))}
@@ -389,12 +389,12 @@ const DashboardPage = ({ }: DashboardPageProps) => {
               {(leadsData?.leads as any)?.length > 0 ? (
                 <>
                   {leadsData?.leads.map((lead: Lead) => (
-                    <TableRow key={lead._id}>
+                    <TableRow key={lead?._id}>
                       <TableCell>
                         <div className="flex items-center gap-3">
                           <div className="size-[40px] rounded-full overflow-hidden">
                             <OptimizedImage
-                              src={lead.profilePic || "/assets/images/leads/dummy-profile.png"}
+                              src={lead?.profilePic || "/assets/images/leads/dummy-profile.png"}
                               alt="avatar"
                               fill
                               className="w-full h-full object-cover"
@@ -402,49 +402,49 @@ const DashboardPage = ({ }: DashboardPageProps) => {
                           </div>
                           <div className="flex flex-col leading-none">
                             <p className="text-[16px] font-[500]">
-                              {lead.fullName && lead.fullName.trim()
-                                ? lead.fullName
-                                : (lead.firstName && lead.firstName.trim()) ||
-                                  (lead.lastName && lead.lastName.trim())
-                                  ? `${lead.firstName ? lead.firstName : ""}${lead.lastName ? ` ${lead.lastName}` : ""
+                              {lead?.fullName && lead?.fullName.trim()
+                                ? lead?.fullName
+                                : (lead?.firstName && lead?.firstName.trim()) ||
+                                  (lead?.lastName && lead?.lastName.trim())
+                                  ? `${lead?.firstName ? lead?.firstName : ""}${lead?.lastName ? ` ${lead?.lastName}` : ""
                                     }`.trim() || "No Name"
                                   : "No Name"}
                             </p>
-                            <p className="text-[12px] text-gray-200">{lead.company || "N/A"}</p>
+                            <p className="text-[12px] text-gray-200">{lead?.company || "N/A"}</p>
                             <p className="text-[12px] text-gray-200">
-                              {lead.email || lead.jobTitle || "N/A"}
+                              {lead?.email || lead?.jobTitle || "N/A"}
                             </p>
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>{getStatusComponent(lead.status)}</TableCell>
+                      <TableCell>{getStatusComponent(lead?.status)}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <PercentageCircle
-                            percentage={lead.leadScore || 0}
+                            percentage={lead?.leadScore || 0}
                             color={
-                              lead.leadScore && lead.leadScore >= 80
+                              lead?.leadScore && lead?.leadScore >= 80
                                 ? "var(--sec)"
-                                : lead.leadScore && lead.leadScore >= 60
+                                : lead?.leadScore && lead?.leadScore >= 60
                                   ? "var(--pipeline)"
                                   : "var(--cold)"
                             }
                             size={18}
                             strokeWidth={3}
                           />
-                          <span className="text-sec font-medium">{lead.leadScore || 0}%</span>
+                          <span className="text-sec font-medium">{lead?.leadScore || 0}%</span>
                         </div>
                       </TableCell>
                       <TableCell>
-                        {lead.profileUrl ? (
+                        {lead?.profileUrl ? (
                           <Link
-                            href={lead.profileUrl}
+                            href={lead?.profileUrl}
                             target="_blank"
                             prefetch={false}
                             rel="noopener noreferrer"
                             className="flex items-center gap-2.5 text-cold text-sm underline-auto-from-front gray-hover"
                           >
-                            {lead.fullName || `${lead.firstName} ${lead.lastName}`}{" "}
+                            {lead?.fullName || `${lead?.firstName} ${lead?.lastName}`}{" "}
                             <ExternalLinkSvg />
                           </Link>
                         ) : (
@@ -452,7 +452,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
                         )}
                       </TableCell>
                       <TableCell className="flex-between">
-                        <h3 className="font-medium">{lead.companySize || "N/A"}</h3>
+                        <h3 className="font-medium">{lead?.companySize || "N/A"}</h3>
                         <LeadsMenu lead={lead} setIsDeleted={setIsRefresh} isDeleted={isRefresh} showQualifiedButton={false} />
                       </TableCell>
                     </TableRow>
