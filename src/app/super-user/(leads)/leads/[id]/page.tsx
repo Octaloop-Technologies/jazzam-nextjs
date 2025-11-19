@@ -247,6 +247,7 @@ const LeadsPage = () => {
           <div className="pl-3 w-full max-w-[5%]">
             <LeadsMenu
               showViewDetails={false}
+              showQualifiedButton={true}
               lead={lead}
               navigate={`/super-user`}
               customTrigger={

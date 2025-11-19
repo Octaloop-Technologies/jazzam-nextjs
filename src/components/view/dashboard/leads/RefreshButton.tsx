@@ -5,15 +5,15 @@ import { useState, useTransition } from "react";
 import { RefreshSvg } from "@/components/svgs/refreshSvg";
 import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
 
-const RefreshButton = ({ title, setIsRefresh }: { title: string, setIsRefresh: (value: boolean) => void }) => {
+const RefreshButton = ({ title, setIsRefresh, isRefresh }: { title: string, isRefresh: boolean, setIsRefresh: (value: boolean) => void }) => {
   // const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleRefresh = () => {
-    setIsLoading(true);
+    // setIsLoading(true);
 
-    setIsRefresh(true)
+    setIsRefresh(!isRefresh)
 
 
     // startTransition(() => {
