@@ -71,9 +71,9 @@ const SummaryPage = () => {
   // =====================================================================
   // =============================== States =============================
   // =====================================================================
-  const [chartData] = useState([
-    { category: "New", value: 940 },
-    { category: "Qualified", value: 677 },
+  const [chartData, setChartData] = useState([
+    { category: "All", value: 0 },
+    { category: "Qualified", value: 0 },
   ]);
 
   const searchParams = useSearchParams();
@@ -143,6 +143,10 @@ const SummaryPage = () => {
           followUpsSent: Number(s.followUpsSent || 0),
           estimatedCloseRate: String(s.estimatedCloseRate ?? s.closeRate ?? "0.00"),
         });
+        setChartData([
+          { category: language?.summary?.leadPipeline?.allLeads || "All", value: Number(s.totalLeads || 0) },
+          { category: language?.summary?.leadPipeline?.qualified || "Qualified", value: Number(s.qualifiedLeads || 0) },
+        ]);
       } catch (err) {
         console.error("Error fetching dashboard:", err);
       }
@@ -234,14 +238,14 @@ const SummaryPage = () => {
 
       if(res.ok){
         const blob = await res.blob();
-        alert("excel file downloaded successfully");
         console.log("blob****", blob)
         const url = window.URL.createObjectURL(blob);
-
+        
         const link = document.createElement("a");
         link.href = url;
         link.setAttribute("download", `${status}.xlsx`);
         link.click();
+        alert("excel file downloaded successfully");
       }
 
     } catch (error) {
@@ -288,7 +292,7 @@ const SummaryPage = () => {
           </h3>
 
           <div className="mt-5 bg-bg flex gap-[15px] p-2.5 rounded-4xl w-fit">
-            <button className="bg-pri-light-2 rounded-4xl flex-center h-[40px] px-5 gap-2">
+            <button className="bg-white rounded-4xl flex-center h-[40px] px-5 gap-2">
               <span className="bg-pri size-2.5 rounded-full" />
               <h4 className="text-sm text-pri">{language?.summary?.leadPipeline?.all}</h4>
             </button>
@@ -306,7 +310,7 @@ const SummaryPage = () => {
             </button>
           </div>
 
-          <ModernBarChart
+          {chartData[0].value > 0 && chartData[1].value > 0 && <ModernBarChart
             data={chartData}
             height={customization.height}
             barColor={customization.barColor}
@@ -314,7 +318,7 @@ const SummaryPage = () => {
             backgroundColor={customization.backgroundColor}
             showGrid={customization.showGrid}
             animate={customization.animate}
-          />
+          />}
         </div>
 
         {/* ---------------------------- Quick Actions ---------------------------- */}
@@ -340,7 +344,7 @@ const SummaryPage = () => {
                     <h3 className="leading-none">{action.description}</h3>
                   </div>
                 </div>
-                <button className="size-[40px] bg-bg flex-center border border-gray-b rounded-full" onClick={() => handleDownloadExcel(action?.type)}>
+                <button className="size-[40px] bg-bg flex-center border border-gray-b rounded-full cursor-pointer" onClick={() => handleDownloadExcel(action?.type)}>
                   <DownloadIcon />
                 </button>
               </div>
