@@ -74,7 +74,11 @@ const SummaryPage = () => {
   const [chartData, setChartData] = useState([
     { category: "All", value: 0 },
     { category: "Qualified", value: 0 },
+    { category: "Hot", value: 0 },
+    { category: "Warm", value: 0 },
+    { category: "Cold", value: 0 },
   ]);
+  const [chartDataLoaded, setChartDataLoaded] = useState<boolean>(false);
 
   const searchParams = useSearchParams();
 
@@ -146,7 +150,11 @@ const SummaryPage = () => {
         setChartData([
           { category: language?.summary?.leadPipeline?.allLeads || "All", value: Number(s.totalLeads || 0) },
           { category: language?.summary?.leadPipeline?.qualified || "Qualified", value: Number(s.qualifiedLeads || 0) },
+          { category: language?.summary?.leadPipeline?.qualified || "Hot", value: Number(s.hotLeads || 0) },
+          { category: language?.summary?.leadPipeline?.qualified || "Warm", value: Number(s.warmLeads || 0) },
+          { category: language?.summary?.leadPipeline?.qualified || "Cold", value: Number(s.coldLeads || 0) },
         ]);
+        setChartDataLoaded(true)
       } catch (err) {
         console.error("Error fetching dashboard:", err);
       }
@@ -310,7 +318,7 @@ const SummaryPage = () => {
             </button>
           </div>
 
-          {chartData[0].value > 0 && chartData[1].value > 0 && <ModernBarChart
+          {chartDataLoaded && <ModernBarChart
             data={chartData}
             height={customization.height}
             barColor={customization.barColor}
