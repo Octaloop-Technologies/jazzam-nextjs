@@ -139,7 +139,7 @@ const SubscriptionSettings = () => {
       </div>
 
       {/* Usage Stats */}
-      {user?.usageStats && (
+      {/* {user?.usageStats && (
         <div className="p-5 border border-gray-b rounded-2xl">
           <h2 className="text-[16px] font-[500] text-sec mb-3">Usage This Month</h2>
           <div className="grid grid-cols-3 gap-4">
@@ -157,7 +157,7 @@ const SubscriptionSettings = () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Payment Info */}
       {user?.paymentMethod && user.paymentMethod !== "none" && (
