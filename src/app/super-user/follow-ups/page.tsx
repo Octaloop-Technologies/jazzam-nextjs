@@ -21,6 +21,7 @@ const FollowUpsPage = () => {
   const searchParams = useSearchParams();
   const lang = getCurrentLang();
   const [language, setLanguage] = useState<any>();
+  const [status, setStatus] = useState<string>("all")
 
   const companyId = searchParams?.get("companyId"); 
 
@@ -40,7 +41,7 @@ const FollowUpsPage = () => {
       const dict = (await getDictionary(lang))?.superUser?.navbar;
       setLanguage(dict);
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/follow-up-leads?companyId=${companyId}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/follow-up-leads?companyId=${companyId}&status=${status}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`
           }
@@ -51,7 +52,7 @@ const FollowUpsPage = () => {
         }
     }
     fetchToken();
-  }, []);
+  }, [status]);
 
   return (
     <section>
@@ -60,13 +61,13 @@ const FollowUpsPage = () => {
         <h1 className="text-[32px] font-[500] capitalize">{language?.followUps?.followUpHeading}</h1>
         <div className="flex items-center gap-2.5">
           {/* search bar */}
-          <SearchBar placeholderText={language?.followUps?.placeholderText} />
+          {/* <SearchBar placeholderText={language?.followUps?.placeholderText} /> */}
 
           {/* tabs */}
           <div className="flex gap-[15px] h-[61px] text-[14px] border border-gray-b p-2.5 rounded-4xl">
-            <button className="h-full px-5 bg-[#0fb98121] text-pri rounded-4xl">{language?.followUps?.all}</button>
-            <button className="h-full px-5 bg-white rounded-4xl">{language?.followUps?.submitted}</button>
-            <button className="h-full px-5 bg-white rounded-4xl">{language?.followUps?.scheduled}</button>
+            <button className={`${status === "all" ? "bg-[#0fb98121] text-pri" : ""} h-full px-5 rounded-4xl cursor-pointer`} onClick={() => setStatus("all")}>{language?.followUps?.all}</button>
+            <button className={`${status === "submitted" ? "bg-[#0fb98121] text-pri" : ""} h-full px-5 rounded-4xl cursor-pointer`} onClick={() => setStatus("submitted")}>{language?.followUps?.submitted}</button>
+            <button className={`${status === "scheduled" ? "bg-[#0fb98121] text-pri" : ""} h-full px-5 rounded-4xl cursor-pointer`} onClick={() => setStatus("scheduled")}>{language?.followUps?.scheduled}</button>
           </div>
         </div>
       </div>
@@ -78,7 +79,7 @@ const FollowUpsPage = () => {
             <h1 className="text-[18px] font-[600] capitalize">{language?.followUps?.allFollowups}</h1>
             <p className="text-gray-200 text-sm">{language?.listMessage?.listMessage}</p>
           </div>
-          <div className="flex items-center gap-2 text-gray-600 text-sm">
+          {/* <div className="flex items-center gap-2 text-gray-600 text-sm">
             <button className="size-[30px] rounded-full border border-gray-b flex-center">
               <LeftArrowSvg />
             </button>
@@ -86,7 +87,7 @@ const FollowUpsPage = () => {
             <button className="size-[30px] rounded-full border border-gray-b flex-center bg-pri text-white">
               <RightArrowSvg />
             </button>
-          </div>
+          </div> */}
         </div>
 
         <div className="min-w-full">
