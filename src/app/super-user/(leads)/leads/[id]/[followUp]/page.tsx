@@ -55,7 +55,7 @@ const FollowPage = ({ params }: FollowPageProps) => {
   // Backcrumb Links and names
   // ==========================================================
   const segments = [
-    { label: "Leads", path: "/" },
+    { label: "Leads", path: "/super-user" },
     { label: `${leadName[0]}  ${leadName[1]}`, path: `/super-user/leads/${id}` },
     { label: "Follow up", path: `/super-user/leads/${id}/${followUp}` },
   ];

@@ -184,34 +184,71 @@ const SummaryPage = () => {
     {
       title: language?.summary?.quickActions.hotLeadDownload,
       description: language?.summary?.quickActions?.hotLeadDownloadDescription,
+      type: "hot",
       icon: <HotLeadsSvg className="size-[24px]" />,
       bgColor: "bg-hot-light",
     },
     {
       title: language?.summary?.quickActions?.warmLeadDownload,
       description: language?.summary?.quickActions?.warmLeadDownloadDescription,
+      type: "warm",
       icon: <WarmLeadsSvg className="size-[24px]" />,
       bgColor: "bg-warm-light",
     },
     {
       title: language?.summary?.quickActions?.coldLeadDownload,
       description: language?.summary?.quickActions?.coldLeadDownloadDescription,
+      type: "cold",
       icon: <ColdLeadsSvg className="size-[24px]" />,
       bgColor: "bg-cold-light",
     },
     {
       title: language?.summary?.quickActions?.contactInfo,
       description: language?.summary?.quickActions?.contactInfoDescription,
+      type: "hot",
       icon: <ContactInfoSvg className="size-[24px]" />,
       bgColor: "bg-pipeline-light",
     },
     {
       title: language?.summary?.quickActions?.exportData,
       description: language?.summary?.quickActions?.exportDataDescription,
+      type: "overall",
       icon: <ExportDataSvg className="size-[24px]" />,
       bgColor: "bg-[#DEFFF4]",
     },
   ];
+
+  // =================================================================
+  // =========================== Download ============================
+  // ================================================================= 
+
+  const handleDownloadExcel = async(status: string) => {
+      const companyId = searchParams?.get("companyId") || user?._id;
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/get-excel-file/${companyId}?status=${status}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`
+        }
+      });
+
+      if(res.ok){
+        const blob = await res.blob();
+        alert("excel file downloaded successfully");
+        console.log("blob****", blob)
+        const url = window.URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `${status}.xlsx`);
+        link.click();
+      }
+
+    } catch (error) {
+      console.log("error*********134", error)
+      alert("uable to download right now.")
+    }
+  }
 
   return (
     <section>
@@ -303,7 +340,7 @@ const SummaryPage = () => {
                     <h3 className="leading-none">{action.description}</h3>
                   </div>
                 </div>
-                <button className="size-[40px] bg-bg flex-center border border-gray-b rounded-full">
+                <button className="size-[40px] bg-bg flex-center border border-gray-b rounded-full" onClick={() => handleDownloadExcel(action?.type)}>
                   <DownloadIcon />
                 </button>
               </div>
