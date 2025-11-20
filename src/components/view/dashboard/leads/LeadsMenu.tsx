@@ -125,7 +125,7 @@ const LeadsMenu = ({
           ) : (
             <button
               className="size-[40px] flex-center rounded-full border border-gray-150 
-                      transition-all duration-200 ease-in-out hover:rotate-90 hover:bg-gray-100 hover:border-gray-200"
+                      transition-all duration-200 ease-in-out hover:rotate-90 hover:bg-gray-100 hover:border-gray-200 cursor-pointer"
             >
               <div className="flex flex-col gap-1">
                 <span className="size-1 bg-black rounded-full" />
