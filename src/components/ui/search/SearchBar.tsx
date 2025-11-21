@@ -1,4 +1,12 @@
-const SearchBar = ({ placeholderText }: { placeholderText: string }) => {
+import React from "react";
+
+interface PlaceHolderInterface{
+  placeholderText: string,
+  searchQuery: string,
+  setSearchQuery: (value: string) => void
+}
+
+const SearchBar = ({ placeholderText, searchQuery, setSearchQuery }: PlaceHolderInterface) => {
   return (
     <div className="w-[329px] p-2.5 border border-gray-b rounded-4xl bg-white flex items-center gap-[6px]">
       {/* ---------------------------- search icon ---------------------------- */}
@@ -22,10 +30,12 @@ const SearchBar = ({ placeholderText }: { placeholderText: string }) => {
 
       {/* ---------------------------- search input ---------------------------- */}
       <input
+      value={searchQuery}
         type="text"
         placeholder={placeholderText}
         className="w-full h-full min-h-[40px] text-[17px] outline-none leading-normal 
                    placeholder:text-gray-200 placeholder:text-[14px]"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchQuery(e.target.value)}
       />
     </div>
   );

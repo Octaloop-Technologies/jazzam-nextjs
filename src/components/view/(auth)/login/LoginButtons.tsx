@@ -64,7 +64,7 @@ const LoginButton = ({
       onClick={onClick}
       disabled={disabled}
       className={`flex-center gap-1 py-[13px] px-1.5 w-full bg-gray border border-gray-b rounded-xl 
-                transition-all duration-200 ease-in-out
+                transition-all duration-200 ease-in-out cursor-pointer
                 ${disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-gray-b"}`}
     >
       <div className="flex-center size-6">

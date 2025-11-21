@@ -21,36 +21,47 @@ const FollowUpsPage = () => {
   const searchParams = useSearchParams();
   const lang = getCurrentLang();
   const [language, setLanguage] = useState<any>();
-  const [status, setStatus] = useState<string>("all")
+  const [status, setStatus] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [page, setPage] = useState<number>(1);
 
-  const companyId = searchParams?.get("companyId"); 
+  const companyId = searchParams?.get("companyId");
 
   const { accessToken } = tokenStorage?.getTokens();
 
+  const fetchToken = async () => {
+    const dict = (await getDictionary(lang))?.superUser?.navbar;
+    setLanguage(dict);
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/follow-up-leads?companyId=${companyId}&status=${status}&search=${searchQuery}&page=${page}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`
+      }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      console.log("follow up leads data", data?.data);
+      // setPage(data?.data?.page);
+      setFollowupLeads(data?.data)
+    }
+  }
+
   useEffect(() => {
-    if(user?.joinedCompanyStatus === true && user?.userType === "user" && !companyId ){
+    const handler = setTimeout(() => {
+        fetchToken()
+    }, 1000);
+
+    return () => clearTimeout(handler);
+  }, [searchQuery])
+
+  useEffect(() => {
+    if (user?.joinedCompanyStatus === true && user?.userType === "user" && !companyId) {
       window.location.href = `/super-user/forms?companyId=${user?.joinedCompanies}`
     }
   }, [])
 
 
-
-
   useEffect(() => {
-    const fetchToken = async () => {
-      const dict = (await getDictionary(lang))?.superUser?.navbar;
-      setLanguage(dict);
-
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/follow-up-leads?companyId=${companyId}&status=${status}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`
-          }
-        });
-        if(res.ok){
-          const data = await res.json();
-          setFollowupLeads(data?.data)
-        }
-    }
     fetchToken();
   }, [status]);
 
@@ -61,7 +72,7 @@ const FollowUpsPage = () => {
         <h1 className="text-[32px] font-[500] capitalize">{language?.followUps?.followUpHeading}</h1>
         <div className="flex items-center gap-2.5">
           {/* search bar */}
-          {/* <SearchBar placeholderText={language?.followUps?.placeholderText} /> */}
+          <SearchBar placeholderText={language?.followUps?.placeholderText} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />
 
           {/* tabs */}
           <div className="flex gap-[15px] h-[61px] text-[14px] border border-gray-b p-2.5 rounded-4xl">
@@ -80,11 +91,11 @@ const FollowUpsPage = () => {
             <p className="text-gray-200 text-sm">{language?.listMessage?.listMessage}</p>
           </div>
           {/* <div className="flex items-center gap-2 text-gray-600 text-sm">
-            <button className="size-[30px] rounded-full border border-gray-b flex-center">
+            <button className="size-[30px] rounded-full border border-gray-b flex-center" onClick={() => setPage(page - 1)}>
               <LeftArrowSvg />
             </button>
             <span className="text-gray-300">Page 1/200</span>
-            <button className="size-[30px] rounded-full border border-gray-b flex-center bg-pri text-white">
+            <button className="size-[30px] rounded-full border border-gray-b flex-center bg-pri text-white" onClick={() => setPage(page + 1)}>
               <RightArrowSvg />
             </button>
           </div> */}

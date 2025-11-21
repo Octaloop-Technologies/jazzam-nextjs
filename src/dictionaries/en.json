@@ -333,7 +333,7 @@
         "channel": "Channel",
         "status": "Status",
         "dateOfSubmission": "Date of submission",
-        "placeholderText": "Search"
+        "placeholderText": "Search by name or email"
       },
       "settings": {
         "settingsHeading": "Settings",
