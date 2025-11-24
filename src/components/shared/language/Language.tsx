@@ -47,7 +47,7 @@ const Language = ({ languages }: LanguageProps) => {
   return (
     <button 
       onClick={handleLanguageSwitch}
-      className="flex items-center gap-2 gray-hover p-2 rounded-lg transition-all duration-200 ease-in-out"
+      className="flex items-center gap-2 gray-hover p-2 rounded-lg transition-all duration-200 ease-in-out cursor-pointer"
       title={`Switch to ${getNextLanguage().label}`}
     >
       <GlobeSvg />

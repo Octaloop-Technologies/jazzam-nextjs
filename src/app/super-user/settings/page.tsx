@@ -486,7 +486,7 @@ const SettingsPage = () => {
         <div className="w-full max-w-[25%] p-[30px] border border-gray-b rounded-3xl bg-white">
           <div className="flex flex-col gap-2">
             <button
-              className={`px-2.5 h-[44px] flex-between gap-2 rounded-[110px] 
+              className={`px-2.5 h-[44px] flex-between gap-2 rounded-[110px] cursor-pointer
                   ${activeTab === "profile"
                   ? "bg-pri text-white"
                   : "bg-transparent text-gray-200 hover:bg-gray"
@@ -501,7 +501,7 @@ const SettingsPage = () => {
             {user?.userType === "company" ? 
             <>
             <button
-              className={`px-2.5 h-[44px] flex-between gap-2 rounded-[110px] 
+              className={`px-2.5 h-[44px] flex-between gap-2 rounded-[110px] cursor-pointer
                   ${activeTab === "general"
                   ? "bg-pri text-white"
                   : "bg-transparent text-gray-200 hover:bg-gray"
@@ -514,7 +514,7 @@ const SettingsPage = () => {
               </div>
             </button>
             <button
-              className={`px-2.5 h-[44px] flex-between gap-2 rounded-[110px] 
+              className={`px-2.5 h-[44px] flex-between gap-2 rounded-[110px] cursor-pointer
                   ${activeTab === "subscription"
                   ? "bg-pri text-white"
                   : "bg-transparent text-gray-200 hover:bg-gray"
@@ -568,7 +568,7 @@ const SettingsPage = () => {
                         }}
                       />
                       <button
-                        className="hover:text-green-700 text-green-600"
+                        className="hover:text-green-700 text-green-600 cursor-pointer"
                         onClick={() => setEditProfilePicture(true)}
                       >
                         <ExternalLinkSvg />
@@ -584,13 +584,13 @@ const SettingsPage = () => {
                         onChange={handleFileChange}
                       />
                       <button
-                        className="bg-yellow-400 text-white w-20 rounded text-md"
+                        className="bg-yellow-400 text-white w-20 rounded text-md cursor-pointer"
                         onClick={() => setEditProfilePicture(false)}
                       >
                         {language?.cancel}
                       </button>
                       <button
-                        className="bg-[#15803c] text-white w-20 rounded text-md"
+                        className="bg-[#15803c] text-white w-20 rounded text-md cursor-pointer"
                         onClick={uploadFile}
                       >
                         {language?.save}
@@ -602,7 +602,7 @@ const SettingsPage = () => {
                   <div className="flex gap-2 text-2xl font-medium text-[#15803c]">
                     {user?.companyName}
                     <button
-                      className="hover:text-green-600"
+                      className="hover:text-green-600 cursor-pointer"
                       onClick={() => setEditName(true)}
                     >
                       <ExternalLinkSvg />
@@ -621,13 +621,13 @@ const SettingsPage = () => {
                       }
                     />
                     <button
-                      className="bg-yellow-400 text-white w-20 rounded text-md"
+                      className="bg-yellow-400 text-white w-20 rounded text-md cursor-pointer"
                       onClick={() => setEditName(false)}
                     >
                       {language?.cancel}
                     </button>
                     <button
-                      className="bg-[#15803c] text-white w-20 rounded text-md"
+                      className="bg-[#15803c] text-white w-20 rounded text-md cursor-pointer"
                       onClick={changeName}
                     >
                       {language?.save}
@@ -659,7 +659,7 @@ const SettingsPage = () => {
                     <button
                       type="submit"
                       disabled={isLoggingOut}
-                      className={`w-fit flex gap-1 text-sm transition-colors duration-200 ${isLoggingOut
+                      className={`w-fit flex gap-1 text-sm transition-colors duration-200 cursor-pointer ${isLoggingOut
                         ? "text-gray-400 cursor-not-allowed"
                         : "text-danger gray-hover"
                         }`}
@@ -698,7 +698,7 @@ const SettingsPage = () => {
 
               {/* delete account */}
               <div className="flex flex-col gap-2">
-                <button className="w-fit flex gap-1 text-sm text-danger gray-hover transition-colors duration-200" onClick={() => setDeleteUserIsOpen(true)}>
+                <button className="w-fit flex gap-1 text-sm text-danger gray-hover transition-colors duration-200 cursor-pointer" onClick={() => setDeleteUserIsOpen(true)}>
                   <div>{trashIcon()}</div>
                   <div>{language?.deleteAccount}</div>
                 </button>
@@ -727,7 +727,7 @@ const SettingsPage = () => {
                       </TableCell>
                         <TableCell className="flex">
                           <button
-                            className="w-fit flex gap-1 text-sm text-danger gray-hover transition-colors duration-200"
+                            className="w-fit flex gap-1 text-sm text-danger gray-hover transition-colors duration-200 cursor-pointer"
                             onClick={() =>
                               activateTeamMember(teams?.company?._id)
                             }
@@ -736,7 +736,7 @@ const SettingsPage = () => {
                             <div>{language?.activateMember}</div>
                           </button>
                           <button
-                            className="w-fit flex gap-1 text-sm text-danger gray-hover transition-colors duration-200"
+                            className="w-fit flex gap-1 text-sm text-danger gray-hover transition-colors duration-200 cursor-pointer"
                             onClick={() =>
                               deactivateTeamMember(teams?.company?._id)
                             }
@@ -888,7 +888,7 @@ const SettingsPage = () => {
                   />
                   <button
                     onClick={handleSendInvite}
-                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-pri text-white hover:bg-pri/80`}
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-pri text-white hover:bg-pri/80 cursor-pointer`}
                   >
                     {sendInviteLoad ? "Sending" : `Send Invite`}
                   </button>
@@ -910,7 +910,7 @@ const SettingsPage = () => {
                   <button
                     onClick={handleRestartTour}
                     disabled={isRestartingTour}
-                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${isRestartingTour
+                    className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors cursor-pointer ${isRestartingTour
                       ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                       : "bg-pri text-white hover:bg-pri/80"
                       }`}
