@@ -109,6 +109,7 @@ const AuthGuard: React.FC<AuthGuardProps> = ({
       if (requireAuth) {
         // If authentication is required
         if (!hasTokens) {
+          window.location.href = redirectTo;
           console.log("AuthGuard: No tokens found, user needs to authenticate");
           return;
         }
