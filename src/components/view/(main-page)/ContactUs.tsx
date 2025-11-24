@@ -289,7 +289,7 @@ const ContactUs = ({ dict }: { dict: Dictionary }) => {
               setMissingField={setMissing}
             />
             <div className="flex justify-center xs:justify-end">
-              <button onClick={(e: React.MouseEvent<HTMLButtonElement>) => sendContactMessage(e)} className="bg-[#EEB600] h-15 px-[50px] py-[12px] rounded-[14px] text-[#FFF] text-[16px] text-semibold leading-normal">
+              <button onClick={(e: React.MouseEvent<HTMLButtonElement>) => sendContactMessage(e)} className="bg-[#EEB600] h-15 px-[50px] py-[12px] rounded-[14px] text-[#FFF] text-[16px] text-semibold leading-normal font-semibold cursor-pointer">
                 {dict?.home?.footer.button}
               </button>
             </div>

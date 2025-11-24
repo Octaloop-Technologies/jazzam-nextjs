@@ -246,7 +246,7 @@ const BeforeJazzam: React.FC<{ dict: Dictionary }> = ({ dict }) => {
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWaitlistEmail(e.target.value)}
                 />
               </div>
-              <button onClick={callWaitlistApi} className="w-full md:w-auto bg-[#EEB600] font-semibold px-8 py-3 rounded-lg transition uppercase tracking-wide whitespace-nowrap shadow-md text-[16px] tracking-normal text-[#FFF]">
+              <button onClick={callWaitlistApi} className="w-full md:w-auto bg-[#EEB600] font-semibold px-8 py-3 rounded-lg transition uppercase tracking-wide whitespace-nowrap shadow-md text-[16px] tracking-normal text-[#FFF] cursor-pointer">
                 {loading ? 'Sending' : dict?.home?.beforeJazzam?.waitlist.button}
               </button>
             </div>
