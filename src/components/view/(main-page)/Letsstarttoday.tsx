@@ -45,7 +45,7 @@ const Letsstarttoday = ({ dict }: { dict: Dictionary }) => {
         {/* Button */}
         <div className="flex justify-center mt-6">
           {/* Button text */}
-          <button onClick={() => dispatch(openModal())} className="text-[#FFF]  bg-[#EEB600]  font-semibold px-8 py-4 rounded-lg uppercase text-sm tracking-wide">
+          <button onClick={() => dispatch(openModal())} className="text-[#FFF]  bg-[#EEB600]  font-semibold px-8 py-4 rounded-lg uppercase text-sm tracking-wide cursor-pointer">
             {dict?.home?.letsstarttoday?.button}
           </button>
 

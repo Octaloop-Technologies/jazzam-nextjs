@@ -93,7 +93,8 @@ const Waitlist = ({ dict }: WaitlistProps) => {
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setWaitlistEmail(e.target.value)}
                         />
                     </div>
-                    <button onClick={callWaitlistApi} className="h-[55px] sm:h-15 w-full sm:w-auto px-6 sm:pl-12.5 sm:pr-[35px] flex items-center justify-center bg-[#EEB600] border-[1.5px] border-[#EEB600] rounded-[14px] text-white text-base uppercase font-semibold">
+                    <button onClick={callWaitlistApi} className="h-[55px] sm:h-15 w-full sm:w-auto px-6 sm:pl-12.5 sm:pr-[35px] flex items-center justify-center 
+                    bg-[#EEB600] border-[1.5px] border-[#EEB600] rounded-[14px] text-white text-base uppercase font-semibold cursor-pointer">
                         {loading ? 'Sending' : dict?.home?.hero?.sendNow}
                     </button>
                 </div>
