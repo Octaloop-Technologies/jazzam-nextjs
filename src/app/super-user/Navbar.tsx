@@ -111,8 +111,8 @@ const Navbar = ({ languages }: NavbarProps) => {
     if (socket) {
 
       const handleNewNotification = (data: any) => {
-        if(data?.action === "newNotification") setNotifications((prev: any) => [data?.newNotification, ...prev]);
-        if(data?.action === "markAllRead" || data?.action === "clearAll" ) setNotifications(data?.notifications);
+        if (data?.action === "newNotification") setNotifications((prev: any) => [data?.newNotification, ...prev]);
+        if (data?.action === "markAllRead" || data?.action === "clearAll") setNotifications(data?.notifications);
       };
 
       socket.on(`notifications`, handleNewNotification);
@@ -156,7 +156,7 @@ const Navbar = ({ languages }: NavbarProps) => {
 
 
   // function to mark all notifications as read
-  const handleMarkAllRead = async() => {
+  const handleMarkAllRead = async () => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/notifications/mark-all-read/${user?._id}`, {
         method: "POST",
@@ -164,9 +164,9 @@ const Navbar = ({ languages }: NavbarProps) => {
           Authorization: `Bearer ${accessToken}`,
         }
       });
-      if(res.ok){
+      if (res.ok) {
         const data = await res.json();
-        if(data?.success === true){
+        if (data?.success === true) {
           console.log("All notifications marked as read.");
         }
       }
@@ -175,8 +175,8 @@ const Navbar = ({ languages }: NavbarProps) => {
     }
   }
 
-    // function to mark all notifications as read
-  const handleClearAll = async() => {
+  // function to mark all notifications as read
+  const handleClearAll = async () => {
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/notifications/clear-all/${user?._id}`, {
         method: "DELETE",
@@ -184,9 +184,9 @@ const Navbar = ({ languages }: NavbarProps) => {
           Authorization: `Bearer ${accessToken}`,
         }
       });
-      if(res.ok){
+      if (res.ok) {
         const data = await res.json();
-        if(data?.success === true){
+        if (data?.success === true) {
           console.log("cleared all notifications.");
         }
       }
@@ -242,11 +242,11 @@ const Navbar = ({ languages }: NavbarProps) => {
         {/* ------------- notifications ------------- */}
         <Dropdown
           trigger={
-            <button className="bg-white p-2.5 rounded-full border border-gray-b relative gray-hover">
+            <button className="bg-white p-2.5 rounded-full border border-gray-b relative gray-hover cursor-pointer">
               {notifications?.length > 0 && (
-              <div className="absolute -top-1 -right-1 w-5 h-5 bg-danger rounded-full flex-center text-white text-xs font-bold">
-                {notifications?.length > 99 ? '99+' : notifications?.length}
-              </div>
+                <div className="absolute -top-1 -right-1 w-5 h-5 bg-danger rounded-full flex-center text-white text-xs font-bold">
+                  {notifications?.length > 99 ? '99+' : notifications?.length}
+                </div>
               )}
               <NotificationSvg />
             </button>
@@ -296,15 +296,15 @@ const Navbar = ({ languages }: NavbarProps) => {
               </DropdownItem>
             ))}
           </div> */}
-          <div className="bg-gray rounded-2xl py-4 px-3 flex flex-col gap-2.5 max-h-96 overflow-y-auto">
+          <div className="bg-gray rounded-2xl py-4 px-3 flex flex-col gap-2.5 max-h-96 overflow-y-auto cursor-pointer">
             {notifications.length > 0 ? (
               notifications.map((notification: any, index: number) => (
                 <DropdownItem
                   key={notification?._id || index}
-                  className={`${notification?.isRead ? "bg-gray-100" : "bg-white" } flex flex-col gap-2 border-l-[3px] border-l-pri rounded-2xl p-4 pb-2 gray-hover cursor-pointer`}
+                  className={`${notification?.isRead ? "bg-gray-100" : "bg-white"} gap-2 border-l-[3px] border-l-pri rounded-2xl p-4 gray-hover cursor-pointer`}
                 >
-                  <div className="flex-between-start gap-2.5">
-                    <div className="bg-pri rounded-full size-[30px] flex-center">
+                  <div className="flex gap-2.5">
+                    <div className={`${notification?.message?.length > 50 && 'w-12'} bg-pri rounded-full size-[30px] flex-center`}>
                       <NotificationDropdownSvg />
                     </div>
                     <div className="flex flex-col gap-0.5 leading-[18px]">

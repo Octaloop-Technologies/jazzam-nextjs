@@ -209,7 +209,7 @@ const SubscriptionSettings = () => {
           <button
             onClick={handleChangePlan}
             disabled={isChanging}
-            className={`w-full px-4 py-3 rounded-xl font-medium transition-colors ${
+            className={`w-full px-4 py-3 rounded-xl font-medium transition-colors cursor-pointer ${
               isChanging
                 ? "bg-gray-200 text-gray-400 cursor-not-allowed"
                 : "bg-pri text-white hover:opacity-90"
@@ -221,7 +221,7 @@ const SubscriptionSettings = () => {
           {currentPlan !== "free" && (
             <button
               onClick={handleCancelSubscription}
-              className="w-full px-4 py-3 text-danger border border-danger rounded-xl font-medium hover:bg-red-50 transition-colors"
+              className="w-full px-4 py-3 text-danger border border-danger rounded-xl font-medium hover:bg-red-50 transition-colors cursor-pointer"
             >
               Cancel Subscription
             </button>
