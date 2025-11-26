@@ -267,6 +267,7 @@ const Navbar = ({ languages }: NavbarProps) => {
               <h2 className="text-[20px] font-[500] leading-none pb-2.5 border-b border-gray-b">
                 {language?.navbar?.notifications?.notification}
               </h2>
+              {notifications.length > 0  && 
               <div className="flex-between gap-2.5 text-[14px] font-[500]">
                 <button className="flex-center gap-1 gray-hover" onClick={handleMarkAllRead}>
                   {language?.navbar?.notifications?.markAllRead}
@@ -275,7 +276,7 @@ const Navbar = ({ languages }: NavbarProps) => {
                 <button className="text-danger gap-1 hover:text-gray-200 transition-all duration-200 ease-in-out underline-auto-from-front" onClick={handleClearAll}>
                   {language?.navbar?.notifications?.clearAll}
                 </button>
-              </div>
+              </div>}
             </div>
           </DropdownItem>
           {/* <div className="bg-gray rounded-2xl py-4 px-3 flex flex-col gap-2.5">
