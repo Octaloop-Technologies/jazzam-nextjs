@@ -208,7 +208,7 @@ export default function SubscriptionSelectionPage() {
                     >
                       {isLoading ? "Redirecting..." : "Subscribe with Stripe"}
                     </button>
-                    <button
+                    {/* <button
                       disabled={isLoading}
                       onClick={() => checkoutPaid(key as Exclude<PlanKey, "free">, "payfort")}
                       className={`py-2 rounded-lg bg-purple-600 text-white ${
@@ -216,7 +216,7 @@ export default function SubscriptionSelectionPage() {
                       }`}
                     >
                       {isLoading ? "Redirecting..." : "Subscribe with PayFort"}
-                    </button>
+                    </button> */}
                   </>
                 ) : (
                   <button

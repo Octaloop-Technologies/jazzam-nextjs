@@ -253,7 +253,7 @@ const SummaryPage = () => {
         link.href = url;
         link.setAttribute("download", `${status}.xlsx`);
         link.click();
-        alert("excel file downloaded successfully");
+        // alert("excel file downloaded successfully");
       }
 
     } catch (error) {

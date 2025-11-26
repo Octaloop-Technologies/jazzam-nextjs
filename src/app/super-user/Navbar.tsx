@@ -17,7 +17,7 @@ import Link from "next/link";
 import Dropdown, { DropdownItem } from "@/components/ui/dropdown/Dropdown";
 // import { navItems } from "@/lib/constants/navbarConstants";
 import gsap from "gsap";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Language from "@/components/shared/language/Language";
 import { changeLangNoReload, getCurrentLang } from "@/lib/api/main-page";
@@ -51,6 +51,11 @@ const Navbar = ({ languages }: NavbarProps) => {
 
   const companyId = user?.joinedCompanyStatus === true ? searchParams?.get("companyId") || user?.joinedCompanies : '';
   const lang = getCurrentLang();
+
+  // show only unread notifications count
+  const unreadCount = useMemo(() => {
+    return (notifications || []).filter((n: any) => !n?.isRead).length;
+  }, [notifications]);
 
   useEffect(() => {
     const handleLanguage = async () => {
@@ -108,10 +113,12 @@ const Navbar = ({ languages }: NavbarProps) => {
 
   // listen real time updates
   useEffect(() => {
-    if (socket) {
+    if (socket && isConnected) {
 
       const handleNewNotification = (data: any) => {
-        if (data?.action === "newNotification") setNotifications((prev: any) => [data?.newNotification, ...prev]);
+        if (data?.action === "newNotification") {
+          setNotifications((prev: any) => [data?.notification, ...prev]);
+        }
         if (data?.action === "markAllRead" || data?.action === "clearAll") setNotifications(data?.notifications);
       };
 
@@ -243,9 +250,9 @@ const Navbar = ({ languages }: NavbarProps) => {
         <Dropdown
           trigger={
             <button className="bg-white p-2.5 rounded-full border border-gray-b relative gray-hover cursor-pointer">
-              {notifications?.length > 0 && (
+              {unreadCount > 0 && (
                 <div className="absolute -top-1 -right-1 w-5 h-5 bg-danger rounded-full flex-center text-white text-xs font-bold">
-                  {notifications?.length > 99 ? '99+' : notifications?.length}
+                  {unreadCount > 99 ? '99+' : unreadCount}
                 </div>
               )}
               <NotificationSvg />

@@ -4,6 +4,7 @@ import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
 import React, { useState } from "react";
 import ScadualeModal from "./ScadualeModal";
 import CloseSvg from "@/components/svgs/CloseSvg";
+import { useRouter } from "next/navigation";
 
 interface FollowupButtonsProps{
   handleScheduleFollowup: (scheduledDate: Date) => void,
@@ -12,11 +13,13 @@ interface FollowupButtonsProps{
 
 const FollowUpButtons = ({ handleScheduleFollowup, handleSendFollowupNow }: FollowupButtonsProps) => {
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const router = useRouter();
 
   return (
     <>
       <PrimaryButton
         title="Cancel"
+        onClick={() => router.push("/super-user") }
         className="w-[137px] h-[50px] rounded-xl-2"
         bordered
         iconRight={<CloseSvg />}
