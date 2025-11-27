@@ -8,10 +8,12 @@ import { useRouter } from "next/navigation";
 
 interface FollowupButtonsProps{
   handleScheduleFollowup: (scheduledDate: Date) => void,
-  handleSendFollowupNow: () => void
+  handleSendFollowupNow: () => void,
+  scheduleLoading: boolean,
+  followupLoading: boolean
 }
 
-const FollowUpButtons = ({ handleScheduleFollowup, handleSendFollowupNow }: FollowupButtonsProps) => {
+const FollowUpButtons = ({ handleScheduleFollowup, handleSendFollowupNow, scheduleLoading, followupLoading }: FollowupButtonsProps) => {
   const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
   const router = useRouter();
 
@@ -28,12 +30,14 @@ const FollowUpButtons = ({ handleScheduleFollowup, handleSendFollowupNow }: Foll
         title="Schedule"
         onClick={() => setIsScheduleModalOpen(true)}
         className="!bg-[#EF8305] w-[220px] h-[50px] rounded-xl-2"
+        isLoading={scheduleLoading}
         iconRight={<ScadualedSvg />}
       />
       <PrimaryButton
         title="Send now"
         className="w-[220px] h-[50px] rounded-xl-2"
         iconRight={<SendNowSvg />}
+        isLoading={followupLoading}
         onClick={handleSendFollowupNow}
       />
 
