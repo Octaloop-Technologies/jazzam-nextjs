@@ -448,7 +448,12 @@ const LeadsPage = () => {
                       ))}
                     </ul>
                   ) : lead.bant?.need?.value ? (
-                    <div className="text-[12px]">{lead.bant.need.value}</div>
+                    <ul className="list-disc list-inside space-y-1">
+                      {lead.bant.need.value.map((needItem: string, index: number) => (
+                        <li key={index}>{needItem}</li>
+                      ))}
+                    </ul>
+                    // <div className="text-[12px]">{lead.bant.need.value}</div>
                   ) : (
                     "Not available"
                   )}
