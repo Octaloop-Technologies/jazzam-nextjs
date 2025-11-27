@@ -33,7 +33,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
     const daysInMonth = lastDay.getDate();
     const startingDayOfWeek = firstDay.getDay();
 
-    const days = [];
+    const days: { date: Date; isCurrentMonth: boolean }[] = [];
 
     // Add previous month's days
     for (let i = startingDayOfWeek - 1; i >= 0; i--) {
@@ -175,7 +175,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
 
         {/* Calendar Grid */}
         <div className="grid grid-cols-7 gap-1">
-          {days.map(({ date, isCurrentMonth }, index) => {
+          {days.map(({ date, isCurrentMonth }: any, index) => {
             const disabled = isBeforeToday(date);
             const baseClasses = `
                   flex-center rounded-full transition-colors text-sm py-2
@@ -195,7 +195,7 @@ const DatePicker: React.FC<DatePickerProps> = ({
                 disabled={disabled}
                 className={`${baseClasses} ${disabled ? disabledClasses : enabledClasses}`}
               >
-                {date.getDate()}
+                {date?.getDate()}
               </button>
             );
           })}

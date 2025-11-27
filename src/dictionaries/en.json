@@ -5,6 +5,14 @@
       "ar": "Arabic"
     }
   },
+  "login": {
+    "welcome": "Welcome!",
+    "letsConnect": "Let's connect your account",
+    "continueLoginMsg": "By continuing you agree that you can select a plan after login, or skip now and start on the free plan. You can upgrade anytime. 14-day free trial available for paid plans.",
+    "continueWith": "Continue with",
+    "googleRedirect": "Redirecting to Google...",
+    "zohoRedirect": "Redirecting to Zoho..."
+  },
   "home": {
     "hero": {
       "title": "Jazzam ",

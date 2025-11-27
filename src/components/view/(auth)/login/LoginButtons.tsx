@@ -5,33 +5,33 @@ import React, { useState } from "react";
 import { loginWithGoogle, loginWithZoho } from "@/lib/api/auth";
 import { useToast } from "@/lib/hooks/useToast";
 
-const LoginButtons = () => {
+const LoginButtons = ({ dict }: any) => {
   const [isLoading, setIsLoading] = useState({ google: false, zoho: false });
   const toast = useToast();
 
   const handleGoogleLogin = async () => {
     setIsLoading((prev) => ({ ...prev, google: true }));
-    toast.info("Redirecting to Google...");
+    toast.info(dict?.googleRedirect);
     await loginWithGoogle();
   };
 
   const handleZohoLogin = async () => {
     setIsLoading((prev) => ({ ...prev, zoho: true }));
-    toast.info("Redirecting to Zoho...");
+    toast.info(dict?.zohoRedirect);
     await loginWithZoho();
   };
 
   return (
     <div className="mt-5 flex flex-col gap-2.5 text-[14px] font-[500]">
       <LoginButton
-        title="Continue with Google"
+        title={`${dict?.continueWith} Google`}
         icon={<GoogleIcon />}
         onClick={handleGoogleLogin}
         disabled={isLoading.google}
         loading={isLoading.google}
       />
       <LoginButton
-        title="Continue with Zoho"
+        title={`${dict?.continueWith} Zoho`}
         icon={<ZohoIcon />}
         onClick={handleZohoLogin}
         disabled={isLoading.zoho}
