@@ -8,6 +8,7 @@ import TableCell from "@/components/ui/table/TableCell";
 import TableHeader from "@/components/ui/table/TableHeader";
 import TableRow from "@/components/ui/table/TableRow";
 import FollowUpMenu from "@/components/view/dashboard/follow-up/FollowUpMenu";
+import TabContentLoader from "@/components/view/dashboard/leads/TabContentLoader";
 import { getCurrentLang } from "@/lib/api/main-page";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import tokenStorage from "@/lib/utils/tokenStorage";
@@ -23,13 +24,15 @@ const FollowUpsPage = () => {
   const [language, setLanguage] = useState<any>();
   const [status, setStatus] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [loadFollowUps, setLoadFollowUps] = useState<boolean>(false);
   const [page, setPage] = useState<number>(1);
 
   const companyId = searchParams?.get("companyId");
 
   const { accessToken } = tokenStorage?.getTokens();
 
-  const fetchToken = async () => {
+  const fetchFollowUp = async () => {
+    setLoadFollowUps(true)
     const dict = (await getDictionary(lang))?.superUser?.navbar;
     setLanguage(dict);
 
@@ -42,17 +45,18 @@ const FollowUpsPage = () => {
       const data = await res.json();
       console.log("follow up leads data", data?.data);
       // setPage(data?.data?.page);
-      setFollowupLeads(data?.data)
+      setFollowupLeads(data?.data);
     }
+    setLoadFollowUps(false)
   }
 
   useEffect(() => {
     const handler = setTimeout(() => {
-        fetchToken()
-    }, 1000);
+        fetchFollowUp()
+    }, 500);
 
     return () => clearTimeout(handler);
-  }, [searchQuery])
+  }, [searchQuery, status])
 
   useEffect(() => {
     if (user?.joinedCompanyStatus === true && user?.userType === "user" && !companyId) {
@@ -60,10 +64,6 @@ const FollowUpsPage = () => {
     }
   }, [])
 
-
-  useEffect(() => {
-    fetchToken();
-  }, [status]);
 
   return (
     <section>
@@ -84,7 +84,7 @@ const FollowUpsPage = () => {
       </div>
 
       {/* ---------------------------- lead Table ---------------------------- */}
-      <div className="mt-4 bg-white py-8 rounded-3xl border border-gray-b">
+      {loadFollowUps ? <TabContentLoader /> : <div className="mt-4 bg-white py-8 rounded-3xl border border-gray-b">
         <div className="flex items-center justify-between mb-4 px-[30px]">
           <div className="leading-none">
             <h1 className="text-[18px] font-[600] capitalize">{language?.followUps?.allFollowups}</h1>
@@ -162,7 +162,7 @@ const FollowUpsPage = () => {
             </div>
           </Table>
         </div>
-      </div>
+      </div>}
     </section>
   );
 };

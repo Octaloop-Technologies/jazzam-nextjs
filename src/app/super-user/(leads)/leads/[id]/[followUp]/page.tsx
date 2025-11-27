@@ -30,8 +30,6 @@ const FollowPage = ({ params }: FollowPageProps) => {
 
   const leadName = followUp?.split("%20")
 
-  const decodedFollowUpEmail = decodeURIComponent(followUp);
-
   const { success, error: ErrorToast } = useToast();
 
   const { accessToken } = tokenStorage?.getTokens()
@@ -41,7 +39,9 @@ const FollowPage = ({ params }: FollowPageProps) => {
     subject: "",
     message: "",
   });
-  const [loading, setLoading] = useState(false);
+  const [scheduleLoading, setScheduleLoading] = useState<boolean>(false);
+  const [followupLoading, setFollowupLoading] = useState<boolean>(false);
+
 
   const emailServiceId: string = process.env.NEXT_PUBLIC_EMAIL_SERVICE_ID ?? '';
   const emailTemplateId: string = process.env.NEXT_PUBLIC_FOLLOWUP_EMAIL_TEMPLATE_ID ?? '';
@@ -67,7 +67,7 @@ const FollowPage = ({ params }: FollowPageProps) => {
     }
 
     try {
-      setLoading(true);
+      setScheduleLoading(true);
 
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/create-followup/${id}`, {
           method: "POST",
@@ -96,7 +96,7 @@ const FollowPage = ({ params }: FollowPageProps) => {
       console.error("Email send failed:", error);
       ErrorToast("Failed to send email");
     } finally {
-      setLoading(false);
+      setScheduleLoading(false);
     }
   }
 
@@ -110,7 +110,7 @@ const FollowPage = ({ params }: FollowPageProps) => {
     }
 
     try {
-      setLoading(true);
+      setFollowupLoading(true);
 
       // now send the email using EmailJS
       const result = await emailjs.send(
@@ -152,7 +152,7 @@ const FollowPage = ({ params }: FollowPageProps) => {
       console.error("Email send failed:", error);
       ErrorToast("Failed to send email");
     } finally {
-      setLoading(false);
+      setFollowupLoading(false);
     }
   }
 
@@ -217,7 +217,7 @@ const FollowPage = ({ params }: FollowPageProps) => {
         </div>
 
         <div className="mt-[35px] flex justify-center gap-2.5">
-          <FollowUpButtons handleScheduleFollowup={handleScheduleFollowup} handleSendFollowupNow={handleSendFollowupNow} />
+          <FollowUpButtons handleScheduleFollowup={handleScheduleFollowup} handleSendFollowupNow={handleSendFollowupNow} followupLoading={followupLoading} scheduleLoading={scheduleLoading} />
         </div>
       </div>
     </section>

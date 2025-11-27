@@ -15,6 +15,7 @@ import { useSearchParams } from "next/navigation";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { getCurrentLang } from "@/lib/api/main-page";
 import tokenStorage from "@/lib/utils/tokenStorage";
+import TabContentLoader from "@/components/view/dashboard/leads/TabContentLoader";
 
 
 // =====================================================================
@@ -270,6 +271,8 @@ const SummaryPage = () => {
       </div>
 
       {/* ---------------------------- Cards ---------------------------- */}
+      {chartDataLoaded === false ? <TabContentLoader/> : 
+      <>
       <div className="mt-4.5 flex gap-2.5">
         {cards.map((card) => (
           <div
@@ -360,6 +363,8 @@ const SummaryPage = () => {
           </div>
         </div>
       </div>
+      </>
+      }
 
       {/* ---------------------------- Team Performance ---------------------------- */}
       {/* <div className="mt-2.5 p-[30px] pr-[50px] bg-white border border-gray-b rounded-3xl">

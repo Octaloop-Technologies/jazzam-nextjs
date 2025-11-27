@@ -69,7 +69,26 @@ const DatePicker: React.FC<DatePickerProps> = ({
     });
   };
 
+  // helper to compare only date portion
+  const isBeforeToday = (date: Date) => {
+    const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return d.getTime() < today.getTime();
+  };
+
+  const canNavigatePrev = () => {
+    const today = new Date();
+    const cmYear = currentMonth.getFullYear();
+    const cmMonth = currentMonth.getMonth();
+    const tYear = today.getFullYear();
+    const tMonth = today.getMonth();
+    return cmYear > tYear || (cmYear === tYear && cmMonth > tMonth);
+  };
+
   const handleDateClick = (date: Date) => {
+    if (isBeforeToday(date)) return;
     onDateSelect(date);
   };
 
@@ -87,8 +106,11 @@ const DatePicker: React.FC<DatePickerProps> = ({
     return date.toDateString() === today.toDateString();
   };
 
+  // use today's date when selectedDate prop is null
+  const displayedDate = selectedDate ?? new Date();
+
   const isSelected = (date: Date) => {
-    return selectedDate && date.toDateString() === selectedDate.toDateString();
+    return date.toDateString() === displayedDate.toDateString();
   };
 
   const days = getDaysInMonth(currentMonth);
@@ -103,14 +125,16 @@ const DatePicker: React.FC<DatePickerProps> = ({
 
         <div className="mt-4 flex-between">
           <span className="text-sm font-medium">
-            {isToday(selectedDate || new Date()) ? "T " : ""}{" "}
-            {formatDate(selectedDate) || "Pick Any Date"}
+            {formatDate(displayedDate)}
           </span>
 
           <div className="flex items-center gap-2 justify-between">
             <button
-              onClick={() => navigateMonth("prev")}
-              className="size-[30px] hover:bg-pri rounded-full flex-center transition-colors hover:text-white text-gray-250"
+              onClick={() => canNavigatePrev() && navigateMonth("prev")}
+              disabled={!canNavigatePrev()}
+              className={`size-[30px] rounded-full flex-center transition-colors text-gray-250 ${
+                !canNavigatePrev() ? "opacity-50 cursor-not-allowed" : "hover:bg-pri hover:text-white"
+              }`}
             >
               <svg className="size-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -151,26 +175,30 @@ const DatePicker: React.FC<DatePickerProps> = ({
 
         {/* Calendar Grid */}
         <div className="grid grid-cols-7 gap-1">
-          {days.map(({ date, isCurrentMonth }, index) => (
-            <button
-              key={index}
-              onClick={() => handleDateClick(date)}
-              className={`
+          {days.map(({ date, isCurrentMonth }, index) => {
+            const disabled = isBeforeToday(date);
+            const baseClasses = `
                   flex-center rounded-full transition-colors text-sm py-2
-                  ${
-                    isCurrentMonth
-                      ? isSelected(date)
-                        ? "bg-pri text-white"
-                        : isToday(date)
-                        ? "bg-pri text-white"
-                        : "hover:bg-pri hover:text-white text-gray-250"
-                      : "text-gray-250"
-                  }
-                `}
-            >
-              {date.getDate()}
-            </button>
-          ))}
+                `;
+            const enabledClasses = isCurrentMonth
+              ? isSelected(date)
+                ? "bg-pri text-white"
+                : isToday(date)
+                ? "bg-pri text-white"
+                : "hover:bg-pri hover:text-white text-gray-250"
+              : "text-gray-250";
+            const disabledClasses = "opacity-50 cursor-not-allowed text-gray-300";
+            return (
+              <button
+                key={index}
+                onClick={() => handleDateClick(date)}
+                disabled={disabled}
+                className={`${baseClasses} ${disabled ? disabledClasses : enabledClasses}`}
+              >
+                {date.getDate()}
+              </button>
+            );
+          })}
         </div>
       </div>
 

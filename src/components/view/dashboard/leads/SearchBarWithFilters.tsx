@@ -11,7 +11,7 @@ import {
 
 interface SearchFields{
   searchFields: {
-    searchFilterTitle: string,
+    searchFilterTitle?: string,
     advanceFilters: string,
     clearAll: string,
     companyIndustry: string,
@@ -218,7 +218,7 @@ const SearchBarWithFilters = ({ searchFields }: SearchFields) => {
         <input
           ref={searchInputRef}
           type="text"
-          placeholder={searchFilterTitle}
+          placeholder={searchFilterTitle || ""}
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           onKeyPress={handleKeyPress}

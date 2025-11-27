@@ -33,6 +33,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
   bordered = false,
   titleClass = "text-[14px] leading-normal",
   disabledIcon = true,
+  isLoading
 }) => {
   return (
     <button
@@ -47,7 +48,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
           relative z-10`}
     >
       {iconLeft && <span>{iconLeft}</span>}
-      {disabled && disabledIcon && (
+      {isLoading && (
         <div className="inset-0 flex-center">
           <div className="w-4 h-4 border-t-2 border-b-2 border-sec rounded-full animate-spin"></div>
         </div>

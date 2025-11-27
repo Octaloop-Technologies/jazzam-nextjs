@@ -76,13 +76,21 @@ const DashboardPage = ({ }: DashboardPageProps) => {
   const [language, setLanguage] = useState<any>();
   const { user } = useAppSelector((state) => state.auth);
   const lang = getCurrentLang();
+
+  // fetch current language
+  useEffect(() => {
+    const fetchLanguage = async () => {
+      const dict = (await getDictionary(lang))?.superUser;
+      setLanguage(dict);
+    }
+    fetchLanguage()
+  }, [])
+
   // Fetch data on mount and when params change
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       setError(null);
-      const dict = (await getDictionary(lang))?.superUser;
-      setLanguage(dict);
 
       try {
         const [leadsResponse, statsResponse, currentUserResponse] = await Promise.all([
@@ -120,17 +128,17 @@ const DashboardPage = ({ }: DashboardPageProps) => {
         setIsLoading(false);
       }
     };
-    if(user?.userType !== "user"){
+    if (user?.userType !== "user") {
       fetchData();
-    }else if(user?.userType === "user" && !companyId && user?.joinedCompanyStatus === false && user?.userFirstLogin === false){
+    } else if (user?.userType === "user" && !companyId && user?.joinedCompanyStatus === false && user?.userFirstLogin === false) {
       router.push("/super-user/settings")
-    }else if(user?.userType === "user" && !companyId && user?.joinedCompanyStatus === false && user?.userFirstLogin === true){
+    } else if (user?.userType === "user" && !companyId && user?.joinedCompanyStatus === false && user?.userFirstLogin === true) {
       router.push("/dashboard")
     }
-    else if(user?.userType === "user" && !companyId && user?.joinedCompanyStatus === true){
+    else if (user?.userType === "user" && !companyId && user?.joinedCompanyStatus === true) {
       router.push(`/super-user?companyId=${user?.joinedCompanies}`)
     }
-    else{
+    else {
       fetchData()
     }
 
@@ -227,11 +235,11 @@ const DashboardPage = ({ }: DashboardPageProps) => {
     );
   };
 
-  if (isLoading) {
-    return <TabContentLoader />;
-  }
+  // if (isLoading) {
+  //   return <TabContentLoader />;
+  // }
 
-  if(user?.userType === "user" && !companyId && user?.joinedCompanyStatus === false){
+  if (user?.userType === "user" && !companyId && user?.joinedCompanyStatus === false) {
     return;
   }
 
@@ -275,7 +283,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
         </div>
         <div className="flex items-center gap-2.5">
           {/* Advanced search bar with filters - supports text search, industry, source, company size filters */}
-          <SearchBarWithFilters searchFields={language?.navbar?.leads?.searchFields} />
+          {language !== undefined  && <SearchBarWithFilters searchFields={language?.navbar?.leads?.searchFields} />}
 
           {/* tabs */}
           <TabNavigation
@@ -314,7 +322,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
       </div>
 
       {/* ---------------------------- lead Table ---------------------------- */}
-      <Suspense fallback={<TabContentLoader />}>
+      {isLoading ? <TabContentLoader /> : <Suspense fallback={<TabContentLoader />}>
         <div className="mt-2.5 bg-white py-8 rounded-3xl border border-gray-b overflow-y-auto">
           <div className="flex items-center justify-between mb-4 px-[30px]">
             <div className="leading-none">
@@ -351,8 +359,8 @@ const DashboardPage = ({ }: DashboardPageProps) => {
                       href={createPaginationUrl(Math.max(1, currentPage - 1))}
                       prefetch={false}
                       className={`size-[30px] rounded-full border border-gray-b flex-center transition-all duration-200 ${currentPage === 1
-                          ? "cursor-not-allowed opacity-50"
-                          : "bg-pri text-white hover:bg-pri/90"
+                        ? "cursor-not-allowed opacity-50"
+                        : "bg-pri text-white hover:bg-pri/90"
                         }`}
                     >
                       <LeftArrowSvg />
@@ -364,8 +372,8 @@ const DashboardPage = ({ }: DashboardPageProps) => {
                       href={!leadsData?.hasNextPage ? '' : createPaginationUrl(currentPage + 1)}
                       prefetch={false}
                       className={`size-[30px] rounded-full border border-gray-b flex-center transition-all duration-200 ${!leadsData?.hasNextPage
-                          ? "cursor-not-allowed opacity-50"
-                          : "bg-pri text-white hover:bg-pri/90"
+                        ? "cursor-not-allowed opacity-50"
+                        : "bg-pri text-white hover:bg-pri/90"
                         }`}
                     >
                       <RightArrowSvg />
@@ -470,7 +478,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
             </Table>
           </div>
         </div>
-      </Suspense>
+      </Suspense>}
     </section>
   );
 };
