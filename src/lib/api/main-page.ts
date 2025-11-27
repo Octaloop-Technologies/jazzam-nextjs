@@ -71,7 +71,7 @@ export const getCurrentLang = () => {
   if (typeof window !== "undefined") {
     try {
       const localLang = localStorage.getItem("lang");
-      if (localLang && ["en", "ar"].includes(localLang)) {
+      if (localLang && ["ar", "en"].includes(localLang)) {
         return localLang;
       }
     } catch {}
@@ -80,12 +80,25 @@ export const getCurrentLang = () => {
   // Fallback to cookie (for SSR)
   if (typeof document !== "undefined") {
     const cookieMatch = document.cookie.match(/lang=([^;]+)/);
-    if (cookieMatch && ["en", "ar"].includes(cookieMatch[1])) {
-      return cookieMatch[1];
+    if (cookieMatch && ["ar", "en"].includes(cookieMatch[0])) {
+      return cookieMatch[0];
     }
   }
   
-  return "en";
+  // return "en";
+  // Default to Arabic and persist to both localStorage and cookie for consistency
+  const defaultLang = "ar";
+  if (typeof window !== "undefined") {
+    try {
+      localStorage.setItem("lang", defaultLang);
+      const expires = new Date();
+      expires.setFullYear(expires.getFullYear() + 1);
+      document.cookie = `lang=${defaultLang}; Path=/; SameSite=Lax; Expires=${expires.toUTCString()}`;
+    } catch (e) {
+      console.error("Failed to persist default language:", e);
+    }
+  }
+  return defaultLang;
 };
 
 export const changeLangNoReload = async (lang: string) => {

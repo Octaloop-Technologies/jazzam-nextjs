@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 // Define locale configuration only (remove auth logic)
 // ==============================================================
 const supportedLocales = ["en", "ar"];
-const defaultLocale = "en";
+const defaultLocale = "ar";
 
 function getLocaleFromHeader(acceptLanguage: string | null): string {
   if (!acceptLanguage) return defaultLocale;
