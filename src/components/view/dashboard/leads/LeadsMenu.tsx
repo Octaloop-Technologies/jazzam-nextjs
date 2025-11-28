@@ -170,7 +170,7 @@ const LeadsMenu = ({
 
         {showQualifiedButton && <DropdownItem>
           <button
-            className="w-full text-purple-400 flex gap-1 hover:text-gray-200"
+            className="w-full text-purple-400 flex gap-1 hover:text-gray-200 cursor-pointer"
             onClick={handleLeadQualified}
           >
             <QualifiedSvg className="hover:text-gray-200" />
@@ -180,7 +180,7 @@ const LeadsMenu = ({
 
         <DropdownItem>
           <button
-            className="w-full text-danger flex gap-1 hover:text-gray-200"
+            className="w-full text-danger flex gap-1 hover:text-gray-200 cursor-pointer"
             onClick={handleDeleteClick}
           >
             <DeleteSvg />
