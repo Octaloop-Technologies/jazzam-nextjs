@@ -113,7 +113,7 @@ const Navbar = ({ languages }: NavbarProps) => {
 
   // listen real time updates
   useEffect(() => {
-    if (socket && isConnected) {
+    if (socket) {
 
       const handleNewNotification = (data: any) => {
         if (data?.action === "newNotification") {
