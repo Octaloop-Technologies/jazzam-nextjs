@@ -103,6 +103,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
               companyIndustry: companyIndustryFilter,
               sortBy,
               sortOrder,
+              companyId
             })
             : getAllLeads({
               page: currentPage,
@@ -293,6 +294,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
             sortBy={sortBy}
             sortOrder={sortOrder}
             statusFilter={statusFilter}
+            companyId={companyId}
           />
 
           {/* split line */}
@@ -342,6 +344,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
                 const createPaginationUrl = (page: number) => {
                   const paginationParams = new URLSearchParams();
                   paginationParams.set("page", page.toString());
+                  if(companyId) paginationParams.set("companyId", companyId);
                   if (searchQuery) paginationParams.set("search", searchQuery);
                   if (statusFilter) paginationParams.set("status", statusFilter);
                   if (companyIndustryFilter)

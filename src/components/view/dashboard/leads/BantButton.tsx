@@ -72,7 +72,7 @@ const BantButton = ({ leadId }: BantButtonProps) => {
     <button
       onClick={handleRequalify}
       disabled={isDisabled}
-      className={`text-[12px] disabled:opacity-50 disabled:cursor-not-allowed relative group flex-center gap-1 border border-gray-b rounded-lg px-2 py-1 
+      className={`text-[12px] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed relative group flex-center gap-1 border border-gray-b rounded-lg px-2 py-1 
         ${isDisabled ? "" : "text-cold gray-hover"}`}
       title={isOnCooldown ? "Please wait 5 seconds..." : "Re-qualify lead using BANT"}
     >

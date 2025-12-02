@@ -253,7 +253,7 @@ const LeadsPage = () => {
               customTrigger={
                 <button
                   className="size-[40px] flex-center rounded-full border border-gray-150 bg-white
-                      transition-all duration-200 ease-in-out hover:rotate-90 hover:border-gray-200"
+                      transition-all duration-200 ease-in-out hover:rotate-90 hover:border-gray-200 cursor-pointer"
                 >
                   <div className="flex flex-col gap-1">
                     <span className="size-1 bg-black rounded-full" />
@@ -298,12 +298,12 @@ const LeadsPage = () => {
                           )}
                         </h2>
                       ) : item.link ? (
-                        <h2 className="text-[14px] leading-none text-cold gray-hover">
+                        <h2 className="text-[14px] leading-none text-cold gray-hover cursor-pointer">
                           <Link
                             prefetch={false}
                             href={item.link}
                             target="_blank"
-                            className="underline-auto-from-front flex gap-2.5"
+                            className="underline-auto-from-front flex gap-2.5 cursor-pointer"
                           >
                             {item.value}
                             <ShareSvg />
@@ -314,11 +314,11 @@ const LeadsPage = () => {
                       )}
                     </div>
                   </div>
-                  {item.copy && (
-                    <button className="gray-hover">
+                  {/* {item.copy && (
+                    <button className="gray-hover cursor-pointer">
                       <CopySvg />
                     </button>
-                  )}
+                  )} */}
                 </div>
               ))}
             </div>

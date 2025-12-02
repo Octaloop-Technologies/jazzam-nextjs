@@ -26,7 +26,7 @@ export default function WelcomeBanner() {
   };
 
   // Don't render until mounted or if conditions aren't met
-  if (!shouldShow || !isVisible) return null;
+  if (!shouldShow || !isVisible || user?.userType === "user") return null;
 
   return (
     <div className="mb-6 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-3xl p-6 shadow-sm relative overflow-hidden">

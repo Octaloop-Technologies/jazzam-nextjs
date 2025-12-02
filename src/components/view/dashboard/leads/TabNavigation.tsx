@@ -10,6 +10,7 @@ interface TabNavigationProps {
   sortBy: string;
   sortOrder: string;
   statusFilter?: string | null | undefined;
+  companyId?: string | null | undefined;
   tabNavigationText?: {
     all?: string | undefined,
     new?: string | undefined,
@@ -25,6 +26,7 @@ const TabNavigation = ({
   sortBy,
   sortOrder,
   statusFilter,
+  companyId,
   tabNavigationText
 }: TabNavigationProps) => {
   const router = useRouter();
@@ -41,6 +43,7 @@ const TabNavigation = ({
     if (sortBy !== "createdAt") currentParams.set("sortBy", sortBy);
     if (sortOrder !== "desc") currentParams.set("sortOrder", sortOrder);
     if (status) currentParams.set("status", status);
+    if(companyId) currentParams.set("companyId", companyId);
 
     return currentParams.toString() ? `?${currentParams.toString()}` : "?";
   };

@@ -39,7 +39,7 @@ export const getAvailablePlatforms = async (companyId: string | null | undefined
       };
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/forms/platform/available`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/forms/platform/available?companyId=${companyId}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`

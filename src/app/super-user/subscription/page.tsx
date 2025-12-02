@@ -193,7 +193,7 @@ export default function SubscriptionSelectionPage() {
                     <button
                       disabled={isLoading}
                       onClick={() => startTrial(key as Exclude<PlanKey, "free">)}
-                      className={`py-2 rounded-lg border border-gray-b ${
+                      className={`py-2 rounded-lg border border-gray-b cursor-pointer ${
                         isLoading ? "opacity-50" : "hover:bg-gray-b"
                       }`}
                     >
@@ -202,7 +202,7 @@ export default function SubscriptionSelectionPage() {
                     <button
                       disabled={isLoading}
                       onClick={() => checkoutPaid(key as Exclude<PlanKey, "free">, "stripe")}
-                      className={`py-2 rounded-lg bg-pri text-white ${
+                      className={`py-2 rounded-lg bg-pri cursor-pointer text-white ${
                         isLoading ? "opacity-50" : "hover:opacity-90"
                       }`}
                     >
@@ -236,7 +236,7 @@ export default function SubscriptionSelectionPage() {
       </div>
 
       <div className="mt-6 text-center">
-        <button onClick={skipToFree} className="text-sm text-gray-500 underline">
+        <button onClick={skipToFree} className="text-sm text-gray-500 underline cursor-pointer">
           Skip for now and use Free plan
         </button>
       </div>
