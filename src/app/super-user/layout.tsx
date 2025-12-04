@@ -14,7 +14,7 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
     <div className="min-h-dvh flex flex-col gap-6">
       <Navbar languages={languages} key={lang} />
       <main className="x-padding flex-1">{children}</main>
-      <OnboardingTour />
+      {/* <OnboardingTour /> */}
     </div>
     </AuthGuard>
   );

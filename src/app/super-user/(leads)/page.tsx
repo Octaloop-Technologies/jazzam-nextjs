@@ -31,6 +31,7 @@ import { getCurrentLang } from "@/lib/api/main-page";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { useAppSelector } from "@/redux/store";
 import { useRouter } from "next/navigation"
+import OnboardingTour from "@/components/view/dashboard/leads/OnboardingTour";
 
 interface DashboardPageProps { }
 
@@ -257,7 +258,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
   //   return;
   // }
     if (isRedirecting) {
-    return <TabContentLoader />;
+    return;
   }
 
   if (error) {
@@ -496,6 +497,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
           </div>
         </div>
       </Suspense>}
+      <OnboardingTour />
     </section>
   );
 };

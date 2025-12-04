@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import tokenStorage from '@/lib/utils/tokenStorage';
 
@@ -41,12 +41,29 @@ const managerialSkills = [
 ];
 
 const skillTypeOptions = [
-  { id: "soft_skills", label: "Soft Skills" },
-  { id: "managerial_skills", label: "Managerial Skills" },
-  { id: "other", label: "Other" },
+  { id: "information_technology_software", label: "Information Technology & Software" },
+  { id: "Digital_Marketing_Advertising", label: "Digital Marketing & Advertising" },
+  { id: "Design_Creative", label: "Design & Creative" },
+  { id: "Writing_Content_Creation", label: "Writing & Content Creation" },
+  { id: "Business_Consulting_Services", label: "Business Consulting & Services" },
+  { id: "Sales & Customer_Support", label: "Sales & Customer Support" },
+  { id: "Engineering & Architecture", label: " Engineering & Architecture" },
+  { id: "Education & Training", label: "Education & Training" },
+  { id: "Health, Wellness & Fitness", label: "Health, Wellness & Fitness" },
+  { id: "Real Estate & Construction", label: "Real Estate & Construction" },
+  { id: "Event Planning & Management", label: "Event Planning & Management" },
+  { id: "Travel & Hospitality", label: "Travel & Hospitality" },
+  { id: "Manufacturing & Production", label: "Manufacturing & Production" },
+  { id: "Logistics & Transportation", label: "Logistics & Transportation" },
+  { id: "Finance & Accounting", label: "Finance & Accounting" },
+  { id: "Legal Services", label: "Legal Services" },
+  { id: "E-commerce & Retail Services", label: "E-commerce & Retail Services" },
+  { id: "Audio & Music", label: "Audio & Music" },
+  { id: "Miscellaneous / Other Professional Services", label: "Miscellaneous / Other Professional Services" },
 ];
 
 const CompanyOnboardingForm = ({ onSubmit, onBack }: Props) => {
+  const [services, setServices] = useState([]);
   const [formData, setFormData] = useState<CompanyOnboardingData>({
     companyName: "",
     description: "",
@@ -60,6 +77,28 @@ const CompanyOnboardingForm = ({ onSubmit, onBack }: Props) => {
 
   const { accessToken } = tokenStorage?.getTokens();
 
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/services`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch services');
+        }
+        const data = await response.json();
+        setServices(data.data); // Assuming the API returns { data: [...] }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchServices();
+  }, []);
+
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -69,14 +108,20 @@ const CompanyOnboardingForm = ({ onSubmit, onBack }: Props) => {
     }));
   };
 
-  const handleSkillTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const skillType = e.target.value;
-    setFormData((prev) => ({
-      ...prev,
-      skillType,
-      skills: [],
-      otherSkill: "",
-    }));
+  // const handleSkillTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  //   const skillType = e.target.value;
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     skillType,
+  //     skills: [],
+  //     otherSkill: "",
+  //   }));
+  // };
+
+  const handleSkillTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedSkillType = event.target.value;
+    setFormData({ ...formData, skillType: selectedSkillType });
+    // Fetch sub-services based on selected skill type if needed
   };
 
   const handleSkillToggle = (skillId: string) => {
@@ -142,7 +187,8 @@ const CompanyOnboardingForm = ({ onSubmit, onBack }: Props) => {
 
         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/company-onboarding`, {
           method: "PATCH",
-          headers: { "Content-Type": "application/json", 
+          headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`
           },
           credentials: "include",
@@ -227,9 +273,9 @@ const CompanyOnboardingForm = ({ onSubmit, onBack }: Props) => {
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pri mt-1"
             >
               <option value="">-- Choose a skill type --</option>
-              {skillTypeOptions.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.label}
+              {services.map((service: any) => (
+                <option key={service?.id} value={service?.id}>
+                  {service?.label}
                 </option>
               ))}
             </select>
