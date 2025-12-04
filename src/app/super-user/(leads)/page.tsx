@@ -253,8 +253,11 @@ const DashboardPage = ({ }: DashboardPageProps) => {
   //   return <TabContentLoader />;
   // }
 
-  if (user?.userType === "user" && !companyId && user?.joinedCompanyStatus === false) {
-    return;
+  // if (user?.userType === "user" && !companyId && user?.joinedCompanyStatus === false) {
+  //   return;
+  // }
+    if (isRedirecting) {
+    return <TabContentLoader />;
   }
 
   if (error) {
