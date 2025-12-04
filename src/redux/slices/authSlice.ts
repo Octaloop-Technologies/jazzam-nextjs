@@ -63,6 +63,7 @@ export interface Company {
     skipped: boolean;
     completedAt?: Date;
   };
+  companyOnboarding: Boolean
   createdAt: Date;
   updatedAt: Date;
 }

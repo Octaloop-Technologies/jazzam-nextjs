@@ -75,6 +75,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
   const sortOrder = searchParams?.get("sortOrder") || "desc";
   const [language, setLanguage] = useState<any>();
   const { user } = useAppSelector((state) => state.auth);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const lang = getCurrentLang();
 
   // fetch current language
@@ -88,6 +89,26 @@ const DashboardPage = ({ }: DashboardPageProps) => {
 
   // Fetch data on mount and when params change
   useEffect(() => {
+    // Check redirect conditions first, before fetching data
+    if (String(user?.userType) === "company" && user?.companyOnboarding === false) {
+      setIsRedirecting(true);
+      router.push("/dashboard/onboarding");
+      return;
+    }
+    
+    if (String(user?.userType) === "user" && !companyId && user?.joinedCompanyStatus === false) {
+      setIsRedirecting(true);
+      router.push("/super-user/settings");
+      return;
+    }
+    
+    if (String(user?.userType) === "user" && !companyId && user?.joinedCompanyStatus === true) {
+      setIsRedirecting(true);
+      router.push(`/super-user?companyId=${user?.joinedCompanies}`);
+      return;
+    }
+
+    // Only fetch data if no redirect is needed
     const fetchData = async () => {
       setIsLoading(true);
       setError(null);
@@ -128,21 +149,14 @@ const DashboardPage = ({ }: DashboardPageProps) => {
         setIsLoading(false);
       }
     };
-    if (user?.userType !== "user") {
+
+    if (String(user?.userType) !== "user") {
       fetchData();
-    } else if (user?.userType === "user" && !companyId && user?.joinedCompanyStatus === false && user?.userFirstLogin === false) {
-      router.push("/super-user/settings")
-    } else if (user?.userType === "user" && !companyId && user?.joinedCompanyStatus === false && user?.userFirstLogin === true) {
-      router.push("/dashboard")
-    }
-    else if (user?.userType === "user" && !companyId && user?.joinedCompanyStatus === true) {
-      router.push(`/super-user?companyId=${user?.joinedCompanies}`)
-    }
-    else {
-      fetchData()
+    } else {
+      fetchData();
     }
 
-  }, [currentPage, statusFilter, companyId, searchQuery, companyIndustryFilter, companySizeFilter, sortBy, sortOrder, isRefresh]);
+  }, [currentPage, statusFilter, companyId, searchQuery, companyIndustryFilter, companySizeFilter, sortBy, sortOrder, isRefresh, user?.userType, user?.companyOnboarding, user?.joinedCompanyStatus]);
 
   // ======================================================
   // Generate cards from stats data

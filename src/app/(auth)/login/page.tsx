@@ -1,6 +1,7 @@
 import AuthGuard from "@/components/shared/auth/AuthGuard";
 import Logo from "@/components/shared/logo/Logo";
 import LoginButtons from "@/components/view/(auth)/login/LoginButtons";
+import SignInForm from "@/components/view/(auth)/SignInform";
 import { getCurrentLang } from "@/lib/api/main-page";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { Metadata } from "next";
@@ -24,6 +25,19 @@ const LoginPage = async () => {
           <h1 className="text-[26px] text-pri font-[600]">{dict?.welcome}</h1>
           <p className="mt-1 text-[14px] text-gray-300">{dict?.letsConnect}</p>
         </div>
+
+        <SignInForm dict={dict} />
+
+        <p className="mt-3 text-[14px] text-gray-600">
+          {/* {dict?.noAccount ?? "Don't have an account?"} */}
+          {"Don't have an account?"}
+          <a href="/signup" className="text-pri font-semibold">
+            {/* {dict?.signUp ?? "Sign up"} */}
+            {"Sign up"}
+          </a>
+        </p>
+
+        <label htmlFor="" className="font-semibold">Or</label>
 
         <LoginButtons dict={dict} />
         <p className="mt-3 text-[12px] text-gray-400">
