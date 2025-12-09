@@ -89,6 +89,29 @@ const VerificationCodeForm = ({ onVerify, onResend }: Props) => {
     }
   };
 
+  const handlePaste = (e) => {
+  const paste = e.clipboardData.getData("text");
+  if (!/^\d+$/.test(paste)) return; // only numbers allowed
+
+  const digits = paste.slice(0, code.length).split(""); // take only required digits
+
+  const newCode = [...code];
+  digits.forEach((digit, i) => {
+    newCode[i] = digit;
+  });
+
+  setCode(newCode);
+
+  // move focus to last filled input
+  const lastIndex = digits.length - 1;
+  if (inputRefs.current[lastIndex]) {
+    inputRefs.current[lastIndex].focus();
+  }
+
+  e.preventDefault();
+};
+
+
   const handleResend = async () => {
     setResendTimer(60);
     setCode(["", "", "", "", "", ""]);
@@ -141,6 +164,7 @@ const VerificationCodeForm = ({ onVerify, onResend }: Props) => {
                 value={digit}
                 onChange={(e) => handleInputChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
+                onPaste={handlePaste}
                 maxLength={1}
                 className="w-12 h-12 text-center text-2xl border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pri focus:border-transparent"
               />

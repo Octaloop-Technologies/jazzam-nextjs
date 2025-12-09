@@ -58,6 +58,18 @@ interface Lead {
   createdAt: string;
   updatedAt: string;
   dateOfSubmission?: string;
+  dealHealth?: {
+    _id?: string,
+    healthScore: Number,
+    healthStatus: string,
+    velocityMetrics: {
+      emailsPerWeek: Number,
+      contactFrequencyTrend: string,
+      engagementDecayDays: Number,
+      daysInCurrentStage: Number
+    },
+    analysisCount: Number
+  }
 }
 
 interface LeadScore {
