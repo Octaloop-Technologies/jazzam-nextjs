@@ -1,7 +1,8 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import tokenStorage from '@/lib/utils/tokenStorage';
+import { useAppSelector } from '@/redux/store';
 
 type Props = {
   onSubmit?: (data: CompanyOnboardingData) => void;
@@ -11,54 +12,48 @@ type Props = {
 interface CompanyOnboardingData {
   companyName: string;
   description: string;
-  skillType: string;
-  skills: string[];
+  service: string;
+  subServices: string[];
   otherSkill?: string;
 }
 
-const softSkills = [
-  { id: "communication", label: "Communication" },
-  { id: "teamwork", label: "Teamwork" },
-  { id: "creativity", label: "Creativity" },
-  { id: "problem_solving", label: "Problem Solving" },
-  { id: "leadership", label: "Leadership" },
-  { id: "time_management", label: "Time Management" },
-  { id: "adaptability", label: "Adaptability" },
-  { id: "critical_thinking", label: "Critical Thinking" },
-  { id: "other", label: "Other" }
-];
-
-const managerialSkills = [
-  { id: "project_management", label: "Project Management" },
-  { id: "budgeting", label: "Budgeting" },
-  { id: "strategic_planning", label: "Strategic Planning" },
-  { id: "team_building", label: "Team Building" },
-  { id: "performance_management", label: "Performance Management" },
-  { id: "decision_making", label: "Decision Making" },
-  { id: "conflict_resolution", label: "Conflict Resolution" },
-  { id: "stakeholder_management", label: "Stakeholder Management" },
-  { id: "other", label: "Other" }
-];
-
-const skillTypeOptions = [
-  { id: "soft_skills", label: "Soft Skills" },
-  { id: "managerial_skills", label: "Managerial Skills" },
-  { id: "other", label: "Other" },
-];
-
 const CompanyOnboardingForm = ({ onSubmit, onBack }: Props) => {
+  const [services, setServices] = useState<any>([]);
+  const [subServices, setSubServices] = useState<any>([]);
   const [formData, setFormData] = useState<CompanyOnboardingData>({
     companyName: "",
     description: "",
-    skillType: "",
-    skills: [],
-    otherSkill: "",
+    service: "",
+    subServices: [],
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const user  = useAppSelector((state) => state.auth.user);
   const router = useRouter();
 
   const { accessToken } = tokenStorage?.getTokens();
+
+  useEffect(() => {
+    const fetchServices = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/services`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch services');
+        }
+        const data = await response.json();
+        setServices(data.data); // Assuming the API returns { data: [...] }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchServices();
+  }, []);
 
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -69,34 +64,23 @@ const CompanyOnboardingForm = ({ onSubmit, onBack }: Props) => {
     }));
   };
 
-  const handleSkillTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const skillType = e.target.value;
-    setFormData((prev) => ({
-      ...prev,
-      skillType,
-      skills: [],
-      otherSkill: "",
-    }));
+
+  const handleSkillTypeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedSkillType = event.target.value;
+    setFormData({ ...formData, service: selectedSkillType, subServices: [] });
+    setSubServices(services.find((service: any) => service.label === selectedSkillType)?.sub_services);
+    // Fetch sub-services based on selected skill type if needed
+    // alert("hello")
+
   };
 
-  const handleSkillToggle = (skillId: string) => {
+  const handleSerivceToggle = (subService: string) => {
     setFormData((prev) => ({
       ...prev,
-      skills: prev.skills.includes(skillId)
-        ? prev.skills.filter((s) => s !== skillId)
-        : [...prev.skills, skillId],
+      subServices: prev.subServices.includes(subService)
+        ? prev.subServices.filter((s) => s !== subService)
+        : [...prev.subServices, subService],
     }));
-  };
-
-  const getSkillsForType = () => {
-    switch (formData.skillType) {
-      case "soft_skills":
-        return softSkills;
-      case "managerial_skills":
-        return managerialSkills;
-      default:
-        return [];
-    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -113,18 +97,13 @@ const CompanyOnboardingForm = ({ onSubmit, onBack }: Props) => {
       return;
     }
 
-    if (!formData.skillType) {
-      setError("Please select a skill type");
+    if (!formData.service) {
+      setError("Please select a service type");
       return;
     }
 
-    if (formData.skillType === "other" && !formData.otherSkill?.trim()) {
-      setError("Please enter a skill");
-      return;
-    }
-
-    if (formData.skillType !== "other" && formData.skills.length === 0) {
-      setError("Please select at least one skill");
+    if (formData.subServices.length === 0) {
+      setError("Please select at least one sub service");
       return;
     }
 
@@ -135,14 +114,17 @@ const CompanyOnboardingForm = ({ onSubmit, onBack }: Props) => {
         onSubmit(formData);
       } else {
         const payload = {
+          companyId: user?._id,
           companyName: formData.companyName.trim(),
           description: formData.description.trim(),
-          skillType: formData.skillType.trim(),
+          service: formData.service.trim(),
+          subServices: formData.subServices
         };
 
         const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/company-onboarding`, {
           method: "PATCH",
-          headers: { "Content-Type": "application/json", 
+          headers: {
+            "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`
           },
           credentials: "include",
@@ -164,14 +146,6 @@ const CompanyOnboardingForm = ({ onSubmit, onBack }: Props) => {
       console.error(err);
       setError(err instanceof Error ? err.message : "Network error");
       setLoading(false);
-    }
-  };
-
-  const handleBack = () => {
-    if (onBack) {
-      onBack();
-    } else {
-      router.back();
     }
   };
 
@@ -222,58 +196,43 @@ const CompanyOnboardingForm = ({ onSubmit, onBack }: Props) => {
               Select Skill Type *
             </label>
             <select
-              value={formData.skillType}
+              value={formData.service}
               onChange={handleSkillTypeChange}
               className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pri mt-1"
             >
               <option value="">-- Choose a skill type --</option>
-              {skillTypeOptions.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.label}
+              {services.map((service: any) => (
+                <option key={service?.id} value={service?.id}>
+                  {service?.label}
                 </option>
               ))}
             </select>
           </div>
 
           {/* Skills Display */}
-          {formData.skillType && formData.skillType !== "other" && (
+          {formData.service && (
             <div>
               <label className="text-left text-[12px] text-gray-500">
                 Select Skills (at least one) *
               </label>
+
               <div className="grid grid-cols-2 gap-3 mt-2">
-                {getSkillsForType().map((skill) => (
+                {subServices?.map((sub: any) => (
                   <label
-                    key={skill.id}
+                    key={sub}
                     className="flex items-center gap-2 p-2 border rounded-lg cursor-pointer hover:bg-gray-50"
                   >
                     <input
                       type="checkbox"
-                      checked={formData.skills.includes(skill.id)}
-                      onChange={() => handleSkillToggle(skill.id)}
+                      value={sub}
+                      checked={formData.subServices.includes(sub)}
+                      onChange={() => handleSerivceToggle(sub)}
                       className="w-4 h-4 accent-pri"
                     />
-                    <span className="text-[14px] text-gray-700">{skill.label}</span>
+                    <span className="text-[14px] text-gray-700">{sub}</span>
                   </label>
                 ))}
               </div>
-            </div>
-          )}
-
-          {/* Other Skill Input */}
-          {formData.skillType === "other" && (
-            <div>
-              <label className="text-left text-[12px] text-gray-500">
-                Enter Skill *
-              </label>
-              <input
-                type="text"
-                name="otherSkill"
-                value={formData.otherSkill}
-                onChange={handleInputChange}
-                placeholder="Enter your skill"
-                className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pri mt-1"
-              />
             </div>
           )}
 
@@ -281,13 +240,6 @@ const CompanyOnboardingForm = ({ onSubmit, onBack }: Props) => {
 
           {/* Buttons */}
           <div className="flex gap-3 mt-4">
-            <button
-              type="button"
-              onClick={handleBack}
-              className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 rounded-lg font-medium"
-            >
-              Back
-            </button>
             <button
               type="submit"
               disabled={loading}
