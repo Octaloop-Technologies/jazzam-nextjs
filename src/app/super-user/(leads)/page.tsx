@@ -31,6 +31,7 @@ import { getCurrentLang } from "@/lib/api/main-page";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { useAppSelector } from "@/redux/store";
 import { useRouter } from "next/navigation"
+import OnboardingTour from "@/components/view/dashboard/leads/OnboardingTour";
 
 interface DashboardPageProps { }
 
@@ -75,6 +76,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
   const sortOrder = searchParams?.get("sortOrder") || "desc";
   const [language, setLanguage] = useState<any>();
   const { user } = useAppSelector((state) => state.auth);
+  const [isRedirecting, setIsRedirecting] = useState(false);
   const lang = getCurrentLang();
 
   // fetch current language
@@ -88,6 +90,26 @@ const DashboardPage = ({ }: DashboardPageProps) => {
 
   // Fetch data on mount and when params change
   useEffect(() => {
+    // Check redirect conditions first, before fetching data
+    if (String(user?.userType) === "company" && user?.companyOnboarding === false) {
+      setIsRedirecting(true);
+      router.push("/dashboard/onboarding");
+      return;
+    }
+    
+    if (String(user?.userType) === "user" && !companyId && user?.joinedCompanyStatus === false) {
+      setIsRedirecting(true);
+      router.push("/super-user/settings");
+      return;
+    }
+
+    if (String(user?.userType) === "user" && !companyId && user?.joinedCompanyStatus === true) {
+      setIsRedirecting(true);
+      router.push(`/super-user?companyId=${user?.joinedCompanies}`);
+      return;
+    }
+
+    // Only fetch data if no redirect is needed
     const fetchData = async () => {
       setIsLoading(true);
       setError(null);
@@ -128,21 +150,16 @@ const DashboardPage = ({ }: DashboardPageProps) => {
         setIsLoading(false);
       }
     };
-    if (user?.userType !== "user") {
+
+    if (String(user?.userType) !== "user") {
       fetchData();
-    } else if (user?.userType === "user" && !companyId && user?.joinedCompanyStatus === false && user?.userFirstLogin === false) {
-      router.push("/super-user/settings")
-    } else if (user?.userType === "user" && !companyId && user?.joinedCompanyStatus === false && user?.userFirstLogin === true) {
-      router.push("/dashboard")
-    }
-    else if (user?.userType === "user" && !companyId && user?.joinedCompanyStatus === true) {
-      router.push(`/super-user?companyId=${user?.joinedCompanies}`)
-    }
-    else {
-      fetchData()
+    } else {
+      fetchData();
     }
 
-  }, [currentPage, statusFilter, companyId, searchQuery, companyIndustryFilter, companySizeFilter, sortBy, sortOrder, isRefresh]);
+  }, [currentPage, statusFilter, companyId, searchQuery, companyIndustryFilter, companySizeFilter, sortBy, sortOrder, isRefresh, user?.userType, user?.companyOnboarding, user?.joinedCompanyStatus]);
+
+  console.log("dealHealth:**************", leadsData?.leads[0].dealHealth);
 
   // ======================================================
   // Generate cards from stats data
@@ -239,7 +256,10 @@ const DashboardPage = ({ }: DashboardPageProps) => {
   //   return <TabContentLoader />;
   // }
 
-  if (user?.userType === "user" && !companyId && user?.joinedCompanyStatus === false) {
+  // if (user?.userType === "user" && !companyId && user?.joinedCompanyStatus === false) {
+  //   return;
+  // }
+  if (isRedirecting) {
     return;
   }
 
@@ -283,7 +303,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
         </div>
         <div className="flex items-center gap-2.5">
           {/* Advanced search bar with filters - supports text search, industry, source, company size filters */}
-          {language !== undefined  && <SearchBarWithFilters searchFields={language?.navbar?.leads?.searchFields} />}
+          {language !== undefined && <SearchBarWithFilters searchFields={language?.navbar?.leads?.searchFields} />}
 
           {/* tabs */}
           <TabNavigation
@@ -391,6 +411,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
                 <TableCell>{language?.navbar?.leads?.tableHeadersTitle?.lead}</TableCell>
                 <TableCell>{language?.navbar?.leads?.tableHeadersTitle?.status}</TableCell>
                 <TableCell>{language?.navbar?.leads?.tableHeadersTitle?.score}</TableCell>
+                {/* <TableCell>{language?.navbar?.leads?.tableHeadersTitle?.dealHealtScore}</TableCell> */}
                 <TableCell>{language?.navbar?.leads?.tableHeadersTitle?.profileLink}</TableCell>
                 <TableCell>{language?.navbar?.leads?.tableHeadersTitle?.companySize}</TableCell>
               </TableHeader>
@@ -443,6 +464,23 @@ const DashboardPage = ({ }: DashboardPageProps) => {
                           <span className="text-sec font-medium">{lead?.leadScore || 0}%</span>
                         </div>
                       </TableCell>
+                      {/* <TableCell>
+                        <div className="flex items-center gap-2">
+                          <PercentageCircle
+                            percentage={lead?.leadScore || 0}
+                            color={
+                              lead?.leadScore && lead?.leadScore >= 80
+                                ? "var(--sec)"
+                                : lead?.leadScore && lead?.leadScore >= 60
+                                  ? "var(--pipeline)"
+                                  : "var(--cold)"
+                            }
+                            size={18}
+                            strokeWidth={3}
+                          />
+                          <span className="text-sec font-medium">{lead?.leadScore || 0}%</span>
+                        </div>
+                      </TableCell> */}
                       <TableCell>
                         {lead?.profileUrl ? (
                           <Link
@@ -479,6 +517,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
           </div>
         </div>
       </Suspense>}
+      <OnboardingTour />
     </section>
   );
 };
