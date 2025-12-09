@@ -18,11 +18,6 @@ const SignupForm = () => {
     const [error, setError] = useState<string>("");
 
     const router = useRouter();
-    
-    const checkEmail = () => {
-        const corporateEmailRegex = /^[a-zA-Z0-9._%+-]+@(?!gmail\.com$)(?!yahoo\.com$)(?!hotmail\.com$)(?!outlook\.com$)(?!live\.com$)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return corporateEmailRegex;
-    }
 
     useEffect(() => {
         const fetchLang = async () => {
@@ -44,25 +39,6 @@ const SignupForm = () => {
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
-        if(!formData.email){
-            setError("Email field can not be empty. Please! enter valid email")
-            return;
-        }
-
-        if(!formData.password){
-            setError("Password field can not be empty. Please! enter password")
-            return;
-        }
-
-        if(!formData.confirmPassword){
-            setError("Confirm Password field can not be empty. Please! enter confirm password")
-            return;
-        }
-
-        if(!checkEmail().test(formData.email)) {
-            setError("Personal email not acceptable. Please! use company email")
-            return;
-        }
         setError("");
         setLoading(true);
 

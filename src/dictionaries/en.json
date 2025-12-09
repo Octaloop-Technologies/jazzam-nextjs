@@ -262,8 +262,6 @@
           "lead": "Lead",
           "status": "Status",
           "score": "Score",
-          "dealHealtScore": "Deal Health Score",
-          "dealHealthStatus": "Deal Health Status",
           "profileLink": "Profile Link",
           "companySize": "Company Size"
         },
