@@ -56,8 +56,9 @@ const LeadsPage = () => {
   const params = useParams();
   const id = params?.id as string;
   const lang = getCurrentLang()
-  
+
   const [lead, setLead] = useState<any>(null);
+  const [dealHealth, setDealHealth] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [language, setLanguage] = useState<any>()
@@ -65,25 +66,26 @@ const LeadsPage = () => {
   useEffect(() => {
     const fetchLead = async () => {
       if (!id) return;
-      
+
       try {
         setLoading(true);
         setError(null);
         const leadResponse = await getLeadById({ id });
-        
+
         if (!leadResponse.success || !leadResponse.data) {
           setError("Lead not found");
           return;
         }
-        
-        setLead(leadResponse.data);
+
+        setLead(leadResponse.data.leadData);
+        setDealHealth(leadResponse.data.dealHealth)
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to fetch lead");
       } finally {
         setLoading(false);
       }
     };
-    const fetchLanguage = async() => {
+    const fetchLanguage = async () => {
       const dict = (await getDictionary(lang))?.superUser?.navbar?.leads;
       setLanguage(dict);
     }
@@ -118,10 +120,9 @@ const LeadsPage = () => {
         lead.fullName && lead.fullName.trim()
           ? lead.fullName
           : (lead.firstName && lead.firstName.trim()) || (lead.lastName && lead.lastName.trim())
-          ? `${lead.firstName ? lead.firstName : ""}${
-              lead.lastName ? ` ${lead.lastName}` : ""
-            }`.trim() || "No Name"
-          : "No Name",
+            ? `${lead.firstName ? lead.firstName : ""}${lead.lastName ? ` ${lead.lastName}` : ""
+              }`.trim() || "No Name"
+            : "No Name",
       path: `/super-user/leads/${id}`,
     },
   ];
@@ -208,15 +209,14 @@ const LeadsPage = () => {
                   </div>
                 </div>
                 <div
-                  className={`mt-2.5 w-[107px] h-[30px] text-sm rounded-lg flex-center gap-1 ${
-                    lead.status === "hot"
-                      ? "text-hot bg-hot-light"
-                      : lead.status === "cold"
+                  className={`mt-2.5 w-[107px] h-[30px] text-sm rounded-lg flex-center gap-1 ${lead.status === "hot"
+                    ? "text-hot bg-hot-light"
+                    : lead.status === "cold"
                       ? "text-cold bg-cold-light"
                       : lead.status === "new"
-                      ? "text-pri bg-pri-light"
-                      : "text-pipeline bg-pipeline-light"
-                  }`}
+                        ? "text-pri bg-pri-light"
+                        : "text-pipeline bg-pipeline-light"
+                    }`}
                 >
                   {lead.status === "hot" && <HotLeadsSvg className="size-4" />}
                   {lead.status === "cold" && <ColdLeadsSvg className="size-4" />}
@@ -396,9 +396,9 @@ const LeadsPage = () => {
           <div className="w-full max-w-[5%]" aria-hidden="true" />
         </div>
 
-        {/* ------------------------- Lead Qualification (BANT) ------------------------- */}
-        <div className="flex-between gap-2.5 w-full items-stretch">
-          <div className="p-[30px] w-full border border-gray-b rounded-3xl bg-white max-w-[55%]">
+        <div className="flex items-start gap-2.5 w-full">
+          {/* ------------------------- Lead Bant Information ------------------------- */}
+          <div className="p-[30px] w-full border border-gray-b rounded-3xl bg-white max-w-[53.7%]">
             <div className="flex-between-start gap-2.5">
               <h2 className="text-[16px] font-[500] capitalize pb-2 border-b border-gray-n/30">
                 {language?.leadQualificationBant}
@@ -416,27 +416,28 @@ const LeadsPage = () => {
                 Qualified
               </div> */}
             </div>
+
             <div className="mt-4 flex justify-between gap-2.5">
               <div className="flex flex-col gap-1">
                 <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Authority</h3>
                 <h2 className="text-[14px] leading-none font-[500]">
                   Decision maker: &nbsp;
                   <span
-                    className={`text-[12px] ${
-                      lead.bant?.authority?.isDecisionMaker ? "text-pri" : "text-hot"
-                    }`}
+                    className={`text-[12px] ${lead.bant?.authority?.isDecisionMaker ? "text-pri" : "text-hot"
+                      }`}
                   >
                     {lead.bant?.authority?.isDecisionMaker ? "Yes" : "No"}
                   </span>
-                  {/* {lead.bant?.authority?.value && (
+                  {lead.bant?.authority?.value && (
                     <div className="mt-1 text-[12px]">{lead.bant.authority.value}</div>
-                  )} */}
+                  )}
                 </h2>
               </div>
               {/* <div className="flex-center px-5 h-[25px] text-[12px] text-hot bg-hot-light rounded-lg">
                 High
               </div> */}
             </div>
+
             <div className="mt-4 flex justify-between gap-2.5">
               <div className="flex flex-col gap-1">
                 <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Need</h3>
@@ -463,7 +464,8 @@ const LeadsPage = () => {
                 Urgent
               </div> */}
             </div>
-            <div className="mt-4 flex justify-between gap-2.5">
+
+            <div className="mt-4 flex justify-between gap-2.5 mb-20">
               <div className="flex flex-col gap-1">
                 <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Timeline</h3>
                 <h2 className="text-[12px] leading-none font-[500]">
@@ -475,10 +477,46 @@ const LeadsPage = () => {
               </div> */}
             </div>
           </div>
-          {/* ----------------------- Not Needed : Design Only ----------------------- */}
-          <div className="p-[30px] w-full max-w-[40%]" aria-hidden="true" />
-          <div className="w-full max-w-[5%]" aria-hidden="true" />
+
+          {/* ------------------------- Deal Health Information ------------------------- */}
+          <div className="p-[30px] w-full border border-gray-b rounded-3xl bg-white max-w-[40%]">
+            <h2 className="text-[16px] leading-none font-[500] capitalize pb-2 border-b border-gray-n/30">
+              {language?.dealHealthInformation}
+            </h2>
+            <div className="mt-4 flex flex-col gap-4">
+              <div className="flex flex-col gap-1">
+                <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Health Score</h3>
+                <h2 className="text-[14px] leading-none font-[500]">
+                  {dealHealth?.healthScore || "Not available"}
+                </h2>
+              </div>
+              <div className="flex flex-col gap-1">
+                <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Health Status</h3>
+                <h2 className="text-[14px] leading-none font-[500]">
+                  {dealHealth?.healthStatus || "Not available"}
+                </h2>
+              </div>
+              <div className="flex flex-col gap-1">
+                <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Ai Analysis</h3>
+                <ul className="mt-1">
+                  <li className="text-[14px] leading-none font-[500] py-1">Churn Risk Score: {dealHealth?.aiAnalysis?.churnRiskScore}</li>
+                  <li className="text-[14px] leading-none font-[500] py-1">Predicted Outcome: {dealHealth?.aiAnalysis?.predictedOutcome}</li>
+                  <li className="text-[14px] leading-none font-[500] py-1">Reasoning: {dealHealth?.aiAnalysis?.reasoning}</li>
+                  <li className="text-[14px] leading-none font-[500] py-1">Success Probility: {dealHealth?.aiAnalysis?.successProbility}</li>
+                </ul>
+              </div>
+                            <div className="flex flex-col gap-1">
+                <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Velocity Metrics</h3>
+                <ul className="mt-1">
+                  <li className="text-[14px] leading-none font-[500] py-1">Contact Frequency Trend: {dealHealth?.velocityMetrics?.contactFrequencyTrend}</li>
+                  <li className="text-[14px] leading-none font-[500] py-1">Stage Progress Speed: {dealHealth?.velocityMetrics?.stageProgressSpeed}</li>
+                  <li className="text-[14px] leading-none font-[500] py-1">Engagement Decay Days: {dealHealth?.velocityMetrics?.engagementDecayDays}</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
+
 
         <div className="flex-between gap-2.5 w-full items-stretch pb-5">
           <div className="p-[30px] w-full border border-gray-b rounded-3xl bg-white max-w-[55%]">
