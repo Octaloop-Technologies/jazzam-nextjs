@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { EyeSvg } from "@/components/svgs/NavbarSvgs";
 
 type Props = {
   dict?: any;
@@ -12,6 +13,7 @@ export default function SignInForm({ dict }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,15 +81,23 @@ export default function SignInForm({ dict }: Props) {
       <label className="text-left text-[12px] text-gray-500">
         {dict?.passwordLabel ?? "Password"}
       </label>
-      <input
-        name="password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        required
-        placeholder={dict?.passwordPlaceholder ?? "••••••••"}
-        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pri"
-      />
+      <div className="flex w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pri">
+        <input
+          name="password"
+          type={showPassword ? "text" : "password"}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          placeholder={dict?.passwordPlaceholder ?? "••••••••"}
+          className="w-full  focus:outline-none"
+        />
+        <button onClick={(e: any) => {
+          e.preventDefault()
+          setShowPassword(!showPassword)
+        }} className="w-10 pl-6">
+          <EyeSvg />
+        </button>
+      </div>
 
       {error && <div className="text-red-500 text-sm">{error}</div>}
 
