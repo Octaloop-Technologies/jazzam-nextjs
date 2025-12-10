@@ -263,8 +263,6 @@
           "lead": "يقود",
           "status": "حالة",
           "score": "نتيجة",
-          "dealHealtScore": "صفقة النتيجة الصحية",
-          "dealHealthStatus": "الحالة الصحية للصفقة",
           "profileLink": "رابط الملف الشخصي",
           "companySize": "حجم الشركة"
         },
