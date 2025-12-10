@@ -128,7 +128,6 @@ const FormsDashboard = () => {
                 <span className="text-2xl">{getPlatformIcon(platform.platform)}</span>
                 <h3 className="font-medium">{platform.name}</h3>
               </div>
-
               <p className="text-sm text-gray-200 mb-4">{platform.description}</p>
 
               <div className="space-y-2">
@@ -139,12 +138,12 @@ const FormsDashboard = () => {
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
-                    value={`https://jazzam.sa/form/${platform.formUrl.split("/")[4]}` || ""}
+                    value={`https://jazzam-frontend-staging.vercel.app/form/${platform.formUrl.split("/")[4]}` || ""}
                     readOnly
                     className="flex-1 px-2 py-1 text-xs border border-gray-b rounded bg-gray-50"
                   />
                   <button
-                    onClick={() => copyToClipboard(`https://jazzam.sa/form/${platform.formUrl.split("/")[4]}` || "", "Form URL")}
+                    onClick={() => copyToClipboard(`https://jazzam-frontend-staging.vercel.app/form/${platform.formUrl.split("/")[4]}` || "", "Form URL")}
                     className="p-1 hover:bg-gray-100 rounded transition-colors"
                     title="Copy Form URL"
                   >
