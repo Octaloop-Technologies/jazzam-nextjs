@@ -138,19 +138,19 @@ const FormsDashboard = () => {
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
-                    value={`https://jazzam-frontend-staging.vercel.app/form/${platform.formUrl.split("/")[4]}` || ""}
+                    value={`https://jazzam.sa/form/${platform.formUrl.split("/")[4]}` || ""}
                     readOnly
                     className="flex-1 px-2 py-1 text-xs border border-gray-b rounded bg-gray-50"
                   />
                   <button
-                    onClick={() => copyToClipboard(`https://jazzam-frontend-staging.vercel.app/form/${platform.formUrl.split("/")[4]}` || "", "Form URL")}
+                    onClick={() => copyToClipboard(`https://jazzam.sa/form/${platform.formUrl.split("/")[4]}` || "", "Form URL")}
                     className="p-1 hover:bg-gray-100 rounded transition-colors"
                     title="Copy Form URL"
                   >
                     <CopySvg />
                   </button>
                   <a
-                    href={`https://jazzam-frontend-staging.vercel.app/form/${platform.formUrl.split("/")[4]}` || ""}
+                    href={`https://jazzam.sa/form/${platform.formUrl.split("/")[4]}` || ""}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-1 hover:bg-gray-100 rounded transition-colors"
