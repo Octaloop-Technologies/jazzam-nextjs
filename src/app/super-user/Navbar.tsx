@@ -208,7 +208,7 @@ const Navbar = ({ languages }: NavbarProps) => {
       <Logo />
 
       {/* ------------- nav items ------------- */}
-      {user?.userType === "user" && user?.joinedCompanyStatus === false ? "" :
+      {(user?.userType === "user" && user?.joinedCompanyStatus === false) || !user?.companyOnboarding  ? "" :
         <nav className="flex-center gap-2.5 text-[14px]">
           {navItems.map((item) => (
             <Link

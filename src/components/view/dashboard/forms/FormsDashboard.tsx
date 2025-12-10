@@ -150,7 +150,7 @@ const FormsDashboard = () => {
                     <CopySvg />
                   </button>
                   <a
-                    href={`https://jazzam.sa/form/${platform.formUrl.split("/")[4]}` || ""}
+                    href={`https://jazzam-frontend-staging.vercel.app/form/${platform.formUrl.split("/")[4]}` || ""}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-1 hover:bg-gray-100 rounded transition-colors"
