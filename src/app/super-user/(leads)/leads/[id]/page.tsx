@@ -59,6 +59,7 @@ const LeadsPage = () => {
 
   const [lead, setLead] = useState<any>(null);
   const [dealHealth, setDealHealth] = useState<any>(null);
+  const [nba, setNBA] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [language, setLanguage] = useState<any>()
@@ -79,6 +80,7 @@ const LeadsPage = () => {
 
         setLead(leadResponse.data.leadData);
         setDealHealth(leadResponse.data.dealHealth)
+        setNBA(leadResponse.data.nextBestAction)
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to fetch lead");
       } finally {
@@ -505,12 +507,12 @@ const LeadsPage = () => {
                   <li className="text-[14px] leading-none font-[500] py-1">Success Probility: {dealHealth?.aiAnalysis?.successProbility}</li>
                 </ul>
               </div>
-                            <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-1">
                 <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Velocity Metrics</h3>
                 <ul className="mt-1">
                   <li className="text-[14px] leading-none font-[500] py-1">Contact Frequency Trend: {dealHealth?.velocityMetrics?.contactFrequencyTrend}</li>
                   <li className="text-[14px] leading-none font-[500] py-1">Stage Progress Speed: {dealHealth?.velocityMetrics?.stageProgressSpeed}</li>
-                  <li className="text-[14px] leading-none font-[500] py-1">Engagement Decay Days: {dealHealth?.velocityMetrics?.engagementDecayDays}</li>
+                  {/* <li className="text-[14px] leading-none font-[500] py-1">Engagement Decay Days: {dealHealth?.velocityMetrics?.engagementDecayDays}</li> */}
                 </ul>
               </div>
             </div>
@@ -518,8 +520,9 @@ const LeadsPage = () => {
         </div>
 
 
-        <div className="flex-between gap-2.5 w-full items-stretch pb-5">
-          <div className="p-[30px] w-full border border-gray-b rounded-3xl bg-white max-w-[55%]">
+        <div className="flex-between w-full items-stretch pb-5">
+          {/* --------------- Skills & Interest */}
+          <div className="p-[30px] w-full border border-gray-b rounded-3xl bg-white max-w-[53.5%]">
             <h2 className="text-[16px] leading-none font-[500] capitalize pb-2 border-b border-gray-n/30">
               {language?.skillsInterest}
             </h2>
@@ -569,9 +572,46 @@ const LeadsPage = () => {
               </div>
             </div>
           </div>
-          {/* ----------------------- Not Needed : Design Only ----------------------- */}
-          <div className="p-[30px] w-full max-w-[40%]" aria-hidden="true" />
-          <div className="w-full max-w-[5%]" aria-hidden="true" />
+          {/* ------------------------- Next Best Action ------------------------- */}
+          <div className="p-[30px] w-full border border-gray-b rounded-3xl bg-white max-w-[45.5%]">
+            <h2 className="text-[16px] leading-none font-[500] capitalize pb-2 border-b border-gray-n/30">
+              {language?.nextBestAction}
+            </h2>
+            <div className="mt-4 flex flex-col gap-4">
+              <div className="flex flex-col gap-1">
+                <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Action Type</h3>
+                <h2 className="text-[14px] leading-none font-[500]">
+                  {nba.actionType || "Not available"}
+                </h2>
+              </div>
+              <div className="flex flex-col gap-1">
+                <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Channel</h3>
+                <h2 className="text-[14px] leading-none font-[500]">
+                  {nba.channel || "Not available"}
+                </h2>
+              </div>
+              <div className="flex flex-col gap-1">
+                <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Title</h3>
+                <h2 className="text-[14px] leading-none font-[500]">
+                  {nba?.title || "Not available"}
+                </h2>
+              </div>
+              <div className="flex flex-col gap-1">
+                <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Description</h3>
+                <h2 className="text-[14px] leading-none font-[500]">
+                  {nba?.description || "Not available"}
+                </h2>
+
+              </div>
+              <div className="flex flex-col gap-1">
+                <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Confidence Score</h3>
+                <h2 className="text-[14px] leading-none font-[500]">
+
+                  {nba?.confidenceScore || "Not available"}
+                </h2>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
