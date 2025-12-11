@@ -78,7 +78,6 @@ const VerificationCodeForm = ({ onVerify, onResend }: Props) => {
 
       // Check if response contains redirect URL
       if (data.redirect) {
-        alert("this is calling...")
         window.location.href = data.redirect;
       }
     } catch (err) {

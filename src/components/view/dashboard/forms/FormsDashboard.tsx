@@ -128,7 +128,6 @@ const FormsDashboard = () => {
                 <span className="text-2xl">{getPlatformIcon(platform.platform)}</span>
                 <h3 className="font-medium">{platform.name}</h3>
               </div>
-
               <p className="text-sm text-gray-200 mb-4">{platform.description}</p>
 
               <div className="space-y-2">

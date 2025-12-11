@@ -1,4 +1,5 @@
 "use client";
+import { EyeSvg } from '@/components/svgs/NavbarSvgs';
 import { getCurrentLang } from '@/lib/api/main-page';
 import { getDictionary } from '@/lib/i18n/getDictionary';
 import Image from 'next/image';
@@ -16,8 +17,15 @@ const SignupForm = () => {
     });
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string>("");
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
     const router = useRouter();
+
+    const checkEmail = () => {
+        const corporateEmailRegex = /^[a-zA-Z0-9._%+-]+@(?!gmail\.com$)(?!yahoo\.com$)(?!hotmail\.com$)(?!outlook\.com$)(?!live\.com$)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return corporateEmailRegex;
+    }
 
     useEffect(() => {
         const fetchLang = async () => {
@@ -39,6 +47,25 @@ const SignupForm = () => {
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (!formData.email) {
+            setError("Email field can not be empty. Please! enter valid email")
+            return;
+        }
+
+        if (!formData.password) {
+            setError("Password field can not be empty. Please! enter password")
+            return;
+        }
+
+        if (!formData.confirmPassword) {
+            setError("Confirm Password field can not be empty. Please! enter confirm password")
+            return;
+        }
+
+        if (!checkEmail().test(formData.email)) {
+            setError("Personal email not acceptable. Please! use company email")
+            return;
+        }
         setError("");
         setLoading(true);
 
@@ -127,31 +154,47 @@ const SignupForm = () => {
                         <label className="text-left text-[12px] text-gray-500">
                             {"Password"}
                         </label>
-                        <input
-                            name="password"
-                            type="password"
-                            required
-                            placeholder={"••••••••"}
-                            value={formData.password}
-                            onChange={handleInputChange}
-                            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pri"
-                        />
+                        <div className="flex w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pri">
+                            <input
+                                name="password"
+                                type={showPassword ? "text" : "password"}
+                                value={formData.password}
+                                onChange={handleInputChange}
+                                required
+                                placeholder={"••••••••"}
+                                className="w-full  focus:outline-none"
+                            />
+                            <button onClick={(e: any) => {
+                                e.preventDefault()
+                                setShowPassword(!showPassword)
+                            }} className="w-10 pl-6">
+                                <EyeSvg />
+                            </button>
+                        </div>
                         <label className="text-left text-[12px] text-gray-500">
                             {"Confirm Password"}
                         </label>
-                        <input
-                            name="confirmPassword"
-                            type="password"
-                            required
-                            placeholder={"••••••••"}
-                            value={formData.confirmPassword}
-                            onChange={handleInputChange}
-                            className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pri"
-                        />
+                        <div className="flex w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pri">
+                            <input
+                                name="confirmPassword"
+                                type={showConfirmPassword ? "text" : "password"}
+                                value={formData.confirmPassword}
+                                onChange={handleInputChange}
+                                required
+                                placeholder={"••••••••"}
+                                className="w-full  focus:outline-none"
+                            />
+                            <button onClick={(e: any) => {
+                                e.preventDefault()
+                                setShowConfirmPassword(!showConfirmPassword)
+                            }} className="w-10 pl-6">
+                                <EyeSvg />
+                            </button>
+                        </div>
                         {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
                     </form>
                     <div className='flex justify-center mt-8'>
-                        <button 
+                        <button
                             onClick={handleSignup}
                             disabled={loading}
                             className='bg-green-600 hover:bg-green-700 disabled:bg-gray-400 border rounded-full text-white py-2 px-10 cursor-pointer'

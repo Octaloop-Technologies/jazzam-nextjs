@@ -1,9 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAppSelector } from "@/redux/store";
+import { useAppDispatch, useAppSelector } from "@/redux/store";
 import { useRouter, usePathname } from "next/navigation";
 import { updateOnboardingStatus as updateOnboardingAction } from "@/lib/api/leads";
+import { fetchCurrentUser } from "@/redux/slices/authSlice";
 
 interface OnboardingStep {
   id: number;
@@ -77,6 +78,7 @@ const onboardingSteps: OnboardingStep[] = [
 
 export default function OnboardingTour() {
   const user = useAppSelector((state) => state.auth.user);
+  const dispatch = useAppDispatch();
   const router = useRouter();
   const pathname = usePathname();
   const [currentStep, setCurrentStep] = useState(0);
@@ -182,6 +184,7 @@ export default function OnboardingTour() {
       skipped: true,
     });
     setIsLoading(false);
+    await dispatch(fetchCurrentUser());
   };
 
   const handleRestart = () => {
