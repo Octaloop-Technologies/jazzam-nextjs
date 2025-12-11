@@ -30,7 +30,7 @@ const SignupForm = () => {
     useEffect(() => {
         const fetchLang = async () => {
             const lang = getCurrentLang();
-            const dict = (await getDictionary(lang))?.superUser?.navbar.settings;
+            const dict = (await getDictionary(lang))?.login;
             setLanguage(dict)
         }
         fetchLang()
@@ -48,22 +48,22 @@ const SignupForm = () => {
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!formData.email) {
-            setError("Email field can not be empty. Please! enter valid email")
+            setError(language?.emptyEmailField)
             return;
         }
 
         if (!formData.password) {
-            setError("Password field can not be empty. Please! enter password")
+            setError(language?.emptyPasswordField)
             return;
         }
 
         if (!formData.confirmPassword) {
-            setError("Confirm Password field can not be empty. Please! enter confirm password")
+            setError(language?.emptyConfirmPassword)
             return;
         }
 
         if (!checkEmail().test(formData.email)) {
-            setError("Personal email not acceptable. Please! use company email")
+            setError(language?.personalEmailErrMsg)
             return;
         }
         setError("");
@@ -86,13 +86,13 @@ const SignupForm = () => {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.message || "Signup failed");
+                throw new Error(language?.failedSignUp);
             }
 
             // Redirect to verification page
             router.push(`/verify-email/${formData.email}`);
         } catch (err) {
-            setError(err instanceof Error ? err.message : "An error occurred");
+            setError(language?.somethingWrongMsg);
         } finally {
             setLoading(false);
         }
@@ -117,7 +117,7 @@ const SignupForm = () => {
                                     className=""
                                 />
                             </div>
-                            <p className='text-center'>Continue as a user</p>
+                            <p className='text-center'>{language?.continueAsUser}</p>
                         </div>
                         <div className={`${userType === "company" ? "bg-gray-150" : "bg-gray-100"} min-w-[20rem] hover:bg-gray-150 hover:cursor-pointer flex flex-col rounded-2xl shadow-2xl p-10 gap-1`} onClick={() => setUserType("company")}>
                             <div className='flex justify-center'>
@@ -129,7 +129,7 @@ const SignupForm = () => {
                                     className=""
                                 />
                             </div>
-                            <p className='text-center'>Continue as a company</p>
+                            <p className='text-center'>{language?.continueAsCompany}</p>
                         </div>
                     </div>
                     <div className='flex justify-center mt-8'>

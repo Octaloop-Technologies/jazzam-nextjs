@@ -1,6 +1,6 @@
 "use client";
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { EyeSvg } from "@/components/svgs/NavbarSvgs";
 
 type Props = {
@@ -14,6 +14,14 @@ export default function SignInForm({ dict }: Props) {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const searchParams = useSearchParams();
+  const loginError = searchParams?.get("error");
+
+  useEffect(() => {
+    if(loginError === "personal_email"){
+      setError(dict?.loginPersonalEmailErrMsg)
+    }
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,13 +31,13 @@ export default function SignInForm({ dict }: Props) {
     try {
       // Validate inputs
       if (!email.trim()) {
-        setError("Email is required");
+        setError(dict?.emailRequired);
         setLoading(false);
         return;
       }
 
       if (!password.trim()) {
-        setError("Password is required");
+        setError(dict?.passwordRequired);
         setLoading(false);
         return;
       }
@@ -44,7 +52,7 @@ export default function SignInForm({ dict }: Props) {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.message || "Sign in failed");
+        setError(data.message || dict?.failedSignIn);
         setLoading(false);
         return;
       }
@@ -58,7 +66,7 @@ export default function SignInForm({ dict }: Props) {
       }
     } catch (err) {
       console.error(err);
-      setError(err instanceof Error ? err.message : "Network error");
+      setError(dict?.somethingWrongMsg);
       setLoading(false);
     }
   };

@@ -1,4 +1,7 @@
 "use client";
+import { getCurrentLang } from '@/lib/api/main-page';
+import { useToast } from '@/lib/hooks/useToast';
+import { getDictionary } from '@/lib/i18n/getDictionary';
 import { useRouter, useParams } from 'next/navigation';
 import React, { useState, useRef, useEffect } from 'react';
 
@@ -13,9 +16,12 @@ const VerificationCodeForm = ({ onVerify, onResend }: Props) => {
   const [error, setError] = useState<string | null>(null);
   const [resendTimer, setResendTimer] = useState(0);
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
-  const router = useRouter();
+  const [language, setLanguage] = useState<any>();
   const params = useParams();
   const email = params?.slug as string;
+  const { success } = useToast();
+  const lang = getCurrentLang();
+
 
   useEffect(() => {
     if (resendTimer > 0) {
@@ -23,6 +29,15 @@ const VerificationCodeForm = ({ onVerify, onResend }: Props) => {
       return () => clearTimeout(timer);
     }
   }, [resendTimer]);
+
+  // fetch current language
+  useEffect(() => {
+    const fetchLanguage = async () => {
+      const dict = (await getDictionary(lang))?.login;
+      setLanguage(dict);
+    }
+    fetchLanguage()
+  }, [])
 
   const handleInputChange = (index: number, value: string) => {
     if (!/^\d*$/.test(value)) return;
@@ -59,16 +74,16 @@ const VerificationCodeForm = ({ onVerify, onResend }: Props) => {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/verify-email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
+        body: JSON.stringify({
           email: decodeURIComponent(email),
-          verificationCode: fullCode 
+          verificationCode: fullCode
         }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.message || "Verification failed");
+        setError("Verification failed. Otp might be expired");
         setLoading(false);
         return;
       }
@@ -78,6 +93,7 @@ const VerificationCodeForm = ({ onVerify, onResend }: Props) => {
 
       // Check if response contains redirect URL
       if (data.redirect) {
+        success("Email successfully verified redirecting to dashboard")
         window.location.href = data.redirect;
       }
     } catch (err) {
@@ -97,22 +113,47 @@ const VerificationCodeForm = ({ onVerify, onResend }: Props) => {
       if (onResend) {
         onResend();
       } else {
-        const response = await fetch("/api/v1/companies/auth/resend-code", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/resend-verification-code`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ email: decodeURIComponent(email) }),
         });
 
+        const data = await response.json();
+
         if (!response.ok) {
-          const data = await response.json();
-          setError(data.message || "Failed to resend code");
+          setError(language?.failedResend);
         }
+        success(language?.otpSuccessfull)
       }
     } catch (err) {
       console.error(err);
-      setError("Failed to resend code");
+      setError(language?.failedResend);
     }
   };
+
+  const handlePaste = (e) => {
+    const paste = e.clipboardData.getData("text");
+    if (!/^\d+$/.test(paste)) return; // only numbers allowed
+
+    const digits = paste.slice(0, code.length).split(""); // take only required digits
+
+    const newCode = [...code];
+    digits.forEach((digit, i) => {
+      newCode[i] = digit;
+    });
+
+    setCode(newCode);
+
+    // move focus to last filled input
+    const lastIndex = digits.length - 1;
+    if (inputRefs.current[lastIndex]) {
+      inputRefs.current[lastIndex].focus();
+    }
+
+    e.preventDefault();
+  };
+
 
   return (
     <div className="flex-col-center min-h-screen w-full">
@@ -120,13 +161,13 @@ const VerificationCodeForm = ({ onVerify, onResend }: Props) => {
         <div className="capitalize leading-none tracking-wide mb-6 text-center">
           <h1 className="text-[26px] text-pri font-[600]">Verify Email</h1>
           <p className="mt-1 text-[14px] text-gray-300">
-            We sent a code to {decodeURIComponent(email)}
+            {language?.codeSent} {decodeURIComponent(email)}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <label className="text-left text-[12px] text-gray-500">
-            Verification Code
+            {language?.VerificationCodeLabel}
           </label>
 
           <div className="flex gap-2 justify-center">
@@ -140,6 +181,7 @@ const VerificationCodeForm = ({ onVerify, onResend }: Props) => {
                 value={digit}
                 onChange={(e) => handleInputChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
+                onPaste={handlePaste}
                 maxLength={1}
                 className="w-12 h-12 text-center text-2xl border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pri focus:border-transparent"
               />
@@ -151,7 +193,7 @@ const VerificationCodeForm = ({ onVerify, onResend }: Props) => {
           <button
             type="submit"
             disabled={loading}
-            className="mt-2 w-full bg-pri text-white py-2 rounded-lg font-medium disabled:opacity-60"
+            className="mt-2 w-full bg-pri text-white py-2 rounded-lg font-medium disabled:opacity-60 cursor-pointer"
           >
             {loading ? "Verifying..." : "Verify"}
           </button>
@@ -159,11 +201,11 @@ const VerificationCodeForm = ({ onVerify, onResend }: Props) => {
 
         <div className="mt-4 text-center">
           <p className="text-[14px] text-gray-600">
-            Didn't receive the code?{" "}
+            {language?.resendCodeLabel}{" "}
             <button
               onClick={handleResend}
               disabled={resendTimer > 0}
-              className="text-pri font-semibold disabled:text-gray-400"
+              className="text-pri font-semibold disabled:text-gray-400 cursor-pointer"
             >
               {resendTimer > 0 ? `Resend in ${resendTimer}s` : "Resend"}
             </button>
