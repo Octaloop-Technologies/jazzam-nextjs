@@ -5,13 +5,47 @@
       "ar": "العربية"
     }
   },
-    "login": {
+  "login": {
     "welcome": "مرحباً!",
     "letsConnect": "دعنا نربط حسابك",
     "continueLoginMsg": "بمواصلتك، توافق على اختيار باقة بعد تسجيل الدخول، أو تخطيها الآن والبدء بالباقة المجانية. يمكنك الترقية في أي وقت. تتوفر فترة تجريبية مجانية لمدة 14 يومًا للباقات المدفوعة.",
     "continueWith": "تواصل مع",
     "googleRedirect": "إعادة التوجيه إلى Google...",
-    "zohoRedirect": "إعادة التوجيه إلى Zoho..."
+    "zohoRedirect": "إعادة التوجيه إلى Zoho...",
+    "emptyEmailField": "لا يمكن ترك حقل البريد الإلكتروني فارغًا. يُرجى إدخال بريد إلكتروني صحيح!",
+    "emptyPasswordField": "لا يمكن ترك حقل كلمة المرور فارغًا. من فضلك! أدخل كلمة المرور",
+    "emptyConfirmPasswordField": "لا يمكن ترك حقل تأكيد كلمة المرور فارغًا. الرجاء إدخال كلمة المرور للتأكيد!",
+    "personalEmailErrMsg": "البريد الإلكتروني الشخصي غير مقبول. يُرجى استخدام بريد الشركة الإلكتروني.",
+    "continueAsUser": "الاستمرار كمستخدم",
+    "continueAsCompany": "الاستمرار كشركة",
+    "failedResend": "فشل إعادة إرسال الرمز",
+    "otpSuccessfull": "تم إرسال رمز التحقق بنجاح",
+    "somethingWrongMsg": "حدث خطأ ما. يرجى المحاولة مرة أخرى لاحقاً.",
+    "emailSuccessfullMsg": "تم التحقق من البريد الإلكتروني بنجاح، جارٍ إعادة التوجيه إلى لوحة التحكم.",
+    "otpExpire": "فشلت عملية التحقق. قد تكون كلمة المرور لمرة واحدة قد انتهت صلاحيتها.",
+    "resendCodeLabel": "ألم تستلم الرمز؟",
+    "failedSignUp": "فشل التسجيل. يرجى المحاولة مرة أخرى لاحقًا!",
+    "codeSent": "أرسلنا رمزًا إلى",
+    "VerificationCodeLabel": "رمز التحقق",
+    "failedSignIn": "فشل تسجيل الدخول",
+    "loginPersonalEmailErrMsg": "لا يُسمح باستخدام عناوين البريد الإلكتروني الشخصية. استخدم بريدك الإلكتروني الخاص بالشركة.",
+    "emailRequired": "البريد الإلكتروني مطلوب",
+    "passwordRequired": "كلمة المرور مطلوبة"
+  },
+  "dashboard": {
+    "companyRequired": "اسم الشركة مطلوب",
+    "descriptionRequired": "الوصف مطلوب",
+    "selectService": "الرجاء اختيار نوع الخدمة",
+    "selectSubService": "يرجى اختيار خدمة فرعية واحدة على الأقل",
+    "onboardingFailed": "فشل الإعداد",
+    "onboardingLabel": "أكمل معلومات شركتك",
+    "companyName": "اسم الشركة *",
+    "description": "وصف *",
+    "skillType": "حدد نوع المهارة *",
+    "chooseSkill": "-- اختر نوع المهارة --",
+    "selectSkill": "اختر المهارات (مهارة واحدة على الأقل) *",
+    "companyNamePlaceHolder": "أدخل اسم الشركة",
+    "textAreaPlaceHolder": "أخبرنا عن شركتك"
   },
   "home": {
     "hero": {
@@ -234,7 +268,7 @@
         "showingLeads": "عرض الخيوط ل",
         "allLeads": "جميع الخيوط",
         "completeSalesList": "قائمة كاملة بآفاق المبيعات لديك وحالتها الحالية",
-        "myDashboard":"لوحة القيادة الخاصة بي",
+        "myDashboard": "لوحة القيادة الخاصة بي",
         "newLeads": "خيوط جديدة",
         "hotLeads": "العروض الساخنة",
         "warmLeads": "خيوط دافئة",
@@ -242,7 +276,7 @@
         "qualifiedLeads": "العملاء المؤهلين",
         "loadingError": "خطأ في تحميل البيانات",
         "headingLeadAnalysis": "تحليل الرصاص الخاص بك",
-        "refreshButtonTitle": "ينعش",   
+        "refreshButtonTitle": "ينعش",
         "contactInformation": "معلومات الاتصال",
         "leadScore": "النتيجة الرصاص",
         "companyInformation": "معلومات الشركة",
@@ -256,9 +290,9 @@
         "deleteLeadHeading": "حذف هذا الرصاص!",
         "deleteLeadDesc": "هل أنت متأكد أنك تريد حذف هذا العميل المحتمل بشكل دائم؟",
         "qualifiedLeadMessage": "تم وضع علامة على العميل المحتمل بأنه مؤهل",
-        "failedLeadUpdate": "فشل في تحديث الرصاص", 
+        "failedLeadUpdate": "فشل في تحديث الرصاص",
         "deleteSuccessMsg": "تم حذف العميل المحتمل بنجاح",
-        "failedDeleteLead": "فشل في حذف الرصاص", 
+        "failedDeleteLead": "فشل في حذف الرصاص",
         "tableHeadersTitle": {
           "lead": "يقود",
           "status": "حالة",
@@ -276,7 +310,7 @@
         "searchFields": {
           "searchFilterTitle": "البحث عن العملاء المحتملين حسب الاسم والشركة والبريد الإلكتروني...",
           "advanceFilters": "مرشحات متقدمة",
-          "clearAll":"مسح الكل",
+          "clearAll": "مسح الكل",
           "companyIndustry": "صناعة الشركة",
           "companySize": "حجم الشركة",
           "allIndustries": "جميع الصناعات",
@@ -303,7 +337,7 @@
           "followupsSent": "المتابعات المرسلة",
           "closeRate": "معدل الإغلاق المقدر"
         },
-        "leadPipeline":{
+        "leadPipeline": {
           "leadPipeline": "خط أنابيب الرصاص",
           "leadPipelineHeading": "تتبع العملاء المحتملين عبر مسار المبيعات الخاص بك باستخدام رؤى مدعومة بالذكاء الاصطناعي",
           "all": "الجميع",
@@ -325,7 +359,7 @@
           "contactInfoDescription": "تنزيل بيانات الاتصال الخاصة بأفضل العملاء المحتملين اليوم",
           "exportDataDescription": "تحميل على كافة البيانات"
         },
-        "teamPerformance":{
+        "teamPerformance": {
           "teamPerformance": "أداء الفريق",
           "leadsQualified": "يؤدي المؤهلين",
           "teamPerformanceHeading": "تتبع أداء الفريق والإنجازات الفردية"
@@ -333,7 +367,7 @@
       },
       "followUps": {
         "followUpHeading": "المتابعات",
-        "all":"الجميع",
+        "all": "الجميع",
         "submitted": "مُقَدَّم",
         "scheduled": "المقرر",
         "allFollowups": "كافة المتابعات",
@@ -348,7 +382,7 @@
         "settingsHeading": "إعدادات",
         "profileSettings": "إعدادات الملف الشخصي",
         "generalSettings": "الإعدادات العامة",
-        "subscriptionBilling":"الاشتراك والفواتير",
+        "subscriptionBilling": "الاشتراك والفواتير",
         "profilePicture": "صورة الملف الشخصي",
         "cancel": "يلغي",
         "save": "يحفظ",
@@ -367,7 +401,7 @@
         "helpsupport": "المساعدة والدعم",
         "dashboardTour": "جولة في لوحة القيادة",
         "dashboardTourDescription": "قم بجولة إرشادية عبر ميزات لوحة المعلومات",
-        "autoBantEnable":"تم تمكين تأهيل BANT التلقائي",
+        "autoBantEnable": "تم تمكين تأهيل BANT التلقائي",
         "autoBantDisable": "تم تعطيل تأهيل BANT التلقائي",
         "logoutMessage": "تم تسجيل الخروج بنجاح",
         "somethingLogoutError": "حدث خطأ أثناء تسجيل الخروج",
