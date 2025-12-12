@@ -21,6 +21,9 @@ export default function SignInForm({ dict }: Props) {
     if(loginError === "personal_email"){
       setError(dict?.loginPersonalEmailErrMsg)
     }
+    if(loginError === "email_not_verified"){
+      setError(dict?.unverifiedEmailErrMsg)
+    }
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -83,13 +86,13 @@ export default function SignInForm({ dict }: Props) {
         onChange={(e) => setEmail(e.target.value)}
         required
         placeholder={dict?.emailPlaceholder ?? "you@example.com"}
-        className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pri"
+        className="w-full px-3 py-2 border border-green-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-pri"
       />
 
       <label className="text-left text-[12px] text-gray-500">
         {dict?.passwordLabel ?? "Password"}
       </label>
-      <div className="flex w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pri">
+      <div className="flex w-full px-3 py-2 border border-green-600 rounded-lg focus-within:outline-none focus-within:ring-2 focus-within:ring-pri">
         <input
           name="password"
           type={showPassword ? "text" : "password"}
@@ -103,7 +106,7 @@ export default function SignInForm({ dict }: Props) {
           e.preventDefault()
           setShowPassword(!showPassword)
         }} className="w-10 pl-6">
-          <EyeSvg />
+          <EyeSvg className={`${showPassword ? 'text-gray-200' : 'text-black'} cursor-pointer`} />
         </button>
       </div>
 
