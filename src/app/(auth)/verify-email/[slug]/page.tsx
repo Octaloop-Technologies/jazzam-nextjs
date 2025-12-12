@@ -2,7 +2,7 @@
 import { getCurrentLang } from '@/lib/api/main-page';
 import { useToast } from '@/lib/hooks/useToast';
 import { getDictionary } from '@/lib/i18n/getDictionary';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import React, { useState, useRef, useEffect } from 'react';
 
 type Props = {
@@ -19,8 +19,10 @@ const VerificationCodeForm = ({ onVerify, onResend }: Props) => {
   const [language, setLanguage] = useState<any>();
   const params = useParams();
   const email = params?.slug as string;
-  const { success } = useToast();
+  const searchParams = useSearchParams();
+  const { success, error: toastError } = useToast();
   const lang = getCurrentLang();
+    const loginError = searchParams?.get("error");
 
 
   useEffect(() => {
@@ -36,7 +38,10 @@ const VerificationCodeForm = ({ onVerify, onResend }: Props) => {
       const dict = (await getDictionary(lang))?.login;
       setLanguage(dict);
     }
-    fetchLanguage()
+    fetchLanguage();
+        if(loginError === "email_not_verified"){
+      toastError("Email not verified. Please verify your email to proceed.")
+    }
   }, [])
 
   const handleInputChange = (index: number, value: string) => {

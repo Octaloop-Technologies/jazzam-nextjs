@@ -581,13 +581,13 @@ const LeadsPage = () => {
               <div className="flex flex-col gap-1">
                 <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Action Type</h3>
                 <h2 className="text-[14px] leading-none font-[500]">
-                  {nba.actionType || "Not available"}
+                  {nba?.actionType || "Not available"}
                 </h2>
               </div>
               <div className="flex flex-col gap-1">
                 <h3 className="text-[14px] text-gray-250 leading-none font-[500]">Channel</h3>
                 <h2 className="text-[14px] leading-none font-[500]">
-                  {nba.channel || "Not available"}
+                  {nba?.channel || "Not available"}
                 </h2>
               </div>
               <div className="flex flex-col gap-1">
