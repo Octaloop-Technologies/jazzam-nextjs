@@ -77,7 +77,7 @@ export default function SignInForm({ dict }: Props) {
   return (
     <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-3">
       <label className="text-left text-[12px] text-gray-500">
-        {dict?.emailLabel ?? "Email"}
+        {dict?.emailLabel ?? dict?.signUpEmail}
       </label>
       <input
         name="email"
@@ -90,7 +90,7 @@ export default function SignInForm({ dict }: Props) {
       />
 
       <label className="text-left text-[12px] text-gray-500">
-        {dict?.passwordLabel ?? "Password"}
+        {dict?.passwordLabel ?? dict?.signUpPassword}
       </label>
       <div className="flex w-full px-3 py-2 border border-green-600 rounded-lg focus-within:outline-none focus-within:ring-2 focus-within:ring-pri">
         <input
@@ -105,7 +105,7 @@ export default function SignInForm({ dict }: Props) {
         <button onClick={(e: any) => {
           e.preventDefault()
           setShowPassword(!showPassword)
-        }} className="w-10 pl-6">
+        }} className="w-10 pl-6 focus:outline-none">
           <EyeSvg className={`${showPassword ? 'text-gray-200' : 'text-black'} cursor-pointer`} />
         </button>
       </div>
@@ -117,7 +117,7 @@ export default function SignInForm({ dict }: Props) {
         disabled={loading}
         className="mt-2 w-full bg-pri text-white py-2 rounded-lg font-medium disabled:opacity-60 cursor-pointer"
       >
-        {loading ? (dict?.signingIn ?? "Signing in...") : (dict?.signInButton ?? "Sign in")}
+        {loading ? (dict?.signingIn ?? "Signing in...") : (dict?.signInButton ?? dict?.signIn)}
       </button>
     </form>
   );

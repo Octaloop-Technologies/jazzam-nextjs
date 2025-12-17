@@ -2,9 +2,9 @@
 
 import TokenStorage from "@/lib/utils/tokenStorage";
 
-export const getFormByAccessToken = async (accessToken: string) => {
+export const getFormByAccessToken = async (accessToken: string, tenantId: string | string[] | undefined) => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/forms/${accessToken}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/forms/${accessToken}?tenantId=${tenantId}`, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -54,8 +54,8 @@ export const getAvailablePlatforms = async (companyId: string | null | undefined
 
     const data = await response.json();
     console.log("djddj")
-    return { 
-      success: true, 
+    return {
+      success: true,
       data: data?.data
     };
   } catch (error) {

@@ -5,6 +5,9 @@ interface PublicFormPageProps {
   params: Promise<{
     accessToken: string;
   }>;
+    searchParams: Promise<{
+    [key: string]: string | string[] | undefined
+  }>
 }
 
 // ======================================================
@@ -15,10 +18,11 @@ export const metadata: Metadata = {
   description: "Submit your information to generate leads",
 };
 
-const PublicFormPage = async ({ params }: PublicFormPageProps) => {
+const PublicFormPage = async ({ params, searchParams }: PublicFormPageProps) => {
   const { accessToken } = await params;
+  const { tenantId } = await searchParams
 
-  return <PublicForm accessToken={accessToken} />;
+  return <PublicForm accessToken={accessToken} tenantId={tenantId} />;
 };
 
 export default PublicFormPage;

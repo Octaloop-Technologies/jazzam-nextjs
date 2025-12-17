@@ -151,9 +151,9 @@ export default function OnboardingTour() {
 
     // Navigate if the step has a target path
     const step = onboardingSteps[nextStep];
-    if (step.targetPath) {
-      router.push(step.targetPath);
-    }
+    // if (step.targetPath) {
+    //   router.push(step.targetPath);
+    // }
 
     setCurrentStep(nextStep);
     await updateOnboardingStatus({
@@ -265,7 +265,7 @@ export default function OnboardingTour() {
                 <button
                   onClick={handlePrevious}
                   disabled={isLoading}
-                  className="px-6 py-3 text-gray-700 font-medium rounded-xl hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-3 text-gray-700 font-medium rounded-xl hover:bg-gray-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                 >
                   Previous
                 </button>
@@ -273,7 +273,7 @@ export default function OnboardingTour() {
                 <button
                   onClick={handleRestart}
                   disabled={isLoading}
-                  className="px-6 py-3 text-gray-500 text-sm hover:text-gray-700 transition-colors disabled:opacity-50"
+                  className="cursor-pointer px-6 py-3 text-gray-500 text-sm hover:text-gray-700 transition-colors disabled:opacity-50"
                 >
                   Restart Tour
                 </button>
@@ -282,7 +282,7 @@ export default function OnboardingTour() {
               <button
                 onClick={handleNext}
                 disabled={isLoading}
-                className="px-8 py-3 bg-gradient-to-r from-pri to-sec text-white font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                className="px-8 py-3 bg-gradient-to-r from-pri to-sec text-white font-semibold rounded-xl hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 cursor-pointer"
               >
                 {isLoading ? (
                   <span className="flex items-center gap-2">
