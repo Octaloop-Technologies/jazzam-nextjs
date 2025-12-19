@@ -1,5 +1,5 @@
 
-FROM node:latest
+FROM node:22.16
 
 # Set the working directory inside the container
 WORKDIR /app
