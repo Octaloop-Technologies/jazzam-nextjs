@@ -32,6 +32,8 @@ import { getDictionary } from "@/lib/i18n/getDictionary";
 import { useAppSelector } from "@/redux/store";
 import { useRouter } from "next/navigation"
 import OnboardingTour from "@/components/view/dashboard/leads/OnboardingTour";
+import { useLeadRealtime } from "@/lib/hooks/useLeadRealtime";
+import { useToast } from "@/lib/hooks/useToast";
 
 interface DashboardPageProps { }
 
@@ -78,6 +80,107 @@ const DashboardPage = ({ }: DashboardPageProps) => {
   const { user } = useAppSelector((state) => state.auth);
   const [isRedirecting, setIsRedirecting] = useState(false);
   const lang = getCurrentLang();
+  const { success, info, warning } = useToast();
+
+  const leadsCompanyId =  user?.joinedCompanies || user?._id;
+
+  const { isConnected, newLead, updatedLead, deletedLeadId, crmSyncStats } = useLeadRealtime(leadsCompanyId);
+
+
+  // Handle new lead in real-time
+  useEffect(() => {
+    if (newLead && leadsData) {
+      console.log('🎉 Adding new lead to list:', newLead);
+
+      // Add new lead to the top of the list
+      setLeadsData((prev) => {
+        if (!prev) return prev;
+
+        return {
+          ...prev,
+          leads: [newLead, ...prev.leads],
+          totalResults: prev.totalResults + 1,
+        };
+      });
+
+      // Update stats
+      setStatsData((prev) => {
+        if (!prev) return prev;
+
+        return {
+          ...prev,
+          overview: {
+            ...prev.overview,
+            newLeads: prev.overview.newLeads + 1,
+          },
+        };
+      });
+
+      // Show notification
+      success(`🎉 New lead: ${newLead.fullName || newLead.email}`);
+
+
+      // Optional: Play sound
+      try {
+        const audio = new Audio('/notification.mp3');
+        audio.play().catch(console.error);
+      } catch (err) {
+        console.error('Could not play notification sound:', err);
+      }
+    }
+  }, [newLead]);
+
+  // Handle lead update in real-time
+  useEffect(() => {
+    if (updatedLead && leadsData) {
+      console.log('✏️ Updating lead in list:', updatedLead);
+
+      setLeadsData((prev) => {
+        if (!prev) return prev;
+
+        return {
+          ...prev,
+          leads: prev.leads.map((lead) =>
+            lead._id === updatedLead._id ? updatedLead : lead
+          ),
+        };
+      });
+
+      info(`✏️ Lead updated: ${updatedLead.fullName || updatedLead.email}`);
+    }
+  }, [updatedLead]);
+
+  // Handle lead deletion in real-time
+  useEffect(() => {
+    if (deletedLeadId && leadsData) {
+      console.log('🗑️ Removing lead from list:', deletedLeadId);
+
+      setLeadsData((prev) => {
+        if (!prev) return prev;
+
+        return {
+          ...prev,
+          leads: prev.leads.filter((lead) => lead._id !== deletedLeadId),
+          totalResults: prev.totalResults - 1,
+        };
+      });
+
+      warning('🗑️ Lead deleted');
+    }
+  }, [deletedLeadId]);
+
+  // Handle CRM sync completion
+  useEffect(() => {
+    if (crmSyncStats) {
+      console.log('🔄 CRM sync completed:', crmSyncStats);
+
+      info(
+        `🔄 CRM Sync: ${crmSyncStats.imported} new, ${crmSyncStats.updated} updated`);
+
+      // Refresh leads data to show imported CRM leads
+      setIsRefresh((prev) => !prev);
+    }
+  }, [crmSyncStats]);
 
   // fetch current language
   useEffect(() => {
@@ -96,13 +199,13 @@ const DashboardPage = ({ }: DashboardPageProps) => {
       router.push("/dashboard/onboarding");
       return;
     }
-    
+
     if (String(user?.userType) === "user" && !companyId && user?.joinedCompanyStatus === false) {
       setIsRedirecting(true);
       router.push("/super-user/settings");
       return;
     }
-    
+
     if (String(user?.userType) === "user" && !companyId && user?.joinedCompanyStatus === true) {
       setIsRedirecting(true);
       router.push(`/super-user?companyId=${user?.joinedCompanies}`);
@@ -257,7 +360,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
   // if (user?.userType === "user" && !companyId && user?.joinedCompanyStatus === false) {
   //   return;
   // }
-    if (isRedirecting) {
+  if (isRedirecting) {
     return;
   }
 
@@ -301,7 +404,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
         </div>
         <div className="flex items-center gap-2.5">
           {/* Advanced search bar with filters - supports text search, industry, source, company size filters */}
-          {language !== undefined  && <SearchBarWithFilters searchFields={language?.navbar?.leads?.searchFields} />}
+          {language !== undefined && <SearchBarWithFilters searchFields={language?.navbar?.leads?.searchFields} />}
 
           {/* tabs */}
           <TabNavigation

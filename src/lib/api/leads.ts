@@ -47,6 +47,7 @@ export const getAllLeads = async ({
     params.append("limit", limit.toString());
     params.append("sortBy", sortBy);
     params.append("sortOrder", sortOrder);
+    params.append("includeCrmLeads", "true");
 
     if (status) params.append("status", status);
     if (companyIndustry) params.append("companyIndustry", companyIndustry);
