@@ -1,4 +1,5 @@
 "use client";
+import Logo from '@/components/shared/logo/Logo';
 import { EyeSvg } from '@/components/svgs/NavbarSvgs';
 import { getCurrentLang } from '@/lib/api/main-page';
 import { getDictionary } from '@/lib/i18n/getDictionary';
@@ -120,6 +121,7 @@ const SignupForm = () => {
         <>
             {!showSignUp ?
                 <div className='flex flex-col justify-center items-center h-[80vh]'>
+                    <Logo />
                     <div className='flex flex-col justify-center items-center'>
                         <h1 className='text-2xl font-semibold mb-3'>{language?.selectTypeHeading}</h1>
                         <p className='mb-5'>{language?.selectTypeDescription}</p>
@@ -151,14 +153,15 @@ const SignupForm = () => {
                         </div>
                     </div>
                     <div className='flex justify-center mt-8'>
-                        <button className='bg-green-600 hover:bg-green-700 border rounded-full text-white py-2 px-10 cursor-pointer' onClick={() => setShowSignUp(true)}>Save</button>
+                        <button className='bg-green-600 hover:bg-green-700 border rounded-full text-white py-2 px-10 cursor-pointer' onClick={() => setShowSignUp(true)}>{language?.save}</button>
                     </div>
                 </div>
                 :
                 <div className="mt-8 p-5 bg-white rounded-3xl max-w-[400px] w-full">
+                    <h1 className='text-2xl font-semibold mb-3'>{language?.signUp}</h1>
                     <form className="mt-4 flex flex-col gap-2" onSubmit={handleSignup}>
                         <label className="text-left text-[12px] text-gray-500">
-                            {"Email"}
+                            {language?.signUpEmail}
                         </label>
                         <input
                             name="email"
@@ -170,7 +173,7 @@ const SignupForm = () => {
                             className="w-full px-3 py-2 border border-green-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-pri"
                         />
                         <label className="text-left text-[12px] text-gray-500">
-                            {"Password"}
+                            {language?.signUpPassword}
                         </label>
                         <div className="flex w-full px-3 py-2 border border-green-600 rounded-lg focus-within:outline-none focus-within:ring-2 focus-within:ring-pri">
                             <input
@@ -182,15 +185,15 @@ const SignupForm = () => {
                                 placeholder={"••••••••"}
                                 className="w-full  focus:outline-none"
                             />
-                            <button onClick={(e: any) => {
+                            <button  onClick={(e: any) => {
                                 e.preventDefault()
                                 setShowPassword(!showPassword)
-                            }} className="w-10 pl-6">
+                            }} className="w-10 pl-6 focus:outline-none">
                                 <EyeSvg className={`${showPassword ? 'text-gray-200' : 'text-black'} cursor-pointer`} />
                             </button>
                         </div>
                         <label className="text-left text-[12px] text-gray-500">
-                            {"Confirm Password"}
+                            {language?.signUpConfirmPassword}
                         </label>
                         <div className="flex w-full px-3 py-2 border border-green-600 rounded-lg focus-within:outline-none focus-within:ring-2 focus-within:ring-pri">
                             <input
@@ -205,7 +208,7 @@ const SignupForm = () => {
                             <button onClick={(e: any) => {
                                 e.preventDefault()
                                 setShowConfirmPassword(!showConfirmPassword)
-                            }} className="w-10 pl-6">
+                            }} className="w-10 pl-6 focus:outline-none">
                                 <EyeSvg className={`${showConfirmPassword ? 'text-gray-200' : 'text-black'} cursor-pointer`} />
                             </button>
                         </div>
@@ -217,7 +220,7 @@ const SignupForm = () => {
                             disabled={loading}
                             className='bg-green-600 hover:bg-green-700 disabled:bg-gray-400 border rounded-full text-white py-2 px-10 cursor-pointer'
                         >
-                            {loading ? "Loading..." : "Save"}
+                            {loading ? "Loading..." : language?.signUp}
                         </button>
                     </div>
                 </div>

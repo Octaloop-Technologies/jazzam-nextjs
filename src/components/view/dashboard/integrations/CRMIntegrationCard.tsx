@@ -113,7 +113,7 @@ export const CRMIntegrationCard: React.FC<CRMIntegrationCardProps> = ({
                 <button
                   onClick={handleTest}
                   disabled={loading}
-                  className="px-3 py-1.5 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50"
+                  className="px-3 py-1.5 text-sm text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 cursor-pointer"
                 >
                   Test
                 </button>
@@ -121,7 +121,7 @@ export const CRMIntegrationCard: React.FC<CRMIntegrationCardProps> = ({
               <button
                 onClick={handleDisconnect}
                 disabled={loading}
-                className="px-3 py-1.5 text-sm text-red-600 border border-red-300 rounded-lg hover:bg-red-50 disabled:opacity-50"
+                className="px-3 py-1.5 text-sm text-red-600 border border-red-300 rounded-lg hover:bg-red-50 disabled:opacity-50 cursor-pointer"
               >
                 {loading ? "Disconnecting..." : "Disconnect"}
               </button>
@@ -130,7 +130,7 @@ export const CRMIntegrationCard: React.FC<CRMIntegrationCardProps> = ({
             <button
               onClick={handleConnect}
               disabled={loading || !provider.configured || disabled}
-              className="px-4 py-2 text-sm font-medium text-white bg-sec rounded-lg hover:bg-sec-hover disabled:opacity-50 disabled:cursor-not-allowed"
+              className="px-4 py-2 text-sm font-medium text-white bg-sec rounded-lg hover:bg-sec-hover disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             >
               {loading ? "Connecting..." : disabled ? "Channel Limit Reached" : "Connect"}
             </button>

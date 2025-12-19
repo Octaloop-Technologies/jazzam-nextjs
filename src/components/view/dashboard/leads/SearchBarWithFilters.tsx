@@ -229,7 +229,7 @@ const SearchBarWithFilters = ({ searchFields }: SearchFields) => {
         {/* ---------------------------- Filter Toggle Button ---------------------------- */}
         <button
           onClick={() => setIsFiltersOpen(!isFiltersOpen)}
-          className={`relative gap-1 bg-gray border-gray-b border rounded-full size-[40px] min-w-[40px] flex-center transition-all
+          className={`cursor-pointer relative gap-1 bg-gray border-gray-b border rounded-full size-[40px] min-w-[40px] flex-center transition-all
             ${
               isFiltersOpen
                 ? "bg-pri text-white border-pri"
@@ -263,7 +263,7 @@ const SearchBarWithFilters = ({ searchFields }: SearchFields) => {
             {hasActiveFilters && (
               <button
                 onClick={clearAllFilters}
-                className="text-sm text-danger gray-hover font-medium"
+                className="text-sm text-danger gray-hover font-medium cursor-pointer"
               >
                 {clearAll}
               </button>
@@ -279,7 +279,7 @@ const SearchBarWithFilters = ({ searchFields }: SearchFields) => {
               <select
                 value={filters.companyIndustry}
                 onChange={(e) => handleFilterChange("companyIndustry", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pri focus:border-pri outline-none"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pri focus:border-pri outline-none cursor-pointer"
               >
                 <option value="">{allIndustries}</option>
                 {companyIndustryOptionsWithLabels.map((option) => (
@@ -296,7 +296,7 @@ const SearchBarWithFilters = ({ searchFields }: SearchFields) => {
               <select
                 value={filters.companySize}
                 onChange={(e) => handleFilterChange("companySize", e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pri focus:border-pri outline-none"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pri focus:border-pri outline-none cursor-pointer"
               >
                 <option value="">{allSizes}</option>
                 {companySizeOptions.map((size) => (
@@ -314,7 +314,7 @@ const SearchBarWithFilters = ({ searchFields }: SearchFields) => {
                 <select
                   value={filters.sortBy}
                   onChange={(e) => handleFilterChange("sortBy", e.target.value)}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pri focus:border-pri outline-none"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pri focus:border-pri outline-none cursor-pointer"
                 >
                   {sortOptions.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -325,7 +325,7 @@ const SearchBarWithFilters = ({ searchFields }: SearchFields) => {
                 <select
                   value={filters.sortOrder}
                   onChange={(e) => handleFilterChange("sortOrder", e.target.value)}
-                  className="w-20 px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pri focus:border-pri outline-none"
+                  className="w-20 px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pri focus:border-pri outline-none cursor-pointer"
                 >
                   {sortOrderOptions.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -345,13 +345,13 @@ const SearchBarWithFilters = ({ searchFields }: SearchFields) => {
             <div className="flex gap-2">
               <button
                 onClick={() => setIsFiltersOpen(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-150 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-150 transition-colors cursor-pointer"
               >
                 {close}
               </button>
               <button
                 onClick={handleSearch}
-                className="px-4 py-2 text-sm font-medium text-white bg-pri rounded-lg hover:bg-pri/90 transition-colors"
+                className="px-4 py-2 text-sm font-medium text-white bg-pri rounded-lg hover:bg-pri/90 transition-colors cursor-pointer"
               >
                 {applyFilters}
               </button>

@@ -34,10 +34,10 @@ export const joinWaitlist = async (
   }
 };
 
-export const submitFormData = async (formData: Record<string, string>, accessToken: string) => {
+export const submitFormData = async (formData: Record<string, string>, accessToken: string, tenantId: string) => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/forms/${accessToken}/submit`,
+      `${process.env.NEXT_PUBLIC_BASE_URL}/forms/${accessToken}/submit?tenantId=${tenantId}`,
       {
         method: "POST",
         body: JSON.stringify(formData),

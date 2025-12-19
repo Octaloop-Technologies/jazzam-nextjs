@@ -34,7 +34,15 @@
     "loginPersonalEmailErrMsg": "لا يُسمح باستخدام عناوين البريد الإلكتروني الشخصية. استخدم بريدك الإلكتروني الخاص بالشركة.",
     "unverifiedEmailErrMsg": "البريد الإلكتروني غير مُحقق. يرجى التحقق من بريدك الإلكتروني للمتابعة.",
     "emailRequired": "البريد الإلكتروني مطلوب",
-    "passwordRequired": "كلمة المرور مطلوبة"
+    "passwordRequired": "كلمة المرور مطلوبة",
+    "signUp": "اشتراك",
+    "signUpEmail": "بريد إلكتروني",
+    "signUpPassword": "كلمة المرور",
+    "signUpConfirmPassword": "تأكيد كلمة المرور",
+    "signIn": "تسجيل الدخول",
+    "dontHaveAcc": "ليس لديك حساب؟",
+    "or": "أو",
+    "save": "يحفظ"
   },
   "dashboard": {
     "companyRequired": "اسم الشركة مطلوب",

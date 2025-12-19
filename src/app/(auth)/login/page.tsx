@@ -30,14 +30,14 @@ const LoginPage = async () => {
 
         <p className="mt-3 text-[14px] text-gray-600">
           {/* {dict?.noAccount ?? "Don't have an account?"} */}
-          {"Don't have an account?"}
+          {dict?.dontHaveAcc}
           <a href="/signup" className="text-pri font-semibold">
             {/* {dict?.signUp ?? "Sign up"} */}
-            {"Sign up"}
+            {dict?.signUp}
           </a>
         </p>
 
-        <label htmlFor="" className="font-semibold">Or</label>
+        <label htmlFor="" className="font-semibold">{dict?.or}</label>
 
         <LoginButtons dict={dict} />
         <p className="mt-3 text-[12px] text-gray-400">

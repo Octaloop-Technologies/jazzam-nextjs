@@ -46,9 +46,10 @@ interface Form {
 
 interface PublicFormProps {
   accessToken: string;
+  tenantId: string | string[] | undefined
 }
 
-const PublicForm = ({ accessToken }: PublicFormProps) => {
+const PublicForm = ({ accessToken, tenantId }: PublicFormProps) => {
   const [form, setForm] = useState<Form | null>(null);
   const [loading, setLoading] = useState(true);
   const { success, error } = useToast();
@@ -63,7 +64,7 @@ const PublicForm = ({ accessToken }: PublicFormProps) => {
   const fetchFormData = async () => {
     try {
       setLoading(true);
-      const response = await getFormByAccessToken(accessToken);
+      const response = await getFormByAccessToken(accessToken, tenantId);
 
       if (response.success) {
         setForm(response.data);
@@ -129,7 +130,7 @@ const PublicForm = ({ accessToken }: PublicFormProps) => {
     setIsSubmitting(true);
 
     try {
-      const response = await submitFormData(formData, accessToken);
+      const response = await submitFormData(formData, accessToken, tenantId as string);
       if (response.success) {
         success(form?.config.settings.successMessage || "Form submitted successfully!");
         // Clear form data
