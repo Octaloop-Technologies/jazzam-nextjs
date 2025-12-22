@@ -582,7 +582,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
                       </TableCell>
                       <TableCell className="flex-between">
                         <h3 className="font-medium">{lead?.companySize || "N/A"}</h3>
-                        <LeadsMenu lead={lead} setIsDeleted={setIsRefresh} isDeleted={isRefresh} showQualifiedButton={false} />
+                        <LeadsMenu lead={lead} setIsDeleted={setIsRefresh} isDeleted={isRefresh} showQualifiedButton={false} showProposalButtton={false} />
                       </TableCell>
                     </TableRow>
                   ))}

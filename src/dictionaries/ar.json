@@ -299,6 +299,7 @@
         "viewDetails": "عرض التفاصيل",
         "sendFollowUp": "إرسال المتابعة",
         "markAsQualified": "وضع علامة على المؤهل",
+        "generateLeadProposal": "توليد مقترحات العملاء المحتملين",
         "deleteLead": "حذف الرصاص",
         "deleteLeadHeading": "حذف هذا الرصاص!",
         "deleteLeadDesc": "هل أنت متأكد أنك تريد حذف هذا العميل المحتمل بشكل دائم؟",

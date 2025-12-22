@@ -12,6 +12,7 @@ import { deleteLead, updateLead } from "@/lib/api/leads";
 import { getCurrentLang } from "@/lib/api/main-page";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { useAppSelector } from "@/redux/store";
+import tokenStorage from "@/lib/utils/tokenStorage";
 
 const LeadsMenu = ({
   lead,
@@ -20,7 +21,8 @@ const LeadsMenu = ({
   navigate = "/super-user",
   isDeleted,
   setIsDeleted,
-  showQualifiedButton
+  showQualifiedButton,
+  showProposalButtton
 }: {
   lead: Lead;
   showViewDetails?: boolean;
@@ -29,6 +31,7 @@ const LeadsMenu = ({
   isDeleted?: boolean
   setIsDeleted?: (value: boolean) => void,
   showQualifiedButton: boolean
+  showProposalButtton: boolean
 }) => {
   // ======================================================
   // State
@@ -38,6 +41,10 @@ const LeadsMenu = ({
   const [language, setLanguage] = useState<any>()
   const lang = getCurrentLang();
   const { user } = useAppSelector(state => state.auth);
+  const [proposalLoading, setProposalLoading] = useState<boolean>(false)
+
+  const { getTokens } = tokenStorage;
+  const accessToken = getTokens().accessToken;
 
   // ======================================================
   // Hooks
@@ -115,6 +122,44 @@ const LeadsMenu = ({
     }
   }
 
+  const generateProposal = async () => {
+    try {
+      setProposalLoading(true)
+      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/proposals/leads/${lead?._id}/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`, // JWT token for auth
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status} ${response.statusText}`);
+      }
+  
+      const data = await response.json();
+      console.log('Proposal generated:', data);
+  
+      // Automatically download the Word document
+      if (data.data && data.data.downloadUrl) {
+        const link = document.createElement('a');
+        link.href = data.data.downloadUrl;
+        link.download = data.data.title ? `${data.data.title}.docx` : 'proposal.docx';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        console.log('Word document download initiated');
+      }
+  
+      return data;
+    } catch (error) {
+      console.error('Failed to generate proposal:', error);
+      setProposalLoading(false);
+    }finally{
+      setProposalLoading(false);
+    }
+  };
+
   return (
     <>
       {/* ---------------------------- dropdown ---------------------------- */}
@@ -177,6 +222,19 @@ const LeadsMenu = ({
             {language?.markAsQualified}
           </button>
         </DropdownItem>}
+        {showProposalButtton && <DropdownItem>
+          <button
+            className="w-full flex items-center gap-2 text-blue-700 hover:text-gray-200 cursor-pointer"
+            onClick={generateProposal}
+          >
+              {proposalLoading ? 
+              <div className="w-5 h-5 border-2 border-gray-100 border-t-blue-700 rounded-full animate-spin"></div>
+              : <WordDocSvg />}
+            {language?.generateLeadProposal}
+          </button>
+
+        </DropdownItem>}
+
 
         <DropdownItem>
           <button
@@ -235,6 +293,29 @@ const QualifiedSvg = ({ className = "size-5" }: { className?: string }) => {
       <path d="M220 260 L250 292 L300 224"
         fill="none" stroke="#000" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" />
     </svg>
+  )
+}
+
+const WordDocSvg = () => {
+  return(
+    <svg
+    width="18"
+    height="18"
+    viewBox="0 0 200 260"
+    xmlns="http://www.w3.org/2000/svg"
+    className="shrink-0"
+  >
+    <rect x="20" y="10" width="160" height="240" rx="12" ry="12" fill="#ffffff" stroke="#2B579A" stroke-width="6" />
+    <polygon points="140,10 180,50 140,50" fill="#D0E2FF" />
+    <line x1="140" y1="10" x2="180" y2="50" stroke="#2B579A" stroke-width="6" />
+    <rect x="20" y="70" width="160" height="50" fill="#2B579A" />
+    <text x="100" y="105" textAnchor="middle" fontSize="40" fill="white" fontFamily="Arial" fontWeight="bold">
+      DOC
+    </text>
+    <line x1="40" y1="145" x2="160" y2="145" stroke="#999" stroke-width="6" />
+    <line x1="40" y1="170" x2="160" y2="170" stroke="#999" stroke-width="6" />
+    <line x1="40" y1="195" x2="130" y2="195" stroke="#999" stroke-width="6" />
+  </svg>
   )
 }
 
