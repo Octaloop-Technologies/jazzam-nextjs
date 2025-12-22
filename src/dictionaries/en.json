@@ -300,6 +300,7 @@
         "viewDetails": "View details",
         "sendFollowUp": "Send follow-up",
         "markAsQualified": "Mark as Qualified",
+        "generateLeadProposal": "Generate Lead Proposal",
         "deleteLead": "Delete lead",
         "deleteLeadHeading": "Delete this lead!",
         "deleteLeadDesc": "Are you sure you want to delete this lead permanently",

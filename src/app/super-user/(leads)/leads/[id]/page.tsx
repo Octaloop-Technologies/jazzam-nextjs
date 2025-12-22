@@ -62,7 +62,8 @@ const LeadsPage = () => {
   const [nba, setNBA] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [language, setLanguage] = useState<any>()
+  const [language, setLanguage] = useState<any>();
+
 
   useEffect(() => {
     const fetchLead = async () => {
@@ -250,12 +251,13 @@ const LeadsPage = () => {
             <LeadsMenu
               showViewDetails={false}
               showQualifiedButton={true}
+              showProposalButtton={true}
               lead={lead}
               navigate={`/super-user`}
               customTrigger={
                 <button
                   className="size-[40px] flex-center rounded-full border border-gray-150 bg-white
-                      transition-all duration-200 ease-in-out hover:rotate-90 hover:border-gray-200"
+                      transition-all duration-200 ease-in-out hover:rotate-90 hover:border-gray-200 cursor-pointer"
                 >
                   <div className="flex flex-col gap-1">
                     <span className="size-1 bg-black rounded-full" />
