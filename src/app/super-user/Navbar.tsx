@@ -89,13 +89,19 @@ const Navbar = ({ languages }: NavbarProps) => {
     },
   ];
 
+  const params = new URLSearchParams();
+
+  if(companyId) params.append("companyId", companyId);
+
+  const userId = companyId || user?._id;
+
 
 
   // Fetch existing notifications on mount
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/notifications/get-notifications/${user?._id}`,
+        `${process.env.NEXT_PUBLIC_BASE_URL}/notifications/get-notifications/${user?._id}?${params.toString()}`,
         {
           method: "GET",
           headers: {
@@ -165,7 +171,7 @@ const Navbar = ({ languages }: NavbarProps) => {
   // function to mark all notifications as read
   const handleMarkAllRead = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/notifications/mark-all-read/${user?._id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/notifications/mark-all-read/${user?._id}?${params.toString()}`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -185,7 +191,7 @@ const Navbar = ({ languages }: NavbarProps) => {
   // function to mark all notifications as read
   const handleClearAll = async () => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/notifications/clear-all/${user?._id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/notifications/clear-all/${userId}?${params.toString()}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${accessToken}`,
@@ -208,7 +214,7 @@ const Navbar = ({ languages }: NavbarProps) => {
       <Logo />
 
       {/* ------------- nav items ------------- */}
-      {(user?.userType === "user" && user?.joinedCompanyStatus === false) || !user?.companyOnboarding  ? "" :
+      {(user?.userType === "user" && user?.joinedCompanyStatus === false) || (user?.userType === "company" && !user?.companyOnboarding)  ? "" :
         <nav className="flex-center gap-2.5 text-[14px]">
           {navItems.map((item) => (
             <Link

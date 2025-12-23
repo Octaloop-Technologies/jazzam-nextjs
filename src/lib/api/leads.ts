@@ -102,7 +102,12 @@ export const getLeadStats = async (companyId: string | null | undefined) => {
       };
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/stats?companyId=${companyId}`, {
+    const params = new URLSearchParams();
+
+    if(companyId) params.append("companyId", companyId)
+
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/stats?${params.toString()}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`,

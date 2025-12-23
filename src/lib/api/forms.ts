@@ -30,6 +30,10 @@ export const getAvailablePlatforms = async (companyId: string | null | undefined
   try {
     const { accessToken } = TokenStorage.getTokens();
 
+    const params = new URLSearchParams();
+
+    if(companyId) params.append("companyId", companyId)
+
     if (!accessToken) {
       console.warn("No access token available in getAvailablePlatforms");
       return {
@@ -39,7 +43,7 @@ export const getAvailablePlatforms = async (companyId: string | null | undefined
       };
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/forms/platform/available`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/forms/platform/available?${params.toString()}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${accessToken}`
