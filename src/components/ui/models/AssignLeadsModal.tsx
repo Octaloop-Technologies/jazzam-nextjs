@@ -6,13 +6,15 @@ import { DeleteSvg } from "../../svgs/LeadsAnalysisSvgs";
 import tokenStorage from "@/lib/utils/tokenStorage";
 import { useAppSelector } from "@/redux/store";
 import { selectUser } from "@/redux/slices/authSlice";
+import { useToast } from "@/lib/hooks/useToast";
 
 interface AssignLeadModalProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
   isLoading?: boolean;
-  language: any
+  language: any,
+  leadId?: string
 }
 
 interface TeamMembers {
@@ -133,13 +135,19 @@ const AssignLeadModal: React.FC<AssignLeadModalProps> = ({
   onClose,
   onConfirm,
   isLoading = false,
-  language
+  language,
+  leadId
 }) => {
   if (!isOpen) return null;
 
   const { accessToken } = tokenStorage.getTokens();
   const [teamMembers, setTeamMembers] = useState<TeamMembers[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [loadingId, setLoadingId] = useState<string>("");
   const user = useAppSelector(selectUser);
+
+
+  const { success, error }  = useToast()
 
 
 
@@ -173,9 +181,36 @@ const AssignLeadModal: React.FC<AssignLeadModalProps> = ({
     fetchTeamMembers()
   }, [])
 
-  const handleAssignLead = async() => {
-    alert("hello")
-    console.log("teamMembers&&&&&&&&", teamMembers)
+  const handleAssignLead = async(id: string) => {
+    try {
+      setLoading(true)
+      setLoadingId(id as string)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${leadId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${accessToken}`
+        },
+        body: JSON.stringify({assignedTo: id})
+      });
+
+      if(!res.ok){
+        throw new Error(language?.leadAssignedErrMsg)
+      }
+
+      const data = await res.json();
+
+      if(data?.success === true){
+        success(language?.leadAssignedMsg)
+      }
+
+    } catch (error) {
+      setLoading(false)
+      error(language?.leadAssignedErrMsg)
+      console.log(error)
+    }finally{
+      setLoading(false);
+    }
   }
 
 
@@ -186,7 +221,7 @@ const AssignLeadModal: React.FC<AssignLeadModalProps> = ({
       className="fixed inset-0 flex items-center justify-center z-50 bg-[#0000000a] backdrop-blur-[2px]"
       onClick={handleOutsideClick}
     >
-      <div className="bg-white pt-[30px] p-5 rounded-3xl max-w-[500px] w-full text-center shadow-[0_4px_20px_0_rgba(0,0,0,0.08)]">
+      <div className="bg-white pt-[30px] p-5 rounded-3xl max-w-[550px] w-full text-center shadow-[0_4px_20px_0_rgba(0,0,0,0.08)]">
         <div className="flex justify-center mb-4">
         </div>
         <h2 className="text-[18px] font-[500] leading-none mb-1">{language?.deleteLeadHeading}</h2>
@@ -213,23 +248,23 @@ const AssignLeadModal: React.FC<AssignLeadModalProps> = ({
             </thead>
 
             <tbody>
-              {teams.map((team, index) => (
+              {teamMembers.map((team, index) => (
                 <tr
                   key={index}
                   className="hover:bg-gray-50 transition"
                 >
                   <td className="px-4 py-2 text-sm text-gray-600 m-52">
-                    {team.sr}
+                  {index + 1}
                   </td>
                   <td className="px-4 py-2 text-sm text-gray-800 m-52">
-                    {team.userName}
+                  {team?.company?.companyName}
                   </td>
                   <td className="px-4 py-2 text-sm text-gray-600 m-52">
-                    {team.email}
+                    {team?.company?.email}
                   </td>
                   <td className="px-4 py-2 text-sm text-white">
-                    <button className="px-4 py-2 text-sm bg-yellow-500 rounded-sm cursor-pointer" onClick={handleAssignLead}>
-                      assign
+                    <button className="px-4 py-2 text-sm bg-yellow-500 rounded-sm cursor-pointer" onClick={() => handleAssignLead(team?.company?._id as string)}>
+                      {loading && loadingId === team?.company?._id ?  "loading" : "assign"}
                     </button>
                   </td>
                 </tr>

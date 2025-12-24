@@ -218,6 +218,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
       setError(null);
 
       try {
+        
         const [leadsResponse, statsResponse, currentUserResponse] = await Promise.all([
           searchQuery
             ? searchLeads({
@@ -228,6 +229,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
               companyIndustry: companyIndustryFilter,
               sortBy,
               sortOrder,
+              companyId
             })
             : getAllLeads({
               page: currentPage,
@@ -470,6 +472,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
                   if (companySizeFilter) paginationParams.set("companySize", companySizeFilter);
                   if (sortBy !== "createdAt") paginationParams.set("sortBy", sortBy);
                   if (sortOrder !== "desc") paginationParams.set("sortOrder", sortOrder);
+                  if(companyId) paginationParams.set("companyId", companyId)
 
                   return `?${paginationParams.toString()}`;
                 };

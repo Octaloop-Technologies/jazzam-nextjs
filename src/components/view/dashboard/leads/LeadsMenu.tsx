@@ -248,12 +248,12 @@ const LeadsMenu = ({
 
         </DropdownItem>}
 
-        <DropdownItem>
-          <button onClick={handleOpenAssignLead} className="w-full flex items-center text-yellow-700 hover:text-gray-200 cursor-pointer">
+        {user?.userType !== "user" && <DropdownItem>
+          <button onClick={handleOpenAssignLead} className={`${lead?.assignedTo ? "" : "hover:text-gray-200"} w-full flex items-center text-yellow-700 cursor-pointer`}>
           <AssignLeadsSvg />
-          {language?.assignLeads}
+          {lead?.assignedTo ? language?.leadAssignAlready : language?.assignLeads}
           </button>
-        </DropdownItem>
+        </DropdownItem>}
 
 
         <DropdownItem>
@@ -281,6 +281,7 @@ const LeadsMenu = ({
         isOpen={isAssignLeadModalOpen} 
         onClose={handleCloseAssignLead} 
         onConfirm={() => console.log("confirm")} 
+        leadId={lead?._id as string}
       />
     </>
   );

@@ -142,6 +142,7 @@ interface SearchLeadsParams {
   companyIndustry?: string | null | undefined;
   sortBy?: string;
   sortOrder?: string;
+  companyId?: string | null | undefined
 }
 
 export const searchLeads = async ({
@@ -152,6 +153,7 @@ export const searchLeads = async ({
   companyIndustry,
   sortBy = "createdAt",
   sortOrder = "desc",
+  companyId
 }: SearchLeadsParams) => {
   try {
     const { accessToken } = TokenStorage.getTokens();
@@ -180,6 +182,7 @@ export const searchLeads = async ({
     // Add filters if provided
     if (status) params.append("status", status);
     if (companyIndustry) params.append("companyIndustry", companyIndustry);
+    if(companyId) params.append("companyId", companyId)
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/leads/search?${params.toString()}`,
