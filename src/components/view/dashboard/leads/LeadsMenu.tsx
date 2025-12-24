@@ -13,6 +13,7 @@ import { getCurrentLang } from "@/lib/api/main-page";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { useAppSelector } from "@/redux/store";
 import tokenStorage from "@/lib/utils/tokenStorage";
+import AssignLeadModal from "@/components/ui/models/AssignLeadsModal";
 
 const LeadsMenu = ({
   lead,
@@ -37,6 +38,7 @@ const LeadsMenu = ({
   // State
   // ======================================================
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isAssignLeadModalOpen, setIsAssignLeadModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [language, setLanguage] = useState<any>()
   const lang = getCurrentLang();
@@ -70,6 +72,17 @@ const LeadsMenu = ({
   const handleCloseDeleteModal = () => {
     setIsDeleteModalOpen(false);
   };
+
+  // =======================================================
+  // Assign Leads
+  // =======================================================
+  const handleOpenAssignLead = () => {
+    setIsAssignLeadModalOpen(true)
+  }
+
+  const handleCloseAssignLead = () => {
+    setIsAssignLeadModalOpen(false);
+  }
 
   const handleConfirmDelete = async () => {
     if (isDeleting) return;
@@ -132,14 +145,14 @@ const LeadsMenu = ({
           'Authorization': `Bearer ${accessToken}`, // JWT token for auth
         },
       });
-  
+
       if (!response.ok) {
         throw new Error(`Error: ${response.status} ${response.statusText}`);
       }
-  
+
       const data = await response.json();
       console.log('Proposal generated:', data);
-  
+
       // Automatically download the Word document
       if (data.data && data.data.downloadUrl) {
         const link = document.createElement('a');
@@ -150,12 +163,12 @@ const LeadsMenu = ({
         document.body.removeChild(link);
         console.log('Word document download initiated');
       }
-  
+
       return data;
     } catch (error) {
       console.error('Failed to generate proposal:', error);
       setProposalLoading(false);
-    }finally{
+    } finally {
       setProposalLoading(false);
     }
   };
@@ -227,12 +240,19 @@ const LeadsMenu = ({
             className="w-full flex items-center gap-2 text-blue-700 hover:text-gray-200 cursor-pointer"
             onClick={generateProposal}
           >
-              {proposalLoading ? 
+            {proposalLoading ?
               <div className="w-5 h-5 border-2 border-gray-100 border-t-blue-700 rounded-full animate-spin"></div>
               : <WordDocSvg />}
             {language?.generateLeadProposal}
           </button>
 
+        </DropdownItem>}
+
+        {user?.userType !== "user" && <DropdownItem>
+          <button onClick={handleOpenAssignLead} className={`${lead?.assignedTo ? "" : "hover:text-gray-200"} w-full flex items-center text-yellow-700 cursor-pointer`}>
+          <AssignLeadsSvg />
+          {lead?.assignedTo ? language?.leadAssignAlready : language?.assignLeads}
+          </button>
         </DropdownItem>}
 
 
@@ -254,6 +274,14 @@ const LeadsMenu = ({
         onClose={handleCloseDeleteModal}
         onConfirm={handleConfirmDelete}
         isLoading={isDeleting}
+      />
+      {/* ------------------------- Assign leads ------------------------------------ */}
+      <AssignLeadModal 
+        language={language} 
+        isOpen={isAssignLeadModalOpen} 
+        onClose={handleCloseAssignLead} 
+        onConfirm={() => console.log("confirm")} 
+        leadId={lead?._id as string}
       />
     </>
   );
@@ -297,26 +325,43 @@ const QualifiedSvg = ({ className = "size-5" }: { className?: string }) => {
 }
 
 const WordDocSvg = () => {
-  return(
+  return (
     <svg
-    width="18"
-    height="18"
-    viewBox="0 0 200 260"
-    xmlns="http://www.w3.org/2000/svg"
-    className="shrink-0"
-  >
-    <rect x="20" y="10" width="160" height="240" rx="12" ry="12" fill="#ffffff" stroke="#2B579A" stroke-width="6" />
-    <polygon points="140,10 180,50 140,50" fill="#D0E2FF" />
-    <line x1="140" y1="10" x2="180" y2="50" stroke="#2B579A" stroke-width="6" />
-    <rect x="20" y="70" width="160" height="50" fill="#2B579A" />
-    <text x="100" y="105" textAnchor="middle" fontSize="40" fill="white" fontFamily="Arial" fontWeight="bold">
-      DOC
-    </text>
-    <line x1="40" y1="145" x2="160" y2="145" stroke="#999" stroke-width="6" />
-    <line x1="40" y1="170" x2="160" y2="170" stroke="#999" stroke-width="6" />
-    <line x1="40" y1="195" x2="130" y2="195" stroke="#999" stroke-width="6" />
-  </svg>
+      width="18"
+      height="18"
+      viewBox="0 0 200 260"
+      xmlns="http://www.w3.org/2000/svg"
+      className="shrink-0"
+    >
+      <rect x="20" y="10" width="160" height="240" rx="12" ry="12" fill="#ffffff" stroke="#2B579A" stroke-width="6" />
+      <polygon points="140,10 180,50 140,50" fill="#D0E2FF" />
+      <line x1="140" y1="10" x2="180" y2="50" stroke="#2B579A" stroke-width="6" />
+      <rect x="20" y="70" width="160" height="50" fill="#2B579A" />
+      <text x="100" y="105" textAnchor="middle" fontSize="40" fill="white" fontFamily="Arial" fontWeight="bold">
+        DOC
+      </text>
+      <line x1="40" y1="145" x2="160" y2="145" stroke="#999" stroke-width="6" />
+      <line x1="40" y1="170" x2="160" y2="170" stroke="#999" stroke-width="6" />
+      <line x1="40" y1="195" x2="130" y2="195" stroke="#999" stroke-width="6" />
+    </svg>
   )
+}
+
+const AssignLeadsSvg = () => {
+  return <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    className="shrink-0 text-yellow-500"
+  >
+    <rect x="4" y="3" width="14" height="18" rx="2" stroke="currentColor" strokeWidth="2" />
+    <rect x="8" y="1" width="6" height="4" rx="1" fill="currentColor" />
+    <line x1="7" y1="9" x2="15" y2="9" stroke="currentColor" strokeWidth="2" />
+    <line x1="7" y1="13" x2="15" y2="13" stroke="currentColor" strokeWidth="2" />
+    <path d="M7 17l2 2 4-4" stroke="currentColor" strokeWidth="2" fill="none" />
+  </svg>
 }
 
 

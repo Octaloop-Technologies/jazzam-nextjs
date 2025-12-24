@@ -32,6 +32,7 @@ interface SearchFilters {
   companySize: string;
   sortBy: string;
   sortOrder: string;
+  companyId?: string 
 }
 
 const SearchBarWithFilters = ({ searchFields }: SearchFields) => {
@@ -79,6 +80,7 @@ const SearchBarWithFilters = ({ searchFields }: SearchFields) => {
       companySize: searchParams.get("companySize") || "",
       sortBy: searchParams.get("sortBy") || "createdAt",
       sortOrder: searchParams.get("sortOrder") || "desc",
+      companyId: searchParams?.get("companyId") || ""
     };
 
     setFilters(initialFilters);

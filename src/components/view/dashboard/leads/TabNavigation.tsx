@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useEffect } from "react";
 
@@ -30,6 +30,11 @@ const TabNavigation = ({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [loadingTab, setLoadingTab] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+
+  const companyId = searchParams?.get("companyId");
+
+
 
   // =======================================================
   // Create tab URL
@@ -41,6 +46,7 @@ const TabNavigation = ({
     if (sortBy !== "createdAt") currentParams.set("sortBy", sortBy);
     if (sortOrder !== "desc") currentParams.set("sortOrder", sortOrder);
     if (status) currentParams.set("status", status);
+    if(companyId) currentParams.set("companyId", companyId)
 
     return currentParams.toString() ? `?${currentParams.toString()}` : "?";
   };
