@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { HotLeadsSvg, ColdLeadsSvg, NewLeadsSvg } from "@/components/svgs/LeadsAnalysisSvgs";
 import {
   CompanySvg,
@@ -55,15 +55,16 @@ const LoadingSkeleton = () => (
 const LeadsPage = () => {
   const params = useParams();
   const id = params?.id as string;
-  const lang = getCurrentLang()
-
+  const searchParams = useSearchParams();
+  const lang = getCurrentLang();
+  
   const [lead, setLead] = useState<any>(null);
   const [dealHealth, setDealHealth] = useState<any>(null);
   const [nba, setNBA] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [language, setLanguage] = useState<any>();
-
+  const companyId = searchParams?.get("companyId");
 
   useEffect(() => {
     const fetchLead = async () => {
@@ -72,7 +73,7 @@ const LeadsPage = () => {
       try {
         setLoading(true);
         setError(null);
-        const leadResponse = await getLeadById({ id });
+        const leadResponse = await getLeadById({ id, companyId });
 
         if (!leadResponse.success || !leadResponse.data) {
           setError("Lead not found");

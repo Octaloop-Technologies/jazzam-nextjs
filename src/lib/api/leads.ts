@@ -215,9 +215,13 @@ export const searchLeads = async ({
 // ======================================================
 // Get lead by id
 // ======================================================
-export const getLeadById = async ({ id }: { id: string }) => {
+export const getLeadById = async ({ id, companyId }: { id: string, companyId?: string | null | undefined }) => {
   try {
     const { accessToken } = TokenStorage.getTokens();
+
+    const params = new URLSearchParams();
+
+    if(companyId) params.append("companyId", companyId)
 
     if (!accessToken) {
       console.warn("No access token available in getLeadById");
@@ -228,7 +232,7 @@ export const getLeadById = async ({ id }: { id: string }) => {
       };
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${id}?${params.toString()}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
@@ -257,9 +261,13 @@ export const getLeadById = async ({ id }: { id: string }) => {
 // ======================================================
 // Delete lead
 // ======================================================
-export const deleteLead = async ({ id }: { id: string }) => {
+export const deleteLead = async ({ id, companyId }: { id: string, companyId: string | null | undefined }) => {
   try {
     const { accessToken } = TokenStorage.getTokens();
+
+    const params = new URLSearchParams()
+
+    if(companyId) params.append("companyId", companyId)
 
     if (!accessToken) {
       console.warn("No access token available in deleteLead");
@@ -270,7 +278,7 @@ export const deleteLead = async ({ id }: { id: string }) => {
       };
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${id}`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${id}?${params.toString()}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
