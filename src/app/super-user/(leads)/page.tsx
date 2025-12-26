@@ -362,9 +362,9 @@ const DashboardPage = ({ }: DashboardPageProps) => {
   // if (user?.userType === "user" && !companyId && user?.joinedCompanyStatus === false) {
   //   return;
   // }
-  if (isRedirecting) {
-    return;
-  }
+  // if (isRedirecting) {
+  //   return;
+  // }
 
   if (error) {
     return (

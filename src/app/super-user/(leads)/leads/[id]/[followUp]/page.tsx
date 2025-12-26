@@ -26,7 +26,9 @@ interface FollowPageProps {
 
 const FollowPage = ({ params }: FollowPageProps) => {
   const { id, followUp } = use(params);
-    const userEmail = useSearchParams()?.get("userEmail");
+  const userEmail = useSearchParams()?.get("userEmail");
+  const companyId = useSearchParams()?.get("companyId");
+
 
   const leadName = followUp?.split("%20")
 
@@ -55,9 +57,9 @@ const FollowPage = ({ params }: FollowPageProps) => {
   // Backcrumb Links and names
   // ==========================================================
   const segments = [
-    { label: "Leads", path: "/super-user" },
-    { label: `${leadName[0]}  ${leadName[1]}`, path: `/super-user/leads/${id}` },
-    { label: "Follow up", path: `/super-user/leads/${id}/${followUp}` },
+    { label: "Leads", path: companyId !== null ? "/super-user" : "/super-user" },
+    { label: `${leadName[0]}  ${leadName[1]}`, path: companyId !== null ? `/super-user/leads/${id}?companyId=${companyId}` : `/super-user/leads/${id}` },
+    { label: "Follow up", path: companyId !== null ? `/super-user/leads/${id}/${followUp}?companyId=${companyId}` : `/super-user/leads/${id}/${followUp}` },
   ];
 
   const handleScheduleFollowup = async(scheduledDate: Date) => {
@@ -68,8 +70,11 @@ const FollowPage = ({ params }: FollowPageProps) => {
 
     try {
       setScheduleLoading(true);
+        const params = new URLSearchParams();
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/create-followup/${id}`, {
+        if(companyId) params.append("companyId", companyId);
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/create-followup/${id}?${params.toString()}`, {
           method: "POST",
           headers: {
             "Content-type": "application/json",
@@ -124,9 +129,13 @@ const FollowPage = ({ params }: FollowPageProps) => {
         },
       );
 
+      const params = new URLSearchParams();
+
+      if(companyId) params.append("companyId", companyId)
+
       if (result.status === 200) {
         success("Email sent successfully!");
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/create-followup/${id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/create-followup/${id}?${params.toString()}`, {
           method: "POST",
           headers: {
             "Content-type": "application/json",

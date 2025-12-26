@@ -14,6 +14,7 @@ import { getDictionary } from "@/lib/i18n/getDictionary";
 import { useAppSelector } from "@/redux/store";
 import tokenStorage from "@/lib/utils/tokenStorage";
 import AssignLeadModal from "@/components/ui/models/AssignLeadsModal";
+import { useSearchParams } from "next/navigation";
 
 const LeadsMenu = ({
   lead,
@@ -44,9 +45,12 @@ const LeadsMenu = ({
   const lang = getCurrentLang();
   const { user } = useAppSelector(state => state.auth);
   const [proposalLoading, setProposalLoading] = useState<boolean>(false)
+  const searchParams = useSearchParams();
+  
 
   const { getTokens } = tokenStorage;
   const accessToken = getTokens().accessToken;
+  const companyId = searchParams?.get("companyId")
 
   // ======================================================
   // Hooks
@@ -89,7 +93,7 @@ const LeadsMenu = ({
 
     setIsDeleting(true);
     try {
-      const result = await deleteLead({ id: lead._id });
+      const result = await deleteLead({ id: lead._id, companyId });
       if (result.success) {
         ToastSuccess(language?.deleteSuccessMsg);
         setIsDeleted?.(!isDeleted);
@@ -200,7 +204,7 @@ const LeadsMenu = ({
         {showViewDetails && (
           <DropdownItem>
             <Link
-              href={`/super-user/leads/${lead._id}`}
+              href={companyId !== null ? `/super-user/leads/${lead._id}?companyId=${companyId}` : `/super-user/leads/${lead._id}`}
               className="flex-between w-full hover:text-gray-200"
               prefetch={false}
             >
@@ -214,7 +218,7 @@ const LeadsMenu = ({
         )}
         <DropdownItem>
           <Link
-            href={`/super-user/leads/${lead._id}/${lead?.fullName}?userEmail=${lead?.email}`}
+            href={companyId !== null ? `/super-user/leads/${lead._id}/${lead?.fullName}?companyId=${companyId}&userEmail=${lead?.email}` :  `/super-user/leads/${lead._id}/${lead?.fullName}?userEmail=${lead?.email}`}
             className="flex-between w-full hover:text-gray-200"
             prefetch={false}
           >
