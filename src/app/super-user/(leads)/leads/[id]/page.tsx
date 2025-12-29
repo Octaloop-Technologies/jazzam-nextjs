@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
-import { HotLeadsSvg, ColdLeadsSvg, NewLeadsSvg } from "@/components/svgs/LeadsAnalysisSvgs";
+import { HotLeadsSvg, ColdLeadsSvg, NewLeadsSvg, WinLeadSvg, LostLeadSvg, ExternalLinkSvg } from "@/components/svgs/LeadsAnalysisSvgs";
 import {
   CompanySvg,
   CopySvg,
@@ -17,10 +17,13 @@ import OptimizedImage from "@/components/ui/image/OptimizedImage";
 import ProgressBar from "@/components/ui/progress/ProgressBar";
 import LeadsMenu from "@/components/view/dashboard/leads/LeadsMenu";
 import Link from "next/link";
-import { getLeadById } from "@/lib/api/leads";
+import { getLeadById, updateLead } from "@/lib/api/leads";
 import BantButton from "@/components/view/dashboard/leads/BantButton";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 import { getCurrentLang } from "@/lib/api/main-page";
+import { useAppSelector } from "@/redux/store";
+import { RootState } from "@reduxjs/toolkit/query";
+import { useToast } from "@/lib/hooks/useToast";
 
 // Loading component
 const LoadingSkeleton = () => (
@@ -57,7 +60,7 @@ const LeadsPage = () => {
   const id = params?.id as string;
   const searchParams = useSearchParams();
   const lang = getCurrentLang();
-  
+
   const [lead, setLead] = useState<any>(null);
   const [dealHealth, setDealHealth] = useState<any>(null);
   const [nba, setNBA] = useState<any>(null);
@@ -65,6 +68,11 @@ const LeadsPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [language, setLanguage] = useState<any>();
   const companyId = searchParams?.get("companyId");
+  const [leadStatus, setLeadStatus] = useState<string>("");
+  const [showChangeLead, setShowChangeLead] = useState<boolean>(false);
+  const user = useAppSelector((state) => state.auth.user);
+  const { success: ToastSuccess, error: ToastError } = useToast();
+  const [refetchLead, setRefetchLead] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchLead = async () => {
@@ -95,7 +103,7 @@ const LeadsPage = () => {
     }
     fetchLead();
     fetchLanguage();
-  }, [id]);
+  }, [id, refetchLead]);
 
   if (loading) {
     return <LoadingSkeleton />;
@@ -183,6 +191,29 @@ const LeadsPage = () => {
     },
   ];
 
+  const handleUpdateLeadStatus = async() => {
+    try {
+      const settings = {
+        id: lead._id,
+        status: leadStatus,
+        companyId: companyId || user?._id
+      };
+      const result = await updateLead(settings);
+      if (result?.success) {
+        ToastSuccess(language?.updatedLeadStatus);
+        setRefetchLead(!refetchLead);
+        setShowChangeLead(false)
+      } else {
+        ToastError(language?.failedLeadUpdate);
+      }
+    } catch (error) {
+      if (process.env.NODE_ENV === "development") {
+        console.error("Error updating lead:", error);
+      }
+      ToastError(language?.failedLeadUpdate);
+    }
+  }
+
   return (
     <section>
       <Breadcrumb segments={segments} />
@@ -212,22 +243,63 @@ const LeadsPage = () => {
                     </p>
                   </div>
                 </div>
-                <div
-                  className={`mt-2.5 w-[107px] h-[30px] text-sm rounded-lg flex-center gap-1 ${lead.status === "hot"
-                    ? "text-hot bg-hot-light"
-                    : lead.status === "cold"
-                      ? "text-cold bg-cold-light"
-                      : lead.status === "new"
-                        ? "text-pri bg-pri-light"
-                        : "text-pipeline bg-pipeline-light"
-                    }`}
-                >
-                  {lead.status === "hot" && <HotLeadsSvg className="size-4" />}
-                  {lead.status === "cold" && <ColdLeadsSvg className="size-4" />}
-                  {lead.status === "new" && <NewLeadsSvg className="size-4" />}
-                  {lead.status === "warm" && <HotLeadsSvg className="size-4" />}
-                  {lead.status?.charAt(0).toUpperCase() + lead.status?.slice(1) || "Lead"}
+                <div className="flex gap-2">
+                  <div
+                    className={`mt-2.5 w-[107px] h-[30px] text-sm rounded-lg flex-center gap-1 ${lead.status === "hot"
+                      ? "text-hot bg-hot-light"
+                      : lead.status === "cold" 
+                        ? "text-cold bg-cold-light"
+                        : lead.status === "new" 
+                          ? "text-pri bg-pri-light"
+                          : lead.status === "win"  ?
+                            "text-green-600 bg-green-200"
+                            : lead.status === "lost" ?
+                              "text-red-600 bg-red-200"
+                              : "text-pipeline bg-pipeline-light"
+                      }`}
+                  >
+                    {lead.status === "hot" && <HotLeadsSvg className="size-4" />}
+                    {lead.status === "cold" && <ColdLeadsSvg className="size-4" />}
+                    {lead.status === "new" && <NewLeadsSvg className="size-4" />}
+                    {lead.status === "warm" && <HotLeadsSvg className="size-4" />}
+                    {lead.status === "win" && <WinLeadSvg className="size-4" />}
+                    {lead.status === "lost" && <LostLeadSvg className="size-4" />}
+                    {lead.status?.charAt(0).toUpperCase() + lead.status?.slice(1) || "Lead"}
+                  </div>
+                  <button
+                    className={`${lead?.status === "hot" ? "text-hot" 
+                      : lead.status === "cold" ? "text-cold" 
+                      : lead.status === "new" ? "text-pri"
+                      : lead.status === "win" ? "text-green-600" 
+                      : lead?.status === "lost" ? "text-red-600" :  "text-pipeline" } cursor-pointer`}
+                    onClick={() => setShowChangeLead(true)}
+                  >
+                    <ExternalLinkSvg />
+                  </button>
                 </div>
+
+                {
+                  showChangeLead &&
+                  <div className="flex gap-4">
+                    <select name="" id="" className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-pri mt-1" onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                      setLeadStatus(e.target.value);
+                    }}>
+                      <option value="">-- Choose a skill type --</option>
+                      <option value="new">New</option>
+                      <option value="hot">Hot</option>
+                      <option value="warm">Warm</option>
+                      <option value="cold">Cold</option>
+                      <option value="win">Win</option>
+                      <option value="lost">Lost</option>
+                    </select>
+                    <button className="bg-yellow-400 text-white w-26 rounded text-md cursor-pointer" onClick={() => setShowChangeLead(false)}>
+                      Cancel
+                    </button>
+                    <button className="bg-[#15803c] text-white w-26 rounded text-md cursor-pointer" onClick={handleUpdateLeadStatus}>
+                      Save
+                    </button>
+                  </div>
+                }
               </div>
 
               {/* <div className="flex-col gap-1 leading-none">

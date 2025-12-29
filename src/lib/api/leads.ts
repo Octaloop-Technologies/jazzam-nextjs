@@ -354,8 +354,13 @@ export const restartOnboarding = async () => {
 // ======================================================
 // Re-qualify lead using BANT
 // ======================================================
-export const requalifyLeadBANT = async ({ id }: { id: string }) => {
+export const requalifyLeadBANT = async ({ id, companyId }: { id: string, companyId: string | null | undefined }) => {
   try {
+
+    const params = new URLSearchParams();
+
+    if(companyId) params.append("companyId", companyId);
+
     const { accessToken } = TokenStorage.getTokens();
 
     if (!accessToken) {
@@ -367,7 +372,7 @@ export const requalifyLeadBANT = async ({ id }: { id: string }) => {
       };
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${id}/bant`, {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${id}/bant?${params.toString()}`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -422,7 +427,10 @@ export const updateLead = async (settings: UpdateLeadInterface) => {
       };
     }
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${settings?.id}`, {
+    const params = new URLSearchParams();
+    if(settings?.companyId) params.append("companyId", settings?.companyId)
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/${settings?.id}?${params.toString()}`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${accessToken}`,

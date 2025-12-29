@@ -198,3 +198,27 @@ export const QualifySvg = () => {
     </svg>
   );
 };
+
+export const WinLeadSvg = ({ className = "size-6" }: { className?: string }) => {
+  return(
+    <svg
+    className="w-5 h-5 text-green-600"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+  </svg>
+  )
+}
+
+export const LostLeadSvg = ({ className = "size-6" }: { className?: string }) => {
+  return (
+    <svg
+    className="w-5 h-5 text-red-600"
+    fill="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path d="M18.3 5.71L12 12l6.3 6.29-1.41 1.42L10.59 13.4 4.29 19.71 2.88 18.3 9.17 12 2.88 5.71 4.29 4.29 10.59 10.6 16.89 4.29z"/>
+  </svg>
+  )
+}

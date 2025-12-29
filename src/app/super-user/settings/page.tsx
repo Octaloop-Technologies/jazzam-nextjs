@@ -37,11 +37,12 @@ import {
 } from "@/components/svgs/LeadsAnalysisSvgs";
 import tokenStorage from "@/lib/utils/tokenStorage";
 import DeleteUserModal from "@/components/ui/models/DeleteUserModal";
+import UpdateLeadsTypeModal from "@/components/ui/models/UpdateLeadsTypeModal";
 import { BlobOptions } from "buffer";
 import { getCurrentLang } from "@/lib/api/main-page";
 import { getDictionary } from "@/lib/i18n/getDictionary";
 
-interface TeamMembers{
+interface TeamMembers {
   company?: {
     companyName?: string,
     email?: string,
@@ -50,6 +51,7 @@ interface TeamMembers{
     },
     _id: string,
     joinedCompanyStatus?: boolean
+    assignedLeadsType?: string
   },
   joinedAt?: string,
   role?: string,
@@ -99,6 +101,8 @@ const SettingsPage = () => {
   const [sendInviteLoad, setSendInviteLoad] = useState<boolean>(false);
   const [deleteUserIsOpen, setDeleteUserIsOpen] = useState<boolean>(false);
   const [deleteUserLoading, setDeleteUserLoading] = useState<boolean>(false);
+  const [openUpdateLeadsTypeModal, setOpenUpdateLeadsTypeModal] = useState<boolean>(false);
+  const [assignLeadType, setAssignLeadsType] = useState<string>("")
   const [language, setLanguage] = useState<any>()
 
   // ==============================================================
@@ -115,7 +119,7 @@ const SettingsPage = () => {
   // Load user settings on component mount
   // ==============================================================
   useEffect(() => {
-    const fetchLanguage = async() => {
+    const fetchLanguage = async () => {
       const dict = (await getDictionary(lang))?.superUser?.navbar.settings;
       setLanguage(dict);
     }
@@ -167,7 +171,7 @@ const SettingsPage = () => {
       }
     };
     fetchTeamMembers();
-    if(user?.joinedCompanies !== undefined || null) fetchJoinedCompany();
+    if (user?.joinedCompanies !== undefined || null) fetchJoinedCompany();
   }, [user]);
 
   // ==============================================================
@@ -346,6 +350,41 @@ const SettingsPage = () => {
   };
 
   // ==============================================================
+  // Change user assign leads type
+  // ==============================================================
+
+  const changeUserAssignType = async () => {
+    console.log("assignLeadType*******", assignLeadType);
+    // return;
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/change-assigned-leads-type/${user?._id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json", // <-- this line is essential
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ assignedLeadsType: assignLeadType }),
+        }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        console.log("data****", data);
+        if (data?.success === true) {
+          ToastSuccess("User assign lead type updated successfully");
+          await dispatch(fetchCurrentUser());
+          setOpenUpdateLeadsTypeModal(false)
+        }
+      }
+    } catch (error) {
+      console.log("error****", error);
+      ToastError("User not found");
+    }
+  };
+
+  // ==============================================================
   // Send Invite handler
   // ==============================================================
 
@@ -453,7 +492,7 @@ const SettingsPage = () => {
     }
   };
 
-  const handleDeleteAccount = async() => {
+  const handleDeleteAccount = async () => {
     try {
       setDeleteUserLoading(true)
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/delete-account`, {
@@ -462,9 +501,9 @@ const SettingsPage = () => {
           Authorization: `Bearer ${accessToken}`
         }
       });
-      if(res.ok){
+      if (res.ok) {
         const data = await res.json();
-        if(data.success === true){
+        if (data.success === true) {
           ToastSuccess(`${user?.userType === "user" ? "user" : "company"} ${language?.userDeleted}`)
           dispatch(logout());
           router.push("/login");
@@ -473,7 +512,7 @@ const SettingsPage = () => {
     } catch (error) {
       ToastError(language?.errorDeleted)
     }
-    finally{
+    finally {
       setDeleteUserLoading(false)
     }
   }
@@ -498,38 +537,38 @@ const SettingsPage = () => {
                 <h3 className="text-[14px] capitalize">{language?.profileSettings}</h3>
               </div>
             </button>
-            {user?.userType === "company" ? 
-            <>
-            <button
-              className={`px-2.5 h-[44px] flex-between gap-2 rounded-[110px] cursor-pointer
+            {user?.userType === "company" ?
+              <>
+                <button
+                  className={`px-2.5 h-[44px] flex-between gap-2 rounded-[110px] cursor-pointer
                   ${activeTab === "general"
-                  ? "bg-pri text-white"
-                  : "bg-transparent text-gray-200 hover:bg-gray"
-                }`}
-              onClick={() => setActiveTab("general")}
-            >
-              <div className="flex-center gap-2">
-                <GeneralSettingsIcon />
-                <h3 className="text-[14px] capitalize">{language?.generalSettings}</h3>
-              </div>
-            </button>
-            <button
-              className={`px-2.5 h-[44px] flex-between gap-2 rounded-[110px] cursor-pointer
+                      ? "bg-pri text-white"
+                      : "bg-transparent text-gray-200 hover:bg-gray"
+                    }`}
+                  onClick={() => setActiveTab("general")}
+                >
+                  <div className="flex-center gap-2">
+                    <GeneralSettingsIcon />
+                    <h3 className="text-[14px] capitalize">{language?.generalSettings}</h3>
+                  </div>
+                </button>
+                <button
+                  className={`px-2.5 h-[44px] flex-between gap-2 rounded-[110px] cursor-pointer
                   ${activeTab === "subscription"
-                  ? "bg-pri text-white"
-                  : "bg-transparent text-gray-200 hover:bg-gray"
-                }`}
-              onClick={() => setActiveTab("subscription")}
-            >
-              <div className="flex-center gap-2">
-                <SubscriptionIcon />
-                <h3 className="text-[14px] capitalize">
-                  {language?.subscriptionBilling}
-                </h3>
-              </div>
-            </button> 
-            </>
-            : ''}
+                      ? "bg-pri text-white"
+                      : "bg-transparent text-gray-200 hover:bg-gray"
+                    }`}
+                  onClick={() => setActiveTab("subscription")}
+                >
+                  <div className="flex-center gap-2">
+                    <SubscriptionIcon />
+                    <h3 className="text-[14px] capitalize">
+                      {language?.subscriptionBilling}
+                    </h3>
+                  </div>
+                </button>
+              </>
+              : ''}
           </div>
         </div>
 
@@ -703,28 +742,130 @@ const SettingsPage = () => {
                   <div>{language?.deleteAccount}</div>
                 </button>
               </div>
-                {user?.userType !== "user" && <div className="min-w-full">
-                  <Table>
-                    <TableHeader>
-                      <TableCell>{language?.sr}</TableCell>
-                      <TableCell>{language?.userName}</TableCell>
-                      <TableCell>{language?.email}</TableCell>
-                      <TableCell>{language?.status}</TableCell>
-                      <TableCell>{language?.actions}</TableCell>
-                    </TableHeader>
-                    { teamMembers?.length <= 0 ? 
+              {user?.userType !== "user" && <div className="min-w-full">
+                <div className={`overflow-y-auto h-[190px]`}>
+                  <table className="min-w-full rounded-lg">
+                    <thead className="bg-gray-100">
+                      <tr>
+                        <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">
+                          {language?.sr}
+                        </th>
+                        <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">
+                          {language?.userName}
+                        </th>
+                        <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">
+                          {language?.email}
+                        </th>
+                        <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">
+                          {language?.status}
+                        </th>
+                        <th className="px-10 py-2 text-left text-sm font-semibold text-gray-700">
+                          {language?.actions}
+                        </th>
+                        <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">
+                          Assigned Leads type
+                        </th>
+                        <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">
+                          Update Leads Type
+                        </th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      {teamMembers?.length <= 0 ?
+                        <div className="flex justify-center text-lg font-semibold">
+                          {language?.noUserFound}
+                        </div>
+                        :
+
+                        teamMembers?.map((teams, i) => (
+                          <tr key={i} className="hover:bg-gray-50 transition">
+                            <td className="px-4 py-2 text-sm text-gray-600 m-52">
+                              {i + 1}
+                            </td>
+                            <td className="px-4 py-2 text-sm text-gray-600 m-52">
+                              {teams?.company?.companyName}
+                            </td>
+                            <td className="px-4 py-2 text-sm text-gray-600 m-52">
+                              {teams?.company?.email}
+                            </td>
+                            <td className="px-4 py-2 text-sm text-gray-600 m-52">
+                              {teams?.company?.joinedCompanyStatus === true ? "Active" : "In-Active"}
+                            </td>
+                            <td className="px-4 py-2 text-sm text-gray-600 m-52">
+                              <button
+                                className="w-40 p-2 mb-2 text-sm text-green-600 bg-green-200 gray-hover transition-colors duration-200 cursor-pointer rounded-md"
+                                onClick={() =>
+                                  activateTeamMember(teams?.company?._id)
+                                }
+                              >
+                                {/* <div>{trashIcon()}</div> */}
+                                <div>{language?.activateMember}</div>
+                              </button>
+                              <button
+                                className="w-40 p-2 mb-2 text-sm text-danger bg-red-200 gray-hover transition-colors duration-200 cursor-pointer rounded-md"
+                                onClick={() =>
+                                  deactivateTeamMember(teams?.company?._id)
+                                }
+                              >
+                                {/* <div>{trashIcon()}</div> */}
+                                <div>{language?.deactivateMember}</div>
+                              </button>
+                            </td>
+                            <td className="px-4 py-2 text-sm text-gray-600 m-52">
+                              <button
+                                className={`${teams?.company?.assignedLeadsType === "hot" ? 
+                                  "text-hot bg-hot-light" 
+                                  : teams?.company?.assignedLeadsType === "cold" ? "text-cold bg-cold-light"
+                                  : teams?.company?.assignedLeadsType === "qualified" ? "text-pipeline bg-pipeline-light"
+                                  : "text-green-600 bg-green-200"} w-40 p-2 mb-2 text-sm gray-hover transition-colors duration-200 cursor-pointer rounded-md`}
+                                onClick={() =>
+                                  activateTeamMember(teams?.company?._id)
+                                }
+                              >
+                                {/* <div>{trashIcon()}</div> */}
+                                <div>{teams?.company?.assignedLeadsType}</div>
+                              </button>
+                            </td>
+                            <td className="px-4 py-2 text-sm text-gray-600 m-52">
+                            <button
+                                className="w-40 p-2 mb-2 text-sm text-yellow-600 bg-yellow-200 gray-hover transition-colors duration-200 cursor-pointer rounded-md"
+                                onClick={() =>
+                                  setOpenUpdateLeadsTypeModal(true)
+                                }
+                              >
+                                {/* <div>{trashIcon()}</div> */}
+                                <div>Update type</div>
+                              </button>
+                            </td>
+
+                          </tr>
+                        ))
+                      }
+                    </tbody>
+                  </table>
+                </div>
+                {/* <Table>
+                  <TableHeader>
+                    <TableCell>{language?.sr}</TableCell>
+                    <TableCell>{language?.userName}</TableCell>
+                    <TableCell>{language?.email}</TableCell>
+                    <TableCell>{language?.status}</TableCell>
+                    <TableCell>{language?.actions}</TableCell>
+                  </TableHeader>
+                  {teamMembers?.length <= 0 ?
                     <div className="flex justify-center text-lg font-semibold">
                       {language?.noUserFound}
-                    </div>  : teamMembers?.map((teams, i) => (
+                    </div> : teamMembers?.map((teams, i) => (
                       <TableRow className="gap-4" key={i}>
                         <TableCell>{i + 1}</TableCell>
                         <TableCell>{teams?.company?.companyName}</TableCell>
                         <TableCell className="mr-10">
                           {teams?.company?.email}
                         </TableCell>
-                      <TableCell className="ml-20">
-                        {teams?.company?.joinedCompanyStatus === true ? "true" : "false"}
-                      </TableCell>
+                        <TableCell className="ml-20">
+                          {teams?.company?.joinedCompanyStatus === true ? "true" : "false"}
+                        </TableCell>
                         <TableCell className="flex">
                           <button
                             className="w-fit flex gap-1 text-sm text-danger gray-hover transition-colors duration-200 cursor-pointer"
@@ -732,7 +873,7 @@ const SettingsPage = () => {
                               activateTeamMember(teams?.company?._id)
                             }
                           >
-                            {/* <div>{trashIcon()}</div> */}
+                            <div>{trashIcon()}</div>
                             <div>{language?.activateMember}</div>
                           </button>
                           <button
@@ -741,14 +882,14 @@ const SettingsPage = () => {
                               deactivateTeamMember(teams?.company?._id)
                             }
                           >
-                            {/* <div>{trashIcon()}</div> */}
+                            <div>{trashIcon()}</div>
                             <div>{language?.deactivateMember}</div>
                           </button>
                         </TableCell>
                       </TableRow>
                     ))}
-                  </Table>
-                </div>}
+                </Table> */}
+              </div>}
             </>
           ) : activeTab === "general" ? (
             // -- general --
@@ -809,7 +950,7 @@ const SettingsPage = () => {
                             );
                           } else {
                             ToastError(
-                               language?.failedSettings
+                              language?.failedSettings
                             );
                             // Revert on error
                             setNotificationSettings((prev) => ({
@@ -938,12 +1079,12 @@ const SettingsPage = () => {
           if (res.success) {
             // Update local state
             setLeadSettings((prev) => ({ ...prev, language: languageCode }));
-            
+
             // Save to storage and update i18n context
             const { changeLangNoReload } = await import("@/lib/api/main-page");
             await changeLangNoReload(languageCode);
             await i18nSetLocale(languageCode);
-            
+
             ToastSuccess(language?.languageUpdate);
           } else {
             ToastError(language?.failedLangUpdate);
@@ -951,11 +1092,19 @@ const SettingsPage = () => {
         }}
       />
 
-      <DeleteUserModal 
-      isOpen={deleteUserIsOpen}
-      onConfirm={handleDeleteAccount}
-      onClose={() => setDeleteUserIsOpen(false)}
-      isLoading={deleteUserLoading}
+      <DeleteUserModal
+        isOpen={deleteUserIsOpen}
+        onConfirm={handleDeleteAccount}
+        onClose={() => setDeleteUserIsOpen(false)}
+        isLoading={deleteUserLoading}
+      />
+      <UpdateLeadsTypeModal
+        isOpen={openUpdateLeadsTypeModal}
+        onClose={() => setOpenUpdateLeadsTypeModal(false)}
+        onConfirm={changeUserAssignType}
+        isLoading={false}
+        language={language}
+        setAssignLeadsType={setAssignLeadsType}
       />
     </div>
   );

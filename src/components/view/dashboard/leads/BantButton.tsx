@@ -4,7 +4,7 @@ import { QualifySvg } from "@/components/svgs/LeadsAnalysisSvgs";
 import { useToast } from "@/lib/hooks/useToast";
 import { requalifyLeadBANT } from "@/lib/api/leads";
 import { useState, useTransition, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface BantButtonProps {
   leadId: string;
@@ -16,6 +16,9 @@ const BantButton = ({ leadId }: BantButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [isOnCooldown, setIsOnCooldown] = useState(false);
+  const searchParams = useSearchParams();
+
+  const companyId = searchParams?.get("companyId");
 
   // Reset loading state when transition completes
   useEffect(() => {
@@ -37,7 +40,7 @@ const BantButton = ({ leadId }: BantButtonProps) => {
       }, 5000);
 
       // Call the BANT re-qualification API
-      const result = await requalifyLeadBANT({ id: leadId });
+      const result = await requalifyLeadBANT({ id: leadId, companyId });
 
       if (result.success) {
         // Show success message with BANT score
