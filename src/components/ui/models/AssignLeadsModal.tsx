@@ -32,103 +32,6 @@ interface TeamMembers {
   _id?: string
 }
 
-const teams = [
-  {
-    sr: "1",
-    userName: "Mudassar Riaz",
-    email: "mudasirriaz649@gmail.com"
-  },
-  {
-    sr: "1",
-    userName: "Mudassar Riaz",
-    email: "mudasirriaz649@gmail.com"
-  },
-  {
-    sr: "1",
-    userName: "Mudassar Riaz",
-    email: "mudasirriaz649@gmail.com"
-  },
-  {
-    sr: "1",
-    userName: "Mudassar Riaz",
-    email: "mudasirriaz649@gmail.com"
-  },
-  // {
-  //   sr: "1",
-  //   userName: "Mudassar Riaz",
-  //   email: "mudasirriaz649@gmail.com"
-  // },
-  // {
-  //   sr: "1",
-  //   userName: "Mudassar Riaz",
-  //   email: "mudasirriaz649@gmail.com"
-  // },
-  // {
-  //   sr: "1",
-  //   userName: "Mudassar Riaz",
-  //   email: "mudasirriaz649@gmail.com"
-  // },
-  // {
-  //   sr: "1",
-  //   userName: "Mudassar Riaz",
-  //   email: "mudasirriaz649@gmail.com"
-  // },
-  // {
-  //   sr: "1",
-  //   userName: "Mudassar Riaz",
-  //   email: "mudasirriaz649@gmail.com"
-  // },
-  // {
-  //   sr: "1",
-  //   userName: "Mudassar Riaz",
-  //   email: "mudasirriaz649@gmail.com"
-  // },
-  // {
-  //   sr: "1",
-  //   userName: "Mudassar Riaz",
-  //   email: "mudasirriaz649@gmail.com"
-  // },
-  // {
-  //   sr: "1",
-  //   userName: "Mudassar Riaz",
-  //   email: "mudasirriaz649@gmail.com"
-  // },
-  // {
-  //   sr: "1",
-  //   userName: "Mudassar Riaz",
-  //   email: "mudasirriaz649@gmail.com"
-  // },
-  // {
-  //   sr: "1",
-  //   userName: "Mudassar Riaz",
-  //   email: "mudasirriaz649@gmail.com"
-  // },
-  // {
-  //   sr: "1",
-  //   userName: "Mudassar Riaz",
-  //   email: "mudasirriaz649@gmail.com"
-  // },
-  // {
-  //   sr: "1",
-  //   userName: "Mudassar Riaz",
-  //   email: "mudasirriaz649@gmail.com"
-  // },
-  // {
-  //   sr: "1",
-  //   userName: "Mudassar Riaz",
-  //   email: "mudasirriaz649@gmail.com"
-  // },
-  {
-    sr: "1",
-    userName: "Mudassar Riaz",
-    email: "mudasirriaz649@gmail.com"
-  },
-  {
-    sr: "1",
-    userName: "Mudassar Riaz",
-    email: "mudasirriaz649@gmail.com"
-  },
-]
 
 const AssignLeadModal: React.FC<AssignLeadModalProps> = ({
   isOpen,
@@ -224,10 +127,10 @@ const AssignLeadModal: React.FC<AssignLeadModalProps> = ({
       <div className="bg-white pt-[30px] p-5 rounded-3xl max-w-[550px] w-full text-center shadow-[0_4px_20px_0_rgba(0,0,0,0.08)]">
         <div className="flex justify-center mb-4">
         </div>
-        <h2 className="text-[18px] font-[500] leading-none mb-1">{language?.deleteLeadHeading}</h2>
-        <p className="text-gray-200 mb-8 leading-none">
+        {/* <h2 className="text-[18px] font-[500] leading-none mb-1">{language?.deleteLeadHeading}</h2> */}
+        {/* <p className="text-gray-200 mb-8 leading-none">
           {language?.deleteLeadDesc}
-        </p>
+        </p> */}
         <div className={`overflow-y-auto h-[190px]`}>
           <table className="min-w-full rounded-lg">
             <thead className="bg-gray-100">
