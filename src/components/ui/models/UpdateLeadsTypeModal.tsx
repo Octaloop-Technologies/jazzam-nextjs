@@ -42,7 +42,7 @@ const UpdateLeadsTypeModal: React.FC<UpdateLeadsTypeModalProps> = ({
                         <option value="hot">Hot</option>
                         <option value="warm">Warm</option>
                         <option value="cold">Cold</option>
-                        <option value="all">All</option>
+                        <option value="new">New</option>
                         <option value="qualified">Qualified</option>
                     </select>
                     <div className="flex justify-right mt-5 gap-5">

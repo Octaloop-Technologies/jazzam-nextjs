@@ -103,6 +103,7 @@ const SettingsPage = () => {
   const [deleteUserLoading, setDeleteUserLoading] = useState<boolean>(false);
   const [openUpdateLeadsTypeModal, setOpenUpdateLeadsTypeModal] = useState<boolean>(false);
   const [assignLeadType, setAssignLeadsType] = useState<string>("")
+  const [assignLeadTypeUserId, setAssignLeadTypeUserId] = useState<string | undefined>("")
   const [language, setLanguage] = useState<any>()
 
   // ==============================================================
@@ -354,34 +355,35 @@ const SettingsPage = () => {
   // ==============================================================
 
   const changeUserAssignType = async () => {
-    console.log("assignLeadType*******", assignLeadType);
-    // return;
-    try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/change-assigned-leads-type/${user?._id}`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json", // <-- this line is essential
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({ assignedLeadsType: assignLeadType }),
+    if(assignLeadType !== "" && assignLeadTypeUserId !== ""){
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/change-assigned-leads-type/${assignLeadTypeUserId}`,
+          {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json", // <-- this line is essential
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: JSON.stringify({ assignedLeadsType: assignLeadType }),
+          }
+        );
+  
+        if (res.ok) {
+          const data = await res.json();
+          console.log("data****", data);
+          if (data?.success === true) {
+            ToastSuccess("User assign lead type updated successfully");
+            await dispatch(fetchCurrentUser());
+            setOpenUpdateLeadsTypeModal(false)
+          }
         }
-      );
-
-      if (res.ok) {
-        const data = await res.json();
-        console.log("data****", data);
-        if (data?.success === true) {
-          ToastSuccess("User assign lead type updated successfully");
-          await dispatch(fetchCurrentUser());
-          setOpenUpdateLeadsTypeModal(false)
-        }
+      } catch (error) {
+        console.log("error****", error);
+        ToastError("User not found");
       }
-    } catch (error) {
-      console.log("error****", error);
-      ToastError("User not found");
     }
+    // return;
   };
 
   // ==============================================================
@@ -814,24 +816,31 @@ const SettingsPage = () => {
                             </td>
                             <td className="px-4 py-2 text-sm text-gray-600 m-52">
                               <button
-                                className={`${teams?.company?.assignedLeadsType === "hot" ? 
-                                  "text-hot bg-hot-light" 
+                                className={`${teams?.company?.assignedLeadsType === "hot" ?
+                                  "text-hot bg-hot-light"
                                   : teams?.company?.assignedLeadsType === "cold" ? "text-cold bg-cold-light"
-                                  : teams?.company?.assignedLeadsType === "qualified" ? "text-pipeline bg-pipeline-light"
-                                  : "text-green-600 bg-green-200"} w-40 p-2 mb-2 text-sm gray-hover transition-colors duration-200 cursor-pointer rounded-md`}
+                                    : teams?.company?.assignedLeadsType === "qualified" ? "text-pipeline bg-pipeline-light"
+                                      : "text-green-600 bg-green-200"} w-40 p-2 mb-2 text-sm gray-hover transition-colors duration-200 cursor-pointer rounded-md`}
                                 onClick={() =>
                                   activateTeamMember(teams?.company?._id)
                                 }
                               >
                                 {/* <div>{trashIcon()}</div> */}
-                                <div>{teams?.company?.assignedLeadsType}</div>
+                                <div>{
+                                  teams?.company?.assignedLeadsType
+                                  ? teams.company.assignedLeadsType.charAt(0).toUpperCase() +
+                                    teams.company.assignedLeadsType.slice(1)
+                                  : ""
+                                  }</div>
                               </button>
                             </td>
                             <td className="px-4 py-2 text-sm text-gray-600 m-52">
-                            <button
+                              <button
                                 className="w-40 p-2 mb-2 text-sm text-yellow-600 bg-yellow-200 gray-hover transition-colors duration-200 cursor-pointer rounded-md"
-                                onClick={() =>
+                                onClick={() => {
                                   setOpenUpdateLeadsTypeModal(true)
+                                  setAssignLeadTypeUserId(teams?.company?._id)
+                                }
                                 }
                               >
                                 {/* <div>{trashIcon()}</div> */}
