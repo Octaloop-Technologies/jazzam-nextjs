@@ -43,11 +43,16 @@ const Waitlist = ({ dict }: WaitlistProps) => {
                 success(dict?.home?.toastMsgs.emailSent);
                 setWaitlistEmail("")
             } else {
-                ErrorToast(dict?.home?.toastMsgs?.errorEmail);
+                // ErrorToast("dict?.home?.toastMsgs?.errorEmail");
+                throw new Error(response.error)
             }
         } catch (error) {
-            console.error("error*******:", error)
-            ErrorToast(`${dict?.home?.toastMsgs?.errorEmail} ${waitlistEmail}`)
+            if(error.message === "Email already exists in waitlist"){
+                ErrorToast(`${dict?.home?.toastMsgs?.emailAlready}`)
+            }
+            else{
+                ErrorToast(`${dict?.home?.toastMsgs?.errorEmail} ${waitlistEmail}`)
+            }
             setWaitlistEmail("")
             setLoading(false);
         } finally {

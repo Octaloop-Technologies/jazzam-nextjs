@@ -260,7 +260,8 @@
     "toastMsgs": {
       "emailSent": "Successfully joined waitlist!",
       "emailNotSent": "Please! enter your email",
-      "errorEmail": "Error submitting email",
+      "emailAlready": "Email already exists in waitlist",
+      "errorEmail": "Something went wrong. Please try again.",
       "emailServerError": "Unable to add email due to server error"
     }
   },
