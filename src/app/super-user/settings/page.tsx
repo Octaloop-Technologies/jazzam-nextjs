@@ -277,6 +277,7 @@ const SettingsPage = () => {
         const data = await res.json();
         if (data?.success === true) {
           ToastSuccess(language?.memberDeactivated);
+          await dispatch(fetchCurrentUser());
         }
       }
     } catch (error) {
@@ -305,6 +306,7 @@ const SettingsPage = () => {
         const data = await res.json();
         if (data?.success === true) {
           ToastSuccess(language?.memberActivated);
+          await dispatch(fetchCurrentUser());
         }
       }
     } catch (error) {
@@ -355,7 +357,7 @@ const SettingsPage = () => {
   // ==============================================================
 
   const changeUserAssignType = async () => {
-    if(assignLeadType !== "" && assignLeadTypeUserId !== ""){
+    if (assignLeadType !== "" && assignLeadTypeUserId !== "") {
       try {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_BASE_URL}/companies/auth/change-assigned-leads-type/${assignLeadTypeUserId}`,
@@ -368,7 +370,7 @@ const SettingsPage = () => {
             body: JSON.stringify({ assignedLeadsType: assignLeadType }),
           }
         );
-  
+
         if (res.ok) {
           const data = await res.json();
           console.log("data****", data);
@@ -795,24 +797,27 @@ const SettingsPage = () => {
                               {teams?.company?.joinedCompanyStatus === true ? "Active" : "In-Active"}
                             </td>
                             <td className="px-4 py-2 text-sm text-gray-600 m-52">
-                              <button
-                                className="w-40 p-2 mb-2 text-sm text-green-600 bg-green-200 gray-hover transition-colors duration-200 cursor-pointer rounded-md"
-                                onClick={() =>
-                                  activateTeamMember(teams?.company?._id)
-                                }
-                              >
-                                {/* <div>{trashIcon()}</div> */}
-                                <div>{language?.activateMember}</div>
-                              </button>
-                              <button
-                                className="w-40 p-2 mb-2 text-sm text-danger bg-red-200 gray-hover transition-colors duration-200 cursor-pointer rounded-md"
-                                onClick={() =>
-                                  deactivateTeamMember(teams?.company?._id)
-                                }
-                              >
-                                {/* <div>{trashIcon()}</div> */}
-                                <div>{language?.deactivateMember}</div>
-                              </button>
+                              {teams?.company?.joinedCompanyStatus === true ?
+                                <button
+                                  className="w-40 p-2 mb-2 text-sm text-danger bg-red-200 gray-hover transition-colors duration-200 cursor-pointer rounded-md"
+                                  onClick={() =>
+                                    deactivateTeamMember(teams?.company?._id)
+                                  }
+                                >
+                                  {/* <div>{trashIcon()}</div> */}
+                                  <div>{language?.deactivateMember}</div>
+                                </button>
+                                :
+                                <button
+                                  className="w-40 p-2 mb-2 text-sm text-green-600 bg-green-200 gray-hover transition-colors duration-200 cursor-pointer rounded-md"
+                                  onClick={() =>
+                                    activateTeamMember(teams?.company?._id)
+                                  }
+                                >
+                                  {/* <div>{trashIcon()}</div> */}
+                                  <div>{language?.activateMember}</div>
+                                </button>
+                              }
                             </td>
                             <td className="px-4 py-2 text-sm text-gray-600 m-52">
                               <button
@@ -828,10 +833,10 @@ const SettingsPage = () => {
                                 {/* <div>{trashIcon()}</div> */}
                                 <div>{
                                   teams?.company?.assignedLeadsType
-                                  ? teams.company.assignedLeadsType.charAt(0).toUpperCase() +
+                                    ? teams.company.assignedLeadsType.charAt(0).toUpperCase() +
                                     teams.company.assignedLeadsType.slice(1)
-                                  : ""
-                                  }</div>
+                                    : ""
+                                }</div>
                               </button>
                             </td>
                             <td className="px-4 py-2 text-sm text-gray-600 m-52">
