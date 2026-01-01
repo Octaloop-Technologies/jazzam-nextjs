@@ -14,6 +14,10 @@ interface Lead {
     company: string,
     email: string
   };
+  bant?: {
+    totalScore?: Number;
+    category?: string;
+  }
   channel?: string;
   date?: any
   lastName?: string;

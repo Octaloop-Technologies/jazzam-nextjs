@@ -31,9 +31,9 @@ const Waitlist = ({ dict }: WaitlistProps) => {
         }
         try {
             setLoading(true);
-            await emailjs.send(emailServiceId, emailTemplateId, {
-                email: waitlistEmail.trim()
-            })
+            // await emailjs.send(emailServiceId, emailTemplateId, {
+            //     email: waitlistEmail.trim()
+            // })
             const response = await joinWaitlist(waitlistEmail.trim(), "", "website", {
                 userAgent: navigator.userAgent,
                 timestamp: new Date().toISOString(),

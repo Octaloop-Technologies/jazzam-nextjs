@@ -91,9 +91,10 @@ const Navbar = ({ languages }: NavbarProps) => {
 
   const params = new URLSearchParams();
 
-  if(companyId) params.append("companyId", companyId);
-
   const userId = companyId || user?._id;
+  
+  if(userId) params.append("companyId", userId);
+
 
 
 
@@ -128,10 +129,10 @@ const Navbar = ({ languages }: NavbarProps) => {
         if (data?.action === "markAllRead" || data?.action === "clearAll") setNotifications(data?.notifications);
       };
 
-      socket.on(`notifications`, handleNewNotification);
+      socket.on(`notifications-${userId}`, handleNewNotification);
 
       return () => {
-        socket.off('notifications', handleNewNotification);
+        socket.off(`notifications-${userId}`, handleNewNotification);
       }
     }
   }, [socket, user?._id]);
