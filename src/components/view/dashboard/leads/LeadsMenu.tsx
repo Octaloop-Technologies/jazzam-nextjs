@@ -351,7 +351,7 @@ const WordDocSvg = () => {
   )
 }
 
-const AssignLeadsSvg = () => {
+export const AssignLeadsSvg = () => {
   return <svg
     width="24"
     height="24"

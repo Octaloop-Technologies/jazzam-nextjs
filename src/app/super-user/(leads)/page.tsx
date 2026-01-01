@@ -18,7 +18,7 @@ import TableHeader from "@/components/ui/table/TableHeader";
 import TableRow from "@/components/ui/table/TableRow";
 import Link from "next/link";
 import React, { Suspense, useEffect, useState } from "react";
-import LeadsMenu from "@/components/view/dashboard/leads/LeadsMenu";
+import LeadsMenu, { AssignLeadsSvg } from "@/components/view/dashboard/leads/LeadsMenu";
 import { getAllLeads, getLeadStats, searchLeads } from "@/lib/api/leads";
 import TabNavigation from "@/components/view/dashboard/leads/TabNavigation";
 import TabContentLoader from "@/components/view/dashboard/leads/TabContentLoader";
@@ -52,6 +52,7 @@ interface StatsData {
     warmLeads: number;
     coldLeads: number;
     qualifiedLeads: number;
+    assignedLeads: number;
   };
 }
 
@@ -82,7 +83,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
   const lang = getCurrentLang();
   const { success, info, warning } = useToast();
 
-  const leadsCompanyId =  user?.joinedCompanies || user?._id;
+  const leadsCompanyId = user?.joinedCompanies || user?._id;
 
   const { isConnected, newLead, updatedLead, deletedLeadId, crmSyncStats } = useLeadRealtime(leadsCompanyId);
 
@@ -92,41 +93,42 @@ const DashboardPage = ({ }: DashboardPageProps) => {
     if (newLead && leadsData) {
       console.log('🎉 Adding new lead to list:', newLead);
 
-      // Add new lead to the top of the list
-      setLeadsData((prev) => {
-        if (!prev) return prev;
+      if ((user?.userType === "user" && newLead?.status === user?.assignedLeadsType) || user?.userType === "company") {
+        // Add new lead to the top of the list
+        setLeadsData((prev) => {
+          if (!prev) return prev;
 
-        return {
-          ...prev,
-          leads: [newLead, ...prev.leads],
-          totalResults: prev.totalResults + 1,
-        };
-      });
+          return {
+            ...prev,
+            leads: [newLead, ...prev.leads],
+            totalResults: prev.totalResults + 1,
+          };
+        });
 
-      // Update stats
-      setStatsData((prev) => {
-        if (!prev) return prev;
+        // Update stats
+        setStatsData((prev) => {
+          if (!prev) return prev;
 
-        return {
-          ...prev,
-          overview: {
-            ...prev.overview,
-            newLeads: prev.overview.newLeads + 1,
-          },
-        };
-      });
+          return {
+            ...prev,
+            overview: {
+              ...prev.overview,
+              newLeads: prev.overview.newLeads + 1,
+            },
+          };
+        });
 
-      // Show notification
-      success(`🎉 New lead: ${newLead.fullName || newLead.email}`);
-
+        // Show notification
+        success(`🎉 New lead: ${newLead.fullName || newLead.email}`);
+      }
 
       // Optional: Play sound
-      try {
-        const audio = new Audio('/notification.mp3');
-        audio.play().catch(console.error);
-      } catch (err) {
-        console.error('Could not play notification sound:', err);
-      }
+      // try {
+      //   const audio = new Audio('/notification.mp3');
+      //   audio.play().catch(console.error);
+      // } catch (err) {
+      //   console.error('Could not play notification sound:', err);
+      // }
     }
   }, [newLead]);
 
@@ -218,7 +220,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
       setError(null);
 
       try {
-        
+
         const [leadsResponse, statsResponse, currentUserResponse] = await Promise.all([
           searchQuery
             ? searchLeads({
@@ -275,6 +277,18 @@ const DashboardPage = ({ }: DashboardPageProps) => {
       color: "text-pri",
       bgColor: "bg-pri-light",
     },
+    ...(user?.userType === "user" ? 
+      [
+        {
+          title: language?.navbar?.leads?.assignedLeads,
+          value: statsData?.overview?.assignedLeads,
+          icon: <AssignLeadsSvg />,
+          color: "text-yellow-500",
+          bgColor: "bg-yellow-200",
+        }
+      ]
+      : []
+    ),
     {
       title: language?.navbar?.leads?.hotLeads,
       value: statsData?.overview?.hotLeads || 0,
@@ -472,7 +486,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
                   if (companySizeFilter) paginationParams.set("companySize", companySizeFilter);
                   if (sortBy !== "createdAt") paginationParams.set("sortBy", sortBy);
                   if (sortOrder !== "desc") paginationParams.set("sortOrder", sortOrder);
-                  if(companyId) paginationParams.set("companyId", companyId)
+                  if (companyId) paginationParams.set("companyId", companyId)
 
                   return `?${paginationParams.toString()}`;
                 };
@@ -549,7 +563,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
                           </div>
                         </div>
                       </TableCell>
-                      <TableCell>{getStatusComponent(lead?.status)}</TableCell>
+                      <TableCell>{getStatusComponent(lead?.assignedTo === user?._id ? "assigned" : lead?.status)}</TableCell>
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <PercentageCircle

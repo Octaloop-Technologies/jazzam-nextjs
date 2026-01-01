@@ -16,6 +16,7 @@ interface TabNavigationProps {
     hot?: string | undefined,
     warm?: string | undefined,
     cold?: string | undefined
+    assigned?: string | undefined
   }
 }
 
@@ -117,6 +118,7 @@ const TabNavigation = ({
       <TabButton status="hot" label={tabNavigationText?.hot} isActive={statusFilter === "hot"} />
       <TabButton status="warm" label={tabNavigationText?.warm} isActive={statusFilter === "warm"} />
       <TabButton status="cold" label={tabNavigationText?.cold} isActive={statusFilter === "cold"} />
+      <TabButton status="assigned" label={"assigned"} isActive={statusFilter === "assigned"} />
     </div>
   );
 };

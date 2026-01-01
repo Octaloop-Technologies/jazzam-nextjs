@@ -66,6 +66,7 @@ export interface Company {
   companyOnboarding: Boolean
   createdAt: Date;
   updatedAt: Date;
+  assignedLeadsType: string;
 }
 
 // Auth state interface
