@@ -102,7 +102,7 @@ function page() {
                 </div>
             </div>
         )
-    } else if (user?.userFirstLogin === false && user?.userType === "user" && user?.joinedCompanyStatus === true) {
+    } else if (user?.userType === "user" && user?.joinedCompanyStatus === true) {
         window.location.href = `/super-user?companyId=${user?.joinedCompanies}`
     } else if (user?.userFirstLogin === false && user?.userType === "user" && user?.joinedCompanyStatus === false) {
         window.location.href = `/super-user/settings`

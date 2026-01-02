@@ -24,11 +24,21 @@ const Waitlist = ({ dict }: WaitlistProps) => {
 
     const { success, error: ErrorToast } = useToast()
 
+    const checkEmail = (email: string) => {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+
     const callWaitlistApi = async () => {
         if (waitlistEmail === "") {
             ErrorToast(dict.home.toastMsgs.emailNotSent)
             return;
         }
+
+        if(!checkEmail(waitlistEmail)){
+            ErrorToast("Email is not valid. Please! enter valid email");
+            return;
+        }
+
         try {
             setLoading(true);
             // await emailjs.send(emailServiceId, emailTemplateId, {
