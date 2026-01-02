@@ -52,7 +52,7 @@ interface PublicFormProps {
 const PublicForm = ({ accessToken, tenantId }: PublicFormProps) => {
   const [form, setForm] = useState<Form | null>(null);
   const [loading, setLoading] = useState(true);
-  const { success, error } = useToast();
+  const { success, error, warning } = useToast();
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -132,7 +132,11 @@ const PublicForm = ({ accessToken, tenantId }: PublicFormProps) => {
     try {
       const response = await submitFormData(formData, accessToken, tenantId as string);
       if (response.success) {
-        success(form?.config.settings.successMessage || "Form submitted successfully!");
+        if(response.message === "Lead already exists; skipped"){
+          warning("Lead for this url already exists"); 
+        }else{
+          success(form?.config.settings.successMessage || "Form submitted successfully!");
+        }
         // Clear form data
         const clearedData: Record<string, string> = {};
         form?.config.fields.forEach((field) => {

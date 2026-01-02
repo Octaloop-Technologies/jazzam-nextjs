@@ -43,7 +43,7 @@ const Page = ({ params }: { params: Promise<{ token: string }> }) => {
             if(data?.success === true){
                 success(data?.message)
                 dispatch(fetchCurrentUser())
-                router.push("/dashboard")
+                router.push("/super-user")
             }
             
             return data;

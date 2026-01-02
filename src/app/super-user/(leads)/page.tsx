@@ -399,7 +399,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
       <PaymentSuccessNotification />
 
       {/* ---------------------------- Welcome Banner ---------------------------- */}
-      <WelcomeBanner />
+      {user?.userType !== "user" && <WelcomeBanner />}
 
       {/* ---------------------------- header ---------------------------- */}
       <div className="flex-between gap-1.5">

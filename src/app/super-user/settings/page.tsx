@@ -775,7 +775,7 @@ const SettingsPage = () => {
                       </tr>
                     </thead>
 
-                    <tbody>
+                    {teamMembers?.length > 0 && <tbody>
                       {teamMembers?.length <= 0 ?
                         <div className="flex justify-center text-lg font-semibold">
                           {language?.noUserFound}
@@ -856,8 +856,11 @@ const SettingsPage = () => {
                           </tr>
                         ))
                       }
-                    </tbody>
+                    </tbody>}
                   </table>
+                  <div className="flex justify-center text-lg font-semibold mt-10">
+                    {language?.noUserFound}
+                  </div>
                 </div>
                 {/* <Table>
                   <TableHeader>
@@ -1038,8 +1041,8 @@ const SettingsPage = () => {
                       setEmail(e.target.value)
                     }
                     type="text"
-                    placeholder="Enter name to edit"
-                    className="outline-none border-2 w-60 border-gray-100 rounded p-1"
+                    placeholder="Enter email to send invite"
+                    className="outline-none border-2 w-72 border-gray-100 rounded p-1"
                   />
                   <button
                     onClick={handleSendInvite}

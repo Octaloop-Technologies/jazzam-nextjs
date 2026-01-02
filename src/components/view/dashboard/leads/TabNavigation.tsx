@@ -1,5 +1,6 @@
 "use client";
 
+import { useAppSelector } from "@/redux/store";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useEffect } from "react";
@@ -32,6 +33,7 @@ const TabNavigation = ({
   const [isPending, startTransition] = useTransition();
   const [loadingTab, setLoadingTab] = useState<string | null>(null);
   const searchParams = useSearchParams();
+  const user = useAppSelector(state => state.auth.user);
 
   const companyId = searchParams?.get("companyId");
 
@@ -118,7 +120,7 @@ const TabNavigation = ({
       <TabButton status="hot" label={tabNavigationText?.hot} isActive={statusFilter === "hot"} />
       <TabButton status="warm" label={tabNavigationText?.warm} isActive={statusFilter === "warm"} />
       <TabButton status="cold" label={tabNavigationText?.cold} isActive={statusFilter === "cold"} />
-      <TabButton status="assigned" label={"assigned"} isActive={statusFilter === "assigned"} />
+      {user?.userType === "user" && <TabButton status="assigned" label={"assigned"} isActive={statusFilter === "assigned"} />}
     </div>
   );
 };
