@@ -108,6 +108,7 @@ const AssignLeadModal: React.FC<AssignLeadModalProps> = ({
 
       if(data?.success === true){
         success(language?.leadAssignedMsg)
+        onClose()
       }
 
     } catch (error) {
