@@ -216,7 +216,7 @@ const LeadsMenu = ({
             </Link>
           </DropdownItem>
         )}
-        <DropdownItem>
+        {lead?.email && <DropdownItem>
           <Link
             href={companyId !== null ? `/super-user/leads/${lead._id}/${lead?.fullName}?companyId=${companyId}&userEmail=${lead?.email}` :  `/super-user/leads/${lead._id}/${lead?.fullName}?userEmail=${lead?.email}`}
             className="flex-between w-full hover:text-gray-200"
@@ -228,7 +228,7 @@ const LeadsMenu = ({
             </div>
             <RightArrowSvg />
           </Link>
-        </DropdownItem>
+        </DropdownItem>}
 
         {showQualifiedButton && <DropdownItem>
           <button
@@ -255,7 +255,7 @@ const LeadsMenu = ({
         {user?.userType !== "user" && <DropdownItem>
           <button onClick={handleOpenAssignLead} className={`${lead?.assignedTo ? "" : "hover:text-gray-200"} w-full flex items-center text-yellow-700 cursor-pointer`}>
           <AssignLeadsSvg />
-          {lead?.assignedTo ? language?.leadAssignAlready : language?.assignLeads}
+          {language?.assignLeads}
           </button>
         </DropdownItem>}
 
@@ -286,6 +286,7 @@ const LeadsMenu = ({
         onClose={handleCloseAssignLead} 
         onConfirm={() => console.log("confirm")} 
         leadId={lead?._id as string}
+        assignedToId={lead?.assignedTo}
       />
     </>
   );

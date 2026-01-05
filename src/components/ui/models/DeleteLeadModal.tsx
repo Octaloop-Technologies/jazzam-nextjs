@@ -9,7 +9,7 @@ interface DeleteLeadModalProps {
   onClose: () => void;
   onConfirm: () => void;
   isLoading?: boolean;
-  language: any
+  language?: any
 }
 
 const DeleteLeadModal: React.FC<DeleteLeadModalProps> = ({

@@ -113,14 +113,17 @@ const TabNavigation = ({
     );
   };
 
+  statusFilter = user?.userType === "user" && !statusFilter ?  "assigned" : statusFilter; 
+
+
   return (
     <div className="flex gap-[15px] h-[61px] text-[14px] border border-gray-b p-2.5 rounded-4xl">
-      <TabButton label={tabNavigationText?.all} isActive={!statusFilter} />
+      <TabButton status="all" label={tabNavigationText?.all} isActive={statusFilter === "all"} />
       <TabButton status="new" label={tabNavigationText?.new} isActive={statusFilter === "new"} />
       <TabButton status="hot" label={tabNavigationText?.hot} isActive={statusFilter === "hot"} />
       <TabButton status="warm" label={tabNavigationText?.warm} isActive={statusFilter === "warm"} />
       <TabButton status="cold" label={tabNavigationText?.cold} isActive={statusFilter === "cold"} />
-      {user?.userType === "user" && <TabButton status="assigned" label={"assigned"} isActive={statusFilter === "assigned"} />}
+      {user?.userType === "user" && <TabButton status="assigned" label={tabNavigationText?.assigned} isActive={statusFilter === 'assigned'} />}
     </div>
   );
 };

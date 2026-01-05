@@ -49,7 +49,7 @@ export const getAllLeads = async ({
     params.append("sortOrder", sortOrder);
     params.append("includeCrmLeads", "true");
 
-    if (status) params.append("status", status);
+    if (status !== "all") params.append("status", status as string);
     if (companyIndustry) params.append("companyIndustry", companyIndustry);
     if (companySize) params.append("companySize", companySize);
     if (assignedTo) params.append("assignedTo", assignedTo);
@@ -180,7 +180,7 @@ export const searchLeads = async ({
     params.append("sortOrder", sortOrder);
 
     // Add filters if provided
-    if (status) params.append("status", status);
+    if (status !== "all" ) params.append("status", status as string);
     if (companyIndustry) params.append("companyIndustry", companyIndustry);
     if(companyId) params.append("companyId", companyId)
 
