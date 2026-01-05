@@ -93,34 +93,64 @@ const DashboardPage = ({ }: DashboardPageProps) => {
     if (newLead && leadsData) {
       console.log('🎉 Adding new lead to list:', newLead);
 
-      if ((user?.userType === "user" && newLead?.status === user?.assignedLeadsType) || user?.userType === "company") {
         // Add new lead to the top of the list
-        setLeadsData((prev) => {
-          if (!prev) return prev;
-
-          return {
-            ...prev,
-            leads: [newLead, ...prev.leads],
-            totalResults: prev.totalResults + 1,
-          };
-        });
-
-        // Update stats
-        setStatsData((prev) => {
-          if (!prev) return prev;
-
-          return {
-            ...prev,
-            overview: {
-              ...prev.overview,
-              newLeads: prev.overview.newLeads + 1,
-            },
-          };
-        });
-
-        // Show notification
-        success(`🎉 New lead: ${newLead.fullName || newLead.email}`);
-      }
+        const existingLead = leadsData?.leads?.find((lead: Lead) => lead?._id === newLead?._id)
+        if(existingLead) {
+          if(statusFilter === "assigned" && user?.userType === "user"){
+            setLeadsData((prev) => {
+              if (!prev) return prev;
+    
+              return {
+                ...prev,
+                leads: [newLead, ...prev.leads],
+                totalResults: prev.totalResults + 1,
+              };
+            });
+    
+            // Update stats
+            setStatsData((prev) => {
+              if (!prev) return prev;
+    
+              return {
+                ...prev,
+                overview: {
+                  ...prev.overview,
+                  newLeads: prev.overview.newLeads + 1,
+                },
+              };
+            });
+    
+            // Show notification
+            success(`🎉 New lead: ${newLead.fullName || newLead.email}`);
+          }
+        }
+        else{
+          setLeadsData((prev) => {
+            if (!prev) return prev;
+  
+            return {
+              ...prev,
+              leads: [newLead, ...prev.leads],
+              totalResults: prev.totalResults + 1,
+            };
+          });
+  
+          // Update stats
+          setStatsData((prev) => {
+            if (!prev) return prev;
+  
+            return {
+              ...prev,
+              overview: {
+                ...prev.overview,
+                newLeads: prev.overview.newLeads + 1,
+              },
+            };
+          });
+  
+          // Show notification
+          success(`🎉 New lead: ${newLead.fullName || newLead.email}`);
+        }
 
       // Optional: Play sound
       // try {
@@ -227,7 +257,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
               query: searchQuery,
               page: currentPage,
               limit: 5,
-              status: statusFilter,
+              status: user?.userType === "user" && !statusFilter ? "assigned" : statusFilter == null || statusFilter === undefined ? "all" : statusFilter,
               companyIndustry: companyIndustryFilter,
               sortBy,
               sortOrder,
@@ -236,7 +266,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
             : getAllLeads({
               page: currentPage,
               limit: 5,
-              status: statusFilter,
+              status: user?.userType === "user" && !statusFilter ? "assigned" : statusFilter == null || statusFilter === undefined ? "all" : statusFilter,
               companyIndustry: companyIndustryFilter,
               companySize: companySizeFilter,
               sortBy,

@@ -327,7 +327,8 @@
           "new": "New",
           "hot": "Hot",
           "warm": "Warm",
-          "cold": "Cold"
+          "cold": "Cold",
+          "assigned": "assigned"
         },
         "searchFields": {
           "searchFilterTitle": "Search leads by name, company, email...",

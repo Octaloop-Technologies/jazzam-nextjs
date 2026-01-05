@@ -15,6 +15,8 @@ interface AssignLeadModalProps {
   isLoading?: boolean;
   language: any,
   leadId?: string
+  assignedToId?: string
+
 }
 
 interface TeamMembers {
@@ -39,7 +41,8 @@ const AssignLeadModal: React.FC<AssignLeadModalProps> = ({
   onConfirm,
   isLoading = false,
   language,
-  leadId
+  leadId,
+  assignedToId
 }) => {
   if (!isOpen) return null;
 
@@ -166,8 +169,8 @@ const AssignLeadModal: React.FC<AssignLeadModalProps> = ({
                     {team?.company?.email}
                   </td>
                   <td className="px-4 py-2 text-sm text-white">
-                    <button className="px-4 py-2 text-sm bg-yellow-500 rounded-sm cursor-pointer" onClick={() => handleAssignLead(team?.company?._id as string)}>
-                      {loading && loadingId === team?.company?._id ?  "loading" : "assign"}
+                    <button className={`${assignedToId == team?.company?._id ? "bg-yellow-300" : "bg-yellow-500"} w-20 py-2 text-sm rounded-sm cursor-pointer`} onClick={() => handleAssignLead(team?.company?._id as string)}>
+                      {loading && loadingId === team?.company?._id ?  "loading" : assignedToId == team?.company?._id ? "assigned" : "assign"}
                     </button>
                   </td>
                 </tr>

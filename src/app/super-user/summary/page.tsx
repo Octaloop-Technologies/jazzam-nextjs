@@ -120,7 +120,7 @@ const SummaryPage = () => {
 
 
     useEffect(() => {
-    const id = user?._id || user?.joinedCompanies || companyId;
+    const id = companyId || user?._id;
     if (!id) return;
 
     const url = `${process.env.NEXT_PUBLIC_BASE_URL}/companies/${id}`;
@@ -236,9 +236,12 @@ const SummaryPage = () => {
   // ================================================================= 
 
   const handleDownloadExcel = async(status: string) => {
-      const companyId = searchParams?.get("companyId") || user?._id;
+    const companyId = searchParams?.get("companyId") || user?._id;
+    const params = new URLSearchParams();
+    if(searchParams?.get("companyId")) params.append("companyId", searchParams?.get("companyId") as string);
+    if(status) params?.append("status", status)
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/get-excel-file/${companyId}?status=${status}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/get-excel-file/${companyId}?${params.toString()}`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${accessToken}`
