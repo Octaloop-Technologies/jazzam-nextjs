@@ -224,9 +224,9 @@ body {
   font-family: var(--font-tajawal), sans-serif;
 }
 
-/* button {
+button {
   @apply cursor-pointer;
-} */
+}
 
 /* ----------------| Scrollbar |----------------------- */
 @utility scrollbar-hidden {

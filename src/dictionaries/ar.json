@@ -39,6 +39,8 @@
     "signUpEmail": "بريد إلكتروني",
     "signUpPassword": "كلمة المرور",
     "signUpConfirmPassword": "تأكيد كلمة المرور",
+    "disposableEmailErrMsg": "لا يُسمح باستخدام عناوين البريد الإلكتروني المؤقتة",
+    "invalidDomainErrMsg": "لا يمكن لنطاق البريد الإلكتروني استقبال رسائل البريد الإلكتروني",
     "signIn": "تسجيل الدخول",
     "dontHaveAcc": "ليس لديك حساب؟",
     "or": "أو",

@@ -40,6 +40,8 @@
     "signUpEmail": "Email",
     "signUpPassword": "Password",
     "signUpConfirmPassword": "Confirm Password",
+    "disposableEmailErrMsg": "Disposable email addresses are not allowed",
+    "invalidDomainErrMsg": "Email domain cannot receive emails",
     "signIn": "Sign in",
     "dontHaveAcc": "Don't have an account?",
     "or": "Or",

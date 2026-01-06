@@ -52,6 +52,30 @@ const SignupForm = () => {
         setError("");
     };
 
+    const mapSignupError = (message?: string) => {
+        console.log('message&&&&', message)
+        if (!message) return language?.somethingWentWrong;
+      
+        if (message.includes("Disposable")) {
+          return language?.disposableEmailErrMsg;
+        }
+      
+        if (message.includes("cannot receive emails")) {
+          return language?.invalidDomainErrMsg;
+        }
+      
+        if (message.includes("already registered")) {
+          return language?.emailAlreadyExist;
+        }
+      
+        if (message.includes("Passwords do not match")) {
+          return language?.passwordsNotMatch;
+        }
+      
+        return message; // fallback
+      };
+      
+
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!formData.email) {
@@ -103,15 +127,15 @@ const SignupForm = () => {
             const data = await response.json();
 
             if (!response.ok) {
-                console.error("sign up error:", response.statusText, data);
-                throw new Error(language?.emailAlreadyExist);
+                const userMessage = mapSignupError(data?.message);
+                throw new Error(userMessage);
             }
 
             // Redirect to verification page
             router.push(`/verify-email/${formData.email}`);
         } catch (err) {
             console.error("sign up error:", err);
-            setError(err?.message);
+            setError(err?.message || language?.somethingWentWrong);
         } finally {
             setLoading(false);
         }
@@ -153,7 +177,7 @@ const SignupForm = () => {
                         </div>
                     </div>
                     <div className='flex justify-center mt-8'>
-                        <button className='bg-green-600 hover:bg-green-700 border rounded-full text-white py-2 px-10 cursor-pointer' onClick={() => setShowSignUp(true)}>{language?.save}</button>
+                        <button disabled={userType === "" ? true : false } className={`${userType === "" ? "bg-green-300 hover:bg-green-300" : "bg-green-600 cursor-pointer hover:bg-green-700"}  border rounded-full text-white py-2 px-10`} onClick={() => setShowSignUp(true)}>{language?.save}</button>
                     </div>
                 </div>
                 :
@@ -170,7 +194,7 @@ const SignupForm = () => {
                             placeholder={"you@example.com"}
                             value={formData.email}
                             onChange={handleInputChange}
-                            className="w-full px-3 py-2 border border-green-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-pri"
+                            className="flex w-full px-3 py-2 border border-green-600 rounded-lg focus-within:outline-none focus-within:ring-2 focus-within:ring-pri"
                         />
                         <label className="text-left text-[12px] text-gray-500">
                             {language?.signUpPassword}

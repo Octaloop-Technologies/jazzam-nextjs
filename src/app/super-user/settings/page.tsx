@@ -746,6 +746,26 @@ const SettingsPage = () => {
                   <div>{language?.deleteAccount}</div>
                 </button>
               </div>
+              {/* Show user assigned lead type */}
+              <h1 className="text-bold text-md">Assigned lead type</h1>
+              <div
+                className={`${user?.assignedLeadsType === "hot" ?
+                  "text-hot bg-hot-light"
+                  : user?.assignedLeadsType === "cold" ? "text-cold bg-cold-light"
+                    : user?.assignedLeadsType === "qualified" ? "text-pipeline bg-pipeline-light"
+                      : "text-green-600 bg-green-200"} w-40 p-2 mb-2 text-sm gray-hover transition-colors duration-200 cursor-pointer rounded-md`}
+              // onClick={() =>
+              //   activateTeamMember(teams?.company?._id)
+              // }
+              >
+                {/* <div>{trashIcon()}</div> */}
+                <p className="text-center">{
+                  user?.assignedLeadsType
+                    ? user?.assignedLeadsType.charAt(0).toUpperCase() +
+                    user?.assignedLeadsType.slice(1)
+                    : ""
+                }</p>
+              </div>
               {user?.userType !== "user" && <div className="min-w-full">
                 <div className={`overflow-y-auto h-[190px]`}>
                   <table className="min-w-full rounded-lg">
@@ -777,77 +797,77 @@ const SettingsPage = () => {
 
                     {teamMembers?.length > 0 && <tbody>
                       {teamMembers?.map((teams, i) => (
-                      <tr key={i} className="hover:bg-gray-50 transition">
-                        <td className="px-4 py-2 text-sm text-gray-600 m-52">
-                          {i + 1}
-                        </td>
-                        <td className="px-4 py-2 text-sm text-gray-600 m-52">
-                          {teams?.company?.companyName}
-                        </td>
-                        <td className="px-4 py-2 text-sm text-gray-600 m-52">
-                          {teams?.company?.email}
-                        </td>
-                        <td className="px-4 py-2 text-sm text-gray-600 m-52">
-                          {teams?.company?.joinedCompanyStatus === true ? "Active" : "In-Active"}
-                        </td>
-                        <td className="px-4 py-2 text-sm text-gray-600 m-52">
-                          {teams?.company?.joinedCompanyStatus === true ?
+                        <tr key={i} className="hover:bg-gray-50 transition">
+                          <td className="px-4 py-2 text-sm text-gray-600 m-52">
+                            {i + 1}
+                          </td>
+                          <td className="px-4 py-2 text-sm text-gray-600 m-52">
+                            {teams?.company?.companyName}
+                          </td>
+                          <td className="px-4 py-2 text-sm text-gray-600 m-52">
+                            {teams?.company?.email}
+                          </td>
+                          <td className="px-4 py-2 text-sm text-gray-600 m-52">
+                            {teams?.company?.joinedCompanyStatus === true ? "Active" : "In-Active"}
+                          </td>
+                          <td className="px-4 py-2 text-sm text-gray-600 m-52">
+                            {teams?.company?.joinedCompanyStatus === true ?
+                              <button
+                                className="w-40 p-2 mb-2 text-sm text-danger bg-red-200 gray-hover transition-colors duration-200 cursor-pointer rounded-md"
+                                onClick={() =>
+                                  deactivateTeamMember(teams?.company?._id)
+                                }
+                              >
+                                {/* <div>{trashIcon()}</div> */}
+                                <div>{language?.deactivateMember}</div>
+                              </button>
+                              :
+                              <button
+                                className="w-40 p-2 mb-2 text-sm text-green-600 bg-green-200 gray-hover transition-colors duration-200 cursor-pointer rounded-md"
+                                onClick={() =>
+                                  activateTeamMember(teams?.company?._id)
+                                }
+                              >
+                                {/* <div>{trashIcon()}</div> */}
+                                <div>{language?.activateMember}</div>
+                              </button>
+                            }
+                          </td>
+                          <td className="px-4 py-2 text-sm text-gray-600 m-52">
+                            <div
+                              className={`${teams?.company?.assignedLeadsType === "hot" ?
+                                "text-hot bg-hot-light"
+                                : teams?.company?.assignedLeadsType === "cold" ? "text-cold bg-cold-light"
+                                  : teams?.company?.assignedLeadsType === "qualified" ? "text-pipeline bg-pipeline-light"
+                                    : "text-green-600 bg-green-200"} w-40 p-2 mb-2 text-sm gray-hover transition-colors duration-200 cursor-pointer rounded-md`}
+                            // onClick={() =>
+                            //   activateTeamMember(teams?.company?._id)
+                            // }
+                            >
+                              {/* <div>{trashIcon()}</div> */}
+                              <p className="text-center">{
+                                teams?.company?.assignedLeadsType
+                                  ? teams.company.assignedLeadsType.charAt(0).toUpperCase() +
+                                  teams.company.assignedLeadsType.slice(1)
+                                  : ""
+                              }</p>
+                            </div>
+                          </td>
+                          <td className="px-4 py-2 text-sm text-gray-600 m-52">
                             <button
-                              className="w-40 p-2 mb-2 text-sm text-danger bg-red-200 gray-hover transition-colors duration-200 cursor-pointer rounded-md"
-                              onClick={() =>
-                                deactivateTeamMember(teams?.company?._id)
+                              className="w-40 p-2 mb-2 text-sm text-yellow-600 bg-yellow-200 gray-hover transition-colors duration-200 cursor-pointer rounded-md"
+                              onClick={() => {
+                                setOpenUpdateLeadsTypeModal(true)
+                                setAssignLeadTypeUserId(teams?.company?._id)
+                              }
                               }
                             >
                               {/* <div>{trashIcon()}</div> */}
-                              <div>{language?.deactivateMember}</div>
+                              <div>Update type</div>
                             </button>
-                            :
-                            <button
-                              className="w-40 p-2 mb-2 text-sm text-green-600 bg-green-200 gray-hover transition-colors duration-200 cursor-pointer rounded-md"
-                              onClick={() =>
-                                activateTeamMember(teams?.company?._id)
-                              }
-                            >
-                              {/* <div>{trashIcon()}</div> */}
-                              <div>{language?.activateMember}</div>
-                            </button>
-                          }
-                        </td>
-                        <td className="px-4 py-2 text-sm text-gray-600 m-52">
-                          <button
-                            className={`${teams?.company?.assignedLeadsType === "hot" ?
-                              "text-hot bg-hot-light"
-                              : teams?.company?.assignedLeadsType === "cold" ? "text-cold bg-cold-light"
-                                : teams?.company?.assignedLeadsType === "qualified" ? "text-pipeline bg-pipeline-light"
-                                  : "text-green-600 bg-green-200"} w-40 p-2 mb-2 text-sm gray-hover transition-colors duration-200 cursor-pointer rounded-md`}
-                            onClick={() =>
-                              activateTeamMember(teams?.company?._id)
-                            }
-                          >
-                            {/* <div>{trashIcon()}</div> */}
-                            <div>{
-                              teams?.company?.assignedLeadsType
-                                ? teams.company.assignedLeadsType.charAt(0).toUpperCase() +
-                                teams.company.assignedLeadsType.slice(1)
-                                : ""
-                            }</div>
-                          </button>
-                        </td>
-                        <td className="px-4 py-2 text-sm text-gray-600 m-52">
-                          <button
-                            className="w-40 p-2 mb-2 text-sm text-yellow-600 bg-yellow-200 gray-hover transition-colors duration-200 cursor-pointer rounded-md"
-                            onClick={() => {
-                              setOpenUpdateLeadsTypeModal(true)
-                              setAssignLeadTypeUserId(teams?.company?._id)
-                            }
-                            }
-                          >
-                            {/* <div>{trashIcon()}</div> */}
-                            <div>Update type</div>
-                          </button>
-                        </td>
+                          </td>
 
-                      </tr>
+                        </tr>
                       ))}
                     </tbody>}
                   </table>
