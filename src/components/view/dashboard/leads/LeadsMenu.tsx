@@ -260,7 +260,7 @@ const LeadsMenu = ({
         </DropdownItem>}
 
 
-        <DropdownItem>
+        {(lead?.assignedTo === user?._id || user?.userType === "company") && <DropdownItem>
           <button
             className="w-full text-danger flex gap-1 hover:text-gray-200 cursor-pointer"
             onClick={handleDeleteClick}
@@ -269,6 +269,7 @@ const LeadsMenu = ({
             {language?.deleteLead}
           </button>
         </DropdownItem>
+        }
       </Dropdown>
 
       {/* ---------------------------- delete lead modal ---------------------------- */}
