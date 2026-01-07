@@ -282,6 +282,9 @@
       },
       "leads": {
         "showingLeads": "Showing leads for",
+        "noMatchingLeadsFound1": "No leads found matching",
+        "noMatchingLeadsFound2": "Try adjusting your search or filters.",
+        "noLeadsFound": "No leads found",
         "allLeads": "All Leads",
         "completeSalesList": "Complete list of your sales prospects and their current status",
         "myDashboard": "My dashboard",

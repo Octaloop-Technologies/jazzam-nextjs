@@ -747,6 +747,8 @@ const SettingsPage = () => {
                 </button>
               </div>
               {/* Show user assigned lead type */}
+              {user?.userType === "user" && 
+              <>
               <h1 className="text-bold text-md">Assigned lead type</h1>
               <div
                 className={`${user?.assignedLeadsType === "hot" ?
@@ -766,6 +768,8 @@ const SettingsPage = () => {
                     : ""
                 }</p>
               </div>
+              </>
+              }
               {user?.userType !== "user" && <div className="min-w-full">
                 <div className={`overflow-y-auto h-[190px]`}>
                   <table className="min-w-full rounded-lg">

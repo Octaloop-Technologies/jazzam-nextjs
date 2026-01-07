@@ -89,8 +89,8 @@ const sortOptions = [
 // Sort Order Options
 // ==========================================================
 const sortOrderOptions = [
-  { value: "desc", label: "Descending", icon: "↓" },
-  { value: "asc", label: "Ascending", icon: "↑" },
+  { value: "desc", label: "Desc", icon: "↓" },
+  { value: "asc", label: "Asc", icon: "↑" },
 ];
 
 // ==========================================================

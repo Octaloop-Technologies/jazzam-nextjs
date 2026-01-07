@@ -282,6 +282,9 @@
       },
       "leads": {
         "showingLeads": "عرض الخيوط ل",
+        "noMatchingLeadsFound1": "لم يتم العثور على أي عملاء محتملين متطابقين",
+        "noMatchingLeadsFound2": "حاول تعديل بحثك أو فلاتر البحث.",
+        "noLeadsFound": "لم يتم العثور على أي خيوط",
         "allLeads": "جميع الخيوط",
         "completeSalesList": "قائمة كاملة بآفاق المبيعات لديك وحالتها الحالية",
         "myDashboard": "لوحة القيادة الخاصة بي",
