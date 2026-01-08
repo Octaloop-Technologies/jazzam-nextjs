@@ -425,10 +425,18 @@
         "crmIntegration": "تكامل إدارة علاقات العملاء",
         "crmDescription": "قم بتوصيل نظام إدارة علاقات العملاء (CRM) الخاص بك لمزامنة العملاء المحتملين تلقائيًا",
         "manageCrm": "إدارة علاقات العملاء",
+        "mailboxIntegration": "تكامل صندوق البريد",
+        "mailboxDescription": "قم بتوصيل صندوق بريدك الإلكتروني لإرسال رسائل البريد الإلكتروني الخاصة بشركتك وإدارة الردود.",
+        "manageMailbox": "إدارة صندوق البريد",
         "inviteUsers": "دعوة المستخدمين",
         "helpsupport": "المساعدة والدعم",
         "dashboardTour": "جولة في لوحة القيادة",
         "dashboardTourDescription": "قم بجولة إرشادية عبر ميزات لوحة المعلومات",
+        "restarting": "جارٍ إعادة التشغيل...",
+        "restartTour": "إعادة تشغيل الجولة",
+        "sending": "إرسال",
+        "sendInvite": "أرسل دعوة",
+        "invitePlaceholder": "أدخل بريدك الإلكتروني لإرسال الدعوة",
         "autoBantEnable": "تم تمكين تأهيل BANT التلقائي",
         "autoBantDisable": "تم تعطيل تأهيل BANT التلقائي",
         "logoutMessage": "تم تسجيل الخروج بنجاح",
@@ -497,7 +505,13 @@
         "availableCrms": "مقدمي خدمات إدارة علاقات العملاء المتاحين",
         "availableCrmsMsg": "قم بتوصيل نظام إدارة علاقات العملاء (CRM) الخاص بك لمزامنة العملاء المحتملين وجهات الاتصال تلقائيًا",
         "noCrmConfigured": "لم يتم تكوين أي موفري CRM",
-        "noCrmContactMsg": "اتصل بالمسؤول لديك لتكوين موفري CRM"
+        "noCrmContactMsg": "اتصل بالمسؤول لديك لتكوين موفري CRM",
+        "assignedLeadsType": "نوع العملاء المحتملين المعينين",
+        "updateLeadsType": "تحديث نوع العملاء المحتملين",
+        "updateType": "نوع التحديث",
+        "active": "نشيط",
+        "inActive": "غير نشط",
+        "newLeadNotifications": "إشعارات العملاء المحتملين الجدد"
       }
     }
   }

@@ -425,10 +425,18 @@
         "crmIntegration": "CRM Integration",
         "crmDescription": "Connect your CRM to sync leads automatically",
         "manageCrm": "Manage CRM",
+        "mailboxIntegration": "Mailbox Integration",
+        "mailboxDescription": "Connect your Mailbox to send your company emails and manage replies",
+        "manageMailbox": "Manage Mailbox",
         "inviteUsers": "Invite Users",
         "helpsupport": "Help & Support",
         "dashboardTour": "Dashboard Tour",
         "dashboardTourDescription": "Take a guided tour through the dashboard features",
+        "restarting": "Restarting...",
+        "restartTour": "Restart Tour",
+        "sending": "Sending",
+        "sendInvite": "Send Invite",
+        "invitePlaceholder": "Enter email to send invite",
         "autoBantEnable": "Auto BANT qualification enabled",
         "autoBantDisable": "Auto BANT qualification disabled",
         "logoutMessage": "Logged out successfully",
@@ -497,7 +505,13 @@
         "availableCrms": "Available CRM Providers",
         "availableCrmsMsg": "Connect your CRM to automatically sync leads and contacts",
         "noCrmConfigured": "No CRM providers configured",
-        "noCrmContactMsg": "Contact your administrator to configure CRM providers"
+        "noCrmContactMsg": "Contact your administrator to configure CRM providers",
+        "assignedLeadsType": "Assigned Leads type",
+        "updateLeadsType": "updateLeadsType",
+        "updateType": "Update type",
+        "active": "Active",
+        "inActive": "In-Active",
+        "newLeadNotifications": "New Lead Notifications"
       }
     }
   }
