@@ -90,66 +90,51 @@ const DashboardPage = ({ }: DashboardPageProps) => {
 
   // Handle new lead in real-time
   useEffect(() => {
-    if (newLead && leadsData) {
+    if (newLead) {
       console.log('🎉 Adding new lead to list:', newLead);
+
+      const fetchData = () => {
+        setLeadsData((prev) => {
+          if (!prev) return prev;
+  
+          return {
+            ...prev,
+            leads: [newLead, ...prev.leads],
+            totalResults: prev.totalResults + 1,
+          };
+        });
+  
+        // Update stats
+        setStatsData((prev) => {
+          if (!prev) return prev;
+  
+          return {
+            ...prev,
+            overview: {
+              ...prev.overview,
+              newLeads: prev.overview.newLeads + 1,
+            },
+          };
+        });
+  
+        // Show notification
+        success(`🎉 New lead: ${newLead.fullName || newLead.email}`);
+      }
 
         // Add new lead to the top of the list
         const existingLead = leadsData?.leads?.find((lead: Lead) => lead?._id === newLead?._id)
-        if(existingLead) {
-          if(statusFilter === "assigned" && user?.userType === "user"){
-            setLeadsData((prev) => {
-              if (!prev) return prev;
-    
-              return {
-                ...prev,
-                leads: [newLead, ...prev.leads],
-                totalResults: prev.totalResults + 1,
-              };
-            });
-    
-            // Update stats
-            setStatsData((prev) => {
-              if (!prev) return prev;
-    
-              return {
-                ...prev,
-                overview: {
-                  ...prev.overview,
-                  newLeads: prev.overview.newLeads + 1,
-                },
-              };
-            });
-    
-            // Show notification
-            success(`🎉 New lead: ${newLead.fullName || newLead.email}`);
+        if(existingLead){
+          if(newLead?.assignedTo === user?._id && user?.userType === "user") {
+            fetchData()
+          }else if(newLead?.assignedTo === user?._id && user?.userType === "user" && statusFilter === "assigned"){
+            fetchData()
           }
-        }
-        else{
-          setLeadsData((prev) => {
-            if (!prev) return prev;
-  
-            return {
-              ...prev,
-              leads: [newLead, ...prev.leads],
-              totalResults: prev.totalResults + 1,
-            };
-          });
-  
-          // Update stats
-          setStatsData((prev) => {
-            if (!prev) return prev;
-  
-            return {
-              ...prev,
-              overview: {
-                ...prev.overview,
-                newLeads: prev.overview.newLeads + 1,
-              },
-            };
-          });
-  
-          // Show notification
-          success(`🎉 New lead: ${newLead.fullName || newLead.email}`);
+        }else{
+          if(user?.userType === "company"){
+            fetchData()
+          }else if(user?.userType === "user" && statusFilter === "all"){
+            fetchData()
+          }
         }
 
       // Optional: Play sound
@@ -639,8 +624,8 @@ const DashboardPage = ({ }: DashboardPageProps) => {
                   {error
                     ? "Error loading leads"
                     : searchQuery
-                      ? `No leads found matching "${searchQuery}". Try adjusting your search or filters.`
-                      : "No leads found"}
+                      ? `${language?.navbar?.leads?.noMatchingLeadsFound1} "${searchQuery}". ${language?.navbar?.leads?.noMatchingLeadsFound2}`
+                      : language?.navbar?.leads?.noLeadsFound}
                 </div>
               )}
             </Table>

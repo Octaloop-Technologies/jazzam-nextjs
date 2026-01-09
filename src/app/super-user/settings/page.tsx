@@ -747,6 +747,8 @@ const SettingsPage = () => {
                 </button>
               </div>
               {/* Show user assigned lead type */}
+              {user?.userType === "user" && 
+              <>
               <h1 className="text-bold text-md">Assigned lead type</h1>
               <div
                 className={`${user?.assignedLeadsType === "hot" ?
@@ -766,6 +768,8 @@ const SettingsPage = () => {
                     : ""
                 }</p>
               </div>
+              </>
+              }
               {user?.userType !== "user" && <div className="min-w-full">
                 <div className={`overflow-y-auto h-[190px]`}>
                   <table className="min-w-full rounded-lg">
@@ -787,10 +791,10 @@ const SettingsPage = () => {
                           {language?.actions}
                         </th>
                         <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">
-                          Assigned Leads type
+                        {language?.assignedLeadsType}
                         </th>
                         <th className="px-4 py-2 text-left text-sm font-semibold text-gray-700">
-                          Update Leads Type
+                        {language?.updateLeadsType}
                         </th>
                       </tr>
                     </thead>
@@ -808,7 +812,7 @@ const SettingsPage = () => {
                             {teams?.company?.email}
                           </td>
                           <td className="px-4 py-2 text-sm text-gray-600 m-52">
-                            {teams?.company?.joinedCompanyStatus === true ? "Active" : "In-Active"}
+                            {teams?.company?.joinedCompanyStatus === true ? language?.active : language?.inActive}
                           </td>
                           <td className="px-4 py-2 text-sm text-gray-600 m-52">
                             {teams?.company?.joinedCompanyStatus === true ?
@@ -863,7 +867,7 @@ const SettingsPage = () => {
                               }
                             >
                               {/* <div>{trashIcon()}</div> */}
-                              <div>Update type</div>
+                              <div>{language?.updateType}</div>
                             </button>
                           </td>
 
@@ -942,7 +946,7 @@ const SettingsPage = () => {
               <div className="flex flex-col gap-[15px] p-[15px] border border-gray-b rounded-2xl">
                 {[
                   {
-                    title: "New Lead Notifications",
+                    title: language?.newLeadNotifications,
                     id: "lead-notifications",
                     key: "leadNotifications",
                   },
@@ -1045,6 +1049,26 @@ const SettingsPage = () => {
                 </div>
               </div>
 
+              <h1 className="text-[14px] text-gray-200 mt-4">
+                {language?.mailboxIntegration}
+              </h1>
+              <div className="p-[15px] border border-gray-b rounded-2xl">
+                <div className="flex-between">
+                  <p className="text-xs text-gray-400">
+                    {language?.mailboxDescription}
+                  </p>
+
+                  <Link
+                    href="/super-user/integrations/mailbox"
+                    prefetch={false}
+                    className="flex-center gap-2 text-red-500 gray-hover"
+                  >
+                    <p>{language?.manageMailbox}</p>
+                    <RightArrowSvg />
+                  </Link>
+                </div>
+              </div>
+
               <h1 className="text-[14px] text-gray-200 mt-4">{language?.inviteUsers}</h1>
               <div className="p-[15px] border border-gray-b rounded-2xl">
                 <div className="flex-between">
@@ -1054,14 +1078,14 @@ const SettingsPage = () => {
                       setEmail(e.target.value)
                     }
                     type="text"
-                    placeholder="Enter email to send invite"
+                    placeholder={language?.invitePlaceholder}
                     className="outline-none border-2 w-72 border-gray-100 rounded p-1"
                   />
                   <button
                     onClick={handleSendInvite}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-pri text-white hover:bg-pri/80 cursor-pointer`}
                   >
-                    {sendInviteLoad ? "Sending" : `Send Invite`}
+                    {sendInviteLoad ? language?.sending : language?.sendInvite}
                   </button>
                 </div>
               </div>
@@ -1086,7 +1110,7 @@ const SettingsPage = () => {
                       : "bg-pri text-white hover:bg-pri/80"
                       }`}
                   >
-                    {isRestartingTour ? "Restarting..." : "Restart Tour"}
+                    {isRestartingTour ? language?.restarting : language?.restartTour}
                   </button>
                 </div>
               </div>

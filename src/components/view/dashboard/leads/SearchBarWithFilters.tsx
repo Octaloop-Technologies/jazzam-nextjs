@@ -331,7 +331,7 @@ const SearchBarWithFilters = ({ searchFields }: SearchFields) => {
                 >
                   {sortOrderOptions.map((option) => (
                     <option key={option.value} value={option.value}>
-                      {option.icon}
+                      {option.icon}{option.label}
                     </option>
                   ))}
                 </select>
