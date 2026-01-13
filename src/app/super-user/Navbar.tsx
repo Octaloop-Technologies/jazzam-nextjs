@@ -65,7 +65,18 @@ const Navbar = ({ languages }: NavbarProps) => {
     handleLanguage()
   }, []);
 
-  const navItems = [
+  const navItems = user?.userType === "admin" ? [
+    {
+      href: "/dashboard/admin",
+      icon: <LeadsIcon />,
+      title: language?.navbar?.navlinks?.companies,
+    },
+    {
+      href: "/dashboard/companies-subscriptions",
+      icon: <FormsIcon />,
+      title: language?.navbar?.navlinks?.companiesSubscriptions,
+    },
+  ] : [
     {
       href: "/super-user",
       icon: <LeadsIcon />,

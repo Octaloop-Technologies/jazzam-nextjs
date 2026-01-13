@@ -24,6 +24,7 @@ interface MailboxIntegrationCardProps {
   onDisconnect: () => void;
   onSetDefault: () => void;
   onToggleStatus: () => void;
+  language?: any
 }
 
 export const MailboxIntegrationCard: React.FC<MailboxIntegrationCardProps> = ({
@@ -31,6 +32,7 @@ export const MailboxIntegrationCard: React.FC<MailboxIntegrationCardProps> = ({
   onDisconnect,
   onSetDefault,
   onToggleStatus,
+  language
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -97,7 +99,7 @@ export const MailboxIntegrationCard: React.FC<MailboxIntegrationCardProps> = ({
               <h3 className="text-base font-semibold">{mailbox.email}</h3>
               {mailbox.isDefault && (
                 <span className="px-2 py-0.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-md">
-                  Default
+                  {language?.default}
                 </span>
               )}
               <span
@@ -107,7 +109,7 @@ export const MailboxIntegrationCard: React.FC<MailboxIntegrationCardProps> = ({
                     : "text-gray-600 bg-gray-50"
                 }`}
               >
-                {mailbox.isActive ? "Active" : "Inactive"}
+                {mailbox.isActive ? language?.active : language?.inactive}
               </span>
             </div>
             <p className="text-sm text-gray-500">
@@ -119,7 +121,7 @@ export const MailboxIntegrationCard: React.FC<MailboxIntegrationCardProps> = ({
             <div className="mt-3 space-y-2">
               <div>
                 <div className="flex justify-between text-xs text-gray-600 mb-1">
-                  <span>Daily usage</span>
+                  <span>{language?.dailyUsage}</span>
                   <span>
                     {mailbox.dailyUsage} / {mailbox.dailyLimit}
                   </span>
@@ -138,10 +140,10 @@ export const MailboxIntegrationCard: React.FC<MailboxIntegrationCardProps> = ({
                 </div>
               </div>
               <div className="flex gap-4 text-xs text-gray-500">
-                <span>Total sent: {mailbox.totalSent}</span>
+                <span>{language?.totalSent}: {mailbox.totalSent}</span>
                 {mailbox.lastUsedAt && (
                   <span>
-                    Last used: {new Date(mailbox.lastUsedAt).toLocaleDateString()}
+                    {language?.lastUsed}: {new Date(mailbox.lastUsedAt).toLocaleDateString()}
                   </span>
                 )}
               </div>
@@ -157,7 +159,7 @@ export const MailboxIntegrationCard: React.FC<MailboxIntegrationCardProps> = ({
               disabled={loading}
               className="px-3 py-1.5 text-sm text-blue-600 border border-blue-300 rounded-lg hover:bg-blue-50 disabled:opacity-50 cursor-pointer whitespace-nowrap"
             >
-              Set as Default
+              {language?.setAsDefault}
             </button>
           )}
           <button
@@ -169,14 +171,14 @@ export const MailboxIntegrationCard: React.FC<MailboxIntegrationCardProps> = ({
                 : "text-green-600 border-green-300 hover:bg-green-50"
             }`}
           >
-            {mailbox.isActive ? "Deactivate" : "Activate"}
+            {mailbox.isActive ? language?.deactivate : language?.activate}
           </button>
           <button
             onClick={handleDisconnect}
             disabled={loading}
             className="px-3 py-1.5 text-sm text-red-600 border border-red-300 rounded-lg hover:bg-red-50 disabled:opacity-50 cursor-pointer whitespace-nowrap"
           >
-            {loading ? "Disconnecting..." : "Disconnect"}
+            {loading ? language?.disconnecting : language?.disconnect}
           </button>
         </div>
       </div>

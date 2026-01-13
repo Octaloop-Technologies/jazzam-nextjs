@@ -740,12 +740,12 @@ const SettingsPage = () => {
               </div>
 
               {/* delete account */}
-              <div className="flex flex-col gap-2">
+              {user?.userType !== "admin" && <div className="flex flex-col gap-2">
                 <button className="w-fit flex gap-1 text-sm text-danger gray-hover transition-colors duration-200 cursor-pointer" onClick={() => setDeleteUserIsOpen(true)}>
                   <div>{trashIcon()}</div>
                   <div>{language?.deleteAccount}</div>
                 </button>
-              </div>
+              </div>}
               {/* Show user assigned lead type */}
               {user?.userType === "user" && 
               <>
@@ -770,7 +770,7 @@ const SettingsPage = () => {
               </div>
               </>
               }
-              {user?.userType !== "user" && <div className="min-w-full">
+              {user?.userType === "company" && <div className="min-w-full">
                 <div className={`overflow-y-auto h-[190px]`}>
                   <table className="min-w-full rounded-lg">
                     <thead className="bg-gray-100">

@@ -44,7 +44,7 @@ interface Mailbox {
 export default function MailboxIntegrationsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const toast = useToast();
+  const { success, error } = useToast();
   const user = useAppSelector(selectUser);
   const [loading, setLoading] = useState(true);
   const lang = getCurrentLang();
@@ -63,29 +63,29 @@ export default function MailboxIntegrationsPage() {
     {
       id: "gmail",
       name: "Gmail",
-      description: "Connect your Gmail account for sending emails",
+      description: language?.gmailConnectDesc,
       icon: "https://www.google.com/s2/favicons?domain=gmail.com&sz=64",
       requiresOAuth: true,
     },
     {
       id: "outlook",
       name: "Outlook",
-      description: "Connect your Microsoft Outlook account",
+      description: language?.outlookConnectDesc,
       icon: "https://outlook.live.com/favicon.ico",
       requiresOAuth: true,
     },
-    {
-      id: "yahoo",
-      name: "Yahoo Mail",
-      description: "Connect your Yahoo Mail with app password",
-      icon: "https://www.yahoo.com/favicon.ico",
-      requiresOAuth: false,
-    },
+    // {
+    //   id: "yahoo",
+    //   name: "Yahoo Mail",
+    //   description: "Connect your Yahoo Mail with app password",
+    //   icon: "https://www.yahoo.com/favicon.ico",
+    //   requiresOAuth: false,
+    // },
   ];
 
   useEffect(() => {
     const fetchLang = async () => {
-      const dict = (await getDictionary(lang))?.superUser?.navbar?.settings;
+      const dict = (await getDictionary(lang))?.superUser?.navbar?.settings?.mailbox;
       setLanguage(dict);
     };
     fetchLang();
@@ -99,12 +99,12 @@ export default function MailboxIntegrationsPage() {
     const message = searchParams?.get("message");
 
     if (status === "connected" && provider) {
-      toast.success(`Successfully connected ${provider}${email ? ` (${email})` : ''}!`);
+      success(`${language?.connectionSuccessMsg} ${provider}${email ? ` (${email})` : ''}!`);
       // Clean URL
       // router.replace("/super-user/integrations/mailbox");
     } else if (status === "error") {
       console.log("connection error msg***********", message)
-      toast.error(`Failed to connect mailbox: ${message || "Unknown error"}`);
+      error(`${language?.failedToConnect}: ${message}`);
       // Clean URL
       // router.replace("/super-user/integrations/mailbox");
     }
@@ -122,7 +122,7 @@ export default function MailboxIntegrationsPage() {
       setMailboxes(response?.data?.mailboxes || []);
     } catch (error) {
       console.error("Error fetching mailbox data:", error);
-      toast.error("Failed to load mailbox integrations");
+      error(language?.failedToLoad);
     } finally {
       setLoading(false);
     }
@@ -147,7 +147,7 @@ export default function MailboxIntegrationsPage() {
       // Open OAuth in same window so callback can redirect properly
       window.location.href = data.data?.authUrl;
     } catch (error: any) {
-      toast.error(error?.message || "Failed to connect mailbox");
+      error(language?.failedToConnect);
     }
   };
 
@@ -165,20 +165,20 @@ export default function MailboxIntegrationsPage() {
         throw new Error("Failed to connect Yahoo mailbox");
       }
 
-      toast.success("Yahoo mailbox connected successfully!");
+      success("Yahoo mailbox connected successfully!");
       setShowYahooForm(false);
       setYahooEmail("");
       setYahooPassword("");
       fetchMailboxData();
     } catch (error: any) {
-      toast.error(error?.message || "Failed to connect Yahoo mailbox");
+      error(error?.message || "Failed to connect Yahoo mailbox");
     } finally {
       setConnectingYahoo(false);
     }
   };
 
   const handleMailboxDisconnect = async (mailboxId: string) => {
-    if (!confirm("Are you sure you want to disconnect this mailbox?")) {
+    if (!confirm(`${language?.disconnectConfirm}`)) {
       return;
     }
 
@@ -189,10 +189,10 @@ export default function MailboxIntegrationsPage() {
         throw new Error("Failed to disconnect");
       }
 
-      toast.success("Mailbox disconnected successfully");
+      success(language?.disconnectSuccess);
       fetchMailboxData();
     } catch (error: any) {
-      toast.error(error?.message || "Failed to disconnect mailbox");
+      error(language?.failedToDisconnect);
     }
   };
 
@@ -204,10 +204,10 @@ export default function MailboxIntegrationsPage() {
         throw new Error("Failed to set default mailbox");
       }
 
-      toast.success("Default mailbox updated successfully");
+      success(language?.mailboxDefaultSuccess);
       fetchMailboxData();
     } catch (error: any) {
-      toast.error(error?.message || "Failed to set default mailbox");
+      error(language?.failedToDefault);
     }
   };
 
@@ -219,35 +219,35 @@ export default function MailboxIntegrationsPage() {
         throw new Error("Failed to toggle mailbox status");
       }
 
-      toast.success("Mailbox status updated successfully");
+      success(language?.mailboxStatusSuccess);
       fetchMailboxData();
     } catch (error: any) {
-      toast.error(error?.message || "Failed to toggle mailbox status");
+      error(language?.failedToToggle);
     }
   };
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold">Email Mailbox Integrations</h1>
+        <h1 className="text-3xl font-bold">{language?.emailIntegration}</h1>
         <p className="text-gray-600 mt-2">
-          Connect your email accounts to send follow-up emails and track responses from your leads.
+        {language?.emailIntegrationMsg}
         </p>
 
         {/* Mailbox Stats */}
         <div className="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="p-4 bg-blue-50 rounded-lg">
-            <h3 className="font-semibold text-blue-900">Connected Mailboxes</h3>
+            <h3 className="font-semibold text-blue-900">{language?.connectMailbox}</h3>
             <p className="text-2xl font-bold text-blue-700">{mailboxes.length}</p>
           </div>
           <div className="p-4 bg-green-50 rounded-lg">
-            <h3 className="font-semibold text-green-900">Active Mailboxes</h3>
+            <h3 className="font-semibold text-green-900">{language?.activeMailbox}</h3>
             <p className="text-2xl font-bold text-green-700">
               {mailboxes.filter((m) => m.isActive).length}
             </p>
           </div>
           <div className="p-4 bg-purple-50 rounded-lg">
-            <h3 className="font-semibold text-purple-900">Emails Sent Today</h3>
+            <h3 className="font-semibold text-purple-900">{language?.emailsSent}</h3>
             <p className="text-2xl font-bold text-purple-700">
               {mailboxes.reduce((sum, m) => sum + m.dailyUsage, 0)}
             </p>
@@ -256,7 +256,7 @@ export default function MailboxIntegrationsPage() {
       </div>
 
       {/* Yahoo Connection Form Modal */}
-      {showYahooForm && (
+      {/* {showYahooForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
             <h2 className="text-xl font-bold mb-4">Connect Yahoo Mail</h2>
@@ -317,7 +317,7 @@ export default function MailboxIntegrationsPage() {
             </form>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Content */}
       {loading ? (
@@ -329,7 +329,7 @@ export default function MailboxIntegrationsPage() {
           {/* Connected Mailboxes */}
           {mailboxes.length > 0 && (
             <div className="mb-8">
-              <h2 className="text-xl font-semibold mb-4">Your Connected Mailboxes</h2>
+              <h2 className="text-xl font-semibold mb-4">{language?.connectedMailbox}</h2>
               <div className="grid gap-4">
                 {mailboxes.map((mailbox) => (
                   <MailboxIntegrationCard
@@ -338,6 +338,7 @@ export default function MailboxIntegrationsPage() {
                     onDisconnect={() => handleMailboxDisconnect(mailbox.id)}
                     onSetDefault={() => handleSetDefault(mailbox.id)}
                     onToggleStatus={() => handleToggleStatus(mailbox.id)}
+                    language={language}
                   />
                 ))}
               </div>
@@ -346,9 +347,9 @@ export default function MailboxIntegrationsPage() {
 
           {/* Available Providers */}
           <div className="mb-6">
-            <h2 className="text-xl font-semibold mb-2">Connect New Mailbox</h2>
+            <h2 className="text-xl font-semibold mb-2">{language?.connectNewMailbox}Connect New Mailbox</h2>
             <p className="text-gray-600">
-              Add email accounts to send personalized follow-ups to your leads.
+            {language?.addNewAccounts}
             </p>
           </div>
 
@@ -383,7 +384,7 @@ export default function MailboxIntegrationsPage() {
                           onClick={() => handleMailboxConnect(provider.id)}
                           className="px-4 py-2 text-sm font-medium text-white bg-sec rounded-lg hover:bg-sec-hover cursor-pointer"
                         >
-                          Connect
+                          {language?.connect}
                         </button>
                     </div>
                   </div>

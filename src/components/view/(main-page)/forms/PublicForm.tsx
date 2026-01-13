@@ -134,6 +134,8 @@ const PublicForm = ({ accessToken, tenantId }: PublicFormProps) => {
       if (response.success) {
         if(response.message === "Lead already exists; skipped"){
           warning("Lead for this url already exists"); 
+        }else if(response.message === "Invalid lead data from scraping; no lead created"){
+          error("Invalid lead data from scraping; no lead created")
         }else{
           success(form?.config.settings.successMessage || "Form submitted successfully!");
         }

@@ -211,6 +211,13 @@ const DashboardPage = ({ }: DashboardPageProps) => {
   // Fetch data on mount and when params change
   useEffect(() => {
     // Check redirect conditions first, before fetching data
+    if (String(user?.userType) === "admin") {
+      setIsRedirecting(true);
+      window.location.href  = "/dashboard/admin";
+      return;
+    }
+    
+    
     if (String(user?.userType) === "company" && user?.companyOnboarding === false) {
       setIsRedirecting(true);
       router.push("/dashboard/onboarding");
@@ -395,6 +402,8 @@ const DashboardPage = ({ }: DashboardPageProps) => {
   //   return;
   // }
 
+  if(user?.userType === "admin") return;
+
   if (error) {
     return (
       <section>
@@ -460,7 +469,7 @@ const DashboardPage = ({ }: DashboardPageProps) => {
         {cards.map((card) => (
           <div
             key={card?.title}
-            className="w-full py-[30px] pl-[40px] bg-white border border-gray-b rounded-3xl flex items-center gap-2.5"
+            className={`${getCurrentLang() === "ar" && "pr-5"} w-full py-[30px] pl-[40px] bg-white border border-gray-b rounded-3xl flex items-center gap-2.5`}
           >
             <div className={`rounded-xl-2 size-[40px] ${card?.bgColor} flex-center`}>
               {card?.icon}

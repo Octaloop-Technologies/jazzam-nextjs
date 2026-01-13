@@ -37,6 +37,13 @@ const LoginPage = async () => {
           </a>
         </p>
 
+        <p className="mt-3 text-[14px] text-gray-600">
+          <a href="/forgot-password" className="text-pri font-semibold">
+            {/* {dict?.signUp ?? "Sign up"} */}
+            {dict?.forgotPassword}
+          </a>
+        </p>
+
         <label htmlFor="" className="font-semibold">{dict?.or}</label>
 
         <LoginButtons dict={dict} />
