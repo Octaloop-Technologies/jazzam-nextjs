@@ -18,7 +18,7 @@ interface Bill {
   amount: number;
 }
 
-const SubscriptionSettings = () => {
+const SubscriptionSettings = ({ language }: any) => {
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const toast = useToast();
@@ -47,7 +47,7 @@ const SubscriptionSettings = () => {
   };
 
   const handleCancelSubscription = async () => {
-    if (!confirm("Are you sure you want to cancel your subscription?")) return;
+    if (!confirm(language?.wantToCancel)) return;
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/companies/subscription`, {
@@ -72,12 +72,12 @@ const SubscriptionSettings = () => {
         })
       );
 
-      toast.success("Subscription cancelled. Switched to Free plan.");
+      toast.success(language?.subscriptionCancelSuccess);
 
       // Refresh user data to ensure we have the latest information
       dispatch(fetchCurrentUser());
     } catch (error) {
-      toast.error("Failed to cancel subscription");
+      toast.error(language?.failToCancel);
     }
   };
 

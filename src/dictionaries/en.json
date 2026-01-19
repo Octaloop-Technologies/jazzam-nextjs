@@ -80,7 +80,10 @@
       "emailHeading": "Your email address",
       "getStarted": "GET STARTED",
       "commingSoon": "COMING SOON",
-      "waitingListMessage": "Please! join out waiting list"
+      "waitingListMessage": "Please! join out waiting list",
+      "wiatlistSuccess": "Successfully joined waitlist!",
+      "errSubmitEmail": "Error submitting email",
+      "unknownErroEmail": "Unknown error submitting email"
     },
     "whyChooseJazzam": {
       "title": "Why Choose Jazzam?",
@@ -271,7 +274,8 @@
       "emailNotSent": "Please! enter your email",
       "emailAlready": "Email already exists in waitlist",
       "errorEmail": "Something went wrong. Please try again.",
-      "emailServerError": "Unable to add email due to server error"
+      "emailServerError": "Unable to add email due to server error",
+      "emailInvalid": "Email is not valid. Please! enter valid email"
     }
   },
   "superUser": {
@@ -329,6 +333,16 @@
         "leadAssignedMsg": "Lead assigned successfully",
         "leadAssignedErrMsg": "Unable to assign lead. Please! try again later",
         "failedDeleteLead": "Failed to delete lead",
+        "leadQualifySuccess":"Lead re-qualified successfully!",
+        "leadRequalifyScore":"Lead re-qualified! Score",
+        "failedToQualify": "Failed to re-qualify lead. Please! try again later",
+        "errorToQualify" : "An error occurred while re-qualifying the lead",
+        "scheduleFollowUp": "Scheduled follow up created successfully",
+        "emailSuccess": "Email sent successfully!",
+        "emailFailSend": "Failed to send email",
+        "msgOrSubjectEmptyMsg": "Message or subject cannot be empty",
+        "followUpSettings": "Follow up settings",
+        "Channel": "Channel",
         "tableHeadersTitle": {
           "lead": "Lead",
           "status": "Status",
@@ -364,7 +378,18 @@
         "uniqueEndpoints": "Your unique form endpoints for automatic lead generation",
         "leadGenerationEndpoint": "Your Lead Generation Form Endpoints",
         "formDescription": "Your unique form endpoints for collecting leads from different platforms. Share these URLs with prospects to automatically generate leads.",
-        "readyToUse": "Ready to Use"
+        "readyToUse": "Ready to Use",
+        "clipToClipboard": "copied to clipboard!",
+        "failedToCopy" : "Failed to copy to clipboard",
+        "FailToLoadPlatform": "Failed to load platforms",
+        "errorLoadingForms": "Error loading forms",
+        "formSuccessMsg": "Form submitted successfully!",
+        "failToSubmit": "Failed to submit form. Please try again.",
+        "formNotFound": "Form not found",
+        "errorLoadingForm": "Error loading form",
+        "invalidLeadData": "Invalid lead data from scraping; no lead created",
+        "formSubmitSuccess": "Form submitted successfully!",
+        "formNotExists": "The form you&apos;re looking for doesn&apos;t exist or has been removed."
       },
       "summary": {
         "executiveHeading": "Executive Weekly Summary",
@@ -413,7 +438,9 @@
         "channel": "Channel",
         "status": "Status",
         "dateOfSubmission": "Date of submission",
-        "placeholderText": "Search by name or email"
+        "placeholderText": "Search by name or email",
+        "followSent": "follow up email sent.",
+        "unableToSend": "unable to send follow up email"
       },
       "settings": {
         "settingsHeading": "Settings",
@@ -457,6 +484,12 @@
         "userNotfound": "User not found",
         "memberNameChanged": "Member name successfully changed",
         "invitationLinkSent": "Invitation link sent successfully",
+        "notLoginMsg": "Your are not loggedIn please login first",
+        "noTokenFound": "No invitation token found",
+        "tryAgain": "Please! try again later.",
+        "invitationSuccess": "Invitation accepted successfully",
+        "acceptDesc": "Click on button to accept invite",
+        "acceptInvite": "Accept invite",
         "errorSendingInvitation": "User not Found",
         "noFileSelected": "No file selected",
         "profileUpdated": "Profile picture uploaded",
@@ -601,7 +634,15 @@
           "Subscribe with Stripe": "Subscribe with Stripe",
           "activating": "Activating...",
           "useFree": "Use Free",
-          "skipPlan":"Skip for now and use Free plan"
+          "skipPlan":"Skip for now and use Free plan",
+          "subscriptionCancelSuccess": "Subscription cancelled. Switched to Free plan.",
+          "wantToCancel": "Are you sure you want to cancel your subscription?",
+          "enjoyFreeTrial": "Trial started. Enjoy 14 days free!",
+          "failToStart": "Could not start trial",
+          "failToSwitch":"Could not switch to free plan",
+          "failToCheckout": "Could not start checkout",
+          "failToCancel": "Failed to cancel subscription",
+          "usingFreePlan":"Using free plan. You can upgrade anytime."
         }
       }
     }

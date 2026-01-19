@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useAppSelector, useAppDispatch } from "@/redux/store";
 import { selectUser, updateUserSubscription, fetchCurrentUser } from "@/redux/slices/authSlice";
 import { useToast } from "@/lib/hooks/useToast";
@@ -11,12 +11,24 @@ import {
   isPaidPlan,
 } from "@/lib/constants/subscriptionPlans";
 import tokenStorage from "@/lib/utils/tokenStorage";
+import { getDictionary } from "@/lib/i18n/getDictionary";
+import { getCurrentLang } from "@/lib/api/main-page";
 
 export default function SubscriptionSelectionPage() {
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const toast = useToast();
   const [loading, setLoading] = useState<PlanKey | null>(null);
+  const [language, setLanguage] = useState<any>();
+  const lang = getCurrentLang();
+
+  useEffect(() => {
+    const fetchLanguage = async() => {
+      const dict = (await getDictionary(lang))?.superUser?.navbar?.settings;
+      setLanguage(dict);
+    }
+    fetchLanguage()
+  }, [])
 
   const trialEnds = useMemo(() => {
     if (!user?.trialEndDate) return null;
@@ -52,7 +64,7 @@ export default function SubscriptionSelectionPage() {
         })
       );
 
-      toast.success("Trial started. Enjoy 14 days free!");
+      toast.success(language?.enjoyFreeTrial);
 
       // Refresh user data to ensure we have the latest information
       dispatch(fetchCurrentUser());
@@ -60,7 +72,7 @@ export default function SubscriptionSelectionPage() {
       // Redirect to dashboard - onboarding will start automatically
       window.location.href = "/super-user";
     } catch (e) {
-      toast.error((e as Error).message || "Could not start trial");
+      toast.error(language?.failToStart);
     } finally {
       setLoading(null);
     }
@@ -94,7 +106,7 @@ export default function SubscriptionSelectionPage() {
         })
       );
 
-      toast.info("Using free plan. You can upgrade anytime.");
+      toast.info(language?.usingFreePlan);
 
       // Refresh user data to ensure we have the latest information
       dispatch(fetchCurrentUser());
@@ -102,7 +114,7 @@ export default function SubscriptionSelectionPage() {
       // Redirect to dashboard - onboarding will start automatically
       window.location.href = "/super-user";
     } catch (e) {
-      toast.error((e as Error).message || "Could not switch to free plan");
+      toast.error(language?.failToSwitch);
     } finally {
       setLoading(null);
     }
@@ -151,7 +163,7 @@ export default function SubscriptionSelectionPage() {
         form.submit();
       }
     } catch (e) {
-      toast.error((e as Error).message || "Could not start checkout");
+      toast.error(language?.failToCheckout);
       setLoading(null);
     }
   };

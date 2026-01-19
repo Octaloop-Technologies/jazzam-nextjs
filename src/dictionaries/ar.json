@@ -77,7 +77,10 @@
       "emailHeading": "عنوان بريدك الإلكتروني",
       "getStarted": "ابدأ",
       "commingSoon": "قريباً",
-      "waitingListMessage": "من فضلك! انضم إلى قائمة الانتظار لدينا"
+      "waitingListMessage": "من فضلك! انضم إلى قائمة الانتظار لدينا",
+      "wiatlistSuccess": "انضممت بنجاح إلى قائمة الانتظار!",
+      "errSubmitEmail": "حدث خطأ أثناء إرسال البريد الإلكتروني",
+      "unknownErroEmail": "حدث خطأ غير معروف أثناء إرسال البريد الإلكتروني"
     },
     "whyChooseJazzam": {
       "title": "لماذا تختار جزّام؟",
@@ -269,7 +272,8 @@
       "emailNotSent": "من فضلك أدخل بريدك الإلكتروني",
       "emailAlready": "البريد الإلكتروني موجود بالفعل في قائمة الانتظار",
       "errorEmail": "حدث خطأ ما. يرجى المحاولة مرة أخرى.",
-      "emailServerError": "غير قادر على إضافة البريد الإلكتروني بسبب خطأ في الخادم"
+      "emailServerError": "غير قادر على إضافة البريد الإلكتروني بسبب خطأ في الخادم",
+      "emailInvalid": "البريد الإلكتروني غير صالح. الرجاء إدخال بريد إلكتروني صحيح!"
     }
   },
   "superUser": {
@@ -327,6 +331,16 @@
         "leadAssignedMsg": "تم تعيين العميل المحتمل بنجاح",
         "leadAssignedErrMsg": "تعذر تعيين العميل المحتمل. يرجى المحاولة مرة أخرى لاحقًا!",
         "failedDeleteLead": "فشل في حذف الرصاص",
+        "leadQualifySuccess":"تمت إعادة تأهيل العميل بنجاح!",
+        "leadRequalifyScore":"تم إعادة تأهيل القائد! النتيجة",
+        "failedToQualify": "فشل إعادة تأهيل العميل المحتمل. يرجى المحاولة مرة أخرى لاحقًا!",
+        "errorToQualify" : "حدث خطأ أثناء إعادة تقييم العميل المحتمل",
+        "scheduleFollowUp": "تم إنشاء جدول المتابعة بنجاح",
+        "emailSuccess": "تم إرسال البريد الإلكتروني بنجاح!",
+        "emailFailSend": "فشل إرسال البريد الإلكتروني",
+        "msgOrSubjectEmptyMsg": "لا يمكن أن تكون الرسالة أو الموضوع فارغين",
+        "followUpSettings": "متابعة الإعدادات",
+        "Channel": "قناة",
         "tableHeadersTitle": {
           "lead": "يقود",
           "status": "حالة",
@@ -362,7 +376,18 @@
         "uniqueEndpoints": "نقاط نهاية النموذج الفريدة الخاصة بك لتوليد العملاء المحتملين تلقائيًا",
         "leadGenerationEndpoint": "نقاط نهاية نموذج توليد العملاء المحتملين الخاص بك",
         "formDescription": "نماذجك الفريدة هي نقاط النهاية لجمع العملاء المحتملين من منصات مختلفة. شارك هذه الروابط مع العملاء المحتملين لتوليد عملاء محتملين تلقائيًا.",
-        "readyToUse": "جاهز للاستخدام"
+        "readyToUse": "جاهز للاستخدام",
+        "clipToClipboard": "تم نسخها إلى الحافظة!",
+        "failedToCopy" : "فشل النسخ إلى الحافظة",
+        "FailToLoadPlatform": "فشل تحميل المنصات",
+        "errorLoadingForms": "حدث خطأ أثناء تحميل النماذج",
+        "formSuccessMsg": "تم إرسال النموذج بنجاح!",
+        "failToSubmit": "فشل إرسال النموذج. يرجى المحاولة مرة أخرى.",
+        "formNotFound": "لم يتم العثور على النموذج",
+        "errorLoadingForm": "خطأ في تحميل النموذج",
+        "invalidLeadData": "بيانات عملاء محتملين غير صالحة تم جمعها؛ لم يتم إنشاء أي عميل محتمل",
+        "formSubmitSuccess": "تم إرسال النموذج بنجاح!",
+        "formNotExists": "النموذج الذي تبحث عنه غير موجود أو تمت إزالته."
       },
       "summary": {
         "executiveHeading": "الملخص الأسبوعي التنفيذي",
@@ -411,7 +436,9 @@
         "channel": "قناة",
         "status": "حالة",
         "dateOfSubmission": "تاريخ التقديم",
-        "placeholderText": "يبحث"
+        "placeholderText": "يبحث",
+        "followSent": "تم إرسال بريد إلكتروني للمتابعة.",
+        "unableToSend": "تعذر إرسال بريد إلكتروني للمتابعة"
       },
       "settings": {
         "settingsHeading": "إعدادات",
@@ -455,6 +482,12 @@
         "userNotfound": "لم يتم العثور على المستخدم",
         "memberNameChanged": "تم تغيير اسم العضو بنجاح",
         "invitationLinkSent": "تم إرسال رابط الدعوة بنجاح",
+        "notLoginMsg": "أنت غير مسجل دخولك، يرجى تسجيل الدخول أولاً",
+        "noTokenFound": "لم يتم العثور على رمز دعوة",
+        "tryAgain": "من فضلك! حاول مرة أخرى لاحقاً.",
+        "invitationSuccess": "تم قبول الدعوة بنجاح",
+        "acceptDesc": "انقر على الزر لقبول الدعوة",
+        "acceptInvite": "قبول الدعوة",
         "errorSendingInvitation": "لم يتم العثور على المستخدم",
         "noFileSelected": "لم يتم تحديد أي ملف",
         "profileUpdated": "تم تحميل الصورة الشخصية",
@@ -595,7 +628,19 @@
           "twoChannels": "قناتان",
           "threeUsers": "ثلاثة مستخدمين",
           "insightsDashboard": "لوحة معلومات التحليلات",
-          "basicSupport": "دعم أساسي"          
+          "basicSupport": "دعم أساسي",
+          "Subscribe with Stripe": "اشترك مع سترايب",
+          "activating": "جارٍ التنشيط...",
+          "useFree": "استخدم مجانًا",
+          "skipPlan":"تخطَّ هذه الخطوة الآن واستخدم الخطة المجانية",
+          "subscriptionCancelSuccess": "تم إلغاء الاشتراك. تم التحويل إلى الخطة المجانية.",
+          "wantToCancel": "هل أنت متأكد من رغبتك في إلغاء اشتراكك؟",
+          "enjoyFreeTrial": "بدأت الفترة التجريبية. استمتع بـ 14 يومًا مجانًا!",
+          "failToStart": "تعذر بدء المحاكمة",
+          "failToSwitch":"تعذر التبديل إلى الخطة المجانية",
+          "failToCheckout": "تعذر بدء عملية الدفع",
+          "failToCancel": "فشل إلغاء الاشتراك",
+          "usingFreePlan":"الخطة المجانية متاحة. يمكنك الترقية في أي وقت."         
         }
       }
     }

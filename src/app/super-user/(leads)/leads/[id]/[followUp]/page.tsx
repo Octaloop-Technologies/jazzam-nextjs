@@ -5,11 +5,13 @@ import ChannelToggle from "@/components/view/dashboard/leads/ChannelToggle";
 import LanguageToggle from "@/components/view/dashboard/leads/LanguageToggle";
 import Input from "@/components/ui/input/Input";
 import RichTextEditor from "@/components/ui/textarea/RichTextEditor";
-import React, { useState, use } from "react";
+import React, { useState, use, useEffect } from "react";
 import emailjs from "@emailjs/browser";
 import { useToast } from "@/lib/hooks/useToast";
 import tokenStorage from "@/lib/utils/tokenStorage";
 import { useSearchParams } from "next/navigation";
+import { getCurrentLang } from "@/lib/api/main-page";
+import { getDictionary } from "@/lib/i18n/getDictionary";
 
 const emailJsKey: string = process.env.NEXT_PUBLIC_EMAIL_JS_PUBLIC_KEY ?? ''
 emailjs.init(emailJsKey);
@@ -28,6 +30,16 @@ const FollowPage = ({ params }: FollowPageProps) => {
   const { id, followUp } = use(params);
   const userEmail = useSearchParams()?.get("userEmail");
   const companyId = useSearchParams()?.get("companyId");
+  const lang = getCurrentLang();
+  const [language, setLanguage] = useState<any>();
+
+  useEffect(() => {
+    const fetchLanguage = async() => {
+      const dict = (await getDictionary(lang))?.superUser?.navbar?.leads;
+      setLanguage(dict)
+    }
+    fetchLanguage()
+  }, [])
 
 
   const leadName = followUp?.split("%20")
@@ -64,7 +76,7 @@ const FollowPage = ({ params }: FollowPageProps) => {
 
   const handleScheduleFollowup = async(scheduledDate: Date) => {
     if (!email.subject || !email.message) {
-      ErrorToast("Message or subject cannot be empty");
+      ErrorToast(language?.msgOrSubjectEmptyMsg);
       return;
     }
 
@@ -93,13 +105,13 @@ const FollowPage = ({ params }: FollowPageProps) => {
           const data = await res.json();
           if(data?.success === true){
             console.log("data****", data?.data)
-            success("Scheduled follow up created successfully");
+            success(language?.scheduleFollowUp);
           }
 
         }
     } catch (error) {
-      console.error("Email send failed:", error);
-      ErrorToast("Failed to send email");
+      console.error("Email send failed");
+      ErrorToast(language?.emailFailSend);
     } finally {
       setScheduleLoading(false);
     }
@@ -110,7 +122,7 @@ const FollowPage = ({ params }: FollowPageProps) => {
     // console.log("message********", email.message);
 
     if (!email.subject || !email.message) {
-      ErrorToast("Message or subject cannot be empty");
+      ErrorToast(language?.msgOrSubjectEmptyMsg);
       return;
     }
 
@@ -134,7 +146,7 @@ const FollowPage = ({ params }: FollowPageProps) => {
       if(companyId) params.append("companyId", companyId)
 
       if (result.status === 200) {
-        success("Email sent successfully!");
+        success(language?.emailSuccess);
         const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/leads/create-followup/${id}?${params.toString()}`, {
           method: "POST",
           headers: {
@@ -158,8 +170,8 @@ const FollowPage = ({ params }: FollowPageProps) => {
         }
       }
     } catch (error) {
-      console.error("Email send failed:", error);
-      ErrorToast("Failed to send email");
+      console.error("Email send failed");
+      ErrorToast(language?.emailFailSend);
     } finally {
       setFollowupLoading(false);
     }
@@ -172,11 +184,11 @@ const FollowPage = ({ params }: FollowPageProps) => {
       <div className="mt-4 wrapper">
         <div className="flex items-start gap-2.5">
           <div className="w-full max-w-[35%] p-[30px] bg-white border border-gray-b rounded-3xl">
-            <h1 className="text-[20px] font-[500]">Follow up settings</h1>
+            <h1 className="text-[20px] font-[500]">{language?.followUpSettings}</h1>
             <div className="mt-5">
               <div className="flex flex-col gap-3">
                 <div>
-                  <h3 className="text-sm font-[500] mb-2">Channel*</h3>
+                  <h3 className="text-sm font-[500] mb-2">{language?.Channel}*</h3>
                   <ChannelToggle />
                 </div>
 

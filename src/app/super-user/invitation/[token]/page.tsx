@@ -1,14 +1,26 @@
 "use client"
+import { getCurrentLang } from '@/lib/api/main-page';
 import { useToast } from '@/lib/hooks/useToast';
+import { getDictionary } from '@/lib/i18n/getDictionary';
 import tokenStorage from '@/lib/utils/tokenStorage';
 import { fetchCurrentUser } from '@/redux/slices/authSlice';
 import { useAppDispatch } from '@/redux/store';
 import { useRouter } from 'next/navigation';
-import React, { use, useEffect } from 'react';
+import React, { use, useEffect, useState } from 'react';
 
 const Page = ({ params }: { params: Promise<{ token: string }> }) => {
     // Use the use() hook to unwrap the promise
     const { token } = use(params);
+    const [language, setLanguage] = useState<any>();
+    const lang = getCurrentLang()
+
+    useEffect(() => {
+        const fetchLanguage = async() => {
+            const dict = (await getDictionary(lang))?.superUser?.navbar?.settings;
+            setLanguage(dict);
+        }
+        fetchLanguage();
+    }, [])
     
     const cleanToken = decodeURIComponent(token).replace(/%/g, '').split('token=')[1];
     console.log("cleanToken********", cleanToken);
@@ -41,14 +53,14 @@ const Page = ({ params }: { params: Promise<{ token: string }> }) => {
             }
 
             if(data?.success === true){
-                success(data?.message)
+                success(language?.invitationSuccess)
                 dispatch(fetchCurrentUser())
                 router.push("/super-user")
             }
             
             return data;
         } catch (error) {
-            ToastError("Please! try again later.")
+            ToastError(language?.tryAgain)
             console.error('Error accepting invitation:', error);
             throw error;
         }
@@ -56,7 +68,7 @@ const Page = ({ params }: { params: Promise<{ token: string }> }) => {
 
     const handleAcceptInvite = () => {
         if (!token) {
-            alert('No invitation token found');
+            alert(language?.noTokenFound);
             return;
         }
 
@@ -65,8 +77,7 @@ const Page = ({ params }: { params: Promise<{ token: string }> }) => {
 
     useEffect(() => {
         if(!accessToken){
-            alert("Your are not loggedIn please login first")
-            success("Your are not loggedIn please login first")
+            alert(language?.notLoginMsg)
             router.push("/login")
         }
     }, [])
@@ -79,12 +90,12 @@ const Page = ({ params }: { params: Promise<{ token: string }> }) => {
     }else{
         return (
             <div className='flex flex-col items-center'>
-                <h1 className='mb-4 text-xl font-semibold'>Click on button to accept invite</h1>
+                <h1 className='mb-4 text-xl font-semibold'>{language?.acceptDesc}</h1>
                 <button
                     onClick={handleAcceptInvite}
                     className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-pri text-white hover:bg-pri/80`}
                 >
-                    Accept invite
+                    {language?.acceptInvite}
                 </button>
             </div>
         );

@@ -19,8 +19,7 @@ const Waitlist = ({ dict }: WaitlistProps) => {
 
     const [waitlistEmail, setWaitlistEmail] = useState("");
     const [loading, setLoading] = useState(false);
-    const emailServiceId: string = process.env.NEXT_PUBLIC_EMAIL_SERVICE_ID ?? '';
-    const emailTemplateId: string = process.env.NEXT_PUBLIC_EMAIL_TEMPLATE_ID ?? '';
+
 
     const { success, error: ErrorToast } = useToast()
 
@@ -35,7 +34,7 @@ const Waitlist = ({ dict }: WaitlistProps) => {
         }
 
         if(!checkEmail(waitlistEmail)){
-            ErrorToast("Email is not valid. Please! enter valid email");
+            ErrorToast(dict?.home?.toastMsgs?.emailInvalid);
             return;
         }
 

@@ -237,7 +237,7 @@ const WaitlistButton = () => {
       if (response.success) {
         success("Successfully joined waitlist!");
       } else {
-        ErrorToast(response.error || "Error submitting email");
+        ErrorToast("Error submitting email");
       }
       setIsSubmitted(true);
       setEmail("");
@@ -249,7 +249,7 @@ const WaitlistButton = () => {
         setIsFocused(false);
       }, 3000);
     } catch (err) {
-      ErrorToast(err instanceof Error ? err.message : "Unknown error submitting email");
+      ErrorToast("Unknown error submitting email");
       throw new Error(err instanceof Error ? err.message : "Unknown error submitting email");
     } finally {
       setIsLoading(false);
