@@ -1117,7 +1117,7 @@ const SettingsPage = () => {
             </div>
           ) : (
             // -- subscription --
-            <SubscriptionSettings />
+            <SubscriptionSettings language={language} />
           )}
         </div>
       </div>

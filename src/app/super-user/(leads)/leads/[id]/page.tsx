@@ -480,7 +480,7 @@ const LeadsPage = () => {
               <h2 className="text-[16px] font-[500] capitalize pb-2 border-b border-gray-n/30">
                 {language?.leadQualificationBant}
               </h2>
-              <BantButton leadId={id} />
+              <BantButton leadId={id} language={language} />
             </div>
             <div className="mt-4 flex justify-between gap-2.5">
               <div className="flex flex-col gap-1">

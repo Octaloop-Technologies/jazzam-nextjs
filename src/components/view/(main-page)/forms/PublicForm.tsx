@@ -3,12 +3,13 @@
 import { useState, useEffect } from "react";
 import { getFormByAccessToken } from "@/lib/api/forms";
 import { useToast } from "@/lib/hooks/useToast";
-import { submitFormData } from "@/lib/api/main-page";
+import { getCurrentLang, submitFormData } from "@/lib/api/main-page";
 import PrimaryButton from "@/components/ui/buttons/PrimaryButton";
 import { LinkedInSvg } from "@/components/svgs/leadsDetailSvgs";
 import Input from "@/components/ui/input";
 import { Instagramicon, LinkedInicon, Metaicon, Twittericon } from "../../dashboard/forms/FormsDashboard";
 import { platform } from "os";
+import { getDictionary } from "@/lib/i18n/getDictionary";
 
 interface FormField {
   id: string;
@@ -56,6 +57,16 @@ const PublicForm = ({ accessToken, tenantId }: PublicFormProps) => {
   const [formData, setFormData] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [language, setLanguage] = useState<any>();
+  const lang = getCurrentLang()
+
+  useEffect(() => {
+    const fetchLanguage = async() => {
+      const dict = (await getDictionary(lang))?.superUser?.navbar?.forms;
+      setLanguage(dict);
+    }
+    fetchLanguage();
+  }, [])
 
   useEffect(() => {
     fetchFormData();
@@ -135,9 +146,9 @@ const PublicForm = ({ accessToken, tenantId }: PublicFormProps) => {
         if(response.message === "Lead already exists; skipped"){
           warning("Lead for this url already exists"); 
         }else if(response.message === "Invalid lead data from scraping; no lead created"){
-          error("Invalid lead data from scraping; no lead created")
+          error(language?.invalidLeadData)
         }else{
-          success(form?.config.settings.successMessage || "Form submitted successfully!");
+          success(language?.formSubmitSuccess);
         }
         // Clear form data
         const clearedData: Record<string, string> = {};
@@ -146,10 +157,10 @@ const PublicForm = ({ accessToken, tenantId }: PublicFormProps) => {
         });
         setFormData(clearedData);
       } else {
-        error(response.error || "Failed to submit form. Please try again.");
+        error(language?.failToSubmit);
       }
     } catch (err) {
-      error(err instanceof Error ? err.message : "Failed to submit form. Please try again.");
+      error(language?.failToSubmit);
     } finally {
       setIsSubmitting(false);
     }
@@ -184,9 +195,9 @@ const PublicForm = ({ accessToken, tenantId }: PublicFormProps) => {
   if (!form) {
     return (
       <div className="text-center">
-        <h1 className="text-2xl font-bold text-gray-800 mb-4">Form Not Found</h1>
+        <h1 className="text-2xl font-bold text-gray-800 mb-4">{language?.formNotFound}</h1>
         <p className="text-gray-600">
-          The form you&apos;re looking for doesn&apos;t exist or has been removed.
+          {language?.formNotExists}
         </p>
       </div>
     );

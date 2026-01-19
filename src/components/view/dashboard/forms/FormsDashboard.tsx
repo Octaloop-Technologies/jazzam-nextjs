@@ -59,11 +59,11 @@ const FormsDashboard = () => {
         setAvailablePlatforms(platformsResponse.data?.platforms || []);
       } else {
         console.error("Platforms fetch failed");
-        error(`Failed to load platforms`);
+        error(language?.FailToLoadPlatform);
       }
     } catch (err) {
       console.error("Error fetching forms data:", err);
-      error("Error loading forms");
+      error(language?.errorLoadingForm);
     } finally {
       setLoading(false);
     }
@@ -72,10 +72,10 @@ const FormsDashboard = () => {
   const copyToClipboard = async (text: string, type: string) => {
     try {
       await navigator.clipboard.writeText(text);
-      success(`${type} copied to clipboard!`);
+      success(`${type} ${language?.clipToClipboard}`);
     } catch (err) {
       console.error("Error copying to clipboard:", err);
-      error("Failed to copy to clipboard");
+      error(language?.failedToCopy);
     }
   };
 

@@ -8,9 +8,10 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 interface BantButtonProps {
   leadId: string;
+  language?: any;
 }
 
-const BantButton = ({ leadId }: BantButtonProps) => {
+const BantButton = ({ leadId, language }: BantButtonProps) => {
   const { success, error } = useToast();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -48,9 +49,9 @@ const BantButton = ({ leadId }: BantButtonProps) => {
         const category = result.data?.lead?.bant?.category || result.data?.lead?.status;
 
         if (bantScore && category) {
-          success(`Lead re-qualified! Score: ${bantScore}/100 (${category.toUpperCase()})`);
+          success(`${language?.leadRequalifyScore}: ${bantScore}/100 (${category.toUpperCase()})`);
         } else {
-          success("Lead re-qualified successfully!");
+          success(language?.leadQualifySuccess);
         }
 
         // Refresh the page to show updated BANT data
@@ -59,12 +60,12 @@ const BantButton = ({ leadId }: BantButtonProps) => {
           router.refresh();
         });
       } else {
-        error(result.error || "Failed to re-qualify lead");
+        error(language?.failedToQualify);
         setIsLoading(false);
       }
     } catch (err) {
       console.error("Error re-qualifying lead:", err);
-      error("An error occurred while re-qualifying the lead");
+      error(language?.errorToQualify);
       setIsLoading(false);
     }
   };
